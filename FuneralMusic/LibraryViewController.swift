@@ -14,6 +14,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     let volumeSlider = UISlider()
     let progressSlider = UISlider()
     let timeLabel = UILabel()
+    var fadeTimer: Timer?
 
     var tracks: [String] = []
     var currentTrackIndex: Int = 0
@@ -75,7 +76,15 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         buttonStack.spacing = 20
         buttonStack.distribution = .equalSpacing
 
-        let controlsStack = UIStackView(arrangedSubviews: [nowPlayingLabel, progressSlider, timeLabel, buttonStack, volumeSlider])
+        let fadeButton = UIButton(type: .system)
+        fadeButton.setTitle("Fade Out", for: .normal)
+        fadeButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        fadeButton.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        fadeButton.layer.cornerRadius = 8
+        fadeButton.setTitleColor(.black, for: .normal)
+        fadeButton.addTarget(self, action: #selector(fadeOutMusic), for: .touchUpInside)
+
+        let controlsStack = UIStackView(arrangedSubviews: [nowPlayingLabel, progressSlider, timeLabel, buttonStack, volumeSlider, fadeButton])
         controlsStack.axis = .vertical
         controlsStack.spacing = 10
         controlsStack.translatesAutoresizingMaskIntoConstraints = false
@@ -165,6 +174,29 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         let currentMin = current / 60, currentSec = current % 60
         let durationMin = duration / 60, durationSec = duration % 60
         timeLabel.text = String(format: "%d:%02d / %d:%02d", currentMin, currentSec, durationMin, durationSec)
+    }
+
+    @objc func fadeOutMusic() {
+        fadeTimer?.invalidate()
+        fadeTimer = Timer.scheduledTimer(withTimeInterval: 0.1, repeats: true) { [weak self] timer in
+            guard let self = self, let player = self.audioPlayer else {
+                timer.invalidate()
+                return
+            }
+
+            if player.volume > 0.01 {
+                player.volume -= 0.01
+            } else {
+                player.stop()
+                player.volume = self.volumeSlider.value
+                self.progressTimer?.invalidate()
+                self.progressSlider.value = 0
+                self.timeLabel.text = "0:00 / 0:00"
+                self.playPauseButton.setImage(UIImage(named: "button_play"), for: .normal)
+                self.nowPlayingLabel.text = "Now Playing: —"
+                timer.invalidate()
+            }
+        }
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
