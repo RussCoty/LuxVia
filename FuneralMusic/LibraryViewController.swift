@@ -31,11 +31,14 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func loadTrackList() {
-        if let resourcePath = Bundle.main.resourcePath {
-            let allFiles = try? FileManager.default.contentsOfDirectory(atPath: resourcePath)
-            self.tracks = allFiles?.filter { $0.hasSuffix(".mp3") }.map { $0.replacingOccurrences(of: ".mp3", with: "") } ?? []
+        if let audioFolderURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
+            let allFiles = try? FileManager.default.contentsOfDirectory(at: audioFolderURL, includingPropertiesForKeys: nil)
+            self.tracks = allFiles?
+                .filter { $0.pathExtension.lowercased() == "mp3" }
+                .map { $0.deletingPathExtension().lastPathComponent } ?? []
         }
     }
+
 
     func setupUI() {
         nowPlayingLabel.text = "Now Playing: —"
@@ -141,7 +144,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func play(trackNamed name: String) {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "mp3") else { return }
+        guard let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") else { return }
 
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
@@ -157,6 +160,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             print("Playback failed: \(error)")
         }
     }
+
 
     func startProgressTimer() {
         progressTimer?.invalidate()
