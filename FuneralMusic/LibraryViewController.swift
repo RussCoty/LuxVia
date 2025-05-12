@@ -17,7 +17,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     var fadeTimer: Timer?
 
     var tracks: [String] = []
-    //var playlist: [String] = []
     var isUsingPlaylist = false
     var currentTrackIndex: Int = 0
     var audioPlayer: AVAudioPlayer?
@@ -135,7 +134,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     @objc func playPreviousTrack() {
         if isUsingPlaylist {
             currentTrackIndex = max(0, currentTrackIndex - 1)
-            play(trackNamed: playlist[currentTrackIndex])
+            play(trackNamed: SharedPlaylistManager.shared.playlist[currentTrackIndex])
         } else {
             currentTrackIndex = max(0, currentTrackIndex - 1)
             play(trackNamed: tracks[currentTrackIndex])
@@ -144,8 +143,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
     @objc func playNextTrack() {
         if isUsingPlaylist {
-            currentTrackIndex = min(playlist.count - 1, currentTrackIndex + 1)
-            play(trackNamed: playlist[currentTrackIndex])
+            currentTrackIndex = min(SharedPlaylistManager.shared.playlist.count - 1, currentTrackIndex + 1)
+            play(trackNamed: SharedPlaylistManager.shared.playlist[currentTrackIndex])
         } else {
             currentTrackIndex = min(tracks.count - 1, currentTrackIndex + 1)
             play(trackNamed: tracks[currentTrackIndex])
@@ -191,7 +190,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             nowPlayingLabel.text = "Now Playing: \(name.replacingOccurrences(of: "_", with: " ").capitalized)"
             playPauseButton.setImage(UIImage(named: "button_pause"), for: .normal)
             if isUsingPlaylist {
-                currentTrackIndex = playlist.firstIndex(of: name) ?? 0
+                currentTrackIndex = SharedPlaylistManager.shared.playlist.firstIndex(of: name) ?? 0
             } else {
                 currentTrackIndex = tracks.firstIndex(of: name) ?? 0
             }
@@ -226,10 +225,10 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     @objc func playPlaylist() {
-        guard !playlist.isEmpty else { return }
+        guard !SharedPlaylistManager.shared.playlist.isEmpty else { return }
         isUsingPlaylist = true
         currentTrackIndex = 0
-        play(trackNamed: playlist[currentTrackIndex])
+        play(trackNamed: SharedPlaylistManager.shared.playlist[currentTrackIndex])
     }
 
     // MARK: - UITableView Data Source & Delegate
@@ -255,8 +254,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         })
 
         alert.addAction(UIAlertAction(title: "Add to Playlist", style: .default) { _ in
-            if !self.playlist.contains(selectedTrack) {
-                self.playlist.append(selectedTrack)
+            if !SharedPlaylistManager.shared.playlist.contains(selectedTrack) {
+                SharedPlaylistManager.shared.playlist.append(selectedTrack)
                 print("Added to playlist: \(selectedTrack)")
             }
         })
@@ -266,4 +265,3 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         present(alert, animated: true)
     }
 }
-

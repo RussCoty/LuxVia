@@ -23,6 +23,7 @@
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
 		109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109366782DD22611007127CC /* SharedPlaylistManager.swift */; };
 		10A90B1F2DCC005400B0FEE6 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */; };
+		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
 		109366782DD22611007127CC /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
 		10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LUMA_Launch.png; sourceTree = "<group>"; };
+		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +89,7 @@
 				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
 				1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */,
 				108D26BB2DD200A30049806F /* PlaylistViewController.swift */,
+				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
 				1084FAA72DC8EC06009398EB /* ViewController.swift */,
@@ -173,6 +176,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */,
+				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,

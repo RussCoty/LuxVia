@@ -1,9 +1,5 @@
-//
 //  PlaylistViewController.swift
 //  FuneralMusic
-//
-//  Created by Russell Cottier on 05/05/2025.
-//
 
 import UIKit
 import AVFoundation
@@ -12,19 +8,10 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
 
     let tableView = UITableView()
     let playButton = UIButton(type: .system)
+
     var audioPlayer: AVAudioPlayer?
     var currentTrackIndex = 0
     var progressTimer: Timer?
-
-    // This should be the same shared playlist as in LibraryViewController
-    var playlist: [String] {
-        get {
-            return SharedPlaylistManager.shared.tracks
-        }
-        set {
-            SharedPlaylistManager.shared.tracks = newValue
-        }
-    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,26 +21,28 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         setupUI()
     }
 
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        tableView.reloadData() // Refresh playlist display when returning to this view
+    }
+
     func setupUI() {
-        // Table View
-        tableView.frame = view.bounds
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.setEditing(true, animated: false)
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(tableView)
+        tableView.setEditing(true, animated: false) // Enable drag-to-reorder
 
-        // Play Playlist Button
         playButton.setTitle("Play Playlist", for: .normal)
         playButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         playButton.backgroundColor = UIColor(white: 0.95, alpha: 1)
         playButton.layer.cornerRadius = 8
         playButton.setTitleColor(.black, for: .normal)
-        playButton.addTarget(self, action: #selector(playPlaylist), for: .touchUpInside)
         playButton.translatesAutoresizingMaskIntoConstraints = false
+        playButton.addTarget(self, action: #selector(playPlaylist), for: .touchUpInside)
+
+        view.addSubview(tableView)
         view.addSubview(playButton)
 
-        // Layout
         NSLayoutConstraint.activate([
             playButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             playButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
@@ -67,35 +56,15 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         ])
     }
 
-    // MARK: - TableView
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return playlist.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = UITableViewCell(style: .default, reuseIdentifier: "PlaylistCell")
-        cell.textLabel?.text = playlist[indexPath.row].capitalized
-        return cell
-    }
-
-    // Enable reordering
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
-        let movedTrack = playlist.remove(at: sourceIndexPath.row)
-        playlist.insert(movedTrack, at: destinationIndexPath.row)
-    }
-
     @objc func playPlaylist() {
-        guard !playlist.isEmpty else { return }
+        guard !SharedPlaylistManager.shared.playlist.isEmpty else { return }
         currentTrackIndex = 0
-        play(trackNamed: playlist[currentTrackIndex])
+        playTrack(at: currentTrackIndex)
     }
 
-    func play(trackNamed name: String) {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") else {
-            print("Track not found in Audio folder: \(name)")
-            return
-        }
+    func playTrack(at index: Int) {
+        let track = SharedPlaylistManager.shared.playlist[index]
+        guard let url = Bundle.main.url(forResource: track, withExtension: "mp3", subdirectory: "Audio") else { return }
 
         do {
             audioPlayer = try AVAudioPlayer(contentsOf: url)
@@ -103,35 +72,51 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
             audioPlayer?.play()
             startProgressTimer()
         } catch {
-            print("Playback failed: \(error)")
+            print("Error playing track \(track): \(error)")
         }
     }
 
     func startProgressTimer() {
         progressTimer?.invalidate()
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
-            guard let self = self,
-                  let player = self.audioPlayer,
-                  player.currentTime >= player.duration else { return }
-
-            self.progressTimer?.invalidate()
-            self.playNext()
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            guard let player = self.audioPlayer else { return }
+            if player.isPlaying == false {
+                self.advanceToNextTrack()
+            }
         }
     }
 
-    func playNext() {
+    func advanceToNextTrack() {
         currentTrackIndex += 1
-        if currentTrackIndex < playlist.count {
-            play(trackNamed: playlist[currentTrackIndex])
+        if currentTrackIndex < SharedPlaylistManager.shared.playlist.count {
+            playTrack(at: currentTrackIndex)
+        } else {
+            progressTimer?.invalidate()
+            audioPlayer = nil
         }
     }
+
+    // MARK: UITableViewDataSource
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return SharedPlaylistManager.shared.playlist.count
+    }
+
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = UITableViewCell(style: .default, reuseIdentifier: "PlaylistCell")
+        cell.textLabel?.text = SharedPlaylistManager.shared.playlist[indexPath.row].capitalized
+        return cell
+    }
+
+    // Enable reordering
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        var playlist = SharedPlaylistManager.shared.playlist
+        let movedItem = playlist.remove(at: sourceIndexPath.row)
+        playlist.insert(movedItem, at: destinationIndexPath.row)
+        SharedPlaylistManager.shared.playlist = playlist
+    }
 }
-
-// Shared playlist manager to keep the playlist in sync between view controllers
-class SharedPlaylistManager {
-    static let shared = SharedPlaylistManager()
-    private init() {}
-
-    var tracks: [String] = []
-}
-
