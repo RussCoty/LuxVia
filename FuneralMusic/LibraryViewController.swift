@@ -17,6 +17,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     var fadeTimer: Timer?
 
     var tracks: [String] = []
+    var playlist: [String] = []
+    var isUsingPlaylist = false
     var currentTrackIndex: Int = 0
     var audioPlayer: AVAudioPlayer?
     var progressTimer: Timer?
@@ -38,7 +40,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
                 .map { $0.deletingPathExtension().lastPathComponent } ?? []
         }
     }
-
 
     func setupUI() {
         nowPlayingLabel.text = "Now Playing: —"
@@ -87,7 +88,15 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         fadeButton.setTitleColor(.black, for: .normal)
         fadeButton.addTarget(self, action: #selector(fadeOutMusic), for: .touchUpInside)
 
-        let controlsStack = UIStackView(arrangedSubviews: [nowPlayingLabel, progressSlider, timeLabel, buttonStack, volumeSlider, fadeButton])
+        let playlistButton = UIButton(type: .system)
+        playlistButton.setTitle("Play Playlist", for: .normal)
+        playlistButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
+        playlistButton.backgroundColor = UIColor(white: 0.95, alpha: 1)
+        playlistButton.layer.cornerRadius = 8
+        playlistButton.setTitleColor(.black, for: .normal)
+        playlistButton.addTarget(self, action: #selector(playPlaylist), for: .touchUpInside)
+
+        let controlsStack = UIStackView(arrangedSubviews: [nowPlayingLabel, progressSlider, timeLabel, buttonStack, volumeSlider, fadeButton, playlistButton])
         controlsStack.axis = .vertical
         controlsStack.spacing = 10
         controlsStack.translatesAutoresizingMaskIntoConstraints = false
@@ -124,13 +133,23 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     @objc func playPreviousTrack() {
-        currentTrackIndex = max(0, currentTrackIndex - 1)
-        play(trackNamed: tracks[currentTrackIndex])
+        if isUsingPlaylist {
+            currentTrackIndex = max(0, currentTrackIndex - 1)
+            play(trackNamed: playlist[currentTrackIndex])
+        } else {
+            currentTrackIndex = max(0, currentTrackIndex - 1)
+            play(trackNamed: tracks[currentTrackIndex])
+        }
     }
 
     @objc func playNextTrack() {
-        currentTrackIndex = min(tracks.count - 1, currentTrackIndex + 1)
-        play(trackNamed: tracks[currentTrackIndex])
+        if isUsingPlaylist {
+            currentTrackIndex = min(playlist.count - 1, currentTrackIndex + 1)
+            play(trackNamed: playlist[currentTrackIndex])
+        } else {
+            currentTrackIndex = min(tracks.count - 1, currentTrackIndex + 1)
+            play(trackNamed: tracks[currentTrackIndex])
+        }
     }
 
     @objc func volumeChanged() {
@@ -153,14 +172,17 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             audioPlayer?.play()
             nowPlayingLabel.text = "Now Playing: \(name.replacingOccurrences(of: "_", with: " ").capitalized)"
             playPauseButton.setImage(UIImage(named: "button_pause"), for: .normal)
-            currentTrackIndex = tracks.firstIndex(of: name) ?? 0
+            if isUsingPlaylist {
+                currentTrackIndex = playlist.firstIndex(of: name) ?? 0
+            } else {
+                currentTrackIndex = tracks.firstIndex(of: name) ?? 0
+            }
             progressSlider.maximumValue = Float(audioPlayer?.duration ?? 1)
             startProgressTimer()
         } catch {
             print("Playback failed: \(error)")
         }
     }
-
 
     func startProgressTimer() {
         progressTimer?.invalidate()
@@ -203,6 +225,13 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
 
+    @objc func playPlaylist() {
+        guard !playlist.isEmpty else { return }
+        isUsingPlaylist = true
+        currentTrackIndex = 0
+        play(trackNamed: playlist[currentTrackIndex])
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tracks.count
     }
@@ -214,7 +243,24 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currentTrackIndex = indexPath.row
-        play(trackNamed: tracks[currentTrackIndex])
+        let selectedTrack = tracks[indexPath.row]
+
+        let alert = UIAlertController(title: selectedTrack, message: "Choose an action", preferredStyle: .actionSheet)
+
+        alert.addAction(UIAlertAction(title: "Play Now", style: .default) { _ in
+            self.isUsingPlaylist = false
+            self.play(trackNamed: selectedTrack)
+        })
+
+        alert.addAction(UIAlertAction(title: "Add to Playlist", style: .default) { _ in
+            if !self.playlist.contains(selectedTrack) {
+                self.playlist.append(selectedTrack)
+                print("Added to playlist: \(selectedTrack)")
+            }
+        })
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        present(alert, animated: true)
     }
 }
