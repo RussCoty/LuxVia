@@ -17,7 +17,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     var fadeTimer: Timer?
 
     var tracks: [String] = []
-    var playlist: [String] = []
+    //var playlist: [String] = []
     var isUsingPlaylist = false
     var currentTrackIndex: Int = 0
     var audioPlayer: AVAudioPlayer?
@@ -162,6 +162,24 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         updateTimeLabel()
     }
 
+    func startProgressTimer() {
+        progressTimer?.invalidate()
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
+            guard let player = self.audioPlayer else { return }
+            self.progressSlider.value = Float(player.currentTime)
+            self.updateTimeLabel()
+        }
+    }
+
+    func updateTimeLabel() {
+        guard let player = audioPlayer else { return }
+        let current = Int(player.currentTime)
+        let duration = Int(player.duration)
+        let currentMin = current / 60, currentSec = current % 60
+        let durationMin = duration / 60, durationSec = duration % 60
+        timeLabel.text = String(format: "%d:%02d / %d:%02d", currentMin, currentSec, durationMin, durationSec)
+    }
+
     func play(trackNamed name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") else { return }
 
@@ -182,24 +200,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         } catch {
             print("Playback failed: \(error)")
         }
-    }
-
-    func startProgressTimer() {
-        progressTimer?.invalidate()
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            guard let player = self.audioPlayer else { return }
-            self.progressSlider.value = Float(player.currentTime)
-            self.updateTimeLabel()
-        }
-    }
-
-    func updateTimeLabel() {
-        guard let player = audioPlayer else { return }
-        let current = Int(player.currentTime)
-        let duration = Int(player.duration)
-        let currentMin = current / 60, currentSec = current % 60
-        let durationMin = duration / 60, durationSec = duration % 60
-        timeLabel.text = String(format: "%d:%02d / %d:%02d", currentMin, currentSec, durationMin, durationSec)
     }
 
     @objc func fadeOutMusic() {
@@ -231,6 +231,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         currentTrackIndex = 0
         play(trackNamed: playlist[currentTrackIndex])
     }
+
+    // MARK: - UITableView Data Source & Delegate
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tracks.count
@@ -264,3 +266,4 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         present(alert, animated: true)
     }
 }
+
