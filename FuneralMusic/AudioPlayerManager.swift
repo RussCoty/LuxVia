@@ -7,7 +7,7 @@ class AudioPlayerManager {
 
     var player: AVAudioPlayer?
 
-    /// Current global volume (0.0 to 1.0)
+    /// Current global volume (0.0 to 1.0) 
     var volume: Float = 0.75 {
         didSet {
             player?.volume = volume
