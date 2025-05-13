@@ -14,6 +14,9 @@ class AudioPlayerManager {
         }
     }
 
+    /// Name of the currently playing track (without extension)
+    var currentTrackName: String?
+
     var isPlaying: Bool {
         return player?.isPlaying ?? false
     }
@@ -29,9 +32,12 @@ class AudioPlayerManager {
     func play(url: URL) {
         do {
             player = try AVAudioPlayer(contentsOf: url)
-            player?.volume = volume // Use current global volume
+            player?.volume = volume
             player?.prepareToPlay()
             player?.play()
+            
+            // ✅ Store the name of the currently playing track
+            currentTrackName = url.deletingPathExtension().lastPathComponent
         } catch {
             print("Error playing audio: \(error)")
         }
@@ -48,6 +54,7 @@ class AudioPlayerManager {
     func stop() {
         player?.stop()
         player?.currentTime = 0
+        currentTrackName = nil
     }
 
     func seek(to time: TimeInterval) {

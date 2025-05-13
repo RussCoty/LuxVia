@@ -9,20 +9,20 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Playlist"
-
         setupUI()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         tableView.reloadData()
+        scrollToNowPlaying()
     }
 
     private func setupUI() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.setEditing(true, animated: false) // Enable drag-to-reorder
+        tableView.setEditing(true, animated: false)
 
         view.addSubview(tableView)
 
@@ -34,7 +34,7 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         ])
     }
 
-    // MARK: - TableView
+    // MARK: - TableView Data Source
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return SharedPlaylistManager.shared.playlist.count
@@ -44,13 +44,28 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         let cell = UITableViewCell(style: .default, reuseIdentifier: "PlaylistCell")
         let trackName = SharedPlaylistManager.shared.playlist[indexPath.row]
         cell.textLabel?.text = trackName.capitalized
+
+        if indexPath.row == currentTrackIndex && AudioPlayerManager.shared.isPlaying {
+            cell.accessoryType = .checkmark
+            cell.textLabel?.textColor = .systemBlue
+            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        } else {
+            cell.accessoryType = .none
+            cell.textLabel?.textColor = .label
+            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+        }
+
         return cell
     }
 
+    // MARK: - Row Selection (no autoplay)
+
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         currentTrackIndex = indexPath.row
-        playTrack(at: currentTrackIndex)
+        tableView.deselectRow(at: indexPath, animated: true)
     }
+
+    // MARK: - Playback
 
     func playTrack(at index: Int) {
         let playlist = SharedPlaylistManager.shared.playlist
@@ -59,10 +74,28 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         let track = playlist[index]
         guard let url = Bundle.main.url(forResource: track, withExtension: "mp3", subdirectory: "Audio") else { return }
 
+        currentTrackIndex = index
         AudioPlayerManager.shared.play(url: url)
+
+        PlayerControlsView.shared?.nowPlayingText("Now Playing: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
+
+        tableView.reloadData()
+        scrollToNowPlaying()
     }
 
-    // MARK: - Reordering Support
+    func playPlaylistFromStart() {
+        guard !SharedPlaylistManager.shared.playlist.isEmpty else { return }
+        currentTrackIndex = 0
+        playTrack(at: currentTrackIndex)
+    }
+
+    func scrollToNowPlaying() {
+        guard currentTrackIndex < SharedPlaylistManager.shared.playlist.count else { return }
+        let indexPath = IndexPath(row: currentTrackIndex, section: 0)
+        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+    }
+
+    // MARK: - Reordering
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
@@ -81,6 +114,11 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         if editingStyle == .delete {
             SharedPlaylistManager.shared.playlist.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+
+            if currentTrackIndex >= SharedPlaylistManager.shared.playlist.count {
+                currentTrackIndex = max(0, SharedPlaylistManager.shared.playlist.count - 1)
+            }
+            tableView.reloadData()
         }
     }
 }

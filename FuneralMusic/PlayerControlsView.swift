@@ -1,6 +1,8 @@
 import UIKit
 
 class PlayerControlsView: UIView {
+    // MARK: - Shared Instance
+    static var shared: PlayerControlsView?
 
     // MARK: - Callbacks
     var onPlayPause: (() -> Void)?
@@ -27,16 +29,20 @@ class PlayerControlsView: UIView {
         return volumeSlider.value
     }
 
+    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
+        PlayerControlsView.shared = self
         setupUI()
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        PlayerControlsView.shared = self
         setupUI()
     }
 
+    // MARK: - UI Setup
     private func setupUI() {
         backgroundColor = UIColor(white: 0.95, alpha: 1.0)
 
@@ -50,7 +56,6 @@ class PlayerControlsView: UIView {
         timeLabel.text = "0:00 / 0:00"
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        // Configure image-based buttons
         configureImageButton(playPauseButton, imageName: "button_play")
         configureImageButton(nextButton, imageName: "button_next")
         configureImageButton(previousButton, imageName: "button_prev")
@@ -77,7 +82,6 @@ class PlayerControlsView: UIView {
         if let wedgeImage = generateWedgeImage() {
             volumeSlider.setMinimumTrackImage(wedgeImage, for: .normal)
         }
-
 
         progressSlider.translatesAutoresizingMaskIntoConstraints = false
         progressSlider.addTarget(self, action: #selector(progressChanged(_:)), for: .valueChanged)
@@ -129,29 +133,6 @@ class PlayerControlsView: UIView {
             timeLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
     }
-    private func generateWedgeImage(width: CGFloat = 300, height: CGFloat = 10, color: UIColor = .black) -> UIImage? {
-        let size = CGSize(width: width, height: height)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-
-        context.setFillColor(color.cgColor)
-        
-        // Wedge: thin on the left (startHeight), thick on the right (full height)
-        let startHeight: CGFloat = height * 0 // e.g. 20% height at the left
-        let endHeight: CGFloat = height   * 2      // full height at the right
-
-        context.beginPath()
-        context.move(to: CGPoint(x: 0, y: height))                          // bottom-left
-        context.addLine(to: CGPoint(x: 0, y: height - startHeight))         // top-left (thin)
-        context.addLine(to: CGPoint(x: width, y: height - endHeight))      // top-right (tall)
-        context.addLine(to: CGPoint(x: width, y: height))                  // bottom-right
-        context.closePath()
-        context.fillPath()
-
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
-    }
 
     private func configureImageButton(_ button: UIButton, imageName: String) {
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -162,28 +143,35 @@ class PlayerControlsView: UIView {
         button.contentVerticalAlignment = .fill
     }
 
+    private func generateWedgeImage(width: CGFloat = 300, height: CGFloat = 10, color: UIColor = .black) -> UIImage? {
+        let size = CGSize(width: width, height: height)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+
+        context.setFillColor(color.cgColor)
+
+        let startHeight: CGFloat = 0
+        let endHeight: CGFloat = height * 2
+
+        context.beginPath()
+        context.move(to: CGPoint(x: 0, y: height))
+        context.addLine(to: CGPoint(x: 0, y: height - startHeight))
+        context.addLine(to: CGPoint(x: width, y: height - endHeight))
+        context.addLine(to: CGPoint(x: width, y: height))
+        context.closePath()
+        context.fillPath()
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
+    }
 
     // MARK: - Button Actions
-
-    @objc private func playPauseTapped() {
-        onPlayPause?()
-    }
-
-    @objc private func nextTapped() {
-        onNext?()
-    }
-
-    @objc private func previousTapped() {
-        onPrevious?()
-    }
-
-    @objc private func fadeTapped() {
-        onFadeOut?()
-    }
-
-    @objc private func playPlaylistTapped() {
-        onPlayPlaylist?()
-    }
+    @objc private func playPauseTapped() { onPlayPause?() }
+    @objc private func nextTapped() { onNext?() }
+    @objc private func previousTapped() { onPrevious?() }
+    @objc private func fadeTapped() { onFadeOut?() }
+    @objc private func playPlaylistTapped() { onPlayPlaylist?() }
 
     @objc private func volumeChanged(_ sender: UISlider) {
         AudioPlayerManager.shared.volume = sender.value
@@ -194,8 +182,7 @@ class PlayerControlsView: UIView {
         onScrubProgress?(sender.value)
     }
 
-    // MARK: - UI Update Methods
-
+    // MARK: - Public Update Methods
     func updatePlayButton(isPlaying: Bool) {
         let imageName = isPlaying ? "button_pause" : "button_play"
         playPauseButton.setImage(UIImage(named: imageName), for: .normal)
