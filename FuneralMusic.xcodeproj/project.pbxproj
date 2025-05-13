@@ -12,12 +12,12 @@
 		1012F6442DC948A200F1D56F /* OrderOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */; };
 		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
 		1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */; };
+		105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */; };
 		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
 		1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA52DC8EC06009398EB /* SceneDelegate.swift */; };
 		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
 		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
 		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
-		1084FAB82DC8EFE3009398EB /* A song.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAB72DC8EFE3009398EB /* A song.mp3 */; };
 		1089BCC62DCE077F005DF96A /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 1089BCC52DCE077F005DF96A /* Audio */; };
 		108D26BC2DD200A30049806F /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BB2DD200A30049806F /* PlaylistViewController.swift */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
@@ -32,6 +32,7 @@
 		1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderOfServiceViewController.swift; sourceTree = "<group>"; };
 		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
 		1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LUMA_Launch.png; path = FuneralMusic/LUMA_Launch.png; sourceTree = SOURCE_ROOT; };
+		105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		1084FAA02DC8EC06009398EB /* FuneralMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuneralMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1084FAA32DC8EC06009398EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1084FAA52DC8EC06009398EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -39,7 +40,6 @@
 		1084FAAC2DC8EC09009398EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1084FAAF2DC8EC09009398EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1084FAB12DC8EC09009398EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1084FAB72DC8EFE3009398EB /* A song.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = "A song.mp3"; path = "FuneralMusic/A song.mp3"; sourceTree = SOURCE_ROOT; };
 		1089BCC52DCE077F005DF96A /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		108D26BB2DD200A30049806F /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
@@ -79,17 +79,17 @@
 			isa = PBXGroup;
 			children = (
 				1089BCC52DCE077F005DF96A /* Audio */,
-				1084FAB72DC8EFE3009398EB /* A song.mp3 */,
 				1084FAB12DC8EC09009398EB /* Info.plist */,
 				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
 				1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */,
 				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
+				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				1012F6412DC9446F00F1D56F /* LibraryViewController.swift */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
 				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
 				1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */,
-				108D26BB2DD200A30049806F /* PlaylistViewController.swift */,
 				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
+				108D26BB2DD200A30049806F /* PlaylistViewController.swift */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
 				1084FAA72DC8EC06009398EB /* ViewController.swift */,
@@ -158,7 +158,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				1084FAB82DC8EFE3009398EB /* A song.mp3 in Resources */,
 				10A90B1F2DCC005400B0FEE6 /* LUMA_Launch.png in Resources */,
 				1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */,
 				102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */,
@@ -182,6 +181,7 @@
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
 				1012F6442DC948A200F1D56F /* OrderOfServiceViewController.swift in Sources */,
 				1012F6422DC9446F00F1D56F /* LibraryViewController.swift in Sources */,
+				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
 				108D26BC2DD200A30049806F /* PlaylistViewController.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */,

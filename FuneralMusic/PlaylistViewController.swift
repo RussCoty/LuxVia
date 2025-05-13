@@ -1,15 +1,11 @@
-//  PlaylistViewController.swift
-//  FuneralMusic
-
 import UIKit
 import AVFoundation
 
 class PlaylistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     let tableView = UITableView()
-    let playButton = UIButton(type: .system)
+    let playerControls = PlayerControlsView()
 
-    var audioPlayer: AVAudioPlayer?
     var currentTrackIndex = 0
     var progressTimer: Timer?
 
@@ -19,70 +15,94 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         title = "Playlist"
 
         setupUI()
+        setupCallbacks()
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        tableView.reloadData() // Refresh playlist display when returning to this view
+        tableView.reloadData()
     }
 
     func setupUI() {
         tableView.dataSource = self
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.setEditing(true, animated: false) // Enable drag-to-reorder
+        tableView.setEditing(true, animated: false)
 
-        playButton.setTitle("Play Playlist", for: .normal)
-        playButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        playButton.backgroundColor = UIColor(white: 0.95, alpha: 1)
-        playButton.layer.cornerRadius = 8
-        playButton.setTitleColor(.black, for: .normal)
-        playButton.translatesAutoresizingMaskIntoConstraints = false
-        playButton.addTarget(self, action: #selector(playPlaylist), for: .touchUpInside)
+        playerControls.translatesAutoresizingMaskIntoConstraints = false
 
         view.addSubview(tableView)
-        view.addSubview(playButton)
+        view.addSubview(playerControls)
 
         NSLayoutConstraint.activate([
-            playButton.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            playButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            playButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -10),
-            playButton.heightAnchor.constraint(equalToConstant: 44),
+            playerControls.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            playerControls.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            playerControls.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: playButton.topAnchor, constant: -10)
+            tableView.bottomAnchor.constraint(equalTo: playerControls.topAnchor, constant: -10)
         ])
     }
 
-    @objc func playPlaylist() {
-        guard !SharedPlaylistManager.shared.playlist.isEmpty else { return }
-        currentTrackIndex = 0
-        playTrack(at: currentTrackIndex)
+    func setupCallbacks() {
+        playerControls.onPlayPause = { [weak self] in
+            guard let self = self else { return }
+            if AudioPlayerManager.shared.isPlaying {
+                AudioPlayerManager.shared.pause()
+                self.playerControls.updatePlayButton(isPlaying: false)
+            } else {
+                AudioPlayerManager.shared.resume()
+                self.playerControls.updatePlayButton(isPlaying: true)
+            }
+        }
+
+        playerControls.onNext = { [weak self] in
+            self?.advanceToNextTrack()
+        }
+
+        playerControls.onVolumeChange = { value in
+            AudioPlayerManager.shared.volume = value
+        }
+
+        playerControls.onScrubProgress = { [weak self] value in
+            AudioPlayerManager.shared.seek(to: TimeInterval(value))
+            self?.updateTimeLabel()
+        }
+
+        playerControls.onPlayPlaylist = { [weak self] in
+            guard let self = self else { return }
+            guard !SharedPlaylistManager.shared.playlist.isEmpty else { return }
+            self.currentTrackIndex = 0
+            self.playTrack(at: self.currentTrackIndex)
+        }
     }
 
     func playTrack(at index: Int) {
         let track = SharedPlaylistManager.shared.playlist[index]
         guard let url = Bundle.main.url(forResource: track, withExtension: "mp3", subdirectory: "Audio") else { return }
 
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.prepareToPlay()
-            audioPlayer?.play()
-            startProgressTimer()
-        } catch {
-            print("Error playing track \(track): \(error)")
-        }
+        AudioPlayerManager.shared.play(url: url)
+        playerControls.updatePlayButton(isPlaying: true)
+        playerControls.nowPlayingText("Now Playing: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
+        playerControls.setMaxProgress(Float(AudioPlayerManager.shared.duration))
+
+        startProgressTimer()
     }
 
     func startProgressTimer() {
         progressTimer?.invalidate()
-        progressTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { _ in
-            guard let player = self.audioPlayer else { return }
-            if player.isPlaying == false {
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 1, repeats: true) { [weak self] _ in
+            guard let self = self else { return }
+
+            if !AudioPlayerManager.shared.isPlaying {
                 self.advanceToNextTrack()
             }
+
+            self.playerControls.updateProgress(current: Float(AudioPlayerManager.shared.currentTime))
+            self.playerControls.setMaxProgress(Float(AudioPlayerManager.shared.duration))
+            self.updateTimeLabel()
         }
     }
 
@@ -92,8 +112,17 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
             playTrack(at: currentTrackIndex)
         } else {
             progressTimer?.invalidate()
-            audioPlayer = nil
+            AudioPlayerManager.shared.stop()
+            playerControls.updatePlayButton(isPlaying: false)
+            playerControls.nowPlayingText("Now Playing: —")
         }
+    }
+
+    func updateTimeLabel() {
+        let player = AudioPlayerManager.shared
+        let current = Int(player.currentTime)
+        let duration = Int(player.duration)
+        playerControls.updateTimeLabel(current: current, duration: duration)
     }
 
     // MARK: UITableViewDataSource

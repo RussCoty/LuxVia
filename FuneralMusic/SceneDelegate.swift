@@ -30,7 +30,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Order of Service tab
         let orderVC = OrderOfServiceViewController()
-        orderVC.tabBarItem = UITabBarItem(title: "Order", image: nil, tag: 2)
+        orderVC.tabBarItem = UITabBarItem(title: "Order of Service", image: nil, tag: 2)
 
         tabBarController.viewControllers = [webVC, musicTab, orderVC]
         window.rootViewController = tabBarController
@@ -73,7 +73,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
         let orderVC = OrderOfServiceViewController()
-        orderVC.tabBarItem = UITabBarItem(title: "Order", image: nil, tag: 2)
+        orderVC.tabBarItem = UITabBarItem(title: "Order of Service", image: nil, tag: 2)
 
         tabBarController.viewControllers = [aboutVC, musicTab, orderVC]
 
