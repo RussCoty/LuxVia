@@ -10,7 +10,7 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
+    
     func scene(_ scene: UIScene,
                willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
@@ -24,8 +24,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let webVC = ViewController()
         webVC.tabBarItem = UITabBarItem(title: "About", image: nil, tag: 0)
 
-        // Music tab containing Explore + Playlist
-        let musicTab = MusicTabViewController()
+        // Music tab using new architecture
+        let musicTab = UINavigationController(rootViewController: MainViewController())
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
         // Order of Service tab
