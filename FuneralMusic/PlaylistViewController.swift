@@ -22,7 +22,7 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.dataSource = self
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.setEditing(true, animated: false)
+        tableView.setEditing(true, animated: false) // Enable drag-to-reorder
 
         view.addSubview(tableView)
 
@@ -42,7 +42,8 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "PlaylistCell")
-        cell.textLabel?.text = SharedPlaylistManager.shared.playlist[indexPath.row].capitalized
+        let trackName = SharedPlaylistManager.shared.playlist[indexPath.row]
+        cell.textLabel?.text = trackName.capitalized
         return cell
     }
 
@@ -72,5 +73,14 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         let movedItem = playlist.remove(at: sourceIndexPath.row)
         playlist.insert(movedItem, at: destinationIndexPath.row)
         SharedPlaylistManager.shared.playlist = playlist
+    }
+
+    // MARK: - Swipe to Delete
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            SharedPlaylistManager.shared.playlist.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
     }
 }
