@@ -50,30 +50,22 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         let trackName = tracks[indexPath.row]
         cell.textLabel?.text = trackName.capitalized
 
-        // Add button to add to playlist
         let addButton = UIButton(type: .contactAdd)
         addButton.tag = indexPath.row
         addButton.addTarget(self, action: #selector(addToPlaylistTapped(_:)), for: .touchUpInside)
         cell.accessoryView = addButton
 
-        // Highlight current playing track
-        let currentlyPlaying = AudioPlayerManager.shared.currentTrackName
-        if trackName == currentlyPlaying {
-            cell.accessoryType = .checkmark
+        // 🔷 Highlight if cued or playing
+        let audio = AudioPlayerManager.shared
+        if audio.currentSource == .library && audio.currentTrackName == trackName {
             cell.textLabel?.textColor = .systemBlue
-            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        }
-        // Highlight selected (tapped) row
-        else if indexPath.row == selectedTrackIndex {
-            cell.accessoryType = .none
-            cell.textLabel?.textColor = .darkGray
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
-        }
-        // Normal
-        else {
-            cell.accessoryType = .none
+            cell.accessoryType = .checkmark
+        } else if audio.isTrackCued && audio.cuedSource == .library && audio.cuedTrackName == trackName {
+            cell.textLabel?.textColor = .systemGray
+            cell.accessoryType = .detailDisclosureButton
+        } else {
             cell.textLabel?.textColor = .label
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            cell.accessoryType = .none
         }
 
         return cell
@@ -82,9 +74,16 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        selectedTrackIndex = indexPath.row
+        let selectedTrack = tracks[indexPath.row]
+        AudioPlayerManager.shared.cueTrack(named: selectedTrack, source: .library)
+
+        let displayName = selectedTrack.replacingOccurrences(of: "_", with: " ").capitalized
+        PlayerControlsView.shared?.nowPlayingText("Cued: \(displayName)")
+
         tableView.reloadData()
     }
+
+
 
     @objc func addToPlaylistTapped(_ sender: UIButton) {
         let track = tracks[sender.tag]

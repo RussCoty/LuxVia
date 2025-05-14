@@ -23,6 +23,7 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.setEditing(true, animated: false)
+        tableView.allowsSelectionDuringEditing = true  // ✅ This enables row taps while editing
 
         view.addSubview(tableView)
 
@@ -45,25 +46,37 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         let trackName = SharedPlaylistManager.shared.playlist[indexPath.row]
         cell.textLabel?.text = trackName.capitalized
 
-        if indexPath.row == currentTrackIndex && AudioPlayerManager.shared.isPlaying {
-            cell.accessoryType = .checkmark
+        // 🔷 Highlight if cued or playing
+        let audio = AudioPlayerManager.shared
+        if audio.currentSource == .playlist && audio.currentTrackName == trackName {
             cell.textLabel?.textColor = .systemBlue
-            cell.textLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+            cell.accessoryType = .checkmark
+        } else if audio.isTrackCued && audio.cuedSource == .playlist && audio.cuedTrackName == trackName {
+            cell.textLabel?.textColor = .systemGray
+            cell.accessoryType = .detailDisclosureButton
         } else {
-            cell.accessoryType = .none
             cell.textLabel?.textColor = .label
-            cell.textLabel?.font = UIFont.systemFont(ofSize: 16)
+            cell.accessoryType = .none
         }
 
         return cell
     }
 
+
     // MARK: - Row Selection (no autoplay)
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        currentTrackIndex = indexPath.row
-        tableView.deselectRow(at: indexPath, animated: true)
+        print("✅ Playlist row tapped: \(indexPath.row)")
+        let selectedTrack = SharedPlaylistManager.shared.playlist[indexPath.row]
+        AudioPlayerManager.shared.cueTrack(named: selectedTrack, source: .playlist)
+
+        let displayName = selectedTrack.replacingOccurrences(of: "_", with: " ").capitalized
+        PlayerControlsView.shared?.nowPlayingText("Cued: \(displayName)")
+
+        tableView.reloadData()
     }
+
+
 
     // MARK: - Playback
 

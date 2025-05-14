@@ -11,7 +11,6 @@ class PlayerControlsView: UIView {
     var onVolumeChange: ((Float) -> Void)?
     var onScrubProgress: ((Float) -> Void)?
     var onFadeOut: (() -> Void)?
-    var onPlayPlaylist: (() -> Void)?
 
     // MARK: - UI Elements
     private let nowPlayingLabel = UILabel()
@@ -19,12 +18,11 @@ class PlayerControlsView: UIView {
     private let nextButton = UIButton(type: .system)
     private let previousButton = UIButton(type: .system)
     private let fadeButton = UIButton(type: .system)
-    private let playPlaylistButton = UIButton(type: .system)
     private let volumeSlider = UISlider()
     private let progressSlider = UISlider()
     private let timeLabel = UILabel()
 
-    // MARK: - Public property
+    // MARK: - Public Property
     var currentVolume: Float {
         return volumeSlider.value
     }
@@ -61,19 +59,14 @@ class PlayerControlsView: UIView {
         configureImageButton(previousButton, imageName: "button_prev")
 
         fadeButton.setTitle("Fade", for: .normal)
-        playPlaylistButton.setTitle("Play Playlist", for: .normal)
-
-        [fadeButton, playPlaylistButton].forEach {
-            $0.translatesAutoresizingMaskIntoConstraints = false
-            $0.tintColor = .black
-            $0.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        }
+        fadeButton.translatesAutoresizingMaskIntoConstraints = false
+        fadeButton.tintColor = .black
+        fadeButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
 
         playPauseButton.addTarget(self, action: #selector(playPauseTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
         previousButton.addTarget(self, action: #selector(previousTapped), for: .touchUpInside)
         fadeButton.addTarget(self, action: #selector(fadeTapped), for: .touchUpInside)
-        playPlaylistButton.addTarget(self, action: #selector(playPlaylistTapped), for: .touchUpInside)
 
         volumeSlider.translatesAutoresizingMaskIntoConstraints = false
         volumeSlider.value = AudioPlayerManager.shared.volume
@@ -95,7 +88,6 @@ class PlayerControlsView: UIView {
         addSubview(nowPlayingLabel)
         addSubview(transportStack)
         addSubview(fadeButton)
-        addSubview(playPlaylistButton)
         addSubview(volumeSlider)
         addSubview(progressSlider)
         addSubview(timeLabel)
@@ -114,11 +106,6 @@ class PlayerControlsView: UIView {
             fadeButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             fadeButton.widthAnchor.constraint(equalToConstant: 80),
             fadeButton.heightAnchor.constraint(equalToConstant: 36),
-
-            playPlaylistButton.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 8),
-            playPlaylistButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            playPlaylistButton.widthAnchor.constraint(equalToConstant: 120),
-            playPlaylistButton.heightAnchor.constraint(equalToConstant: 36),
 
             volumeSlider.topAnchor.constraint(equalTo: fadeButton.bottomAnchor, constant: 8),
             volumeSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
@@ -171,7 +158,6 @@ class PlayerControlsView: UIView {
     @objc private func nextTapped() { onNext?() }
     @objc private func previousTapped() { onPrevious?() }
     @objc private func fadeTapped() { onFadeOut?() }
-    @objc private func playPlaylistTapped() { onPlayPlaylist?() }
 
     @objc private func volumeChanged(_ sender: UISlider) {
         AudioPlayerManager.shared.volume = sender.value
@@ -207,4 +193,9 @@ class PlayerControlsView: UIView {
         let durationSec = duration % 60
         timeLabel.text = String(format: "%d:%02d / %d:%02d", currentMin, currentSec, durationMin, durationSec)
     }
+
+    func setFadeButtonTitle(_ title: String) {
+        fadeButton.setTitle(title, for: .normal)
+    }
+
 }
