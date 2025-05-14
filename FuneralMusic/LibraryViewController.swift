@@ -58,13 +58,13 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         // 🔷 Highlight if cued or playing
         let audio = AudioPlayerManager.shared
         if audio.currentSource == .library && audio.currentTrackName == trackName {
-            cell.textLabel?.textColor = .systemBlue
+            cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
             cell.accessoryType = .checkmark
         } else if audio.isTrackCued && audio.cuedSource == .library && audio.cuedTrackName == trackName {
-            cell.textLabel?.textColor = .systemGray
+            cell.backgroundColor = UIColor.systemGray.withAlphaComponent(0.2)
             cell.accessoryType = .detailDisclosureButton
         } else {
-            cell.textLabel?.textColor = .label
+            cell.backgroundColor = .clear
             cell.accessoryType = .none
         }
 
@@ -87,9 +87,57 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
     @objc func addToPlaylistTapped(_ sender: UIButton) {
         let track = tracks[sender.tag]
-        if !SharedPlaylistManager.shared.playlist.contains(track) {
+
+        if SharedPlaylistManager.shared.playlist.contains(track) {
+            // Confirm duplicate addition
+            let alert = UIAlertController(
+                title: "Add Again?",
+                message: "\"\(track.replacingOccurrences(of: "_", with: " ").capitalized)\" is already in the playlist. Add it again?",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "Add Again", style: .default) { _ in
+                SharedPlaylistManager.shared.playlist.append(track)
+                self.showConfirmationBanner(for: track)
+            })
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            present(alert, animated: true)
+        } else {
             SharedPlaylistManager.shared.playlist.append(track)
-            print("✅ Added to playlist: \(track)")
+            showConfirmationBanner(for: track)
         }
     }
+    func showConfirmationBanner(for track: String) {
+        let banner = UILabel()
+        banner.text = "“\(track.replacingOccurrences(of: "_", with: " ").capitalized)” added to playlist ✅"
+        banner.textColor = .white
+        banner.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.95)
+        banner.font = UIFont.boldSystemFont(ofSize: 14)
+        banner.textAlignment = .center
+        banner.numberOfLines = 2
+        banner.layer.cornerRadius = 10
+        banner.layer.masksToBounds = true
+
+        let bannerHeight: CGFloat = 50
+        banner.frame = CGRect(x: 40, y: view.frame.height, width: view.frame.width - 80, height: bannerHeight)
+        banner.alpha = 0
+
+        view.addSubview(banner)
+
+        // Animate in
+        UIView.animate(withDuration: 0.35, animations: {
+            banner.alpha = 1.0
+            banner.frame.origin.y -= (bannerHeight + 100)
+        })
+
+        // Animate out after delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
+            UIView.animate(withDuration: 0.35, animations: {
+                banner.alpha = 0.0
+                banner.frame.origin.y += 40
+            }, completion: { _ in
+                banner.removeFromSuperview()
+            })
+        }
+    }
+
 }

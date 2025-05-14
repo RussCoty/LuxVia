@@ -33,6 +33,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         orderVC.tabBarItem = UITabBarItem(title: "Order of Service", image: nil, tag: 2)
 
         tabBarController.viewControllers = [webVC, musicTab, orderVC]
+        let biggerFont = UIFont.systemFont(ofSize: 14, weight: .bold)
+        UITabBarItem.appearance().setTitleTextAttributes([.font: biggerFont], for: .normal)
+
         window.rootViewController = tabBarController
         self.window = window
         window.makeKeyAndVisible()

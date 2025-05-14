@@ -1,6 +1,9 @@
 import UIKit
 
 class MainViewController: UIViewController {
+
+    private var progressTimer: Timer?
+
     
     private let containerView = UIView()
     private let playerControls = PlayerControlsView()
@@ -87,13 +90,21 @@ class MainViewController: UIViewController {
             if AudioPlayerManager.shared.isTrackCued {
                 AudioPlayerManager.shared.playCuedTrack()
                 self.playerControls.updatePlayButton(isPlaying: true)
+                self.playerControls.setFadeButtonTitle("Fade Out")
+                self.startProgressTimer() // ✅ Add this
             } else if AudioPlayerManager.shared.isPlaying {
                 AudioPlayerManager.shared.pause()
                 self.playerControls.updatePlayButton(isPlaying: false)
+                self.playerControls.setFadeButtonTitle("Fade In")
+                self.progressTimer?.invalidate() // ✅ stop progress
             } else {
                 AudioPlayerManager.shared.resume()
                 self.playerControls.updatePlayButton(isPlaying: true)
+                self.playerControls.setFadeButtonTitle("Fade Out")
+                self.startProgressTimer() // ✅ Add this
             }
+
+
         }
         
         
@@ -145,17 +156,23 @@ class MainViewController: UIViewController {
     }
     
     private func startProgressTimer() {
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        // Invalidate any existing timer
+        progressTimer?.invalidate()
+
+        progressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-            
+
             let player = AudioPlayerManager.shared
             if player.isPlaying {
-                self.playerControls.updateProgress(current: Float(player.currentTime))
-                self.playerControls.setMaxProgress(Float(player.duration))
+                let currentTime = Float(player.currentTime)
+                let duration = Float(player.duration)
+                self.playerControls.updateProgress(current: currentTime)
+                self.playerControls.setMaxProgress(duration)
                 self.updateTimeLabel()
             }
         }
     }
+
     
     private func updateTimeLabel() {
         let current = Int(AudioPlayerManager.shared.currentTime)
@@ -165,46 +182,54 @@ class MainViewController: UIViewController {
     
     private func fadeOutMusic() {
         let audio = AudioPlayerManager.shared
-        
+
         if audio.isPlaying {
-            // Fade Out to Pause
-            Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
-                guard let player = audio.player else {
-                    timer.invalidate()
-                    return
-                }
-                
-                if player.volume > 0.05 {
-                    player.volume -= 0.05
+            // Fade out to pause
+            guard let player = audio.player else { return }
+
+            let fadeStep: Float = 0.01
+            let fadeDuration: TimeInterval = 1.5
+            let interval: TimeInterval = 0.01
+            let totalSteps = Int(fadeDuration / interval)
+            let volumeDecrement = audio.volume / Float(totalSteps)
+
+            Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+                if player.volume > volumeDecrement {
+                    player.volume -= volumeDecrement
                 } else {
                     timer.invalidate()
                     player.pause()
-                    player.volume = audio.volume // Restore target volume
+                    player.volume = audio.volume // restore for next time
                     self.playerControls.updatePlayButton(isPlaying: false)
                     self.playerControls.setFadeButtonTitle("Fade In")
                     self.playerControls.nowPlayingText("Paused after fade")
                 }
             }
-            
+
         } else {
-            // Fade In from Pause
+            // Fade in to resume
             guard let player = audio.player else { return }
-            player.volume = 0.0
+
+            player.volume = 0
             player.play()
             self.playerControls.updatePlayButton(isPlaying: true)
             self.playerControls.setFadeButtonTitle("Fade Out")
-            
-            Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { timer in
-                if audio.volume < 1.0 {
-                    audio.volume += 0.05
-                    player.volume = audio.volume
+
+            let fadeTarget: Float = audio.volume
+            let fadeStep: Float = 0.01
+            let interval: TimeInterval = 0.01
+            let totalSteps = Int(fadeTarget / fadeStep)
+
+            Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
+                if player.volume < fadeTarget - fadeStep {
+                    player.volume += fadeStep
                 } else {
-                    audio.volume = 1.0
-                    player.volume = 1.0
+                    player.volume = fadeTarget
                     timer.invalidate()
                 }
             }
         }
     }
+
 }
 

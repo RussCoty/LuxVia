@@ -58,10 +58,18 @@ class PlayerControlsView: UIView {
         configureImageButton(nextButton, imageName: "button_next")
         configureImageButton(previousButton, imageName: "button_prev")
 
+        playPauseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        previousButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        nextButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
         fadeButton.setTitle("Fade", for: .normal)
         fadeButton.translatesAutoresizingMaskIntoConstraints = false
         fadeButton.tintColor = .black
+        fadeButton.setTitleColor(.black, for: .normal)
         fadeButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
+        fadeButton.backgroundColor = UIColor.systemGray5
+        fadeButton.layer.cornerRadius = 8
+        fadeButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
 
         playPauseButton.addTarget(self, action: #selector(playPauseTapped), for: .touchUpInside)
         nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
@@ -82,9 +90,10 @@ class PlayerControlsView: UIView {
         let transportStack = UIStackView(arrangedSubviews: [previousButton, playPauseButton, nextButton])
         transportStack.axis = .horizontal
         transportStack.distribution = .fillEqually
-        transportStack.spacing = 12
+        transportStack.spacing = 16
         transportStack.translatesAutoresizingMaskIntoConstraints = false
 
+        // Add all subviews
         addSubview(nowPlayingLabel)
         addSubview(transportStack)
         addSubview(fadeButton)
@@ -92,6 +101,7 @@ class PlayerControlsView: UIView {
         addSubview(progressSlider)
         addSubview(timeLabel)
 
+        // Layout constraints
         NSLayoutConstraint.activate([
             nowPlayingLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             nowPlayingLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
@@ -100,14 +110,13 @@ class PlayerControlsView: UIView {
             transportStack.topAnchor.constraint(equalTo: nowPlayingLabel.bottomAnchor, constant: 8),
             transportStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             transportStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            transportStack.heightAnchor.constraint(equalToConstant: 60),
+            transportStack.heightAnchor.constraint(equalToConstant: 50),
 
             fadeButton.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 8),
-            fadeButton.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            fadeButton.widthAnchor.constraint(equalToConstant: 80),
-            fadeButton.heightAnchor.constraint(equalToConstant: 36),
+            fadeButton.centerXAnchor.constraint(equalTo: centerXAnchor),
+            fadeButton.widthAnchor.constraint(equalToConstant: 120),
 
-            volumeSlider.topAnchor.constraint(equalTo: fadeButton.bottomAnchor, constant: 8),
+            volumeSlider.topAnchor.constraint(equalTo: fadeButton.bottomAnchor, constant: 12),
             volumeSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             volumeSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
@@ -138,7 +147,7 @@ class PlayerControlsView: UIView {
         context.setFillColor(color.cgColor)
 
         let startHeight: CGFloat = 0
-        let endHeight: CGFloat = height * 2
+        let endHeight: CGFloat = height * 4
 
         context.beginPath()
         context.move(to: CGPoint(x: 0, y: height))
@@ -197,5 +206,4 @@ class PlayerControlsView: UIView {
     func setFadeButtonTitle(_ title: String) {
         fadeButton.setTitle(title, for: .normal)
     }
-
 }

@@ -49,13 +49,13 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         // 🔷 Highlight if cued or playing
         let audio = AudioPlayerManager.shared
         if audio.currentSource == .playlist && audio.currentTrackName == trackName {
-            cell.textLabel?.textColor = .systemBlue
+            cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
             cell.accessoryType = .checkmark
         } else if audio.isTrackCued && audio.cuedSource == .playlist && audio.cuedTrackName == trackName {
-            cell.textLabel?.textColor = .systemGray
+            cell.backgroundColor = UIColor.systemGray.withAlphaComponent(0.2)
             cell.accessoryType = .detailDisclosureButton
         } else {
-            cell.textLabel?.textColor = .label
+            cell.backgroundColor = .clear
             cell.accessoryType = .none
         }
 
