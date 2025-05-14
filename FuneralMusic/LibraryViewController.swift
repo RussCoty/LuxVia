@@ -2,26 +2,50 @@ import UIKit
 
 class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-    let tableView = UITableView()
-    var tracks: [String] = []
-    var selectedTrackIndex: Int? = nil
+    let tableView = UITableView(frame: .zero, style: .insetGrouped)
+
+    var groupedTracks: [String: [String]] = [:]
+    var sortedFolders: [String] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Music Library"
 
-        loadTrackList()
+        loadGroupedTrackList()
         setupUI()
     }
 
-    func loadTrackList() {
-        if let audioFolderURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
-            let allFiles = try? FileManager.default.contentsOfDirectory(at: audioFolderURL, includingPropertiesForKeys: nil)
-            self.tracks = allFiles?
-                .filter { $0.pathExtension.lowercased() == "mp3" }
-                .map { $0.deletingPathExtension().lastPathComponent } ?? []
+    func loadGroupedTrackList() {
+        guard let baseURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") else {
+            print("❌ Audio folder not found")
+            return
         }
+
+        var tempGroups: [String: [String]] = [:]
+
+        if let enumerator = FileManager.default.enumerator(at: baseURL, includingPropertiesForKeys: nil) {
+            for case let fileURL as URL in enumerator {
+                if fileURL.pathExtension.lowercased() == "mp3" {
+                    let relativePath = fileURL.path.replacingOccurrences(of: baseURL.path + "/", with: "")
+                    let components = relativePath.components(separatedBy: "/")
+                    let folder = components.dropLast().joined(separator: "/").isEmpty ? "Root" : components.dropLast().joined(separator: "/")
+                    let name = fileURL.deletingPathExtension().lastPathComponent
+
+                    tempGroups[folder, default: []].append(name)
+                }
+            }
+        }
+
+        // Sort filenames and section names
+        for (folder, tracks) in tempGroups {
+            tempGroups[folder] = tracks.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+        }
+
+        self.groupedTracks = tempGroups
+        self.sortedFolders = tempGroups.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+
+        tableView.reloadData()
     }
 
     func setupUI() {
@@ -41,26 +65,35 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
     // MARK: UITableViewDataSource
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return sortedFolders.count
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return tracks.count
+        let folder = sortedFolders[section]
+        return groupedTracks[folder]?.count ?? 0
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        return sortedFolders[section]
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let folder = sortedFolders[indexPath.section]
+        let track = groupedTracks[folder]?[indexPath.row] ?? ""
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
-        let trackName = tracks[indexPath.row]
-        cell.textLabel?.text = trackName.capitalized
+        cell.textLabel?.text = track.replacingOccurrences(of: "_", with: " ").capitalized
 
         let addButton = UIButton(type: .contactAdd)
-        addButton.tag = indexPath.row
+        addButton.tag = indexPath.section * 1000 + indexPath.row
         addButton.addTarget(self, action: #selector(addToPlaylistTapped(_:)), for: .touchUpInside)
         cell.accessoryView = addButton
 
-        // 🔷 Highlight if cued or playing
         let audio = AudioPlayerManager.shared
-        if audio.currentSource == .library && audio.currentTrackName == trackName {
+        if audio.currentSource == .library && audio.currentTrackName == track {
             cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
             cell.accessoryType = .checkmark
-        } else if audio.isTrackCued && audio.cuedSource == .library && audio.cuedTrackName == trackName {
+        } else if audio.isTrackCued && audio.cuedSource == .library && audio.cuedTrackName == track {
             cell.backgroundColor = UIColor.systemGray.withAlphaComponent(0.2)
             cell.accessoryType = .detailDisclosureButton
         } else {
@@ -74,22 +107,23 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     // MARK: UITableViewDelegate
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let selectedTrack = tracks[indexPath.row]
-        AudioPlayerManager.shared.cueTrack(named: selectedTrack, source: .library)
+        let folder = sortedFolders[indexPath.section]
+        let track = groupedTracks[folder]?[indexPath.row] ?? ""
+        AudioPlayerManager.shared.cueTrack(named: track, source: .library)
 
-        let displayName = selectedTrack.replacingOccurrences(of: "_", with: " ").capitalized
-        PlayerControlsView.shared?.nowPlayingText("Cued: \(displayName)")
-
+        PlayerControlsView.shared?.nowPlayingText("Cued: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
         tableView.reloadData()
     }
 
-
+    // MARK: Add to Playlist
 
     @objc func addToPlaylistTapped(_ sender: UIButton) {
-        let track = tracks[sender.tag]
+        let section = sender.tag / 1000
+        let row = sender.tag % 1000
+        let folder = sortedFolders[section]
+        guard let track = groupedTracks[folder]?[row] else { return }
 
         if SharedPlaylistManager.shared.playlist.contains(track) {
-            // Confirm duplicate addition
             let alert = UIAlertController(
                 title: "Add Again?",
                 message: "\"\(track.replacingOccurrences(of: "_", with: " ").capitalized)\" is already in the playlist. Add it again?",
@@ -106,6 +140,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             showConfirmationBanner(for: track)
         }
     }
+
     func showConfirmationBanner(for track: String) {
         let banner = UILabel()
         banner.text = "“\(track.replacingOccurrences(of: "_", with: " ").capitalized)” added to playlist ✅"
@@ -123,13 +158,11 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
         view.addSubview(banner)
 
-        // Animate in
-        UIView.animate(withDuration: 0.35, animations: {
+        UIView.animate(withDuration: 0.35) {
             banner.alpha = 1.0
             banner.frame.origin.y -= (bannerHeight + 100)
-        })
+        }
 
-        // Animate out after delay
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
             UIView.animate(withDuration: 0.35, animations: {
                 banner.alpha = 0.0
@@ -139,5 +172,4 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             })
         }
     }
-
 }
