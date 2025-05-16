@@ -5,6 +5,7 @@ import WebKit
 class LoginViewController: UIViewController, WKNavigationDelegate {
 
     var webView: WKWebView!
+    var loginCheckTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,51 +23,78 @@ class LoginViewController: UIViewController, WKNavigationDelegate {
         }
     }
 
-    // MARK: - Detect login completion
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        if webView.url?.absoluteString.contains("/dashboard") == true {
-            UserDefaults.standard.set(true, forKey: "isLoggedIn")
-            fetchMembershipStatusAfterLogin()
+        startLoginPolling()
+    }
+
+    func startLoginPolling() {
+        loginCheckTimer?.invalidate()
+        loginCheckTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { _ in
+            self.fetchMembershipStatusAfterLogin()
         }
     }
 
-    // MARK: - Fetch Membership Using Session Cookies
+    func stopLoginPolling() {
+        loginCheckTimer?.invalidate()
+        loginCheckTimer = nil
+    }
+
     func fetchMembershipStatusAfterLogin() {
         guard let url = URL(string: "https://funeralmusic.co.uk/wp-json/funeralmusic/v1/membership-status") else { return }
 
         webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            let config = URLSessionConfiguration.default
-            let session = URLSession(configuration: config)
-
             for cookie in cookies {
+                print("🍪 WKWebView Cookie: \(cookie.name)=\(cookie.value)")
                 HTTPCookieStorage.shared.setCookie(cookie)
             }
 
             var request = URLRequest(url: url)
             request.httpMethod = "GET"
 
-            let task = session.dataTask(with: request) { data, _, error in
-                guard let data = data,
-                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let isMember = json["is_member"] as? Bool else {
-                    print("❌ Could not parse membership status: \(error?.localizedDescription ?? "unknown error")")
-                    DispatchQueue.main.async {
-                        self.showMainApp(isMember: false)
-                    }
+            let config = URLSessionConfiguration.default
+            config.httpCookieStorage = HTTPCookieStorage.shared
+            let session = URLSession(configuration: config)
+
+            let task = session.dataTask(with: request) { data, response, error in
+                if let error = error {
+                    print("❌ Request error: \(error.localizedDescription)")
                     return
                 }
 
-                print("✅ Membership status: \(isMember)")
-                DispatchQueue.main.async {
-                    self.showMainApp(isMember: isMember)
+                guard let data = data else {
+                    print("❌ No data received from membership status check")
+                    return
+                }
+
+                if let responseText = String(data: data, encoding: .utf8) {
+                    print("📦 Raw response: \(responseText)")
+                }
+
+                guard let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any] else {
+                    print("❌ JSON parsing failed")
+                    return
+                }
+
+                let isLoggedIn = json["is_logged_in"] as? Bool ?? false
+                let isMember = json["is_member"] as? Bool ?? false
+
+                print("✅ Parsed: isLoggedIn=\(isLoggedIn), isMember=\(isMember)")
+
+                if isLoggedIn {
+                    self.stopLoginPolling()
+                    DispatchQueue.main.async {
+                        self.finalizeLoginState(isMember: isMember)
+                    }
                 }
             }
+
             task.resume()
         }
     }
 
-    // MARK: - Proceed to App
-    func showMainApp(isMember: Bool) {
+
+    func finalizeLoginState(isMember: Bool) {
+        UserDefaults.standard.set(true, forKey: "isLoggedIn")
         UserDefaults.standard.set(isMember, forKey: "isMember")
         let sceneDelegate = UIApplication.shared.connectedScenes
             .first?.delegate as? SceneDelegate

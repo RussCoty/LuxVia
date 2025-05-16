@@ -4,13 +4,31 @@
 //
 //  Created by Russell Cottier on 05/05/2025.
 //
+import UIKit
+
+class SessionManager {
+    static func logout() {
+        KeychainHelper.standard.delete(service: "jwt", account: "funeralmusic")
+        UserDefaults.standard.set(false, forKey: "isLoggedIn")
+        UserDefaults.standard.set(false, forKey: "isMember")
+
+        if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
+            let loginVC = NativeLoginViewController()
+            sceneDelegate.window?.rootViewController = UINavigationController(rootViewController: loginVC)
+            sceneDelegate.window?.makeKeyAndVisible()
+        }
+    }
+}
+
+
 
 import UIKit
+import SafariServices
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-    
+
     func scene(_ scene: UIScene,
                willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
@@ -18,13 +36,27 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
         let window = UIWindow(windowScene: windowScene)
+        self.window = window
+
+        let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")
+
+        if isLoggedIn {
+            showMainApp()
+        } else {
+            let loginVC = NativeLoginViewController()
+            window.rootViewController = UINavigationController(rootViewController: loginVC)
+            window.makeKeyAndVisible()
+        }
+    }
+
+    func showMainApp() {
         let tabBarController = UITabBarController()
 
         // About tab (WebView)
-        let webVC = ViewController()
-        webVC.tabBarItem = UITabBarItem(title: "About", image: nil, tag: 0)
+        let aboutVC = ViewController()
+        aboutVC.tabBarItem = UITabBarItem(title: "About", image: nil, tag: 0)
 
-        // Music tab using new architecture
+        // Music tab (Navigation Controller)
         let musicTab = UINavigationController(rootViewController: MainViewController())
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
@@ -32,22 +64,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let orderVC = OrderOfServiceViewController()
         orderVC.tabBarItem = UITabBarItem(title: "Order of Service", image: nil, tag: 2)
 
-        tabBarController.viewControllers = [webVC, musicTab, orderVC]
+        tabBarController.viewControllers = [aboutVC, musicTab, orderVC]
+
         let biggerFont = UIFont.systemFont(ofSize: 14, weight: .bold)
         UITabBarItem.appearance().setTitleTextAttributes([.font: biggerFont], for: .normal)
 
-        window.rootViewController = tabBarController
-        self.window = window
-        window.makeKeyAndVisible()
+        window?.rootViewController = tabBarController
+        window?.makeKeyAndVisible()
 
         showGDPRNoticeIfNeeded()
     }
-
-    func sceneDidDisconnect(_ scene: UIScene) { }
-    func sceneDidBecomeActive(_ scene: UIScene) { }
-    func sceneWillResignActive(_ scene: UIScene) { }
-    func sceneWillEnterForeground(_ scene: UIScene) { }
-    func sceneDidEnterBackground(_ scene: UIScene) { }
 
     func showGDPRNoticeIfNeeded() {
         let hasSeenNotice = UserDefaults.standard.bool(forKey: "hasSeenGDPRNotice")
@@ -66,25 +92,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    func showMainApp() {
-        let tabBarController = UITabBarController()
-
-        let aboutVC = ViewController()
-        aboutVC.tabBarItem = UITabBarItem(title: "About", image: nil, tag: 0)
-
-        let musicTab = MusicTabViewController()
-        musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
-
-        let orderVC = OrderOfServiceViewController()
-        orderVC.tabBarItem = UITabBarItem(title: "Order of Service", image: nil, tag: 2)
-
-        tabBarController.viewControllers = [aboutVC, musicTab, orderVC]
-
-        window?.rootViewController = tabBarController
-        window?.makeKeyAndVisible()
-
-        showGDPRNoticeIfNeeded()
-    }
-
+    // Other lifecycle methods
+    func sceneDidDisconnect(_ scene: UIScene) { }
+    func sceneDidBecomeActive(_ scene: UIScene) { }
+    func sceneWillResignActive(_ scene: UIScene) { }
+    func sceneWillEnterForeground(_ scene: UIScene) { }
+    func sceneDidEnterBackground(_ scene: UIScene) { }
 }
-

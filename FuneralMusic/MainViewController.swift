@@ -10,8 +10,6 @@ class MainViewController: UIViewController {
     private lazy var playlistVC = PlaylistViewController()
     private var currentTrackIndex = 0
 
-    private let statusLabel = UILabel() // ✅ Login status
-
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -20,9 +18,7 @@ class MainViewController: UIViewController {
         setupUI()
         setupPlayerCallbacks()
         showLibrary()
-
-        setupStatusLabel()
-        updateLoginStatusLabel()
+        setupLogoutButton()
     }
 
     private func setupUI() {
@@ -50,6 +46,30 @@ class MainViewController: UIViewController {
         segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
+    }
+
+    private func setupLogoutButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Logout",
+            style: .plain,
+            target: self,
+            action: #selector(logoutTapped)
+        )
+    }
+
+    @objc private func logoutTapped() {
+        let alert = UIAlertController(
+            title: "Logout",
+            message: "Are you sure you want to log out?",
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
+            SessionManager.logout()
+        })
+
+        present(alert, animated: true, completion: nil)
     }
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
@@ -226,34 +246,5 @@ class MainViewController: UIViewController {
                 }
             }
         }
-    }
-
-    // MARK: - Login Status Label
-
-    private func setupStatusLabel() {
-        statusLabel.text = "Guest"
-        statusLabel.font = .systemFont(ofSize: 13, weight: .semibold)
-        statusLabel.textColor = .white
-        statusLabel.backgroundColor = .systemGray
-        statusLabel.layer.cornerRadius = 8
-        statusLabel.layer.masksToBounds = true
-        statusLabel.textAlignment = .center
-        statusLabel.translatesAutoresizingMaskIntoConstraints = false
-        statusLabel.alpha = 0.9
-
-        view.addSubview(statusLabel)
-
-        NSLayoutConstraint.activate([
-            statusLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
-            statusLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
-            statusLabel.heightAnchor.constraint(equalToConstant: 26),
-            statusLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 80)
-        ])
-    }
-
-    func updateLoginStatusLabel() {
-        let isMember = UserDefaults.standard.bool(forKey: "isMember")
-        statusLabel.text = isMember ? "Member" : "Guest"
-        statusLabel.backgroundColor = isMember ? .systemGreen : .systemGray
     }
 }

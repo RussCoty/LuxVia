@@ -35,7 +35,6 @@ class ViewController: UIViewController, WKNavigationDelegate {
         config.userContentController = contentController
 
         webView = WKWebView(frame: self.view.bounds, configuration: config)
-        
         webView.navigationDelegate = self
         webView.customUserAgent = "FuneralMusicApp"
         view.addSubview(webView)
@@ -80,44 +79,22 @@ class ViewController: UIViewController, WKNavigationDelegate {
         }
     }
 
-    // MARK: - WebView Login Detection
+    // MARK: - WebView Callback
 
     func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
-        if webView.url?.absoluteString.contains("/dashboard") == true {
-            print("✅ Login detected in About tab")
-            checkMembershipStatusFromWebView()
-        }
-    }
+        print("📡 WebView finished loading, checking for nonce...")
 
-    // MARK: - Fetch Membership Status Using Cookies
+        self.checkMembershipStatusUsingNonceFromPage()
 
-    func checkMembershipStatusFromWebView() {
-        guard let url = URL(string: "https://funeralmusic.co.uk/wp-json/funeralmusic/v1/membership-status") else { return }
-
-        webView.configuration.websiteDataStore.httpCookieStore.getAllCookies { cookies in
-            let config = URLSessionConfiguration.default
-            let session = URLSession(configuration: config)
-
-            for cookie in cookies {
-                HTTPCookieStorage.shared.setCookie(cookie)
+        webView.evaluateJavaScript("document.documentElement.outerHTML.toString()") { result, error in
+            if let html = result as? String {
+                print("📄 PAGE HTML:\n\(html)")
+            } else if let error = error {
+                print("❌ Error evaluating HTML: \(error.localizedDescription)")
             }
-
-            let request = URLRequest(url: url)
-
-            session.dataTask(with: request) { data, _, _ in
-                guard let data = data,
-                      let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-                      let isMember = json["is_member"] as? Bool else {
-                    print("❌ Could not fetch or parse membership status")
-                    return
-                }
-
-                print("✅ Membership confirmed: \(isMember)")
-                UserDefaults.standard.set(isMember, forKey: "isMember")
-                self.updateLoginStatusLabel()
-            }.resume()
         }
     }
+
     // MARK: - Membership: Nonce → API
 
     func checkMembershipStatusUsingNonceFromPage() {
@@ -176,6 +153,4 @@ class ViewController: UIViewController, WKNavigationDelegate {
             }
         }.resume()
     }
-
 }
-
