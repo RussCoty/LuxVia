@@ -6,11 +6,21 @@ class AudioPlayerManager {
     private init() {}
 
     var player: AVAudioPlayer?
+    private var playbackLimitTimer: Timer?
+    private var fadeTimer: Timer?
 
     enum AudioSource {
         case none
         case library
         case playlist
+    }
+
+    var isPaused: Bool {
+        return player?.isPlaying == false && player != nil
+    }
+
+    var isStopped: Bool {
+        return player == nil
     }
 
     var currentSource: AudioSource = .none
@@ -25,7 +35,6 @@ class AudioPlayerManager {
     var cuedTrackName: String?
     var cuedSource: AudioSource = .none
     private var cuedTrackURL: URL?
-    private var fadeTimer: Timer?
 
     var isTrackCued: Bool {
         return cuedTrackURL != nil
@@ -56,6 +65,8 @@ class AudioPlayerManager {
             cuedTrackName = nil
             cuedTrackURL = nil
             cuedSource = .none
+
+            maybeStartPlaybackLimiter()
         } catch {
             print("❌ Error playing audio: \(error)")
         }
@@ -63,10 +74,12 @@ class AudioPlayerManager {
 
     func pause() {
         player?.pause()
+        playbackLimitTimer?.invalidate()
     }
 
     func resume() {
         player?.play()
+        maybeStartPlaybackLimiter()
     }
 
     func stop() {
@@ -75,6 +88,7 @@ class AudioPlayerManager {
         currentTrackName = nil
         cuedTrackURL = nil
         cuedTrackName = nil
+        playbackLimitTimer?.invalidate()
     }
 
     func seek(to time: TimeInterval) {
@@ -84,7 +98,7 @@ class AudioPlayerManager {
     // MARK: - Cue a Track Without Interrupting Playback
 
     func cueTrack(named name: String, source: AudioSource) {
-        guard let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") else {
+        guard let url = findMP3(named: name) else {
             print("❌ Could not find track to cue: \(name)")
             return
         }
@@ -95,6 +109,22 @@ class AudioPlayerManager {
 
         print("🎵 Cued track: \(name)")
         PlayerControlsView.shared?.nowPlayingText("Ready: \(name.replacingOccurrences(of: "_", with: " ").capitalized)")
+    }
+
+    // MARK: - Search Audio Directory Recursively
+
+    private func findMP3(named name: String) -> URL? {
+        guard let audioFolder = Bundle.main.resourceURL?.appendingPathComponent("Audio") else { return nil }
+
+        if let enumerator = FileManager.default.enumerator(at: audioFolder, includingPropertiesForKeys: nil) {
+            for case let fileURL as URL in enumerator {
+                if fileURL.pathExtension.lowercased() == "mp3",
+                   fileURL.deletingPathExtension().lastPathComponent == name {
+                    return fileURL
+                }
+            }
+        }
+        return nil
     }
 
     // MARK: - Play the Cued Track
@@ -111,7 +141,7 @@ class AudioPlayerManager {
         let playNow = {
             self.play(url: url)
             self.currentSource = self.cuedSource
-            PlayerControlsView.shared?.nowPlayingText("Now Playing: \(displayName)") // ✅ Add this line
+            PlayerControlsView.shared?.nowPlayingText("Now Playing: \(displayName)")
             PlayerControlsView.shared?.updatePlayButton(isPlaying: true)
         }
 
@@ -124,8 +154,7 @@ class AudioPlayerManager {
         }
     }
 
-
-    // MARK: - Fade Out Helper
+    // MARK: - Fade Out Current Track
 
     private func startFadeOut(completion: @escaping () -> Void) {
         fadeTimer?.invalidate()
@@ -141,10 +170,29 @@ class AudioPlayerManager {
             } else {
                 timer.invalidate()
                 player.stop()
-                player.volume = self.volume // Restore user volume after fade
+                player.volume = self.volume
                 completion()
             }
         }
     }
-}
 
+    // MARK: - 20 Second Limiter for Non-Members
+
+    private func maybeStartPlaybackLimiter() {
+        playbackLimitTimer?.invalidate()
+
+        let isMember = UserDefaults.standard.bool(forKey: "isMember")
+        if !isMember {
+            playbackLimitTimer = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] _ in
+                guard let self = self else { return }
+                if self.isPlaying {
+                    self.startFadeOut {
+                        self.stop()
+                        PlayerControlsView.shared?.nowPlayingText("🔒 Limited to 20 seconds")
+                        PlayerControlsView.shared?.updatePlayButton(isPlaying: false)
+                    }
+                }
+            }
+        }
+    }
+}

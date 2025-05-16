@@ -1,19 +1,56 @@
 import UIKit
 
-class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
+    let searchController = UISearchController(searchResultsController: nil)
 
     var groupedTracks: [String: [String]] = [:]
     var sortedFolders: [String] = []
+    var collapsedSections: Set<String> = []
+
+    var filteredGroupedTracks: [String: [String]] = [:]
+    var filteredFolders: [String] = []
+
+    var isFiltering: Bool {
+        return !(searchController.searchBar.text?.isEmpty ?? true)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Music Library"
 
+        setupSearch()
         loadGroupedTrackList()
         setupUI()
+    }
+
+    func setupSearch() {
+        searchController.searchResultsUpdater = self
+        searchController.obscuresBackgroundDuringPresentation = false
+        searchController.searchBar.placeholder = "Search Tracks"
+        navigationItem.searchController = searchController
+        definesPresentationContext = true
+    }
+
+    func updateSearchResults(for searchController: UISearchController) {
+        let query = searchController.searchBar.text?.lowercased() ?? ""
+        if query.isEmpty {
+            filteredGroupedTracks = [:]
+            filteredFolders = []
+        } else {
+            var temp: [String: [String]] = [:]
+            for (folder, tracks) in groupedTracks {
+                let matches = tracks.filter { $0.lowercased().contains(query) }
+                if !matches.isEmpty {
+                    temp[folder] = matches
+                }
+            }
+            filteredGroupedTracks = temp
+            filteredFolders = temp.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+        }
+        tableView.reloadData()
     }
 
     func loadGroupedTrackList() {
@@ -29,22 +66,19 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
                 if fileURL.pathExtension.lowercased() == "mp3" {
                     let relativePath = fileURL.path.replacingOccurrences(of: baseURL.path + "/", with: "")
                     let components = relativePath.components(separatedBy: "/")
-                    let folder = components.dropLast().joined(separator: "/").isEmpty ? "Root" : components.dropLast().joined(separator: "/")
+                    let folder = components.dropLast().joined(separator: "/").isEmpty ? " " : components.dropLast().joined(separator: "/")
                     let name = fileURL.deletingPathExtension().lastPathComponent
-
                     tempGroups[folder, default: []].append(name)
                 }
             }
         }
 
-        // Sort filenames and section names
         for (folder, tracks) in tempGroups {
             tempGroups[folder] = tracks.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
         }
 
-        self.groupedTracks = tempGroups
-        self.sortedFolders = tempGroups.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
-
+        groupedTracks = tempGroups
+        sortedFolders = tempGroups.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
         tableView.reloadData()
     }
 
@@ -52,7 +86,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.dataSource = self
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
-
         view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
@@ -63,24 +96,72 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
     }
 
-    // MARK: UITableViewDataSource
-
     func numberOfSections(in tableView: UITableView) -> Int {
-        return sortedFolders.count
+        return isFiltering ? filteredFolders.count : sortedFolders.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
+        if collapsedSections.contains(folder) && !isFiltering {
+            return 0
+        }
+        return (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?.count ?? 0
+    }
+
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
+        let isCollapsed = collapsedSections.contains(folder)
+        let icon = isCollapsed && !isFiltering ? "▶︎" : "▼"
+
+        let label = UILabel()
+        label.text = "\(icon) \(folder)"
+        label.font = .boldSystemFont(ofSize: 16)
+
+        let tapView = UIView()
+        tapView.backgroundColor = .clear
+        tapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleSection(_:))))
+        tapView.tag = section
+
+        let container = UIView()
+        container.addSubview(label)
+        container.addSubview(tapView)
+        label.translatesAutoresizingMaskIntoConstraints = false
+        tapView.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
+            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
+            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 4),
+            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
+
+            tapView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            tapView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            tapView.topAnchor.constraint(equalTo: container.topAnchor),
+            tapView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
+        ])
+        return container
+    }
+
+    @objc func toggleSection(_ sender: UITapGestureRecognizer) {
+        guard let section = sender.view?.tag, !isFiltering else { return }
         let folder = sortedFolders[section]
-        return groupedTracks[folder]?.count ?? 0
+
+        if collapsedSections.contains(folder) {
+            collapsedSections.remove(folder)
+        } else {
+            collapsedSections.insert(folder)
+        }
+        tableView.reloadSections(IndexSet(integer: section), with: .automatic)
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return sortedFolders[section]
+        return nil
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let folder = sortedFolders[indexPath.section]
-        let track = groupedTracks[folder]?[indexPath.row] ?? ""
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] ?? ""
+
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
         cell.textLabel?.text = track.replacingOccurrences(of: "_", with: " ").capitalized
 
@@ -104,24 +185,20 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         return cell
     }
 
-    // MARK: UITableViewDelegate
-
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let folder = sortedFolders[indexPath.section]
-        let track = groupedTracks[folder]?[indexPath.row] ?? ""
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] ?? ""
         AudioPlayerManager.shared.cueTrack(named: track, source: .library)
 
         PlayerControlsView.shared?.nowPlayingText("Cued: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
         tableView.reloadData()
     }
 
-    // MARK: Add to Playlist
-
     @objc func addToPlaylistTapped(_ sender: UIButton) {
         let section = sender.tag / 1000
         let row = sender.tag % 1000
-        let folder = sortedFolders[section]
-        guard let track = groupedTracks[folder]?[row] else { return }
+        let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
+        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[row] else { return }
 
         if SharedPlaylistManager.shared.playlist.contains(track) {
             let alert = UIAlertController(
@@ -131,45 +208,12 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             )
             alert.addAction(UIAlertAction(title: "Add Again", style: .default) { _ in
                 SharedPlaylistManager.shared.playlist.append(track)
-                self.showConfirmationBanner(for: track)
             })
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             present(alert, animated: true)
         } else {
             SharedPlaylistManager.shared.playlist.append(track)
-            showConfirmationBanner(for: track)
-        }
-    }
-
-    func showConfirmationBanner(for track: String) {
-        let banner = UILabel()
-        banner.text = "“\(track.replacingOccurrences(of: "_", with: " ").capitalized)” added to playlist ✅"
-        banner.textColor = .white
-        banner.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.95)
-        banner.font = UIFont.boldSystemFont(ofSize: 14)
-        banner.textAlignment = .center
-        banner.numberOfLines = 2
-        banner.layer.cornerRadius = 10
-        banner.layer.masksToBounds = true
-
-        let bannerHeight: CGFloat = 50
-        banner.frame = CGRect(x: 40, y: view.frame.height, width: view.frame.width - 80, height: bannerHeight)
-        banner.alpha = 0
-
-        view.addSubview(banner)
-
-        UIView.animate(withDuration: 0.35) {
-            banner.alpha = 1.0
-            banner.frame.origin.y -= (bannerHeight + 100)
-        }
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.8) {
-            UIView.animate(withDuration: 0.35, animations: {
-                banner.alpha = 0.0
-                banner.frame.origin.y += 40
-            }, completion: { _ in
-                banner.removeFromSuperview()
-            })
         }
     }
 }
+

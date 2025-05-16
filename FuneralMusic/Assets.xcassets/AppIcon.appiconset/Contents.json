@@ -1,21 +1,25 @@
 {
   "images" : [
     {
+      "filename" : "LUMA_Launch 2.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "20x20"
     },
     {
+      "filename" : "LUMA_Launch 3.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "20x20"
     },
     {
+      "filename" : "LUMA_Launch 4.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "29x29"
     },
     {
+      "filename" : "LUMA_Launch 5.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "29x29"
@@ -31,11 +35,13 @@
       "size" : "40x40"
     },
     {
+      "filename" : "LUMA_Launch 6.png",
       "idiom" : "iphone",
       "scale" : "2x",
       "size" : "60x60"
     },
     {
+      "filename" : "LUMA_Launch 7.png",
       "idiom" : "iphone",
       "scale" : "3x",
       "size" : "60x60"
@@ -71,21 +77,25 @@
       "size" : "40x40"
     },
     {
+      "filename" : "LUMA_Launch 8.png",
       "idiom" : "ipad",
       "scale" : "1x",
       "size" : "76x76"
     },
     {
+      "filename" : "LUMA_Launch 9.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "76x76"
     },
     {
+      "filename" : "LUMA_Launch 1.png",
       "idiom" : "ipad",
       "scale" : "2x",
       "size" : "83.5x83.5"
     },
     {
+      "filename" : "LUMA_Launch.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
