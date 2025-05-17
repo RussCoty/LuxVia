@@ -11,16 +11,17 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
     private let infoLabel = UILabel()
     private let shareButton = UIButton(type: .system)
     private let previewButton = UIButton(type: .system)
-    private let toastLabel = UILabel()
+    private let toastLabel = PaddedLabel()
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Order of Service"
+        title = "Stationary"
         view.backgroundColor = .white
 
         setupWebView()
         setupInfoBar()
         setupToast()
+        setupUserMenu()
         layoutViews()
 
         loadOrderForm()
@@ -72,14 +73,36 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
 
     private func setupToast() {
         toastLabel.translatesAutoresizingMaskIntoConstraints = false
-        toastLabel.backgroundColor = UIColor.black.withAlphaComponent(0.8)
+        toastLabel.backgroundColor = UIColor(red: 0.27, green: 0.84, blue: 0.47, alpha: 1.0)
         toastLabel.textColor = .white
         toastLabel.textAlignment = .center
-        toastLabel.font = .systemFont(ofSize: 13, weight: .medium)
-        toastLabel.layer.cornerRadius = 8
+        toastLabel.font = .systemFont(ofSize: 15, weight: .semibold)
+        toastLabel.layer.cornerRadius = 18
         toastLabel.clipsToBounds = true
         toastLabel.alpha = 0
         view.addSubview(toastLabel)
+    }
+
+    private func setupUserMenu() {
+        let menuButton = UIBarButtonItem(title: "⋯", style: .plain, target: self, action: #selector(showUserMenu))
+        navigationItem.rightBarButtonItem = menuButton
+    }
+
+    @objc private func showUserMenu() {
+        let status = AuthManager.shared.isLoggedIn ? "Member: Active" : "Guest"
+
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: status, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive) { _ in
+            AuthManager.shared.logout()
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+
+        present(alert, animated: true)
     }
 
     private func layoutViews() {
@@ -104,9 +127,7 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
             shareButton.centerYAnchor.constraint(equalTo: infoBar.centerYAnchor),
 
             toastLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            toastLabel.bottomAnchor.constraint(equalTo: infoBar.topAnchor, constant: -8),
-            toastLabel.heightAnchor.constraint(equalToConstant: 32),
-            toastLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 180)
+            toastLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor)
         ])
     }
 
@@ -167,13 +188,16 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
     private func showToast(_ message: String) {
         toastLabel.text = message
         toastLabel.alpha = 0
-        UIView.animate(withDuration: 0.3) {
-            self.toastLabel.alpha = 1
-        }
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            UIView.animate(withDuration: 0.3) {
-                self.toastLabel.alpha = 0
-            }
+        toastLabel.transform = CGAffineTransform(translationX: 0, y: 20)
+
+        UIView.animate(withDuration: 0.25, animations: {
+            self.toastLabel.alpha = 1.0
+            self.toastLabel.transform = .identity
+        }) { _ in
+            UIView.animate(withDuration: 0.25, delay: 2.0, options: .curveEaseInOut, animations: {
+                self.toastLabel.alpha = 0.0
+                self.toastLabel.transform = CGAffineTransform(translationX: 0, y: -10)
+            }, completion: nil)
         }
     }
 
@@ -203,3 +227,4 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
         return pdfLocalURL() as QLPreviewItem
     }
 }
+

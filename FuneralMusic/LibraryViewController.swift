@@ -1,9 +1,11 @@
 import UIKit
+import UniformTypeIdentifiers
 
-class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating {
+class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
+    private var importButton: UIButton!
 
     var groupedTracks: [String: [String]] = [:]
     var sortedFolders: [String] = []
@@ -24,6 +26,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         setupSearch()
         loadGroupedTrackList()
         setupUI()
+        setupImportButton()
+        setupUserMenu()
     }
 
     func setupSearch() {
@@ -54,21 +58,38 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     }
 
     func loadGroupedTrackList() {
-        guard let baseURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") else {
-            print("❌ Audio folder not found")
-            return
-        }
-
+        let fileManager = FileManager.default
         var tempGroups: [String: [String]] = [:]
 
-        if let enumerator = FileManager.default.enumerator(at: baseURL, includingPropertiesForKeys: nil) {
-            for case let fileURL as URL in enumerator {
-                if fileURL.pathExtension.lowercased() == "mp3" {
-                    let relativePath = fileURL.path.replacingOccurrences(of: baseURL.path + "/", with: "")
-                    let components = relativePath.components(separatedBy: "/")
-                    let folder = components.dropLast().joined(separator: "/").isEmpty ? " " : components.dropLast().joined(separator: "/")
-                    let name = fileURL.deletingPathExtension().lastPathComponent
-                    tempGroups[folder, default: []].append(name)
+        // Built-in audio from app bundle
+        if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
+            if let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
+                for case let fileURL as URL in enumerator {
+                    if fileURL.pathExtension.lowercased() == "mp3" {
+                        let relativePath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
+                        let components = relativePath.components(separatedBy: "/")
+                        let folder = components.dropLast().joined(separator: "/").isEmpty ? " Music" : components.dropLast().joined(separator: "/")
+                        let name = fileURL.deletingPathExtension().lastPathComponent
+                        tempGroups[folder, default: []].append(name)
+                    }
+                }
+            }
+        }
+
+        // Imported audio from documents
+        if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let importedURL = docsURL.appendingPathComponent("audio")
+            if fileManager.fileExists(atPath: importedURL.path) {
+                if let enumerator = fileManager.enumerator(at: importedURL, includingPropertiesForKeys: nil) {
+                    for case let fileURL as URL in enumerator {
+                        if fileURL.pathExtension.lowercased() == "mp3" {
+                            let relativePath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
+                            let components = relativePath.components(separatedBy: "/")
+                            let folder = components.dropLast().joined(separator: "/").isEmpty ? "Imported" : components.dropLast().joined(separator: "/")
+                            let name = fileURL.deletingPathExtension().lastPathComponent
+                            tempGroups[folder, default: []].append(name)
+                        }
+                    }
                 }
             }
         }
@@ -94,6 +115,58 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+
+    private func setupImportButton() {
+        importButton = UIButton(type: .system)
+        importButton.setTitle("Import", for: .normal)
+        importButton.backgroundColor = .systemBlue
+        importButton.setTitleColor(.white, for: .normal)
+        importButton.layer.cornerRadius = 20
+        importButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+        importButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+        importButton.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(importButton)
+
+        NSLayoutConstraint.activate([
+            importButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            importButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -76)
+        ])
+
+        importButton.addTarget(self, action: #selector(importTapped), for: .touchUpInside)
+    }
+
+    @objc private func importTapped() {
+        let mp3Type = UTType(filenameExtension: "mp3")!
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [mp3Type], asCopy: true)
+        picker.delegate = self
+        picker.allowsMultipleSelection = false
+        present(picker, animated: true)
+    }
+
+    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
+        guard let pickedURL = urls.first else { return }
+
+        let fileManager = FileManager.default
+        guard let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
+        let importedFolderURL = docsURL.appendingPathComponent("audio/imported")
+
+        do {
+            if !fileManager.fileExists(atPath: importedFolderURL.path) {
+                try fileManager.createDirectory(at: importedFolderURL, withIntermediateDirectories: true)
+            }
+
+            let destinationURL = importedFolderURL.appendingPathComponent(pickedURL.lastPathComponent)
+
+            if fileManager.fileExists(atPath: destinationURL.path) {
+                try fileManager.removeItem(at: destinationURL)
+            }
+
+            try fileManager.copyItem(at: pickedURL, to: destinationURL)
+            loadGroupedTrackList()
+        } catch {
+            print("❌ Failed to import: \(error)")
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -208,12 +281,68 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             )
             alert.addAction(UIAlertAction(title: "Add Again", style: .default) { _ in
                 SharedPlaylistManager.shared.playlist.append(track)
+                self.showToast(message: "✅ Added: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
             })
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
             present(alert, animated: true)
         } else {
             SharedPlaylistManager.shared.playlist.append(track)
+            self.showToast(message: "✅ Added: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
         }
     }
-}
 
+    func showToast(message: String, duration: TimeInterval = 2.0) {
+        let toast = PaddedLabel()
+        toast.text = message
+        toast.textAlignment = .center
+        toast.backgroundColor = UIColor(red: 0.27, green: 0.84, blue: 0.47, alpha: 1.0)
+        toast.textColor = .white
+        toast.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        toast.alpha = 0
+        toast.layer.cornerRadius = 18
+        toast.clipsToBounds = true
+        toast.translatesAutoresizingMaskIntoConstraints = false
+
+        view.addSubview(toast)
+
+        NSLayoutConstraint.activate([
+            toast.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            toast.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100)
+        ])
+
+        toast.transform = CGAffineTransform(translationX: 0, y: 20)
+        UIView.animate(withDuration: 0.25, animations: {
+            toast.alpha = 1.0
+            toast.transform = .identity
+        }) { _ in
+            UIView.animate(withDuration: 0.25, delay: duration, options: .curveEaseInOut, animations: {
+                toast.alpha = 0.0
+                toast.transform = CGAffineTransform(translationX: 0, y: -10)
+            }, completion: { _ in
+                toast.removeFromSuperview()
+            })
+        }
+    }
+
+    private func setupUserMenu() {
+        let menuButton = UIBarButtonItem(title: "⋯", style: .plain, target: self, action: #selector(showUserMenu))
+        navigationItem.rightBarButtonItem = menuButton
+    }
+
+    @objc private func showUserMenu() {
+        let status = AuthManager.shared.isLoggedIn ? "Member: Active" : "Guest"
+
+        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: status, style: .default, handler: nil))
+        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive) { _ in
+            AuthManager.shared.logout()
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+
+        present(alert, animated: true)
+    }
+}

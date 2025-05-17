@@ -54,7 +54,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // About tab (WebView)
         let aboutVC = ViewController()
-        aboutVC.tabBarItem = UITabBarItem(title: "About", image: nil, tag: 0)
+        aboutVC.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)
 
         // Music tab (Navigation Controller)
         let musicTab = UINavigationController(rootViewController: MainViewController())
@@ -62,7 +62,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Order of Service tab
         let orderVC = OrderOfServiceViewController()
-        orderVC.tabBarItem = UITabBarItem(title: "Order of Service", image: nil, tag: 2)
+        orderVC.tabBarItem = UITabBarItem(title: "Stationary", image: nil, tag: 2)
 
         tabBarController.viewControllers = [aboutVC, musicTab, orderVC]
 
