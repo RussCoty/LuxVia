@@ -25,6 +25,7 @@
 		109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109366782DD22611007127CC /* SharedPlaylistManager.swift */; };
 		1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1098512E2DD8CCCF007C685B /* PaddedLabel.swift */; };
 		109851312DD8D258007C685B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109851302DD8D258007C685B /* AuthManager.swift */; };
+		109851332DD8D490007C685B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109851322DD8D490007C685B /* BaseViewController.swift */; };
 		1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B61F2DD7744300CA3194 /* MembershipManager.swift */; };
 		1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6212DD784A000CA3194 /* NonceExtractor.swift */; };
 		1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6232DD793E600CA3194 /* KeychainHelper.swift */; };
@@ -55,6 +56,7 @@
 		109366782DD22611007127CC /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
 		1098512E2DD8CCCF007C685B /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
 		109851302DD8D258007C685B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		109851322DD8D490007C685B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
 		1099B61F2DD7744300CA3194 /* MembershipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipManager.swift; sourceTree = "<group>"; };
 		1099B6212DD784A000CA3194 /* NonceExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonceExtractor.swift; sourceTree = "<group>"; };
 		1099B6232DD793E600CA3194 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
@@ -120,6 +122,7 @@
 				10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
 				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
+				109851322DD8D490007C685B /* BaseViewController.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -203,6 +206,7 @@
 				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
 				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
+				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,

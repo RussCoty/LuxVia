@@ -130,7 +130,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
         NSLayoutConstraint.activate([
             importButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            importButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -76)
+            importButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -5)
         ])
 
         importButton.addTarget(self, action: #selector(importTapped), for: .touchUpInside)
