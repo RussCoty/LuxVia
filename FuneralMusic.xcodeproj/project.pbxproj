@@ -14,6 +14,7 @@
 		1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */; };
 		105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */; };
 		105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A92DD3BF79008AF276 /* MainViewController.swift */; };
+		105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105FC7322DD9048A00C93490 /* TopBarView.swift */; };
 		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
 		1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA52DC8EC06009398EB /* SceneDelegate.swift */; };
 		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
@@ -23,6 +24,7 @@
 		108D26BC2DD200A30049806F /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BB2DD200A30049806F /* PlaylistViewController.swift */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
 		109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109366782DD22611007127CC /* SharedPlaylistManager.swift */; };
+		10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10964F762DDA3174000BAF5A /* AudioImportManager.swift */; };
 		1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1098512E2DD8CCCF007C685B /* PaddedLabel.swift */; };
 		109851312DD8D258007C685B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109851302DD8D258007C685B /* AuthManager.swift */; };
 		109851332DD8D490007C685B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109851322DD8D490007C685B /* BaseViewController.swift */; };
@@ -43,6 +45,7 @@
 		1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LUMA_Launch.png; path = FuneralMusic/LUMA_Launch.png; sourceTree = SOURCE_ROOT; };
 		105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		105679A92DD3BF79008AF276 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		1084FAA02DC8EC06009398EB /* FuneralMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuneralMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1084FAA32DC8EC06009398EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1084FAA52DC8EC06009398EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -54,6 +57,7 @@
 		108D26BB2DD200A30049806F /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
 		109366782DD22611007127CC /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
+		10964F762DDA3174000BAF5A /* AudioImportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportManager.swift; sourceTree = "<group>"; };
 		1098512E2DD8CCCF007C685B /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
 		109851302DD8D258007C685B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
 		109851322DD8D490007C685B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
@@ -103,6 +107,7 @@
 				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
 				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				1012F6412DC9446F00F1D56F /* LibraryViewController.swift */,
+				105FC7322DD9048A00C93490 /* TopBarView.swift */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
 				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
 				1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */,
@@ -123,6 +128,7 @@
 				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
 				109851322DD8D490007C685B /* BaseViewController.swift */,
+				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -205,12 +211,14 @@
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
+				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
 				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
 				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
+				10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */,
 				1012F6442DC948A200F1D56F /* OrderOfServiceViewController.swift in Sources */,
 				10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */,
 				1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */,

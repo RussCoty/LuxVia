@@ -114,18 +114,31 @@ class AudioPlayerManager {
     // MARK: - Search Audio Directory Recursively
 
     private func findMP3(named name: String) -> URL? {
-        guard let audioFolder = Bundle.main.resourceURL?.appendingPathComponent("Audio") else { return nil }
+        let fileManager = FileManager.default
 
-        if let enumerator = FileManager.default.enumerator(at: audioFolder, includingPropertiesForKeys: nil) {
-            for case let fileURL as URL in enumerator {
-                if fileURL.pathExtension.lowercased() == "mp3",
-                   fileURL.deletingPathExtension().lastPathComponent == name {
-                    return fileURL
+        // 1. Search imported documents folder first
+        if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let importedURL = docsURL.appendingPathComponent("audio/imported/\(name).mp3")
+            if fileManager.fileExists(atPath: importedURL.path) {
+                return importedURL
+            }
+        }
+
+        // 2. Fallback to bundle search
+        if let audioFolder = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
+            if let enumerator = fileManager.enumerator(at: audioFolder, includingPropertiesForKeys: nil) {
+                for case let fileURL as URL in enumerator {
+                    if fileURL.pathExtension.lowercased() == "mp3",
+                       fileURL.deletingPathExtension().lastPathComponent == name {
+                        return fileURL
+                    }
                 }
             }
         }
+
         return nil
     }
+
 
     // MARK: - Play the Cued Track
 

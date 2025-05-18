@@ -2,10 +2,11 @@ import UIKit
 import UniformTypeIdentifiers
 
 class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
+    
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
-    private var importButton: UIButton!
+    //private var importButton: UIButton!
 
     var groupedTracks: [String: [String]] = [:]
     var sortedFolders: [String] = []
@@ -26,7 +27,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         setupSearch()
         loadGroupedTrackList()
         setupUI()
-        setupImportButton()
+        //setupImportButton()
         setupUserMenu()
     }
 
@@ -68,7 +69,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
                     if fileURL.pathExtension.lowercased() == "mp3" {
                         let relativePath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
                         let components = relativePath.components(separatedBy: "/")
-                        let folder = components.dropLast().joined(separator: "/").isEmpty ? " Music" : components.dropLast().joined(separator: "/")
+                        let rawFolder = components.dropLast().joined(separator: "/")
+                        let folder = rawFolder.isEmpty ? "Music" : rawFolder.capitalized
                         let name = fileURL.deletingPathExtension().lastPathComponent
                         tempGroups[folder, default: []].append(name)
                     }
@@ -85,7 +87,8 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
                         if fileURL.pathExtension.lowercased() == "mp3" {
                             let relativePath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
                             let components = relativePath.components(separatedBy: "/")
-                            let folder = components.dropLast().joined(separator: "/").isEmpty ? "Imported" : components.dropLast().joined(separator: "/")
+                            let rawFolder = components.dropLast().joined(separator: "/")
+                            let folder = rawFolder.isEmpty ? "Imported" : rawFolder.capitalized
                             let name = fileURL.deletingPathExtension().lastPathComponent
                             tempGroups[folder, default: []].append(name)
                         }
@@ -103,6 +106,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.reloadData()
     }
 
+
     func setupUI() {
         tableView.dataSource = self
         tableView.delegate = self
@@ -117,24 +121,24 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
     }
 
-    private func setupImportButton() {
-        importButton = UIButton(type: .system)
-        importButton.setTitle("Import", for: .normal)
-        importButton.backgroundColor = .systemBlue
-        importButton.setTitleColor(.white, for: .normal)
-        importButton.layer.cornerRadius = 20
-        importButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-        importButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-        importButton.translatesAutoresizingMaskIntoConstraints = false
-        view.addSubview(importButton)
-
-        NSLayoutConstraint.activate([
-            importButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-            importButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -5)
-        ])
-
-        importButton.addTarget(self, action: #selector(importTapped), for: .touchUpInside)
-    }
+//    private func setupImportButton() {
+//        importButton = UIButton(type: .system)
+//        importButton.setTitle("Import", for: .normal)
+//        importButton.backgroundColor = .systemBlue
+//        importButton.setTitleColor(.white, for: .normal)
+//        importButton.layer.cornerRadius = 20
+//        importButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
+//        importButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
+//        importButton.translatesAutoresizingMaskIntoConstraints = false
+//        view.addSubview(importButton)
+//
+//        NSLayoutConstraint.activate([
+//            importButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+//            importButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -5)
+//        ])
+//
+//        importButton.addTarget(self, action: #selector(importTapped), for: .touchUpInside)
+//    }
 
     @objc private func importTapped() {
         let mp3Type = UTType(filenameExtension: "mp3")!

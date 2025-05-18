@@ -39,7 +39,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
         webView.customUserAgent = "FuneralMusicApp"
         view.addSubview(webView)
 
-        if let url = URL(string: "https://funeralmusic.co.uk/how-it-works-130/") {
+        if let url = URL(string:"https://funeralmusic.co.uk/readings-library-121/") {
             let request = URLRequest(url: url)
             webView.load(request)
         }

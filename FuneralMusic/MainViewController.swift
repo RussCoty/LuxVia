@@ -1,6 +1,7 @@
 import UIKit
 
 class MainViewController: UIViewController {
+    let segmentedControl = UISegmentedControl(items: ["Import", "Library", "Playlist"])
 
     private var progressTimer: Timer?
 
@@ -42,8 +43,8 @@ class MainViewController: UIViewController {
             containerView.bottomAnchor.constraint(equalTo: playerControls.topAnchor)
         ])
 
-        let segmentedControl = UISegmentedControl(items: ["Library", "Playlist"])
-        segmentedControl.selectedSegmentIndex = 0
+
+        segmentedControl.selectedSegmentIndex = 1
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
     }
@@ -73,11 +74,17 @@ class MainViewController: UIViewController {
     }
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
-        if sender.selectedSegmentIndex == 0 {
+        
+        switch sender.selectedSegmentIndex {
+            case 1:
             showLibrary()
-        } else {
+            case 2:
             showPlaylist()
-        }
+            case 0:
+            AudioImportManager.presentImportPicker(from: self)
+
+           default: break
+           }
     }
 
     private func showLibrary() {
@@ -247,4 +254,9 @@ class MainViewController: UIViewController {
             }
         }
     }
+    @objc func selectSegment(index: Int) {
+        segmentedControl.selectedSegmentIndex = index
+        segmentChanged(segmentedControl)
+    }
+
 }
