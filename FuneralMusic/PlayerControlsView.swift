@@ -1,10 +1,9 @@
+
 import UIKit
 
 class PlayerControlsView: UIView {
-    // MARK: - Shared Instance
     static var shared: PlayerControlsView?
 
-    // MARK: - Callbacks
     var onPlayPause: (() -> Void)?
     var onNext: (() -> Void)?
     var onPrevious: (() -> Void)?
@@ -12,7 +11,6 @@ class PlayerControlsView: UIView {
     var onScrubProgress: ((Float) -> Void)?
     var onFadeOut: (() -> Void)?
 
-    // MARK: - UI Elements
     private let nowPlayingLabel = UILabel()
     private let playPauseButton = UIButton(type: .system)
     private let nextButton = UIButton(type: .system)
@@ -22,12 +20,8 @@ class PlayerControlsView: UIView {
     private let progressSlider = UISlider()
     private let timeLabel = UILabel()
 
-    // MARK: - Public Property
-    var currentVolume: Float {
-        return volumeSlider.value
-    }
+    var currentVolume: Float { volumeSlider.value }
 
-    // MARK: - Init
     override init(frame: CGRect) {
         super.init(frame: frame)
         PlayerControlsView.shared = self
@@ -40,7 +34,6 @@ class PlayerControlsView: UIView {
         setupUI()
     }
 
-    // MARK: - UI Setup
     private func setupUI() {
         backgroundColor = UIColor(white: 0.95, alpha: 1.0)
 
@@ -58,31 +51,42 @@ class PlayerControlsView: UIView {
         configureImageButton(nextButton, imageName: "button_next")
         configureImageButton(previousButton, imageName: "button_prev")
 
-        playPauseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        previousButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        nextButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        [playPauseButton, previousButton, nextButton].forEach {
+            $0.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        }
 
-        fadeButton.setTitle("Fade", for: .normal)
-        fadeButton.translatesAutoresizingMaskIntoConstraints = false
+        fadeButton.setTitle("Fade Out", for: .normal)
         fadeButton.tintColor = .black
         fadeButton.setTitleColor(.black, for: .normal)
         fadeButton.titleLabel?.font = UIFont.systemFont(ofSize: 14, weight: .medium)
         fadeButton.backgroundColor = UIColor.systemGray5
         fadeButton.layer.cornerRadius = 8
-        fadeButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+        fadeButton.translatesAutoresizingMaskIntoConstraints = false
+        fadeButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
+        fadeButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
+        fadeButton.setContentHuggingPriority(.required, for: .horizontal)
 
-        playPauseButton.addTarget(self, action: #selector(playPauseTapped), for: .touchUpInside)
-        nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
-        previousButton.addTarget(self, action: #selector(previousTapped), for: .touchUpInside)
-        fadeButton.addTarget(self, action: #selector(fadeTapped), for: .touchUpInside)
-
-        volumeSlider.translatesAutoresizingMaskIntoConstraints = false
         volumeSlider.value = AudioPlayerManager.shared.volume
         volumeSlider.addTarget(self, action: #selector(volumeChanged(_:)), for: .valueChanged)
+        volumeSlider.transform = CGAffineTransform(scaleX: 1, y: 0.5)
+        volumeSlider.translatesAutoresizingMaskIntoConstraints = false
+        volumeSlider.setContentHuggingPriority(.defaultLow, for: .horizontal)
+        volumeSlider.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
+        volumeSlider.minimumTrackTintColor = .systemBlue
+        volumeSlider.maximumTrackTintColor = .systemGray5
+        volumeSlider.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
 
-        if let wedgeImage = generateWedgeImage() {
-            volumeSlider.setMinimumTrackImage(wedgeImage, for: .normal)
+        // Custom thumb
+        let thumbSize = CGSize(width: 14, height: 14)
+        let thumbImage = UIGraphicsImageRenderer(size: thumbSize).image { context in
+            let rect = CGRect(origin: .zero, size: thumbSize)
+            context.cgContext.setFillColor(UIColor.white.cgColor)
+            context.cgContext.setStrokeColor(UIColor.systemGray.cgColor)
+            context.cgContext.setLineWidth(1)
+            context.cgContext.fillEllipse(in: rect)
+            context.cgContext.strokeEllipse(in: rect)
         }
+        volumeSlider.setThumbImage(thumbImage, for: .normal)
 
         progressSlider.translatesAutoresizingMaskIntoConstraints = false
         progressSlider.addTarget(self, action: #selector(progressChanged(_:)), for: .valueChanged)
@@ -93,15 +97,20 @@ class PlayerControlsView: UIView {
         transportStack.spacing = 16
         transportStack.translatesAutoresizingMaskIntoConstraints = false
 
-        // Add all subviews
+        let fadeVolumeStack = UIStackView()
+        fadeVolumeStack.axis = .horizontal
+        fadeVolumeStack.spacing = 20
+        fadeVolumeStack.alignment = .center
+        fadeVolumeStack.translatesAutoresizingMaskIntoConstraints = false
+        fadeVolumeStack.addArrangedSubview(fadeButton)
+        fadeVolumeStack.addArrangedSubview(volumeSlider)
+
         addSubview(nowPlayingLabel)
         addSubview(transportStack)
-        addSubview(fadeButton)
-        addSubview(volumeSlider)
+        addSubview(fadeVolumeStack)
         addSubview(progressSlider)
         addSubview(timeLabel)
 
-        // Layout constraints
         NSLayoutConstraint.activate([
             nowPlayingLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             nowPlayingLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
@@ -112,15 +121,11 @@ class PlayerControlsView: UIView {
             transportStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             transportStack.heightAnchor.constraint(equalToConstant: 50),
 
-            fadeButton.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 8),
-            fadeButton.centerXAnchor.constraint(equalTo: centerXAnchor),
-            fadeButton.widthAnchor.constraint(equalToConstant: 120),
+            fadeVolumeStack.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 8),
+            fadeVolumeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
+            fadeVolumeStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
-            volumeSlider.topAnchor.constraint(equalTo: fadeButton.bottomAnchor, constant: 12),
-            volumeSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            volumeSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-
-            progressSlider.topAnchor.constraint(equalTo: volumeSlider.bottomAnchor, constant: 8),
+            progressSlider.topAnchor.constraint(equalTo: fadeVolumeStack.bottomAnchor, constant: 12),
             progressSlider.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             progressSlider.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
@@ -128,6 +133,11 @@ class PlayerControlsView: UIView {
             timeLabel.bottomAnchor.constraint(equalTo: safeAreaLayoutGuide.bottomAnchor, constant: -6),
             timeLabel.centerXAnchor.constraint(equalTo: centerXAnchor)
         ])
+
+        playPauseButton.addTarget(self, action: #selector(playPauseTapped), for: .touchUpInside)
+        nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
+        previousButton.addTarget(self, action: #selector(previousTapped), for: .touchUpInside)
+        fadeButton.addTarget(self, action: #selector(fadeTapped), for: .touchUpInside)
     }
 
     private func configureImageButton(_ button: UIButton, imageName: String) {
@@ -139,30 +149,6 @@ class PlayerControlsView: UIView {
         button.contentVerticalAlignment = .fill
     }
 
-    private func generateWedgeImage(width: CGFloat = 300, height: CGFloat = 10, color: UIColor = .black) -> UIImage? {
-        let size = CGSize(width: width, height: height)
-        UIGraphicsBeginImageContextWithOptions(size, false, 0)
-        guard let context = UIGraphicsGetCurrentContext() else { return nil }
-
-        context.setFillColor(color.cgColor)
-
-        let startHeight: CGFloat = 0
-        let endHeight: CGFloat = height * 4
-
-        context.beginPath()
-        context.move(to: CGPoint(x: 0, y: height))
-        context.addLine(to: CGPoint(x: 0, y: height - startHeight))
-        context.addLine(to: CGPoint(x: width, y: height - endHeight))
-        context.addLine(to: CGPoint(x: width, y: height))
-        context.closePath()
-        context.fillPath()
-
-        let image = UIGraphicsGetImageFromCurrentImageContext()
-        UIGraphicsEndImageContext()
-        return image?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
-    }
-
-    // MARK: - Button Actions
     @objc private func playPauseTapped() { onPlayPause?() }
     @objc private func nextTapped() { onNext?() }
     @objc private func previousTapped() { onPrevious?() }
@@ -177,7 +163,6 @@ class PlayerControlsView: UIView {
         onScrubProgress?(sender.value)
     }
 
-    // MARK: - Public Update Methods
     func updatePlayButton(isPlaying: Bool) {
         let imageName = isPlaying ? "button_pause" : "button_play"
         playPauseButton.setImage(UIImage(named: imageName), for: .normal)
