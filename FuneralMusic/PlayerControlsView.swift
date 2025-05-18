@@ -1,4 +1,3 @@
-
 import UIKit
 
 class PlayerControlsView: UIView {
@@ -19,6 +18,7 @@ class PlayerControlsView: UIView {
     private let volumeSlider = UISlider()
     private let progressSlider = UISlider()
     private let timeLabel = UILabel()
+    private let volumeLabel = UILabel()
 
     var currentVolume: Float { volumeSlider.value }
 
@@ -47,6 +47,11 @@ class PlayerControlsView: UIView {
         timeLabel.text = "0:00 / 0:00"
         timeLabel.translatesAutoresizingMaskIntoConstraints = false
 
+        volumeLabel.font = UIFont.systemFont(ofSize: 12, weight: .regular)
+        volumeLabel.textAlignment = .center
+        volumeLabel.text = "Volume: 50%"
+        volumeLabel.translatesAutoresizingMaskIntoConstraints = false
+
         configureImageButton(playPauseButton, imageName: "button_play")
         configureImageButton(nextButton, imageName: "button_next")
         configureImageButton(previousButton, imageName: "button_prev")
@@ -67,26 +72,14 @@ class PlayerControlsView: UIView {
         fadeButton.setContentHuggingPriority(.required, for: .horizontal)
 
         volumeSlider.value = AudioPlayerManager.shared.volume
-        volumeSlider.addTarget(self, action: #selector(volumeChanged(_:)), for: .valueChanged)
-        volumeSlider.transform = CGAffineTransform(scaleX: 1, y: 0.5)
         volumeSlider.translatesAutoresizingMaskIntoConstraints = false
         volumeSlider.setContentHuggingPriority(.defaultLow, for: .horizontal)
         volumeSlider.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        volumeSlider.minimumTrackTintColor = .systemBlue
-        volumeSlider.maximumTrackTintColor = .systemGray5
         volumeSlider.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
 
-        // Custom thumb
-        let thumbSize = CGSize(width: 14, height: 14)
-        let thumbImage = UIGraphicsImageRenderer(size: thumbSize).image { context in
-            let rect = CGRect(origin: .zero, size: thumbSize)
-            context.cgContext.setFillColor(UIColor.white.cgColor)
-            context.cgContext.setStrokeColor(UIColor.systemGray.cgColor)
-            context.cgContext.setLineWidth(1)
-            context.cgContext.fillEllipse(in: rect)
-            context.cgContext.strokeEllipse(in: rect)
+        if let wedgeImage = generateWedgeImage() {
+            volumeSlider.setMinimumTrackImage(wedgeImage, for: .normal)
         }
-        volumeSlider.setThumbImage(thumbImage, for: .normal)
 
         progressSlider.translatesAutoresizingMaskIntoConstraints = false
         progressSlider.addTarget(self, action: #selector(progressChanged(_:)), for: .valueChanged)
@@ -97,13 +90,17 @@ class PlayerControlsView: UIView {
         transportStack.spacing = 16
         transportStack.translatesAutoresizingMaskIntoConstraints = false
 
-        let fadeVolumeStack = UIStackView()
+        let volumeStack = UIStackView(arrangedSubviews: [volumeSlider, volumeLabel])
+        volumeStack.axis = .vertical
+        volumeStack.alignment = .center
+        volumeStack.spacing = 4
+        volumeStack.translatesAutoresizingMaskIntoConstraints = false
+
+        let fadeVolumeStack = UIStackView(arrangedSubviews: [fadeButton, volumeStack])
         fadeVolumeStack.axis = .horizontal
-        fadeVolumeStack.spacing = 20
         fadeVolumeStack.alignment = .center
+        fadeVolumeStack.spacing = 20
         fadeVolumeStack.translatesAutoresizingMaskIntoConstraints = false
-        fadeVolumeStack.addArrangedSubview(fadeButton)
-        fadeVolumeStack.addArrangedSubview(volumeSlider)
 
         addSubview(nowPlayingLabel)
         addSubview(transportStack)
@@ -121,7 +118,7 @@ class PlayerControlsView: UIView {
             transportStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             transportStack.heightAnchor.constraint(equalToConstant: 50),
 
-            fadeVolumeStack.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 8),
+            fadeVolumeStack.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 12),
             fadeVolumeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
             fadeVolumeStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
@@ -138,6 +135,7 @@ class PlayerControlsView: UIView {
         nextButton.addTarget(self, action: #selector(nextTapped), for: .touchUpInside)
         previousButton.addTarget(self, action: #selector(previousTapped), for: .touchUpInside)
         fadeButton.addTarget(self, action: #selector(fadeTapped), for: .touchUpInside)
+        volumeSlider.addTarget(self, action: #selector(volumeChanged(_:)), for: .valueChanged)
     }
 
     private func configureImageButton(_ button: UIButton, imageName: String) {
@@ -149,12 +147,36 @@ class PlayerControlsView: UIView {
         button.contentVerticalAlignment = .fill
     }
 
+    private func generateWedgeImage(width: CGFloat = 300, height: CGFloat = 10, color: UIColor = .black) -> UIImage? {
+        let size = CGSize(width: width, height: height)
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+
+        context.setFillColor(color.cgColor)
+
+        // Steep wedge: starts at 0, ends much taller
+        context.beginPath()
+        context.move(to: CGPoint(x: 0, y: height))
+        context.addLine(to: CGPoint(x: 0, y: height - 0.2 * height))   // near bottom
+        context.addLine(to: CGPoint(x: width, y: height - 1.2 * height)) // loud end = much higher
+        context.addLine(to: CGPoint(x: width, y: height))
+        context.closePath()
+        context.fillPath()
+
+        let image = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return image?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
+    }
+
+
     @objc private func playPauseTapped() { onPlayPause?() }
     @objc private func nextTapped() { onNext?() }
     @objc private func previousTapped() { onPrevious?() }
     @objc private func fadeTapped() { onFadeOut?() }
 
     @objc private func volumeChanged(_ sender: UISlider) {
+        let percent = Int(sender.value * 100)
+        volumeLabel.text = "Volume: \(percent)%"
         AudioPlayerManager.shared.volume = sender.value
         onVolumeChange?(sender.value)
     }
