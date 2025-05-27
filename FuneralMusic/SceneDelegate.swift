@@ -62,7 +62,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         // Order of Service tab
         let orderVC = OrderOfServiceViewController()
-        orderVC.tabBarItem = UITabBarItem(title: "Stationary", image: nil, tag: 2)
+        orderVC.tabBarItem = UITabBarItem(title: "Booklet", image: nil, tag: 2)
 
         tabBarController.viewControllers = [aboutVC, musicTab, orderVC]
 

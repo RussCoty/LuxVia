@@ -13,6 +13,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
 
     var webView: WKWebView!
     let statusLabel = UILabel()
+    private let topBar = TopBarView()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -34,7 +35,19 @@ class ViewController: UIViewController, WKNavigationDelegate {
         let config = WKWebViewConfiguration()
         config.userContentController = contentController
 
-        webView = WKWebView(frame: self.view.bounds, configuration: config)
+        webView = WKWebView(frame: .zero, configuration: config)
+        webView.navigationDelegate = self
+        webView.customUserAgent = "FuneralMusicApp"
+        webView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(webView)
+
+        // ✅ Add constraints to respect safe area and avoid overlap
+        NSLayoutConstraint.activate([
+            webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
         webView.navigationDelegate = self
         webView.customUserAgent = "FuneralMusicApp"
         view.addSubview(webView)
@@ -46,6 +59,18 @@ class ViewController: UIViewController, WKNavigationDelegate {
 
         setupStatusLabel()
         updateLoginStatusLabel()
+        
+        view.addSubview(topBar)
+        topBar.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
+        topBar.logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
+
     }
 
     // MARK: - Login Status Display
@@ -153,4 +178,9 @@ class ViewController: UIViewController, WKNavigationDelegate {
             }
         }.resume()
     }
+    
+    @objc private func handleLogout() {
+        AuthManager.shared.logout()
+    }
+
 }

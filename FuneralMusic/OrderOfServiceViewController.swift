@@ -6,7 +6,7 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
 
     private var webView: WKWebView!
     private let pdfFilename = "order.pdf"
-
+    private let topBar = TopBarView()
     private let infoBar = UIView()
     private let infoLabel = UILabel()
     private let shareButton = UIButton(type: .system)
@@ -15,7 +15,7 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Stationary"
+        title = "Booklet"
         view.backgroundColor = .white
 
         setupWebView()
@@ -26,6 +26,18 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
 
         loadOrderForm()
         updateInfoBar()
+        
+        view.addSubview(topBar)
+        topBar.translatesAutoresizingMaskIntoConstraints = false
+
+        NSLayoutConstraint.activate([
+            topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            topBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
+
+        topBar.logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
+
     }
 
     // MARK: - Setup
@@ -226,5 +238,10 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         return pdfLocalURL() as QLPreviewItem
     }
+    
+    @objc private func handleLogout() {
+        AuthManager.shared.logout()
+    }
+
 }
 

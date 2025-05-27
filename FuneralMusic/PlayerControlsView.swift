@@ -70,12 +70,18 @@ class PlayerControlsView: UIView {
         fadeButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
         fadeButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
         fadeButton.setContentHuggingPriority(.required, for: .horizontal)
+        
+        fadeButton.setTitle("Fade Out", for: .normal)
+        fadeButton.setTitle("Fade In", for: .disabled)
+        fadeButton.setTitle("Fade Out", for: .normal)
+        fadeButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
+
 
         volumeSlider.value = AudioPlayerManager.shared.volume
         volumeSlider.translatesAutoresizingMaskIntoConstraints = false
         volumeSlider.setContentHuggingPriority(.defaultLow, for: .horizontal)
         volumeSlider.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        volumeSlider.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
+        //volumeSlider.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
 
         if let wedgeImage = generateWedgeImage() {
             volumeSlider.setMinimumTrackImage(wedgeImage, for: .normal)
@@ -171,9 +177,18 @@ class PlayerControlsView: UIView {
 
     @objc private func playPauseTapped() { onPlayPause?() }
     @objc private func nextTapped() { onNext?() }
+    @objc private func fadeTapped() { onFadeOut?()
+            // Pulse animation on tap
+                let pulse = CASpringAnimation(keyPath: "transform.scale")
+                pulse.fromValue = 1.0
+                pulse.toValue = 1.1
+                pulse.duration = 0.2
+                pulse.autoreverses = true
+                pulse.repeatCount = 1
+                fadeButton.layer.add(pulse, forKey: nil)
+        }
     @objc private func previousTapped() { onPrevious?() }
-    @objc private func fadeTapped() { onFadeOut?() }
-
+    
     @objc private func volumeChanged(_ sender: UISlider) {
         let percent = Int(sender.value * 100)
         volumeLabel.text = "Volume: \(percent)%"

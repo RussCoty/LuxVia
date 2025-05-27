@@ -214,7 +214,7 @@ class MainViewController: UIViewController {
             guard let player = audio.player else { return }
 
             let fadeStep: Float = 0.01
-            let fadeDuration: TimeInterval = 1.5
+            let fadeDuration: TimeInterval = 7
             let interval: TimeInterval = 0.01
             let totalSteps = Int(fadeDuration / interval)
             let volumeDecrement = audio.volume / Float(totalSteps)
