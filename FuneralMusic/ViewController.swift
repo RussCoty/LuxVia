@@ -13,9 +13,9 @@ class ViewController: UIViewController, WKNavigationDelegate {
 
     var webView: WKWebView!
     let statusLabel = UILabel()
-    private let topBar = TopBarView()
 
     override func viewDidLoad() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
         super.viewDidLoad()
         view.backgroundColor = .white
 
@@ -58,18 +58,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
         }
 
         setupStatusLabel()
-        updateLoginStatusLabel()
-        
-        view.addSubview(topBar)
-        topBar.translatesAutoresizingMaskIntoConstraints = false
 
-        NSLayoutConstraint.activate([
-            topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            topBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-
-        topBar.logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
 
     }
 
@@ -180,7 +169,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     }
     
     @objc private func handleLogout() {
-        AuthManager.shared.logout()
+        SessionManager.logout()
     }
 
 }

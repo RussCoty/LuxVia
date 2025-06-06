@@ -2,11 +2,9 @@ import UIKit
 import UniformTypeIdentifiers
 
 class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
-    
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
-    //private var importButton: UIButton!
 
     var groupedTracks: [String: [String]] = [:]
     var sortedFolders: [String] = []
@@ -27,8 +25,30 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         setupSearch()
         loadGroupedTrackList()
         setupUI()
-        //setupImportButton()
         setupUserMenu()
+
+        // 🔁 Hook up forward/back buttons
+        PlayerControlsView.shared?.onNext = {
+            let mgr = AudioPlayerManager.shared
+            if mgr.isTrackCued {
+                mgr.playCuedTrack()
+            } else if mgr.currentSource == .playlist {
+                SharedPlaylistManager.shared.playNext()
+            } else if mgr.currentSource == .library {
+                mgr.playNextInLibrary()
+            }
+        }
+
+        PlayerControlsView.shared?.onPrevious = {
+            let mgr = AudioPlayerManager.shared
+            if mgr.isTrackCued {
+                mgr.cancelCue()
+            } else if mgr.currentSource == .playlist {
+                SharedPlaylistManager.shared.playPrevious()
+            } else if mgr.currentSource == .library {
+                mgr.playPreviousInLibrary()
+            }
+        }
     }
 
     func setupSearch() {
@@ -62,7 +82,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         let fileManager = FileManager.default
         var tempGroups: [String: [String]] = [:]
 
-        // Built-in audio from app bundle
+        // Bundle audio
         if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
             if let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
                 for case let fileURL as URL in enumerator {
@@ -78,7 +98,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             }
         }
 
-        // Imported audio from documents
+        // Imported audio
         if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
             let importedURL = docsURL.appendingPathComponent("audio")
             if fileManager.fileExists(atPath: importedURL.path) {
@@ -103,9 +123,13 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
         groupedTracks = tempGroups
         sortedFolders = tempGroups.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+
+        // ✅ Sync to SharedLibraryManager
+        let allTracks = tempGroups.values.flatMap { $0 }.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+        SharedLibraryManager.shared.libraryTracks = allTracks
+
         tableView.reloadData()
     }
-
 
     func setupUI() {
         tableView.dataSource = self
@@ -120,25 +144,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
-
-//    private func setupImportButton() {
-//        importButton = UIButton(type: .system)
-//        importButton.setTitle("Import", for: .normal)
-//        importButton.backgroundColor = .systemBlue
-//        importButton.setTitleColor(.white, for: .normal)
-//        importButton.layer.cornerRadius = 20
-//        importButton.titleLabel?.font = UIFont.boldSystemFont(ofSize: 16)
-//        importButton.contentEdgeInsets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
-//        importButton.translatesAutoresizingMaskIntoConstraints = false
-//        view.addSubview(importButton)
-//
-//        NSLayoutConstraint.activate([
-//            importButton.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-//            importButton.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -5)
-//        ])
-//
-//        importButton.addTarget(self, action: #selector(importTapped), for: .touchUpInside)
-//    }
 
     @objc private func importTapped() {
         let mp3Type = UTType(filenameExtension: "mp3")!
@@ -350,3 +355,4 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         present(alert, animated: true)
     }
 }
+

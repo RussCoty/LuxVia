@@ -53,18 +53,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let tabBarController = UITabBarController()
 
         // About tab (WebView)
-        let aboutVC = ViewController()
-        aboutVC.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)
+        let wordsNav = UINavigationController(rootViewController: WordsListViewController())
+    wordsNav.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)
 
         // Music tab (Navigation Controller)
         let musicTab = UINavigationController(rootViewController: MainViewController())
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
         // Order of Service tab
-        let orderVC = OrderOfServiceViewController()
-        orderVC.tabBarItem = UITabBarItem(title: "Booklet", image: nil, tag: 2)
+        let bookletNav = UINavigationController(rootViewController: OrderOfServiceViewController())
+    bookletNav.tabBarItem = UITabBarItem(title: "Booklet", image: nil, tag: 2)
 
-        tabBarController.viewControllers = [aboutVC, musicTab, orderVC]
+        tabBarController.viewControllers = [wordsNav, musicTab, bookletNav]
 
         let biggerFont = UIFont.systemFont(ofSize: 14, weight: .bold)
         UITabBarItem.appearance().setTitleTextAttributes([.font: biggerFont], for: .normal)
@@ -94,7 +94,16 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // Other lifecycle methods
     func sceneDidDisconnect(_ scene: UIScene) { }
-    func sceneDidBecomeActive(_ scene: UIScene) { }
+    func sceneDidBecomeActive(_ scene: UIScene) {
+        LyricsSyncManager.shared.syncLyrics { result in
+            switch result {
+            case .success(let lyrics):
+                print("✅ Synced \(lyrics.count) lyrics.")
+            case .failure(let error):
+                print("❌ Lyrics sync failed: \(error.localizedDescription)")
+            }
+        }
+    }
     func sceneWillResignActive(_ scene: UIScene) { }
     func sceneWillEnterForeground(_ scene: UIScene) { }
     func sceneDidEnterBackground(_ scene: UIScene) { }

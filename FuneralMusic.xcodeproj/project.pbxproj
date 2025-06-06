@@ -15,6 +15,11 @@
 		105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */; };
 		105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A92DD3BF79008AF276 /* MainViewController.swift */; };
 		105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105FC7322DD9048A00C93490 /* TopBarView.swift */; };
+		107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */; };
+		10824D782DF3392700CDF11B /*  LyricsSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D772DF3392700CDF11B /*  LyricsSyncManager.swift */; };
+		10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 10824D7A2DF339B100CDF11B /* SwiftSoup */; };
+		10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */; };
+		10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */; };
 		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
 		1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA52DC8EC06009398EB /* SceneDelegate.swift */; };
 		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
@@ -46,6 +51,10 @@
 		105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		105679A92DD3BF79008AF276 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
 		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
+		10824D772DF3392700CDF11B /*  LyricsSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = " LyricsSyncManager.swift"; sourceTree = "<group>"; };
+		10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsListViewController.swift; sourceTree = "<group>"; };
+		10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsDetailViewController.swift; sourceTree = "<group>"; };
 		1084FAA02DC8EC06009398EB /* FuneralMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuneralMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1084FAA32DC8EC06009398EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1084FAA52DC8EC06009398EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -75,6 +84,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,35 +110,39 @@
 		1084FAA22DC8EC06009398EB /* FuneralMusic */ = {
 			isa = PBXGroup;
 			children = (
+				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
+				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
 				1089BCC52DCE077F005DF96A /* Audio */,
+				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
+				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
+				109851302DD8D258007C685B /* AuthManager.swift */,
+				109851322DD8D490007C685B /* BaseViewController.swift */,
 				1084FAB12DC8EC09009398EB /* Info.plist */,
+				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
+				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
+				1012F6412DC9446F00F1D56F /* LibraryViewController.swift */,
+				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
 				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
 				1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */,
-				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
-				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
-				1012F6412DC9446F00F1D56F /* LibraryViewController.swift */,
-				105FC7322DD9048A00C93490 /* TopBarView.swift */,
-				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
+				105679A92DD3BF79008AF276 /* MainViewController.swift */,
+				1099B61F2DD7744300CA3194 /* MembershipManager.swift */,
 				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
+				1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */,
+				1099B6212DD784A000CA3194 /* NonceExtractor.swift */,
 				1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */,
+				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
 				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
 				108D26BB2DD200A30049806F /* PlaylistViewController.swift */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
+				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
-				1084FAA72DC8EC06009398EB /* ViewController.swift */,
-				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
-				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
-				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
-				105679A92DD3BF79008AF276 /* MainViewController.swift */,
-				1099B61F2DD7744300CA3194 /* MembershipManager.swift */,
-				1099B6212DD784A000CA3194 /* NonceExtractor.swift */,
-				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
-				1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */,
+				105FC7322DD9048A00C93490 /* TopBarView.swift */,
 				10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
-				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
-				109851302DD8D258007C685B /* AuthManager.swift */,
-				109851322DD8D490007C685B /* BaseViewController.swift */,
-				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
+				1084FAA72DC8EC06009398EB /* ViewController.swift */,
+				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
+				10824D772DF3392700CDF11B /*  LyricsSyncManager.swift */,
+				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
+				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -149,6 +163,9 @@
 			dependencies = (
 			);
 			name = FuneralMusic;
+			packageProductDependencies = (
+				10824D7A2DF339B100CDF11B /* SwiftSoup */,
+			);
 			productName = FuneralMusic;
 			productReference = 1084FAA02DC8EC06009398EB /* FuneralMusic.app */;
 			productType = "com.apple.product-type.application";
@@ -177,6 +194,9 @@
 				Base,
 			);
 			mainGroup = 1084FA972DC8EC06009398EB;
+			packageReferences = (
+				10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+			);
 			productRefGroup = 1084FAA12DC8EC06009398EB /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -209,6 +229,8 @@
 			files = (
 				101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */,
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
+				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
+				10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */,
 				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
 				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
@@ -216,6 +238,7 @@
 				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
+				10824D782DF3392700CDF11B /*  LyricsSyncManager.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
 				10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */,
@@ -225,6 +248,7 @@
 				1012F6422DC9446F00F1D56F /* LibraryViewController.swift in Sources */,
 				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
 				109851312DD8D258007C685B /* AuthManager.swift in Sources */,
+				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
 				108D26BC2DD200A30049806F /* PlaylistViewController.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,
@@ -440,6 +464,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		10824D7A2DF339B100CDF11B /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 1084FA982DC8EC06009398EB /* Project object */;
 }

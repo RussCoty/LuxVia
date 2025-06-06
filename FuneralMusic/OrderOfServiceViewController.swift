@@ -6,7 +6,6 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
 
     private var webView: WKWebView!
     private let pdfFilename = "order.pdf"
-    private let topBar = TopBarView()
     private let infoBar = UIView()
     private let infoLabel = UILabel()
     private let shareButton = UIButton(type: .system)
@@ -15,29 +14,14 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Booklet"
         view.backgroundColor = .white
-
         setupWebView()
         setupInfoBar()
         setupToast()
         setupUserMenu()
         layoutViews()
-
         loadOrderForm()
-        updateInfoBar()
-        
-        view.addSubview(topBar)
-        topBar.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-            topBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            topBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-        ])
-
-        topBar.logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)
-
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
     }
 
     // MARK: - Setup
@@ -96,25 +80,7 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
     }
 
     private func setupUserMenu() {
-        let menuButton = UIBarButtonItem(title: "⋯", style: .plain, target: self, action: #selector(showUserMenu))
-        navigationItem.rightBarButtonItem = menuButton
-    }
-
-    @objc private func showUserMenu() {
-        let status = AuthManager.shared.isLoggedIn ? "Member: Active" : "Guest"
-
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: status, style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive) { _ in
-            AuthManager.shared.logout()
-        })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-
-        if let popover = alert.popoverPresentationController {
-            popover.barButtonItem = navigationItem.rightBarButtonItem
-        }
-
-        present(alert, animated: true)
+        // intentionally empty – handled by navigationItem bar button now
     }
 
     private func layoutViews() {
@@ -143,18 +109,8 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
         ])
     }
 
-    // MARK: - PDF Logic
-
-    private func pdfLocalURL() -> URL {
-        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            .appendingPathComponent(pdfFilename)
-    }
-
-    private func updateInfoBar() {
-        let exists = FileManager.default.fileExists(atPath: pdfLocalURL().path)
-        infoLabel.text = exists ? "Saved: \(pdfFilename)" : "No PDF saved"
-        shareButton.isEnabled = exists
-        previewButton.isEnabled = exists
+    @objc private func handleLogout() {
+        SessionManager.logout()
     }
 
     @objc private func sharePDF() {
@@ -167,6 +123,18 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
         let preview = QLPreviewController()
         preview.dataSource = self
         present(preview, animated: true)
+    }
+
+    private func pdfLocalURL() -> URL {
+        FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
+            .appendingPathComponent(pdfFilename)
+    }
+
+    private func updateInfoBar() {
+        let exists = FileManager.default.fileExists(atPath: pdfLocalURL().path)
+        infoLabel.text = exists ? "Saved: \(pdfFilename)" : "No PDF saved"
+        shareButton.isEnabled = exists
+        previewButton.isEnabled = exists
     }
 
     private func manuallyDownloadPDF(from url: URL) {
@@ -195,8 +163,6 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
         task.resume()
     }
 
-    // MARK: - Toast
-
     private func showToast(_ message: String) {
         toastLabel.text = message
         toastLabel.alpha = 0
@@ -213,8 +179,6 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
         }
     }
 
-    // MARK: - WebView Navigation
-
     func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction,
                  decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
 
@@ -229,8 +193,6 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
         decisionHandler(.allow)
     }
 
-    // MARK: - QLPreviewController
-
     func numberOfPreviewItems(in controller: QLPreviewController) -> Int {
         return 1
     }
@@ -238,10 +200,4 @@ class OrderOfServiceViewController: UIViewController, WKNavigationDelegate, QLPr
     func previewController(_ controller: QLPreviewController, previewItemAt index: Int) -> QLPreviewItem {
         return pdfLocalURL() as QLPreviewItem
     }
-    
-    @objc private func handleLogout() {
-        AuthManager.shared.logout()
-    }
-
 }
-

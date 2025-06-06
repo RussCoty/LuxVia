@@ -3,13 +3,35 @@ import UIKit
 class PlaylistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
     let tableView = UITableView()
-    var currentTrackIndex = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Playlist"
         setupUI()
+
+        // ✅ Hook up forward and back buttons
+        PlayerControlsView.shared?.onNext = {
+            let mgr = AudioPlayerManager.shared
+            if mgr.isTrackCued {
+                mgr.playCuedTrack()
+            } else if mgr.currentSource == .playlist {
+                SharedPlaylistManager.shared.playNext()
+            } else if mgr.currentSource == .library {
+                mgr.playNextInLibrary()
+            }
+        }
+
+        PlayerControlsView.shared?.onPrevious = {
+            let mgr = AudioPlayerManager.shared
+            if mgr.isTrackCued {
+                mgr.cancelCue()
+            } else if mgr.currentSource == .playlist {
+                SharedPlaylistManager.shared.playPrevious()
+            } else if mgr.currentSource == .library {
+                mgr.playPreviousInLibrary()
+            }
+        }
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -23,7 +45,7 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.setEditing(true, animated: false)
-        tableView.allowsSelectionDuringEditing = true  // ✅ This enables row taps while editing
+        tableView.allowsSelectionDuringEditing = true
 
         view.addSubview(tableView)
 
@@ -46,7 +68,6 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         let trackName = SharedPlaylistManager.shared.playlist[indexPath.row]
         cell.textLabel?.text = trackName.capitalized
 
-        // 🔷 Highlight if cued or playing
         let audio = AudioPlayerManager.shared
         if audio.currentSource == .playlist && audio.currentTrackName == trackName {
             cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
@@ -62,11 +83,9 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         return cell
     }
 
-
-    // MARK: - Row Selection (no autoplay)
+    // MARK: - Row Selection (Cue only)
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("✅ Playlist row tapped: \(indexPath.row)")
         let selectedTrack = SharedPlaylistManager.shared.playlist[indexPath.row]
         AudioPlayerManager.shared.cueTrack(named: selectedTrack, source: .playlist)
 
@@ -76,36 +95,14 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.reloadData()
     }
 
-
-
-    // MARK: - Playback
-
-    func playTrack(at index: Int) {
-        let playlist = SharedPlaylistManager.shared.playlist
-        guard index < playlist.count else { return }
-
-        let track = playlist[index]
-        guard let url = Bundle.main.url(forResource: track, withExtension: "mp3", subdirectory: "Audio") else { return }
-
-        currentTrackIndex = index
-        AudioPlayerManager.shared.play(url: url)
-
-        PlayerControlsView.shared?.nowPlayingText("Now Playing: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
-
-        tableView.reloadData()
-        scrollToNowPlaying()
-    }
-
-    func playPlaylistFromStart() {
-        guard !SharedPlaylistManager.shared.playlist.isEmpty else { return }
-        currentTrackIndex = 0
-        playTrack(at: currentTrackIndex)
-    }
+    // MARK: - Scroll to Current Track
 
     func scrollToNowPlaying() {
-        guard currentTrackIndex < SharedPlaylistManager.shared.playlist.count else { return }
-        let indexPath = IndexPath(row: currentTrackIndex, section: 0)
-        tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        if let currentIndex = SharedPlaylistManager.shared.indexOfCurrentTrack(),
+           currentIndex < SharedPlaylistManager.shared.playlist.count {
+            let indexPath = IndexPath(row: currentIndex, section: 0)
+            tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+        }
     }
 
     // MARK: - Reordering
@@ -127,10 +124,6 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         if editingStyle == .delete {
             SharedPlaylistManager.shared.playlist.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
-
-            if currentTrackIndex >= SharedPlaylistManager.shared.playlist.count {
-                currentTrackIndex = max(0, SharedPlaylistManager.shared.playlist.count - 1)
-            }
             tableView.reloadData()
         }
     }

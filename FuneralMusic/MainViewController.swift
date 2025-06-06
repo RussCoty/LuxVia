@@ -2,14 +2,14 @@ import UIKit
 
 class MainViewController: UIViewController {
     let segmentedControl = UISegmentedControl(items: ["Import", "Library", "Playlist"])
-
-    private var progressTimer: Timer?
-
     private let containerView = UIView()
     private let playerControls = PlayerControlsView()
+
     private lazy var libraryVC = LibraryViewController()
     private lazy var playlistVC = PlaylistViewController()
     private var currentTrackIndex = 0
+
+    private var progressTimer: Timer?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -17,10 +17,12 @@ class MainViewController: UIViewController {
         title = "Music"
 
         setupUI()
+        setupLogoutButton()
         setupPlayerCallbacks()
         showLibrary()
-        setupLogoutButton()
     }
+
+    // MARK: - UI Setup
 
     private func setupUI() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -43,7 +45,6 @@ class MainViewController: UIViewController {
             containerView.bottomAnchor.constraint(equalTo: playerControls.topAnchor)
         ])
 
-
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
@@ -65,26 +66,32 @@ class MainViewController: UIViewController {
             preferredStyle: .alert
         )
 
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
             SessionManager.logout()
         })
 
-        present(alert, animated: true, completion: nil)
+        present(alert, animated: true)
     }
 
-    @objc private func segmentChanged(_ sender: UISegmentedControl) {
-        
-        switch sender.selectedSegmentIndex {
-            case 1:
-            showLibrary()
-            case 2:
-            showPlaylist()
-            case 0:
-            AudioImportManager.presentImportPicker(from: self)
+    // MARK: - Tab Switching
 
-           default: break
-           }
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+        switch sender.selectedSegmentIndex {
+        case 0:
+            AudioImportManager.presentImportPicker(from: self)
+        case 1:
+            showLibrary()
+        case 2:
+            showPlaylist()
+        default:
+            break
+        }
+    }
+
+    @objc func selectSegment(index: Int) {
+        segmentedControl.selectedSegmentIndex = index
+        segmentChanged(segmentedControl)
     }
 
     private func showLibrary() {
@@ -96,10 +103,10 @@ class MainViewController: UIViewController {
     }
 
     private func swapChild(to newVC: UIViewController) {
-        children.forEach { child in
-            child.willMove(toParent: nil)
-            child.view.removeFromSuperview()
-            child.removeFromParent()
+        children.forEach {
+            $0.willMove(toParent: nil)
+            $0.view.removeFromSuperview()
+            $0.removeFromParent()
         }
 
         addChild(newVC)
@@ -108,6 +115,8 @@ class MainViewController: UIViewController {
         newVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         newVC.didMove(toParent: self)
     }
+
+    // MARK: - Player Control Setup
 
     private func setupPlayerCallbacks() {
         playerControls.onPlayPause = { [weak self] in
@@ -119,10 +128,7 @@ class MainViewController: UIViewController {
                 self.playerControls.updatePlayButton(isPlaying: false)
                 self.playerControls.setFadeButtonTitle("Fade In")
                 self.progressTimer?.invalidate()
-                return
-            }
-
-            if audio.isPaused {
+            } else {
                 if audio.isTrackCued {
                     audio.playCuedTrack()
                 } else {
@@ -131,19 +137,16 @@ class MainViewController: UIViewController {
                 self.playerControls.updatePlayButton(isPlaying: true)
                 self.playerControls.setFadeButtonTitle("Fade Out")
                 self.startProgressTimer()
-                return
-            }
-
-            if audio.isStopped && audio.isTrackCued {
-                audio.playCuedTrack()
-                self.playerControls.updatePlayButton(isPlaying: true)
-                self.playerControls.setFadeButtonTitle("Fade Out")
-                self.startProgressTimer()
             }
         }
 
         playerControls.onNext = { [weak self] in
-            self?.advanceToNextTrack()
+            guard let self = self else { return }
+            if AudioPlayerManager.shared.currentSource == .playlist {
+                SharedPlaylistManager.shared.playNext()
+            } else {
+                self.advanceToNextTrack()
+            }
         }
 
         playerControls.onVolumeChange = { value in
@@ -162,16 +165,12 @@ class MainViewController: UIViewController {
 
     private func startProgressTimer() {
         progressTimer?.invalidate()
-
         progressTimer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: true) { [weak self] _ in
             guard let self = self else { return }
-
-            let player = AudioPlayerManager.shared
-            if player.isPlaying {
-                let currentTime = Float(player.currentTime)
-                let duration = Float(player.duration)
-                self.playerControls.updateProgress(current: currentTime)
-                self.playerControls.setMaxProgress(duration)
+            let audio = AudioPlayerManager.shared
+            if audio.isPlaying {
+                self.playerControls.updateProgress(current: Float(audio.currentTime))
+                self.playerControls.setMaxProgress(Float(audio.duration))
                 self.updateTimeLabel()
             }
         }
@@ -182,6 +181,8 @@ class MainViewController: UIViewController {
         let duration = Int(AudioPlayerManager.shared.duration)
         playerControls.updateTimeLabel(current: current, duration: duration)
     }
+
+    // MARK: - Manual Advance Logic (for Library Mode)
 
     private func advanceToNextTrack() {
         currentTrackIndex += 1
@@ -203,25 +204,22 @@ class MainViewController: UIViewController {
         playerControls.updatePlayButton(isPlaying: true)
         playerControls.nowPlayingText("Now Playing: \(name.replacingOccurrences(of: "_", with: " ").capitalized)")
         playerControls.setMaxProgress(Float(AudioPlayerManager.shared.duration))
-
         startProgressTimer()
     }
 
+    // MARK: - Fade In/Out
+
     private func fadeOutMusic() {
         let audio = AudioPlayerManager.shared
+        guard let player = audio.player else { return }
 
         if audio.isPlaying {
-            guard let player = audio.player else { return }
+            let totalSteps = Int(7.0 / 0.01)
+            let decrement = audio.volume / Float(totalSteps)
 
-            let fadeStep: Float = 0.01
-            let fadeDuration: TimeInterval = 7
-            let interval: TimeInterval = 0.01
-            let totalSteps = Int(fadeDuration / interval)
-            let volumeDecrement = audio.volume / Float(totalSteps)
-
-            Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-                if player.volume > volumeDecrement {
-                    player.volume -= volumeDecrement
+            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+                if player.volume > decrement {
+                    player.volume -= decrement
                 } else {
                     timer.invalidate()
                     player.pause()
@@ -231,32 +229,20 @@ class MainViewController: UIViewController {
                     self.playerControls.nowPlayingText("Paused after fade")
                 }
             }
-
         } else {
-            guard let player = audio.player else { return }
-
             player.volume = 0
             player.play()
             self.playerControls.updatePlayButton(isPlaying: true)
             self.playerControls.setFadeButtonTitle("Fade Out")
 
-            let fadeTarget: Float = audio.volume
-            let fadeStep: Float = 0.01
-            let interval: TimeInterval = 0.01
-
-            Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-                if player.volume < fadeTarget - fadeStep {
-                    player.volume += fadeStep
+            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
+                if player.volume < audio.volume - 0.01 {
+                    player.volume += 0.01
                 } else {
-                    player.volume = fadeTarget
+                    player.volume = audio.volume
                     timer.invalidate()
                 }
             }
         }
     }
-    @objc func selectSegment(index: Int) {
-        segmentedControl.selectedSegmentIndex = index
-        segmentChanged(segmentedControl)
-    }
-
 }
