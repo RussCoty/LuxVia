@@ -1,4 +1,7 @@
+// File: PlaylistViewController.swift
+
 import UIKit
+
 
 class PlaylistViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
@@ -10,7 +13,6 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
         title = "Playlist"
         setupUI()
 
-        // ✅ Hook up forward and back buttons
         PlayerControlsView.shared?.onNext = {
             let mgr = AudioPlayerManager.shared
             if mgr.isTrackCued {
@@ -65,14 +67,17 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = UITableViewCell(style: .default, reuseIdentifier: "PlaylistCell")
-        let trackName = SharedPlaylistManager.shared.playlist[indexPath.row]
-        cell.textLabel?.text = trackName.capitalized
+        let track = SharedPlaylistManager.shared.playlist[indexPath.row]
+        cell.textLabel?.text = track.title.replacingOccurrences(of: "_", with: " ").capitalized
 
         let audio = AudioPlayerManager.shared
-        if audio.currentSource == .playlist && audio.currentTrackName == trackName {
+        if audio.currentSource == .playlist && audio.currentTrackName == track.title {
             cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
             cell.accessoryType = .checkmark
-        } else if audio.isTrackCued && audio.cuedSource == .playlist && audio.cuedTrackName == trackName {
+        } else if audio.isTrackCued,
+                  audio.cuedSource == .playlist,
+                  let cued = audio.cuedTrack,
+                  cued.title == track.title {
             cell.backgroundColor = UIColor.systemGray.withAlphaComponent(0.2)
             cell.accessoryType = .detailDisclosureButton
         } else {
@@ -87,11 +92,9 @@ class PlaylistViewController: UIViewController, UITableViewDataSource, UITableVi
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let selectedTrack = SharedPlaylistManager.shared.playlist[indexPath.row]
-        AudioPlayerManager.shared.cueTrack(named: selectedTrack, source: .playlist)
+        AudioPlayerManager.shared.cueTrack(selectedTrack, source: .playlist)
 
-        let displayName = selectedTrack.replacingOccurrences(of: "_", with: " ").capitalized
-        PlayerControlsView.shared?.nowPlayingText("Cued: \(displayName)")
-
+        PlayerControlsView.shared?.nowPlayingText("Cued: \(selectedTrack.title.replacingOccurrences(of: "_", with: " ").capitalized)")
         tableView.reloadData()
     }
 

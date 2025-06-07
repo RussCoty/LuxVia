@@ -1,17 +1,18 @@
+// File: SharedPlaylistManager.swift
+
 import Foundation
 
 class SharedPlaylistManager {
     static let shared = SharedPlaylistManager()
     private init() {}
 
-    var playlist: [String] = []
+    var playlist: [SongEntry] = []
     private(set) var currentIndex: Int = 0
 
     func play(at index: Int) {
         guard index >= 0, index < playlist.count else { return }
         currentIndex = index
-        let track = playlist[index]
-        AudioPlayerManager.shared.playTrackFromPlaylist(named: track)
+        AudioPlayerManager.shared.playTrackFromPlaylist(at: index)
     }
 
     func playNext() {
@@ -27,6 +28,7 @@ class SharedPlaylistManager {
     }
 
     func indexOfCurrentTrack() -> Int? {
-        return playlist.firstIndex(of: AudioPlayerManager.shared.currentTrackName ?? "")
+        guard let name = AudioPlayerManager.shared.currentTrackName else { return nil }
+        return playlist.firstIndex(where: { $0.title == name })
     }
 }

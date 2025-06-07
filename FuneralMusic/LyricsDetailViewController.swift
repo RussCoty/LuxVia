@@ -1,12 +1,14 @@
 
 import UIKit
-import AVFoundation
 
 class LyricsDetailViewController: UIViewController {
 
     private let entry: LyricEntry
     private let textView = UITextView()
-    private var audioPlayer: AVAudioPlayer?
+    private let playButton = UIButton(type: .system)
+    private let addButton = UIButton(type: .system)
+    private let bottomBanner = UIView()
+    private var isPlaying = false
 
     init(entry: LyricEntry) {
         self.entry = entry
@@ -21,35 +23,59 @@ class LyricsDetailViewController: UIViewController {
         super.viewDidLoad()
         title = entry.title
         view.backgroundColor = .systemBackground
-        setupTextView()
-        setupNavigationButton()
+        setupLayout()
         renderLyrics()
     }
 
-    private func setupTextView() {
+    private func setupLayout() {
         textView.translatesAutoresizingMaskIntoConstraints = false
         textView.isEditable = false
         textView.isScrollEnabled = true
-        textView.backgroundColor = .clear
         textView.textAlignment = .center
+        textView.font = .systemFont(ofSize: 18)
         textView.textContainerInset = UIEdgeInsets(top: 16, left: 16, bottom: 16, right: 16)
         view.addSubview(textView)
+
+        bottomBanner.translatesAutoresizingMaskIntoConstraints = false
+        bottomBanner.backgroundColor = UIColor.secondarySystemBackground
+        view.addSubview(bottomBanner)
+
+        playButton.translatesAutoresizingMaskIntoConstraints = false
+        playButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        playButton.tintColor = .label
+        playButton.addTarget(self, action: #selector(playMatchingSong), for: .touchUpInside)
+
+        let hasAudio = entry.musicFilename != nil
+        playButton.isEnabled = hasAudio
+        playButton.alpha = hasAudio ? 1.0 : 0.5
+
+        addButton.translatesAutoresizingMaskIntoConstraints = false
+        addButton.setTitle("Add to Service", for: .normal)
+        addButton.titleLabel?.font = .systemFont(ofSize: 17, weight: .semibold)
+        addButton.addTarget(self, action: #selector(addToService), for: .touchUpInside)
+
+        let stack = UIStackView(arrangedSubviews: [playButton, addButton])
+        stack.axis = .horizontal
+        stack.spacing = 24
+        stack.alignment = .center
+        stack.distribution = .equalCentering
+        stack.translatesAutoresizingMaskIntoConstraints = false
+        bottomBanner.addSubview(stack)
 
         NSLayoutConstraint.activate([
             textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
-    }
+            textView.bottomAnchor.constraint(equalTo: bottomBanner.topAnchor),
 
-    private func setupNavigationButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Find Song",
-            style: .plain,
-            target: self,
-            action: #selector(findMatchingSong)
-        )
+            bottomBanner.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            bottomBanner.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            bottomBanner.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            bottomBanner.heightAnchor.constraint(equalToConstant: 60),
+
+            stack.centerXAnchor.constraint(equalTo: bottomBanner.centerXAnchor),
+            stack.centerYAnchor.constraint(equalTo: bottomBanner.centerYAnchor)
+        ])
     }
 
     private func renderLyrics() {
@@ -75,90 +101,102 @@ class LyricsDetailViewController: UIViewController {
         }
     }
 
-    @objc private func findMatchingSong() {
-        let normalizedTitle = normalize(entry.title)
-        let tracks = SharedLibraryManager.shared.libraryTracks
-
-        var bestMatch: (name: String, distance: Int)? = nil
-
-        for track in tracks {
-            let distance = levenshtein(normalizedTitle, normalize(track))
-            if bestMatch == nil || distance < bestMatch!.distance {
-                bestMatch = (track, distance)
-            }
-        }
-
-        guard let match = bestMatch else {
-            showNoMatchAlert()
+    @objc private func playMatchingSong() {
+        guard let filename = entry.musicFilename else { return }
+        let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
+        guard let url = SharedLibraryManager.shared.urlForTrack(named: trimmed) else {
+            showAlert("Not Found", "Could not find audio file.")
             return
         }
 
-        if match.distance <= 3 {
-            playTrack(named: match.name)
+        if isPlaying {
+            AudioPlayerManager.shared.stop()
+            animateButtonIcon(to: "play.fill")
         } else {
-            let alert = UIAlertController(
-                title: "Closest Match Found",
-                message: "Play “\(match.name)” for this reading?",
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "Play", style: .default) { _ in
-                self.playTrack(named: match.name)
-            })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-            present(alert, animated: true)
+            AudioPlayerManager.shared.play(url: url)
+            animateButtonIcon(to: "pause.fill")
+        }
+
+        isPlaying.toggle()
+    }
+
+    private func animateButtonIcon(to iconName: String) {
+        UIView.transition(with: playButton, duration: 0.25, options: .transitionCrossDissolve) {
+            self.playButton.setImage(UIImage(systemName: iconName), for: .normal)
         }
     }
 
-    private func playTrack(named name: String) {
-        guard let url = SharedLibraryManager.shared.urlForTrack(named: name) else {
-            showNoMatchAlert()
-            return
-        }
+    @objc private func addToService() {
+        if let filename = entry.musicFilename {
+            let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
+            if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
 
-        do {
-            audioPlayer = try AVAudioPlayer(contentsOf: url)
-            audioPlayer?.play()
-        } catch {
-            let alert = UIAlertController(title: "Playback Error", message: "Could not play “\(name)”", preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
-            present(alert, animated: true)
+                if OrderOfServiceManager.shared.contains(.song(song)) {
+                    showToast("Already in Order: \(song.title)")
+                    return
+                }
+
+                OrderOfServiceManager.shared.addItem(.song(song))
+                showToast("Added: \(song.title)")
+            } else {
+                showToast("MP3 not found for: \(entry.title)")
+            }
+        } else {
+            let reading = ReadingEntry(title: entry.title, text: entry.body)
+
+            if OrderOfServiceManager.shared.contains(.reading(reading)) {
+                showToast("Already in Order: \(reading.title)")
+                return
+            }
+
+            OrderOfServiceManager.shared.addItem(.reading(reading))
+            showToast("Added: \(reading.title)")
         }
     }
 
-    private func showNoMatchAlert() {
-        let alert = UIAlertController(title: "No Match", message: "No matching song found for this reading.", preferredStyle: .alert)
+
+    private func showAlert(_ title: String, _ message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
+    
+    private func showToast(_ message: String) {
+        let toastLabel = UILabel()
+        toastLabel.text = message
+        toastLabel.backgroundColor = UIColor.systemGreen
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.alpha = 0
+        toastLabel.layer.cornerRadius = 6
+        toastLabel.clipsToBounds = true
+        toastLabel.font = UIFont.boldSystemFont(ofSize: 14)
 
-    private func normalize(_ string: String) -> String {
-        return string
-            .lowercased()
-            .replacingOccurrences(of: "[^a-z0-9 ]", with: "", options: .regularExpression)
-            .trimmingCharacters(in: .whitespacesAndNewlines)
-    }
+        let padding: CGFloat = 12
+        toastLabel.frame = CGRect(
+            x: padding,
+            y: view.safeAreaInsets.top + 16,
+            width: view.frame.width - padding * 2,
+            height: 36
+        )
+        view.addSubview(toastLabel)
 
-    private func levenshtein(_ aStr: String, _ bStr: String) -> Int {
-        let a = Array(aStr)
-        let b = Array(bStr)
-        var dist = [[Int]](repeating: [Int](repeating: 0, count: b.count + 1), count: a.count + 1)
-
-        for i in 0...a.count { dist[i][0] = i }
-        for j in 0...b.count { dist[0][j] = j }
-
-        for i in 1...a.count {
-            for j in 1...b.count {
-                if a[i - 1] == b[j - 1] {
-                    dist[i][j] = dist[i - 1][j - 1]
-                } else {
-                    dist[i][j] = min(
-                        dist[i - 1][j] + 1,
-                        dist[i][j - 1] + 1,
-                        dist[i - 1][j - 1] + 1
-                    )
+        UIView.animate(withDuration: 0.25, animations: {
+            toastLabel.alpha = 1.0
+            toastLabel.transform = .identity
+        }) { _ in
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 2.0,
+                options: .curveEaseInOut,
+                animations: {
+                    toastLabel.alpha = 0.0
+                    toastLabel.transform = CGAffineTransform(translationX: 0, y: -10)
+                }, completion: { _ in
+                    toastLabel.removeFromSuperview()
                 }
-            }
+            )
         }
-        return dist[a.count][b.count]
     }
+
 }

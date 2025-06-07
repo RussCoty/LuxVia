@@ -6,11 +6,11 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
 
-    var groupedTracks: [String: [String]] = [:]
+    var groupedTracks: [String: [SongEntry]] = [:]
     var sortedFolders: [String] = []
     var collapsedSections: Set<String> = []
 
-    var filteredGroupedTracks: [String: [String]] = [:]
+    var filteredGroupedTracks: [String: [SongEntry]] = [:]
     var filteredFolders: [String] = []
 
     var isFiltering: Bool {
@@ -27,7 +27,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         setupUI()
         setupUserMenu()
 
-        // 🔁 Hook up forward/back buttons
         PlayerControlsView.shared?.onNext = {
             let mgr = AudioPlayerManager.shared
             if mgr.isTrackCued {
@@ -65,9 +64,9 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             filteredGroupedTracks = [:]
             filteredFolders = []
         } else {
-            var temp: [String: [String]] = [:]
+            var temp: [String: [SongEntry]] = [:]
             for (folder, tracks) in groupedTracks {
-                let matches = tracks.filter { $0.lowercased().contains(query) }
+                let matches = tracks.filter { $0.title.lowercased().contains(query) }
                 if !matches.isEmpty {
                     temp[folder] = matches
                 }
@@ -80,54 +79,47 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
     func loadGroupedTrackList() {
         let fileManager = FileManager.default
-        var tempGroups: [String: [String]] = [:]
+        var tempGroups: [String: [SongEntry]] = [:]
 
-        // Bundle audio
-        if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
-            if let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
-                for case let fileURL as URL in enumerator {
-                    if fileURL.pathExtension.lowercased() == "mp3" {
-                        let relativePath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
-                        let components = relativePath.components(separatedBy: "/")
-                        let rawFolder = components.dropLast().joined(separator: "/")
-                        let folder = rawFolder.isEmpty ? "Music" : rawFolder.capitalized
-                        let name = fileURL.deletingPathExtension().lastPathComponent
-                        tempGroups[folder, default: []].append(name)
-                    }
+        func appendTrack(folder: String, fileURL: URL) {
+            let title = fileURL.deletingPathExtension().lastPathComponent
+            let entry = SongEntry(title: title, fileName: title, artist: nil, duration: nil)
+            tempGroups[folder, default: []].append(entry)
+        }
+
+        if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio"),
+           let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
+            for case let fileURL as URL in enumerator {
+                if fileURL.pathExtension.lowercased() == "mp3" {
+                    let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
+                    let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                    appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
                 }
             }
         }
 
-        // Imported audio
         if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
             let importedURL = docsURL.appendingPathComponent("audio")
-            if fileManager.fileExists(atPath: importedURL.path) {
-                if let enumerator = fileManager.enumerator(at: importedURL, includingPropertiesForKeys: nil) {
-                    for case let fileURL as URL in enumerator {
-                        if fileURL.pathExtension.lowercased() == "mp3" {
-                            let relativePath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
-                            let components = relativePath.components(separatedBy: "/")
-                            let rawFolder = components.dropLast().joined(separator: "/")
-                            let folder = rawFolder.isEmpty ? "Imported" : rawFolder.capitalized
-                            let name = fileURL.deletingPathExtension().lastPathComponent
-                            tempGroups[folder, default: []].append(name)
-                        }
+            if fileManager.fileExists(atPath: importedURL.path),
+               let enumerator = fileManager.enumerator(at: importedURL, includingPropertiesForKeys: nil) {
+                for case let fileURL as URL in enumerator {
+                    if fileURL.pathExtension.lowercased() == "mp3" {
+                        let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
+                        let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                        appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
                     }
                 }
             }
         }
 
         for (folder, tracks) in tempGroups {
-            tempGroups[folder] = tracks.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+            tempGroups[folder] = tracks.sorted(by: { $0.title.localizedStandardCompare($1.title) == .orderedAscending })
         }
 
         groupedTracks = tempGroups
         sortedFolders = tempGroups.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
 
-        // ✅ Sync to SharedLibraryManager
-        let allTracks = tempGroups.values.flatMap { $0 }.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
-        SharedLibraryManager.shared.libraryTracks = allTracks
-
+        SharedLibraryManager.shared.allSongs = tempGroups.values.flatMap { $0 }
         tableView.reloadData()
     }
 
@@ -145,134 +137,35 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         ])
     }
 
-    @objc private func importTapped() {
-        let mp3Type = UTType(filenameExtension: "mp3")!
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [mp3Type], asCopy: true)
-        picker.delegate = self
-        picker.allowsMultipleSelection = false
-        present(picker, animated: true)
-    }
-
-    func documentPicker(_ controller: UIDocumentPickerViewController, didPickDocumentsAt urls: [URL]) {
-        guard let pickedURL = urls.first else { return }
-
-        let fileManager = FileManager.default
-        guard let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first else { return }
-        let importedFolderURL = docsURL.appendingPathComponent("audio/imported")
-
-        do {
-            if !fileManager.fileExists(atPath: importedFolderURL.path) {
-                try fileManager.createDirectory(at: importedFolderURL, withIntermediateDirectories: true)
-            }
-
-            let destinationURL = importedFolderURL.appendingPathComponent(pickedURL.lastPathComponent)
-
-            if fileManager.fileExists(atPath: destinationURL.path) {
-                try fileManager.removeItem(at: destinationURL)
-            }
-
-            try fileManager.copyItem(at: pickedURL, to: destinationURL)
-            loadGroupedTrackList()
-        } catch {
-            print("❌ Failed to import: \(error)")
-        }
-    }
-
     func numberOfSections(in tableView: UITableView) -> Int {
         return isFiltering ? filteredFolders.count : sortedFolders.count
     }
 
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
-        if collapsedSections.contains(folder) && !isFiltering {
-            return 0
-        }
         return (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?.count ?? 0
-    }
-
-    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-        let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
-        let isCollapsed = collapsedSections.contains(folder)
-        let icon = isCollapsed && !isFiltering ? "▶︎" : "▼"
-
-        let label = UILabel()
-        label.text = "\(icon) \(folder)"
-        label.font = .boldSystemFont(ofSize: 16)
-
-        let tapView = UIView()
-        tapView.backgroundColor = .clear
-        tapView.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleSection(_:))))
-        tapView.tag = section
-
-        let container = UIView()
-        container.addSubview(label)
-        container.addSubview(tapView)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        tapView.translatesAutoresizingMaskIntoConstraints = false
-
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(equalTo: container.leadingAnchor, constant: 16),
-            label.trailingAnchor.constraint(equalTo: container.trailingAnchor, constant: -8),
-            label.topAnchor.constraint(equalTo: container.topAnchor, constant: 4),
-            label.bottomAnchor.constraint(equalTo: container.bottomAnchor, constant: -4),
-
-            tapView.leadingAnchor.constraint(equalTo: container.leadingAnchor),
-            tapView.trailingAnchor.constraint(equalTo: container.trailingAnchor),
-            tapView.topAnchor.constraint(equalTo: container.topAnchor),
-            tapView.bottomAnchor.constraint(equalTo: container.bottomAnchor),
-        ])
-        return container
-    }
-
-    @objc func toggleSection(_ sender: UITapGestureRecognizer) {
-        guard let section = sender.view?.tag, !isFiltering else { return }
-        let folder = sortedFolders[section]
-
-        if collapsedSections.contains(folder) {
-            collapsedSections.remove(folder)
-        } else {
-            collapsedSections.insert(folder)
-        }
-        tableView.reloadSections(IndexSet(integer: section), with: .automatic)
-    }
-
-    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return nil
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] ?? ""
+        let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row]
 
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
-        cell.textLabel?.text = track.replacingOccurrences(of: "_", with: " ").capitalized
+        cell.textLabel?.text = track?.title.replacingOccurrences(of: "_", with: " ").capitalized
 
         let addButton = UIButton(type: .contactAdd)
         addButton.tag = indexPath.section * 1000 + indexPath.row
         addButton.addTarget(self, action: #selector(addToPlaylistTapped(_:)), for: .touchUpInside)
         cell.accessoryView = addButton
-
-        let audio = AudioPlayerManager.shared
-        if audio.currentSource == .library && audio.currentTrackName == track {
-            cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
-            cell.accessoryType = .checkmark
-        } else if audio.isTrackCued && audio.cuedSource == .library && audio.cuedTrackName == track {
-            cell.backgroundColor = UIColor.systemGray.withAlphaComponent(0.2)
-            cell.accessoryType = .detailDisclosureButton
-        } else {
-            cell.backgroundColor = .clear
-            cell.accessoryType = .none
-        }
-
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] ?? ""
-        AudioPlayerManager.shared.cueTrack(named: track, source: .library)
+        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
-        PlayerControlsView.shared?.nowPlayingText("Cued: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
+        AudioPlayerManager.shared.cueTrack(track, source: .library)
+        PlayerControlsView.shared?.nowPlayingText("Cued: \(track.title.replacingOccurrences(of: "_", with: " ").capitalized)")
         tableView.reloadData()
     }
 
@@ -282,54 +175,21 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[row] else { return }
 
-        if SharedPlaylistManager.shared.playlist.contains(track) {
+        if SharedPlaylistManager.shared.playlist.contains(where: { $0.title == track.title }) {
             let alert = UIAlertController(
                 title: "Add Again?",
-                message: "\"\(track.replacingOccurrences(of: "_", with: " ").capitalized)\" is already in the playlist. Add it again?",
+                message: "\"\(track.title.capitalized)\" is already in the playlist. Add it again?",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "Add Again", style: .default) { _ in
                 SharedPlaylistManager.shared.playlist.append(track)
-                self.showToast(message: "✅ Added: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
+                self.showToast("Added again: \(track.title)")
             })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
             present(alert, animated: true)
         } else {
             SharedPlaylistManager.shared.playlist.append(track)
-            self.showToast(message: "✅ Added: \(track.replacingOccurrences(of: "_", with: " ").capitalized)")
-        }
-    }
-
-    func showToast(message: String, duration: TimeInterval = 2.0) {
-        let toast = PaddedLabel()
-        toast.text = message
-        toast.textAlignment = .center
-        toast.backgroundColor = UIColor(red: 0.27, green: 0.84, blue: 0.47, alpha: 1.0)
-        toast.textColor = .white
-        toast.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        toast.alpha = 0
-        toast.layer.cornerRadius = 18
-        toast.clipsToBounds = true
-        toast.translatesAutoresizingMaskIntoConstraints = false
-
-        view.addSubview(toast)
-
-        NSLayoutConstraint.activate([
-            toast.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            toast.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -100)
-        ])
-
-        toast.transform = CGAffineTransform(translationX: 0, y: 20)
-        UIView.animate(withDuration: 0.25, animations: {
-            toast.alpha = 1.0
-            toast.transform = .identity
-        }) { _ in
-            UIView.animate(withDuration: 0.25, delay: duration, options: .curveEaseInOut, animations: {
-                toast.alpha = 0.0
-                toast.transform = CGAffineTransform(translationX: 0, y: -10)
-            }, completion: { _ in
-                toast.removeFromSuperview()
-            })
+            showToast("Added: \(track.title)")
         }
     }
 
@@ -340,12 +200,9 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
     @objc private func showUserMenu() {
         let status = AuthManager.shared.isLoggedIn ? "Member: Active" : "Guest"
-
         let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: status, style: .default, handler: nil))
-        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive) { _ in
-            AuthManager.shared.logout()
-        })
+        alert.addAction(UIAlertAction(title: status, style: .default))
+        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive) { _ in AuthManager.shared.logout() })
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
 
         if let popover = alert.popoverPresentationController {
@@ -354,5 +211,42 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
         present(alert, animated: true)
     }
-}
 
+    private func showToast(_ message: String) {
+        let toastLabel = UILabel()
+        toastLabel.text = message
+        toastLabel.backgroundColor = UIColor.systemGreen
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.alpha = 0
+        toastLabel.layer.cornerRadius = 6
+        toastLabel.clipsToBounds = true
+        toastLabel.font = UIFont.boldSystemFont(ofSize: 14)
+
+        let padding: CGFloat = 12
+        toastLabel.frame = CGRect(
+            x: padding,
+            y: view.safeAreaInsets.top + 16,
+            width: view.frame.width - padding * 2,
+            height: 36
+        )
+        view.addSubview(toastLabel)
+
+        UIView.animate(withDuration: 0.25, animations: {
+            toastLabel.alpha = 1.0
+            toastLabel.transform = .identity
+        }) { _ in
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 2.0,
+                options: .curveEaseInOut,
+                animations: {
+                    toastLabel.alpha = 0.0
+                    toastLabel.transform = CGAffineTransform(translationX: 0, y: -10)
+                }, completion: { _ in
+                    toastLabel.removeFromSuperview()
+                }
+            )
+        }
+    }
+}

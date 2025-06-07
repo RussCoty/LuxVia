@@ -188,14 +188,14 @@ class MainViewController: UIViewController {
         currentTrackIndex += 1
         if currentTrackIndex < SharedPlaylistManager.shared.playlist.count {
             let nextTrack = SharedPlaylistManager.shared.playlist[currentTrackIndex]
-            play(trackNamed: nextTrack)
+            play(trackNamed: nextTrack.fileName) // ✅ or .title if that's what your audio engine expects
         } else {
             AudioPlayerManager.shared.stop()
             playerControls.updatePlayButton(isPlaying: false)
             playerControls.nowPlayingText("Now Playing: —")
-            playerControls.updateProgress(current: 0)
         }
     }
+
 
     private func play(trackNamed name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") else { return }

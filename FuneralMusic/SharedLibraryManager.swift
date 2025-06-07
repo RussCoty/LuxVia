@@ -1,27 +1,27 @@
 import Foundation
 
+
 class SharedLibraryManager {
     static let shared = SharedLibraryManager()
 
-    // This should be populated once when the app loads the library
-    var libraryTracks: [String] = []
+    var allSongs: [SongEntry] = []
 
-    // This helps AudioPlayerManager get the track file URL
     func urlForTrack(named name: String) -> URL? {
-        // Check for imported files
-        let fileManager = FileManager.default
-        if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let importedURL = docsURL.appendingPathComponent("audio/imported/\(name).mp3")
-            if fileManager.fileExists(atPath: importedURL.path) {
-                return importedURL
-            }
+        // Match by title or filename, ignoring case
+        if let song = allSongs.first(where: {
+            $0.title.lowercased() == name.lowercased() ||
+            $0.fileName.lowercased() == name.lowercased()
+        }) {
+            let path = Bundle.main.path(forResource: song.fileName, ofType: "mp3")
+            return path != nil ? URL(fileURLWithPath: path!) : nil
         }
-
-        // Check the bundle
-        if let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") {
-            return url
-        }
-
         return nil
+    }
+
+    func songForTrack(named name: String) -> SongEntry? {
+        return allSongs.first(where: {
+            $0.title.lowercased() == name.lowercased() ||
+            $0.fileName.lowercased() == name.lowercased()
+        })
     }
 }
