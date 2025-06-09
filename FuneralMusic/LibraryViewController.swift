@@ -183,12 +183,14 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
             )
             alert.addAction(UIAlertAction(title: "Add Again", style: .default) { _ in
                 SharedPlaylistManager.shared.playlist.append(track)
+                SharedPlaylistManager.shared.save()
                 self.showToast("Added again: \(track.title)")
             })
             alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
             present(alert, animated: true)
         } else {
             SharedPlaylistManager.shared.playlist.append(track)
+            SharedPlaylistManager.shared.save()
             showToast("Added: \(track.title)")
         }
     }

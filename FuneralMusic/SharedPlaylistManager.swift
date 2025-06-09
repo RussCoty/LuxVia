@@ -4,10 +4,21 @@ import Foundation
 
 class SharedPlaylistManager {
     static let shared = SharedPlaylistManager()
-    private init() {}
+
+    // MARK: - Properties
 
     var playlist: [SongEntry] = []
     private(set) var currentIndex: Int = 0
+
+    private let playlistKey = "sharedPlaylist"
+
+    // MARK: - Init
+
+    private init() {
+        load()
+    }
+
+    // MARK: - Playback
 
     func play(at index: Int) {
         guard index >= 0, index < playlist.count else { return }
@@ -30,5 +41,26 @@ class SharedPlaylistManager {
     func indexOfCurrentTrack() -> Int? {
         guard let name = AudioPlayerManager.shared.currentTrackName else { return nil }
         return playlist.firstIndex(where: { $0.title == name })
+    }
+
+    // MARK: - Persistence
+
+    func save() {
+        do {
+            let data = try JSONEncoder().encode(playlist)
+            UserDefaults.standard.set(data, forKey: playlistKey)
+        } catch {
+            print("Error saving playlist: \(error)")
+        }
+    }
+
+    func load() {
+        if let data = UserDefaults.standard.data(forKey: playlistKey) {
+            do {
+                playlist = try JSONDecoder().decode([SongEntry].self, from: data)
+            } catch {
+                print("Error loading playlist: \(error)")
+            }
+        }
     }
 }

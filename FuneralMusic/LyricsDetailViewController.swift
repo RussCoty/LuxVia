@@ -102,9 +102,18 @@ class LyricsDetailViewController: UIViewController {
     }
 
     @objc private func playMatchingSong() {
-        guard let filename = entry.musicFilename else { return }
+        guard let filename = entry.musicFilename else {
+            print("[DEBUG] No musicFilename in entry: \(entry.title)")
+            return
+        }
+
         let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
+        print("[DEBUG] Requested filename:", filename)
+        print("[DEBUG] Trimmed base name:", trimmed)
+
         guard let url = SharedLibraryManager.shared.urlForTrack(named: trimmed) else {
+            print("[DEBUG] MP3 not found in SharedLibraryManager. All available files:")
+            SharedLibraryManager.shared.allSongs.forEach { print("- \($0.fileName)") }
             showAlert("Not Found", "Could not find audio file.")
             return
         }
@@ -119,6 +128,7 @@ class LyricsDetailViewController: UIViewController {
 
         isPlaying.toggle()
     }
+
 
     private func animateButtonIcon(to iconName: String) {
         UIView.transition(with: playButton, duration: 0.25, options: .transitionCrossDissolve) {
