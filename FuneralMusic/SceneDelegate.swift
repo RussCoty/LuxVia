@@ -61,10 +61,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
         // Order of Service tab
-        let bookletNav = UINavigationController(rootViewController: OrderOfServiceViewController())
-    bookletNav.tabBarItem = UITabBarItem(title: "Booklet", image: nil, tag: 2)
+        let serviceNav = UINavigationController(rootViewController: ServiceViewController())
+        serviceNav.tabBarItem = UITabBarItem(title: "Service", image: nil, tag: 2)
 
-        tabBarController.viewControllers = [wordsNav, musicTab, bookletNav]
+
+        tabBarController.viewControllers = [wordsNav, musicTab, serviceNav]
 
         let biggerFont = UIFont.systemFont(ofSize: 14, weight: .bold)
         UITabBarItem.appearance().setTitleTextAttributes([.font: biggerFont], for: .normal)

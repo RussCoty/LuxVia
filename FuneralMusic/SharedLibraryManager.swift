@@ -12,11 +12,13 @@ class SharedLibraryManager {
             $0.title.lowercased() == name.lowercased() ||
             $0.fileName.lowercased() == name.lowercased()
         }) {
-            let path = Bundle.main.path(forResource: song.fileName, ofType: "mp3")
+            // Looks inside 'Audio/' folder in bundle
+            let path = Bundle.main.path(forResource: song.fileName, ofType: "mp3", inDirectory: "Audio")
             return path != nil ? URL(fileURLWithPath: path!) : nil
         }
         return nil
     }
+
 
     func songForTrack(named name: String) -> SongEntry? {
         return allSongs.first(where: {

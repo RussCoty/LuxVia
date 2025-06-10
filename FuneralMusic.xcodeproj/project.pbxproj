@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101293E62DC9FD7C0012B3DE /* LoginViewController.swift */; };
-		1012F6422DC9446F00F1D56F /* LibraryViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1012F6412DC9446F00F1D56F /* LibraryViewController.swift */; };
-		1012F6442DC948A200F1D56F /* OrderOfServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */; };
+		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
 		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
+		10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10334E4D2DF70CEC005B9682 /* ServiceItem.swift */; };
+		103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D32DF700AF005D90DF /* ServiceOrderManager.swift */; };
+		103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D42DF700AF005D90DF /* ServiceItem.swift */; };
+		103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D52DF700AF005D90DF /* ServiceViewController.swift */; };
 		1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */; };
 		105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */; };
 		105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A92DD3BF79008AF276 /* MainViewController.swift */; };
@@ -19,7 +22,6 @@
 		10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 10824D7A2DF339B100CDF11B /* SwiftSoup */; };
 		10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */; };
 		10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */; };
-		10824D812DF3978000CDF11B /* OrderOfServiceManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D802DF3978000CDF11B /* OrderOfServiceManager.swift */; };
 		10824D832DF3989300CDF11B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D822DF3989300CDF11B /* Models.swift */; };
 		10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */; };
 		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
@@ -28,7 +30,6 @@
 		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
 		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
 		1089BCC62DCE077F005DF96A /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 1089BCC52DCE077F005DF96A /* Audio */; };
-		108D26BC2DD200A30049806F /* PlaylistViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BB2DD200A30049806F /* PlaylistViewController.swift */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
 		109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109366782DD22611007127CC /* SharedPlaylistManager.swift */; };
 		10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10964F762DDA3174000BAF5A /* AudioImportManager.swift */; };
@@ -46,9 +47,12 @@
 
 /* Begin PBXFileReference section */
 		101293E62DC9FD7C0012B3DE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
-		1012F6412DC9446F00F1D56F /* LibraryViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryViewController.swift; sourceTree = "<group>"; };
-		1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderOfServiceViewController.swift; sourceTree = "<group>"; };
+		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
+		10334E4D2DF70CEC005B9682 /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		103984D32DF700AF005D90DF /* ServiceOrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
+		103984D42DF700AF005D90DF /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		103984D52DF700AF005D90DF /* ServiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceViewController.swift; sourceTree = "<group>"; };
 		1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LUMA_Launch.png; path = FuneralMusic/LUMA_Launch.png; sourceTree = SOURCE_ROOT; };
 		105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		105679A92DD3BF79008AF276 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
@@ -56,7 +60,6 @@
 		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
 		10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsListViewController.swift; sourceTree = "<group>"; };
 		10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsDetailViewController.swift; sourceTree = "<group>"; };
-		10824D802DF3978000CDF11B /* OrderOfServiceManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OrderOfServiceManager.swift; sourceTree = "<group>"; };
 		10824D822DF3989300CDF11B /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LyricsSyncManager.swift; sourceTree = "<group>"; };
 		1084FAA02DC8EC06009398EB /* FuneralMusic.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FuneralMusic.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -67,7 +70,6 @@
 		1084FAAF2DC8EC09009398EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1084FAB12DC8EC09009398EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1089BCC52DCE077F005DF96A /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
-		108D26BB2DD200A30049806F /* PlaylistViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaylistViewController.swift; sourceTree = "<group>"; };
 		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
 		109366782DD22611007127CC /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
 		10964F762DDA3174000BAF5A /* AudioImportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportManager.swift; sourceTree = "<group>"; };
@@ -95,11 +97,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		101651CE2DF70D53008B41E5 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
 		1084FA972DC8EC06009398EB = {
 			isa = PBXGroup;
 			children = (
 				1084FAA22DC8EC06009398EB /* FuneralMusic */,
 				1084FAA12DC8EC06009398EB /* Products */,
+				101651CE2DF70D53008B41E5 /* Recovered References */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,40 +124,41 @@
 		1084FAA22DC8EC06009398EB /* FuneralMusic */ = {
 			isa = PBXGroup;
 			children = (
-				10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */,
-				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
-				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
 				1089BCC52DCE077F005DF96A /* Audio */,
+				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
+				1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */,
+				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
+				1084FAB12DC8EC09009398EB /* Info.plist */,
 				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
 				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
 				109851322DD8D490007C685B /* BaseViewController.swift */,
-				1084FAB12DC8EC09009398EB /* Info.plist */,
 				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
-				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
-				1012F6412DC9446F00F1D56F /* LibraryViewController.swift */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
-				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
-				1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */,
 				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
-				10824D822DF3989300CDF11B /* Models.swift */,
+				10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */,
 				105679A92DD3BF79008AF276 /* MainViewController.swift */,
 				1099B61F2DD7744300CA3194 /* MembershipManager.swift */,
+				10824D822DF3989300CDF11B /* Models.swift */,
 				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
+				1022FA822DF704BB0030074B /* MusicViewController.swift */,
 				1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */,
 				1099B6212DD784A000CA3194 /* NonceExtractor.swift */,
-				10824D802DF3978000CDF11B /* OrderOfServiceManager.swift */,
-				1012F6432DC948A200F1D56F /* OrderOfServiceViewController.swift */,
 				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
 				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
-				108D26BB2DD200A30049806F /* PlaylistViewController.swift */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
+				103984D42DF700AF005D90DF /* ServiceItem.swift */,
+				103984D32DF700AF005D90DF /* ServiceOrderManager.swift */,
+				103984D52DF700AF005D90DF /* ServiceViewController.swift */,
 				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
 				105FC7322DD9048A00C93490 /* TopBarView.swift */,
 				10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
 				1084FAA72DC8EC06009398EB /* ViewController.swift */,
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
+				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
+				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
+				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
 			);
 			path = FuneralMusic;
@@ -234,32 +245,33 @@
 			buildActionMask = 2147483647;
 			files = (
 				101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */,
+				103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */,
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
 				10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */,
 				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
 				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
+				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
 				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
 				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
+				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
+				103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */,
 				10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */,
-				1012F6442DC948A200F1D56F /* OrderOfServiceViewController.swift in Sources */,
 				10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */,
 				1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */,
-				1012F6422DC9446F00F1D56F /* LibraryViewController.swift in Sources */,
 				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
 				109851312DD8D258007C685B /* AuthManager.swift in Sources */,
 				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
-				108D26BC2DD200A30049806F /* PlaylistViewController.swift in Sources */,
+				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,
 				10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */,
 				1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */,
-				10824D812DF3978000CDF11B /* OrderOfServiceManager.swift in Sources */,
 				10824D832DF3989300CDF11B /* Models.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -408,7 +420,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -436,7 +448,7 @@
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
-				IPHONEOS_DEPLOYMENT_TARGET = 10;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

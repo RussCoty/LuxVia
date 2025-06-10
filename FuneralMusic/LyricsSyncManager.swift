@@ -4,17 +4,26 @@ import SwiftSoup
 class LyricsSyncManager {
     static let shared = LyricsSyncManager()
 
-    private let baseURL = "https://funeralmusic.co.uk/category/words/"
+    private let baseURL = "https://funeralmusic.co.uk/category/words/page/"
     private let fileName = "lyrics.json"
+    private let lastSyncedKey = "lyricsLastSynced"
+    private let maxPages = 20 // You can increase this if needed
 
-    func syncLyrics(completion: @escaping (Result<[LyricEntry], Error>) -> Void) {
-        fetchPostURLs(from: baseURL) { result in
+    func syncLyrics(force: Bool = false, completion: @escaping (Result<[LyricEntry], Error>) -> Void) {
+        if !force && !shouldSync() {
+            let cached = loadCachedLyrics()
+            completion(.success(cached))
+            return
+        }
+
+        fetchAllPostURLs { result in
             switch result {
             case .success(let urls):
                 self.fetchLyricsEntries(from: urls) { lyricsResult in
                     switch lyricsResult {
                     case .success(let entries):
                         self.saveToDisk(entries)
+                        self.updateLastSynced()
                         completion(.success(entries))
                     case .failure(let err):
                         completion(.failure(err))
@@ -26,32 +35,57 @@ class LyricsSyncManager {
         }
     }
 
-    private func fetchPostURLs(from categoryURL: String, completion: @escaping (Result<[String], Error>) -> Void) {
-        guard let url = URL(string: categoryURL) else {
-            return completion(.failure(NSError(domain: "bad url", code: 1)))
+    private func shouldSync() -> Bool {
+        guard let last = UserDefaults.standard.object(forKey: lastSyncedKey) as? Date else { return true }
+        return Date().timeIntervalSince(last) > 3600 // 1 hour
+    }
+
+    private func updateLastSynced() {
+        UserDefaults.standard.set(Date(), forKey: lastSyncedKey)
+    }
+
+    private func fetchAllPostURLs(completion: @escaping (Result<[String], Error>) -> Void) {
+        var allURLs: [String] = []
+        let group = DispatchGroup()
+
+        for page in 1...maxPages {
+            let pageURL = "\(baseURL)\(page)/"
+            guard let url = URL(string: pageURL) else { continue }
+
+            group.enter()
+            var request = URLRequest(url: url)
+            request.setValue(
+                "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
+                forHTTPHeaderField: "User-Agent"
+            )
+
+            URLSession.shared.dataTask(with: request) { data, _, error in
+                defer { group.leave() }
+
+                guard let data = data,
+                      let html = String(data: data, encoding: .utf8) else { return }
+
+                do {
+                    let doc = try SwiftSoup.parse(html)
+                    let links = try doc.select("article h2.entry-title a")
+                    let urls = try links.map { try $0.attr("href") }
+                    if !urls.isEmpty {
+                        allURLs.append(contentsOf: urls)
+                    }
+                } catch {
+                    // Ignore errors per page, stop on completion
+                }
+            }.resume()
         }
 
-        var request = URLRequest(url: url)
-        request.setValue(
-            "Mozilla/5.0 (iPhone; CPU iPhone OS 15_0 like Mac OS X)",
-            forHTTPHeaderField: "User-Agent"
-        )
-
-        URLSession.shared.dataTask(with: request) { data, _, error in
-            guard let data = data, error == nil,
-                  let html = String(data: data, encoding: .utf8) else {
-                return completion(.failure(error ?? NSError(domain: "failed html fetch", code: 2)))
+        group.notify(queue: .main) {
+            if allURLs.isEmpty {
+                completion(.failure(NSError(domain: "no urls found", code: 1)))
+            } else {
+                let uniqueURLs = Array(Set(allURLs)).sorted()
+                completion(.success(uniqueURLs))
             }
-
-            do {
-                let doc = try SwiftSoup.parse(html)
-                let links = try doc.select("article h2.entry-title a")
-                let urls = try links.map { try $0.attr("href") }
-                completion(.success(urls))
-            } catch {
-                completion(.failure(error))
-            }
-        }.resume()
+        }
     }
 
     private func fetchLyricsEntries(from urls: [String], completion: @escaping (Result<[LyricEntry], Error>) -> Void) {
@@ -66,7 +100,7 @@ class LyricsSyncManager {
             URLSession.shared.dataTask(with: urlObj) { data, _, error in
                 defer { group.leave() }
 
-                guard let data = data, error == nil,
+                guard let data = data,
                       let html = String(data: data, encoding: .utf8) else {
                     if let err = error { errors.append(err) }
                     return
@@ -77,6 +111,7 @@ class LyricsSyncManager {
                     let title = try doc.select("h1.entry-title").text()
                     let bodyHTML = try doc.select("div.entry-content").html()
                     let musicTag = try? doc.select("meta[name=music-filename]").attr("content")
+
                     let entry = LyricEntry(
                         title: title,
                         body: bodyHTML,
@@ -94,7 +129,7 @@ class LyricsSyncManager {
             if !entries.isEmpty {
                 completion(.success(entries))
             } else {
-                completion(.failure(errors.first ?? NSError(domain: "no entries", code: 3)))
+                completion(.failure(errors.first ?? NSError(domain: "no entries", code: 2)))
             }
         }
     }
@@ -123,4 +158,3 @@ class LyricsSyncManager {
         return docDir.appendingPathComponent(fileName)
     }
 }
-

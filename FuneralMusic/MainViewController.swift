@@ -1,12 +1,14 @@
 import UIKit
+import Foundation
 
 class MainViewController: UIViewController {
     let segmentedControl = UISegmentedControl(items: ["Import", "Library", "Playlist"])
     private let containerView = UIView()
     private let playerControls = PlayerControlsView()
 
-    private lazy var libraryVC = LibraryViewController()
-    private lazy var playlistVC = PlaylistViewController()
+    let libraryVC = MusicViewController()
+    let playlistVC = ServiceViewController()
+
     private var currentTrackIndex = 0
 
     private var progressTimer: Timer?

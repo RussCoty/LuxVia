@@ -1,4 +1,3 @@
-
 import UIKit
 
 class LyricsDetailViewController: UIViewController {
@@ -110,7 +109,13 @@ class LyricsDetailViewController: UIViewController {
         let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
         print("[DEBUG] Requested filename:", filename)
         print("[DEBUG] Trimmed base name:", trimmed)
-
+        print("[DEBUG] Total songs in library:", SharedLibraryManager.shared.allSongs.count)
+            print("[DEBUG] Looking for matches against:")
+            SharedLibraryManager.shared.allSongs.forEach { song in
+                print("  - Title: '\(song.title)', FileName: '\(song.fileName)'")
+                print("    Title match: \(song.title.lowercased() == trimmed.lowercased())")
+                print("    FileName match: \(song.fileName.lowercased() == trimmed.lowercased())")
+            }
         guard let url = SharedLibraryManager.shared.urlForTrack(named: trimmed) else {
             print("[DEBUG] MP3 not found in SharedLibraryManager. All available files:")
             SharedLibraryManager.shared.allSongs.forEach { print("- \($0.fileName)") }
@@ -129,7 +134,6 @@ class LyricsDetailViewController: UIViewController {
         isPlaying.toggle()
     }
 
-
     private func animateButtonIcon(to iconName: String) {
         UIView.transition(with: playButton, duration: 0.25, options: .transitionCrossDissolve) {
             self.playButton.setImage(UIImage(systemName: iconName), for: .normal)
@@ -140,29 +144,42 @@ class LyricsDetailViewController: UIViewController {
         if let filename = entry.musicFilename {
             let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
             if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
+                let serviceItem = ServiceItem(
+                    type: .music,
+                    title: song.title,
+                    subtitle: nil,
+                    fileName: song.fileName,
+                    customText: nil
+                )
 
-                if OrderOfServiceManager.shared.contains(.song(song)) {
+                if ServiceOrderManager.shared.items.contains(where: { $0.fileName == song.fileName && $0.type == .music }) {
                     showToast("Already in Order: \(song.title)")
                     return
                 }
 
-                OrderOfServiceManager.shared.addItem(.song(song))
+                ServiceOrderManager.shared.add(serviceItem)
                 showToast("Added: \(song.title)")
             } else {
                 showToast("MP3 not found for: \(entry.title)")
             }
         } else {
-            let reading = ReadingEntry(title: entry.title, text: entry.body)
+            let reading = ServiceItem(
+                type: .reading,
+                title: entry.title,
+                subtitle: nil,
+                customText: entry.body
+            )
 
-            if OrderOfServiceManager.shared.contains(.reading(reading)) {
+            if ServiceOrderManager.shared.items.contains(where: { $0.title == entry.title && $0.type == .reading }) {
                 showToast("Already in Order: \(reading.title)")
                 return
             }
 
-            OrderOfServiceManager.shared.addItem(.reading(reading))
+            ServiceOrderManager.shared.add(reading)
             showToast("Added: \(reading.title)")
         }
     }
+
 
 
     private func showAlert(_ title: String, _ message: String) {
@@ -170,7 +187,7 @@ class LyricsDetailViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
-    
+
     private func showToast(_ message: String) {
         let toastLabel = UILabel()
         toastLabel.text = message
@@ -208,5 +225,4 @@ class LyricsDetailViewController: UIViewController {
             )
         }
     }
-
 }
