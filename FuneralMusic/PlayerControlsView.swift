@@ -52,13 +52,17 @@ class PlayerControlsView: UIView {
         volumeLabel.text = "Volume: 50%"
         volumeLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        configureImageButton(playPauseButton, imageName: "button_play")
+        playPauseButton.translatesAutoresizingMaskIntoConstraints = false
+        playPauseButton.setImage(UIImage(systemName: "play.fill"), for: .normal)
+        playPauseButton.tintColor = .black
+        playPauseButton.imageView?.contentMode = .scaleAspectFit
+        playPauseButton.contentVerticalAlignment = .fill
+        playPauseButton.contentHorizontalAlignment = .fill
+        playPauseButton.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        playPauseButton.heightAnchor.constraint(equalToConstant: 44).isActive = true
+
         configureImageButton(nextButton, imageName: "button_next")
         configureImageButton(previousButton, imageName: "button_prev")
-
-        [playPauseButton, previousButton, nextButton].forEach {
-            $0.heightAnchor.constraint(equalToConstant: 44).isActive = true
-        }
 
         fadeButton.setTitle("Fade Out", for: .normal)
         fadeButton.tintColor = .black
@@ -70,18 +74,10 @@ class PlayerControlsView: UIView {
         fadeButton.heightAnchor.constraint(equalToConstant: 36).isActive = true
         fadeButton.contentEdgeInsets = UIEdgeInsets(top: 6, left: 16, bottom: 6, right: 16)
         fadeButton.setContentHuggingPriority(.required, for: .horizontal)
-        
-        fadeButton.setTitle("Fade Out", for: .normal)
-        fadeButton.setTitle("Fade In", for: .disabled)
-        fadeButton.setTitle("Fade Out", for: .normal)
         fadeButton.widthAnchor.constraint(greaterThanOrEqualToConstant: 100).isActive = true
-
 
         volumeSlider.value = AudioPlayerManager.shared.volume
         volumeSlider.translatesAutoresizingMaskIntoConstraints = false
-        volumeSlider.setContentHuggingPriority(.defaultLow, for: .horizontal)
-        volumeSlider.setContentCompressionResistancePriority(.defaultLow, for: .horizontal)
-        //volumeSlider.widthAnchor.constraint(lessThanOrEqualToConstant: 200).isActive = true
 
         if let wedgeImage = generateWedgeImage() {
             volumeSlider.setMinimumTrackImage(wedgeImage, for: .normal)
@@ -92,8 +88,8 @@ class PlayerControlsView: UIView {
 
         let transportStack = UIStackView(arrangedSubviews: [previousButton, playPauseButton, nextButton])
         transportStack.axis = .horizontal
-        transportStack.distribution = .fillEqually
         transportStack.spacing = 16
+        transportStack.alignment = .center
         transportStack.translatesAutoresizingMaskIntoConstraints = false
 
         let volumeStack = UIStackView(arrangedSubviews: [volumeSlider, volumeLabel])
@@ -120,9 +116,7 @@ class PlayerControlsView: UIView {
             nowPlayingLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
 
             transportStack.topAnchor.constraint(equalTo: nowPlayingLabel.bottomAnchor, constant: 8),
-            transportStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
-            transportStack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
-            transportStack.heightAnchor.constraint(equalToConstant: 50),
+            transportStack.centerXAnchor.constraint(equalTo: centerXAnchor),
 
             fadeVolumeStack.topAnchor.constraint(equalTo: transportStack.bottomAnchor, constant: 12),
             fadeVolumeStack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 16),
@@ -151,6 +145,8 @@ class PlayerControlsView: UIView {
         button.imageView?.contentMode = .scaleAspectFit
         button.contentHorizontalAlignment = .fill
         button.contentVerticalAlignment = .fill
+        button.widthAnchor.constraint(equalToConstant: 44).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 44).isActive = true
     }
 
     private func generateWedgeImage(width: CGFloat = 300, height: CGFloat = 10, color: UIColor = .black) -> UIImage? {
@@ -159,12 +155,10 @@ class PlayerControlsView: UIView {
         guard let context = UIGraphicsGetCurrentContext() else { return nil }
 
         context.setFillColor(color.cgColor)
-
-        // Steep wedge: starts at 0, ends much taller
         context.beginPath()
         context.move(to: CGPoint(x: 0, y: height))
-        context.addLine(to: CGPoint(x: 0, y: height - 0.2 * height))   // near bottom
-        context.addLine(to: CGPoint(x: width, y: height - 1.2 * height)) // loud end = much higher
+        context.addLine(to: CGPoint(x: 0, y: height - 0.2 * height))
+        context.addLine(to: CGPoint(x: width, y: height - 1.2 * height))
         context.addLine(to: CGPoint(x: width, y: height))
         context.closePath()
         context.fillPath()
@@ -174,21 +168,19 @@ class PlayerControlsView: UIView {
         return image?.resizableImage(withCapInsets: .zero, resizingMode: .stretch)
     }
 
-
     @objc private func playPauseTapped() { onPlayPause?() }
     @objc private func nextTapped() { onNext?() }
-    @objc private func fadeTapped() { onFadeOut?()
-            // Pulse animation on tap
-                let pulse = CASpringAnimation(keyPath: "transform.scale")
-                pulse.fromValue = 1.0
-                pulse.toValue = 1.1
-                pulse.duration = 0.2
-                pulse.autoreverses = true
-                pulse.repeatCount = 1
-                fadeButton.layer.add(pulse, forKey: nil)
-        }
     @objc private func previousTapped() { onPrevious?() }
-    
+    @objc private func fadeTapped() {
+        onFadeOut?()
+        let pulse = CASpringAnimation(keyPath: "transform.scale")
+        pulse.fromValue = 1.0
+        pulse.toValue = 1.1
+        pulse.duration = 0.2
+        pulse.autoreverses = true
+        pulse.repeatCount = 1
+        fadeButton.layer.add(pulse, forKey: nil)
+    }
     @objc private func volumeChanged(_ sender: UISlider) {
         let percent = Int(sender.value * 100)
         volumeLabel.text = "Volume: \(percent)%"
@@ -201,8 +193,9 @@ class PlayerControlsView: UIView {
     }
 
     func updatePlayButton(isPlaying: Bool) {
-        let imageName = isPlaying ? "button_pause" : "button_play"
-        playPauseButton.setImage(UIImage(named: imageName), for: .normal)
+        let systemName = isPlaying ? "pause.fill" : "play.fill"
+        let image = UIImage(systemName: systemName)
+        playPauseButton.setImage(image, for: .normal)
     }
 
     func nowPlayingText(_ text: String) {

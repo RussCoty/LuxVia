@@ -17,6 +17,11 @@
 		1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */; };
 		105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */; };
 		105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A92DD3BF79008AF276 /* MainViewController.swift */; };
+		105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBACB2DF9A01C004B7F7A /* CustomReading.swift */; };
+		105BBACE2DF9A067004B7F7A /* CustomReadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */; };
+		105BBAD02DF9A08D004B7F7A /* CustomReadingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */; };
+		105BBAD42DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */; };
+		105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */; };
 		105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105FC7322DD9048A00C93490 /* TopBarView.swift */; };
 		107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */; };
 		10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 10824D7A2DF339B100CDF11B /* SwiftSoup */; };
@@ -31,6 +36,7 @@
 		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
 		1089BCC62DCE077F005DF96A /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 1089BCC52DCE077F005DF96A /* Audio */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
+		108DB36C2DF8DE6F00DEB58C /* TopHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */; };
 		109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109366782DD22611007127CC /* SharedPlaylistManager.swift */; };
 		10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10964F762DDA3174000BAF5A /* AudioImportManager.swift */; };
 		1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1098512E2DD8CCCF007C685B /* PaddedLabel.swift */; };
@@ -56,6 +62,11 @@
 		1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = LUMA_Launch.png; path = FuneralMusic/LUMA_Launch.png; sourceTree = SOURCE_ROOT; };
 		105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
 		105679A92DD3BF79008AF276 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		105BBACB2DF9A01C004B7F7A /* CustomReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReading.swift; sourceTree = "<group>"; };
+		105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingManager.swift; sourceTree = "<group>"; };
+		105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingsViewController.swift; sourceTree = "<group>"; };
+		105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingEditorViewController.swift; sourceTree = "<group>"; };
+		105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingStore.swift; sourceTree = "<group>"; };
 		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
 		10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsListViewController.swift; sourceTree = "<group>"; };
@@ -71,6 +82,7 @@
 		1084FAB12DC8EC09009398EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1089BCC52DCE077F005DF96A /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
+		108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopHeaderView.swift; sourceTree = "<group>"; };
 		109366782DD22611007127CC /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
 		10964F762DDA3174000BAF5A /* AudioImportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportManager.swift; sourceTree = "<group>"; };
 		1098512E2DD8CCCF007C685B /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
@@ -135,9 +147,9 @@
 				109851322DD8D490007C685B /* BaseViewController.swift */,
 				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
+				105679A92DD3BF79008AF276 /* MainViewController.swift */,
 				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
 				10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */,
-				105679A92DD3BF79008AF276 /* MainViewController.swift */,
 				1099B61F2DD7744300CA3194 /* MembershipManager.swift */,
 				10824D822DF3989300CDF11B /* Models.swift */,
 				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
@@ -160,6 +172,12 @@
 				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
+				108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */,
+				105BBACB2DF9A01C004B7F7A /* CustomReading.swift */,
+				105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */,
+				105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */,
+				105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */,
+				105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -249,15 +267,20 @@
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
 				10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */,
+				105BBACE2DF9A067004B7F7A /* CustomReadingManager.swift in Sources */,
+				105BBAD42DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift in Sources */,
+				108DB36C2DF8DE6F00DEB58C /* TopHeaderView.swift in Sources */,
 				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
 				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
 				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
 				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
 				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
+				105BBAD02DF9A08D004B7F7A /* CustomReadingsViewController.swift in Sources */,
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
+				105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */,
 				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
 				103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */,
@@ -267,6 +290,7 @@
 				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
 				109851312DD8D258007C685B /* AuthManager.swift in Sources */,
 				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
+				105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */,
 				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,

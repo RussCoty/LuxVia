@@ -1,15 +1,9 @@
-//
-//  TopBarView.swift
-//  FuneralMusic
-//
-//  Created by Russell Cottier on 17/05/2025.
-//
-
 import UIKit
 
 class TopBarView: UIView {
 
     let logoutButton = UIButton(type: .system)
+    let titleLabel = UILabel()
     let contentContainer = UIView()
 
     override init(frame: CGRect) {
@@ -25,11 +19,14 @@ class TopBarView: UIView {
     private func setupView() {
         backgroundColor = .systemBackground
 
-        // Container for left/middle content
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentContainer)
 
-        // Logout button setup
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        titleLabel.textAlignment = .left
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+        contentContainer.addSubview(titleLabel)
+
         logoutButton.setTitle("Logout", for: .normal)
         logoutButton.setTitleColor(.systemBlue, for: .normal)
         logoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
@@ -43,32 +40,15 @@ class TopBarView: UIView {
             contentContainer.centerYAnchor.constraint(equalTo: centerYAnchor),
             contentContainer.trailingAnchor.constraint(lessThanOrEqualTo: logoutButton.leadingAnchor, constant: -8),
 
+            titleLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
+            titleLabel.centerYAnchor.constraint(equalTo: contentContainer.centerYAnchor),
+
             logoutButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             logoutButton.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
     }
 
-    func setContent(_ view: UIView) {
-        contentContainer.subviews.forEach { $0.removeFromSuperview() }
-        view.translatesAutoresizingMaskIntoConstraints = false
-        contentContainer.addSubview(view)
-
-        NSLayoutConstraint.activate([
-            view.topAnchor.constraint(equalTo: contentContainer.topAnchor),
-            view.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor),
-            view.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
-            view.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor)
-        ])
+    func setTitle(_ text: String) {
+        titleLabel.text = text
     }
 }
-
-// Usage Example (in your ViewController):
-// let topBar = TopBarView()
-// view.addSubview(topBar)
-// topBar.translatesAutoresizingMaskIntoConstraints = false
-// NSLayoutConstraint.activate([
-//     topBar.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
-//     topBar.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-//     topBar.trailingAnchor.constraint(equalTo: view.trailingAnchor)
-// ])
-// topBar.logoutButton.addTarget(self, action: #selector(handleLogout), for: .touchUpInside)

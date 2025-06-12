@@ -4,7 +4,9 @@
 //
 //  Created by Russell Cottier on 05/05/2025.
 //
+
 import UIKit
+import SafariServices
 
 class SessionManager {
     static func logout() {
@@ -20,11 +22,6 @@ class SessionManager {
     }
 }
 
-
-
-import UIKit
-import SafariServices
-
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
@@ -32,6 +29,33 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func scene(_ scene: UIScene,
                willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
+
+        // ✅ Apply global tab bar appearance
+        if #available(iOS 13.0, *) {
+            let appearance = UITabBarAppearance()
+            appearance.configureWithOpaqueBackground()
+            appearance.backgroundColor = .systemBackground
+            appearance.shadowImage = nil
+            appearance.shadowColor = nil
+
+            // ✅ Fix: Set tab item title font & color
+            let attributes: [NSAttributedString.Key: Any] = [
+                .font: UIFont.systemFont(ofSize: 14, weight: .bold),
+                .foregroundColor: UIColor.gray
+            ]
+            appearance.stackedLayoutAppearance.normal.titleTextAttributes = attributes
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+                .font: UIFont.systemFont(ofSize: 14, weight: .bold),
+                .foregroundColor: UIColor.label
+            ]
+
+            UITabBar.appearance().standardAppearance = appearance
+
+            if #available(iOS 15.0, *) {
+                UITabBar.appearance().scrollEdgeAppearance = appearance
+            }
+        }
+
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
@@ -52,23 +76,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func showMainApp() {
         let tabBarController = UITabBarController()
 
-        // About tab (WebView)
+        // Words Tab
         let wordsNav = UINavigationController(rootViewController: WordsListViewController())
-    wordsNav.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)
+        wordsNav.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)
 
-        // Music tab (Navigation Controller)
+        // Music Tab
         let musicTab = UINavigationController(rootViewController: MainViewController())
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
-        // Order of Service tab
+        // Service Tab
         let serviceNav = UINavigationController(rootViewController: ServiceViewController())
         serviceNav.tabBarItem = UITabBarItem(title: "Service", image: nil, tag: 2)
 
-
         tabBarController.viewControllers = [wordsNav, musicTab, serviceNav]
 
-        let biggerFont = UIFont.systemFont(ofSize: 14, weight: .bold)
-        UITabBarItem.appearance().setTitleTextAttributes([.font: biggerFont], for: .normal)
+        // Bold font for tab bar items
+        let boldFont = UIFont.systemFont(ofSize: 14, weight: .bold)
+        UITabBarItem.appearance().setTitleTextAttributes([.font: boldFont], for: .normal)
 
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
@@ -93,7 +117,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    // Other lifecycle methods
+    // App Lifecycle
     func sceneDidDisconnect(_ scene: UIScene) { }
     func sceneDidBecomeActive(_ scene: UIScene) {
         LyricsSyncManager.shared.syncLyrics { result in
