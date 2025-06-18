@@ -47,13 +47,33 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
 
     @objc private func addReading() {
         let editorVC = CustomReadingEditorViewController()
+
         editorVC.onSave = { [weak self] newReading in
+            // Save only on manual Save
             CustomReadingStore.shared.add(newReading)
-            self?.customReadings.append(newReading)
+            self?.customReadings = CustomReadingStore.shared.load()
             self?.tableView.reloadData()
         }
+
+        editorVC.onAddToService = { [weak self] reading in
+            // ❌ DO NOT save again here!
+            self?.customReadings = CustomReadingStore.shared.load()
+            self?.tableView.reloadData()
+
+            let serviceItem = ServiceItem(
+                type: .customReading,
+                title: reading.title,
+                subtitle: nil,
+                customText: reading.content
+            )
+
+            ServiceOrderManager.shared.add(serviceItem)
+            self?.tabBarController?.selectedIndex = 0
+        }
+
         navigationController?.pushViewController(editorVC, animated: true)
     }
+
 
     // MARK: - UITableViewDataSource
 
@@ -79,7 +99,12 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
 
     @objc private func addToService(_ sender: UIButton) {
         let reading = customReadings[sender.tag]
-        let serviceItem = ServiceItem(type: .reading, title: reading.title)
+        let serviceItem = ServiceItem(
+            type: .customReading,
+            title: reading.title,
+            subtitle: nil,
+            customText: reading.content
+        )
         print("Adding to service:", serviceItem)
         ServiceOrderManager.shared.add(serviceItem)
     }

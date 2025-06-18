@@ -7,7 +7,7 @@ class LyricsDetailViewController: UIViewController {
     private let playButton = UIButton(type: .system)
     private let addButton = UIButton(type: .system)
     private let bottomBanner = UIView()
-    private var isPlaying = false
+    //private var isPlaying = false
 
     init(entry: LyricEntry) {
         self.entry = entry
@@ -107,38 +107,33 @@ class LyricsDetailViewController: UIViewController {
         }
 
         let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
-        print("[DEBUG] Requested filename:", filename)
-        print("[DEBUG] Trimmed base name:", trimmed)
-        print("[DEBUG] Total songs in library:", SharedLibraryManager.shared.allSongs.count)
-            print("[DEBUG] Looking for matches against:")
-            SharedLibraryManager.shared.allSongs.forEach { song in
-                print("  - Title: '\(song.title)', FileName: '\(song.fileName)'")
-                print("    Title match: \(song.title.lowercased() == trimmed.lowercased())")
-                print("    FileName match: \(song.fileName.lowercased() == trimmed.lowercased())")
-            }
+
         guard let url = SharedLibraryManager.shared.urlForTrack(named: trimmed) else {
-            print("[DEBUG] MP3 not found in SharedLibraryManager. All available files:")
-            SharedLibraryManager.shared.allSongs.forEach { print("- \($0.fileName)") }
             showAlert("Not Found", "Could not find audio file.")
             return
         }
 
-        if isPlaying {
-            AudioPlayerManager.shared.stop()
-            animateButtonIcon(to: "play.fill")
-        } else {
-            AudioPlayerManager.shared.play(url: url)
-            animateButtonIcon(to: "pause.fill")
-        }
+        AudioPlayerManager.shared.play(url: url)
 
-        isPlaying.toggle()
-    }
+        // Switch to Music tab
+        tabBarController?.selectedIndex = 0
 
-    private func animateButtonIcon(to iconName: String) {
-        UIView.transition(with: playButton, duration: 0.25, options: .transitionCrossDissolve) {
-            self.playButton.setImage(UIImage(systemName: iconName), for: .normal)
+        // Delay scroll until transition completes
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            if let nav = self.tabBarController?.viewControllers?.first as? UINavigationController,
+               let musicVC = nav.topViewController as? MusicViewController {
+                musicVC.scrollToTrack(named: trimmed)
+            }
         }
     }
+
+
+
+//    private func animateButtonIcon(to iconName: String) {
+//        UIView.transition(with: playButton, duration: 0.25, options: .transitionCrossDissolve) {
+//            self.playButton.setImage(UIImage(systemName: iconName), for: .normal)
+//        }
+//    }
 
     @objc private func addToService() {
         if let filename = entry.musicFilename {

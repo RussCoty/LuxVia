@@ -23,9 +23,16 @@ class CustomReadingStore {
 
     func add(_ reading: CustomReading) {
         var current = load()
+
+        // ❌ Prevent duplicate titles (case-insensitive)
+        guard !current.contains(where: { $0.title.lowercased() == reading.title.lowercased() }) else {
+            return
+        }
+
         current.append(reading)
         save(current)
     }
+
 
     func update(_ id: UUID, with updated: CustomReading) {
         var current = load()

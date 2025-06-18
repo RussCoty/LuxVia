@@ -79,8 +79,24 @@ class CustomReadingEditorViewController: UIViewController {
 
     @objc private func addToServiceTapped() {
         guard let reading = buildReading() else { return }
-        let serviceItem = ServiceItem(type: .reading, title: reading.title)
-        ServiceOrderManager.shared.add(serviceItem)
+
+        let store = CustomReadingStore.shared
+        if store.load().contains(where: { $0.id == reading.id }) {
+            store.update(reading.id, with: reading)
+        } else {
+            store.add(reading)
+        }
+
+        let serviceItem = ServiceItem(
+            type: .customReading,
+            title: reading.title,
+            subtitle: nil,
+            customText: reading.content
+        )
+
+        ServiceOrderManager.shared.add(serviceItem) // 👈 Always add here
+
+        onAddToService?(reading)
         navigationController?.popViewController(animated: true)
     }
 
