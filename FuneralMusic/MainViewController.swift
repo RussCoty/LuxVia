@@ -10,8 +10,11 @@ class MainViewController: UIViewController {
     let playlistVC = ServiceViewController()
 
     private var currentTrackIndex = 0
-
     private var progressTimer: Timer?
+
+    // MARK: - Mini Player Support
+    let miniPlayerVC = MiniPlayerContainerViewController()
+    private var miniPlayerBottomConstraint: NSLayoutConstraint!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +25,7 @@ class MainViewController: UIViewController {
         setupLogoutButton()
         setupPlayerCallbacks()
         showLibrary()
+        setupMiniPlayer() // ✅ Add this
     }
 
     // MARK: - UI Setup
@@ -52,6 +56,45 @@ class MainViewController: UIViewController {
         navigationItem.titleView = segmentedControl
     }
 
+    private func setupMiniPlayer() {
+        addChild(miniPlayerVC)
+        view.addSubview(miniPlayerVC.view)
+        miniPlayerVC.didMove(toParent: self)
+
+        miniPlayerVC.view.translatesAutoresizingMaskIntoConstraints = false
+        miniPlayerVC.view.backgroundColor = .systemGray5 // ✅ Add this line
+
+        miniPlayerBottomConstraint = miniPlayerVC.view.bottomAnchor.constraint(
+            equalTo: view.safeAreaLayoutGuide.bottomAnchor, // ✅ use safeArea
+            constant: 64
+        )
+
+        NSLayoutConstraint.activate([
+            miniPlayerVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            miniPlayerVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            miniPlayerBottomConstraint,
+            miniPlayerVC.view.heightAnchor.constraint(equalToConstant: 64)
+        ])
+    }
+
+
+    func showMiniPlayer() {
+        print("👀 Showing Mini Player") // ✅ Add debug
+        miniPlayerBottomConstraint.constant = 0
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    func hideMiniPlayer() {
+        miniPlayerBottomConstraint.constant = 64
+        UIView.animate(withDuration: 0.3) {
+            self.view.layoutIfNeeded()
+        }
+    }
+
+    // MARK: - Logout
+
     private func setupLogoutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: "Logout",
@@ -80,14 +123,10 @@ class MainViewController: UIViewController {
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
-        case 0:
-            AudioImportManager.presentImportPicker(from: self)
-        case 1:
-            showLibrary()
-        case 2:
-            showPlaylist()
-        default:
-            break
+        case 0: AudioImportManager.presentImportPicker(from: self)
+        case 1: showLibrary()
+        case 2: showPlaylist()
+        default: break
         }
     }
 
@@ -184,20 +223,17 @@ class MainViewController: UIViewController {
         playerControls.updateTimeLabel(current: current, duration: duration)
     }
 
-    // MARK: - Manual Advance Logic (for Library Mode)
-
     private func advanceToNextTrack() {
         currentTrackIndex += 1
         if currentTrackIndex < SharedPlaylistManager.shared.playlist.count {
             let nextTrack = SharedPlaylistManager.shared.playlist[currentTrackIndex]
-            play(trackNamed: nextTrack.fileName) // ✅ or .title if that's what your audio engine expects
+            play(trackNamed: nextTrack.fileName)
         } else {
             AudioPlayerManager.shared.stop()
             playerControls.updatePlayButton(isPlaying: false)
             playerControls.nowPlayingText("Now Playing: —")
         }
     }
-
 
     private func play(trackNamed name: String) {
         guard let url = Bundle.main.url(forResource: name, withExtension: "mp3", subdirectory: "Audio") else { return }
@@ -208,8 +244,6 @@ class MainViewController: UIViewController {
         playerControls.setMaxProgress(Float(AudioPlayerManager.shared.duration))
         startProgressTimer()
     }
-
-    // MARK: - Fade In/Out
 
     private func fadeOutMusic() {
         let audio = AudioPlayerManager.shared
