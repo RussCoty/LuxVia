@@ -51,6 +51,7 @@
 		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
 		10A90B1F2DCC005400B0FEE6 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */; };
 		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
+		10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -99,6 +100,7 @@
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
 		10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LUMA_Launch.png; sourceTree = "<group>"; };
 		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
+		10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,6 +186,7 @@
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
 				10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */,
+				10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -287,6 +290,7 @@
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
 				10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
+				10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */,
 				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,

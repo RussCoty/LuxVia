@@ -36,6 +36,7 @@ class MiniPlayerContainerViewController: UIViewController {
 
         playerView.updatePlayButton(isPlaying: false)
         playerView.setMaxProgress(Float(AudioPlayerManager.shared.duration))
+        playerView.setVolumeSlider(value: AudioPlayerManager.shared.volume)
         startProgressTimer()
     }
 
@@ -57,9 +58,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 }
 
                 let title = self.currentSong?.title ?? "—"
-                print("▶️ Now Playing: \(title)")
                 self.playerView.nowPlayingText("Now Playing: \(title)")
-
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
                 self.startProgressTimer()
