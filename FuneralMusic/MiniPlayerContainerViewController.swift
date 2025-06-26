@@ -2,7 +2,7 @@ import UIKit
 
 class MiniPlayerContainerViewController: UIViewController {
 
-    private let playerView = PlayerControlsView()
+    let playerView = PlayerControlsView()  // or use a public getter
     private var progressTimer: Timer?
     private var currentSong: SongEntry?
 
