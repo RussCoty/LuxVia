@@ -4,7 +4,9 @@ import Foundation
 class MainViewController: UIViewController {
     let segmentedControl = UISegmentedControl(items: ["Import", "Library", "Playlist"])
     private let containerView = UIView()
-    private let playerControls = PlayerControlsView()
+
+    // 🔒 Full Player (commented out)
+    // private let playerControls = PlayerControlsView()
 
     let libraryVC = MusicViewController()
     let playlistVC = ServiceViewController()
@@ -12,7 +14,7 @@ class MainViewController: UIViewController {
     private var currentTrackIndex = 0
     private var progressTimer: Timer?
 
-    // MARK: - Mini Player Support
+    // ✅ Mini Player
     let miniPlayerVC = MiniPlayerContainerViewController()
     private var miniPlayerBottomConstraint: NSLayoutConstraint!
 
@@ -23,32 +25,27 @@ class MainViewController: UIViewController {
 
         setupUI()
         setupLogoutButton()
-        setupPlayerCallbacks()
+        // setupPlayerCallbacks() ❌ Full player off
         showLibrary()
-        setupMiniPlayer() // ✅ Add this
+        setupMiniPlayer()
     }
-
-    // MARK: - UI Setup
 
     private func setupUI() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
-        playerControls.translatesAutoresizingMaskIntoConstraints = false
-
         view.addSubview(containerView)
-        view.addSubview(playerControls)
 
-        PlayerControlsView.shared = playerControls
-        playerControls.setFadeButtonTitle("Fade Out")
+        // 🔒 Full Player UI Setup (commented)
+        // playerControls.translatesAutoresizingMaskIntoConstraints = false
+        // view.addSubview(playerControls)
+        // PlayerControlsView.shared = playerControls
+        // playerControls.setFadeButtonTitle("Fade Out")
 
         NSLayoutConstraint.activate([
-            playerControls.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            playerControls.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            playerControls.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: playerControls.topAnchor)
+            containerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            // ⛔ no playerControls.topAnchor anymore
         ])
 
         segmentedControl.selectedSegmentIndex = 1
@@ -62,11 +59,11 @@ class MainViewController: UIViewController {
         miniPlayerVC.didMove(toParent: self)
 
         miniPlayerVC.view.translatesAutoresizingMaskIntoConstraints = false
-        miniPlayerVC.view.backgroundColor = .systemGray5 // ✅ Add this line
+        miniPlayerVC.view.backgroundColor = .systemGray5
 
         miniPlayerBottomConstraint = miniPlayerVC.view.bottomAnchor.constraint(
-            equalTo: view.safeAreaLayoutGuide.bottomAnchor, // ✅ use safeArea
-            constant: 64
+            equalTo: view.safeAreaLayoutGuide.bottomAnchor,
+            constant: 0
         )
 
         NSLayoutConstraint.activate([
@@ -77,9 +74,8 @@ class MainViewController: UIViewController {
         ])
     }
 
-
     func showMiniPlayer() {
-        print("👀 Showing Mini Player") // ✅ Add debug
+        print("👀 Showing Mini Player")
         miniPlayerBottomConstraint.constant = 0
         UIView.animate(withDuration: 0.3) {
             self.view.layoutIfNeeded()
@@ -92,8 +88,6 @@ class MainViewController: UIViewController {
             self.view.layoutIfNeeded()
         }
     }
-
-    // MARK: - Logout
 
     private func setupLogoutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
@@ -110,12 +104,10 @@ class MainViewController: UIViewController {
             message: "Are you sure you want to log out?",
             preferredStyle: .alert
         )
-
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
             SessionManager.logout()
         })
-
         present(alert, animated: true)
     }
 
@@ -157,8 +149,9 @@ class MainViewController: UIViewController {
         newVC.didMove(toParent: self)
     }
 
-    // MARK: - Player Control Setup
+    // 🔒 Full Player Callbacks (commented)
 
+    /*
     private func setupPlayerCallbacks() {
         playerControls.onPlayPause = { [weak self] in
             guard let self = self else { return }
@@ -281,4 +274,5 @@ class MainViewController: UIViewController {
             }
         }
     }
+    */
 }
