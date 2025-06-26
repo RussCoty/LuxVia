@@ -1,38 +1,47 @@
 import UIKit
 
-final class IconLabelButtonView: UIControl {
+class IconLabelButtonView: UIView {
 
     private let iconView = UIImageView()
-    private let label = UILabel()
+    private let titleLabel = UILabel()
+    private var tapGesture: UITapGestureRecognizer?
 
-    private var tapAction: (() -> Void)?
+    var currentIconName: String = ""
+    var currentTitle: String? {
+        return titleLabel.text
+    }
 
-    init(icon: String, title: String, action: @escaping () -> Void) {
+    var onTap: (() -> Void)?
+
+    init(icon: String, title: String) {
         super.init(frame: .zero)
         setup(icon: icon, title: title)
-        tapAction = action
-        addTarget(self, action: #selector(didTap), for: .touchUpInside)
     }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+        setup(icon: "questionmark", title: "Unknown")
     }
 
     private func setup(icon: String, title: String) {
+        currentIconName = icon
         iconView.image = UIImage(systemName: icon)
-        iconView.contentMode = .scaleAspectFit
         iconView.tintColor = .label
+        iconView.contentMode = .scaleAspectFit
+        iconView.translatesAutoresizingMaskIntoConstraints = false
+        iconView.setContentHuggingPriority(.defaultHigh, for: .vertical)
 
-        label.text = title
-        label.font = .systemFont(ofSize: 12)
-        label.textColor = .label
-        label.textAlignment = .center
-        label.adjustsFontSizeToFitWidth = true
+        titleLabel.text = title
+        titleLabel.textAlignment = .center
+        titleLabel.font = .systemFont(ofSize: 12)
+        titleLabel.adjustsFontSizeToFitWidth = true
+        titleLabel.minimumScaleFactor = 0.8
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        let stack = UIStackView(arrangedSubviews: [iconView, label])
+        let stack = UIStackView(arrangedSubviews: [iconView, titleLabel])
         stack.axis = .vertical
         stack.alignment = .center
-        stack.spacing = 6
+        stack.spacing = 4
         stack.translatesAutoresizingMaskIntoConstraints = false
 
         addSubview(stack)
@@ -42,16 +51,29 @@ final class IconLabelButtonView: UIControl {
             stack.bottomAnchor.constraint(equalTo: bottomAnchor),
             stack.leadingAnchor.constraint(equalTo: leadingAnchor),
             stack.trailingAnchor.constraint(equalTo: trailingAnchor),
-            iconView.heightAnchor.constraint(equalToConstant: 32)
-        ])
-    }
 
-    @objc private func didTap() {
-        tapAction?()
+            iconView.widthAnchor.constraint(equalToConstant: 24),
+            iconView.heightAnchor.constraint(equalToConstant: 24),
+            titleLabel.widthAnchor.constraint(equalToConstant: 64) // prevent jitter
+        ])
+
+        tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
+        if let gesture = tapGesture {
+            addGestureRecognizer(gesture)
+        }
+
+        translatesAutoresizingMaskIntoConstraints = false
+        widthAnchor.constraint(equalToConstant: 64).isActive = true
+        heightAnchor.constraint(equalToConstant: 64).isActive = true
     }
 
     func update(icon: String, title: String) {
+        currentIconName = icon
         iconView.image = UIImage(systemName: icon)
-        label.text = title
+        titleLabel.text = title
+    }
+
+    @objc private func tapped() {
+        onTap?()
     }
 }
