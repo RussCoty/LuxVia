@@ -35,6 +35,8 @@ class MiniPlayerContainerViewController: UIViewController {
         playerView.nowPlayingText(cueText)
 
         playerView.updatePlayButton(isPlaying: false)
+        playerView.setFadeButtonTitle("Fade In")
+        playerView.updateFadeIcon(isFadingOut: true)
         playerView.setMaxProgress(Float(AudioPlayerManager.shared.duration))
         playerView.setVolumeSlider(value: AudioPlayerManager.shared.volume)
         startProgressTimer()
@@ -49,6 +51,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 audio.pause()
                 self.playerView.updatePlayButton(isPlaying: false)
                 self.playerView.setFadeButtonTitle("Fade In")
+                self.playerView.updateFadeIcon(isFadingOut: true)
                 self.stopProgressTimer()
             } else {
                 if audio.isTrackCued {
@@ -61,6 +64,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 self.playerView.nowPlayingText("Now Playing: \(title)")
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
+                self.playerView.updateFadeIcon(isFadingOut: false)
                 self.startProgressTimer()
             }
         }
@@ -126,6 +130,7 @@ class MiniPlayerContainerViewController: UIViewController {
                     player.volume = audio.volume
                     self.playerView.updatePlayButton(isPlaying: false)
                     self.playerView.setFadeButtonTitle("Fade In")
+                    self.playerView.updateFadeIcon(isFadingOut: true)
                     self.playerView.nowPlayingText("Paused after fade")
                 }
             }
@@ -134,6 +139,7 @@ class MiniPlayerContainerViewController: UIViewController {
             player.play()
             self.playerView.updatePlayButton(isPlaying: true)
             self.playerView.setFadeButtonTitle("Fade Out")
+            self.playerView.updateFadeIcon(isFadingOut: false)
 
             Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
                 if player.volume < audio.volume - 0.01 {

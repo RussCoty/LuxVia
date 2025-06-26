@@ -34,17 +34,26 @@ class PlayerControlsView: UIView {
         titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
         titleLabel.textAlignment = .center
         titleLabel.numberOfLines = 1
+        titleLabel.text = " " // avoid zero-height label
+        titleLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
+
+        configureIconButton(fadeButton, icon: "radiowaves.right", title: "Fade", horizontalOffset: 10)
+        fadeButton.addTarget(self, action: #selector(handleFade), for: .touchUpInside)
 
         configureIconButton(playPauseButton, icon: "play.fill", title: "Play")
         playPauseButton.addTarget(self, action: #selector(handlePlayPause), for: .touchUpInside)
 
-        configureIconButton(playCuedButton, icon: "forward.fill", title: "Play Cued")
+        configureIconButton(playCuedButton, icon: "forward.fill", title: "Play Cued", horizontalOffset: -10)
         playCuedButton.addTarget(self, action: #selector(handleNext), for: .touchUpInside)
 
-        configureIconButton(fadeButton, icon: "radiowaves.left", title: "Fade")
-        fadeButton.addTarget(self, action: #selector(handleFade), for: .touchUpInside)
 
         progressSlider.addTarget(self, action: #selector(handleScrub), for: .valueChanged)
+        progressSlider.minimumValue = 0
+        progressSlider.maximumValue = 1 // Prevent zero-width slider
+        progressSlider.value = 0.001     // Tiny visible indicator
+        progressSlider.isContinuous = true
+        progressSlider.translatesAutoresizingMaskIntoConstraints = false
+        progressSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
         timeLabel.font = .systemFont(ofSize: 12)
         timeLabel.textAlignment = .center
@@ -53,9 +62,9 @@ class PlayerControlsView: UIView {
         volumeSlider.value = AudioPlayerManager.shared.volume
 
         let buttonRow = UIStackView(arrangedSubviews: [
+            fadeButton,
             playPauseButton,
-            playCuedButton,
-            fadeButton
+            playCuedButton
         ])
         buttonRow.axis = .horizontal
         buttonRow.spacing = 24
@@ -83,16 +92,48 @@ class PlayerControlsView: UIView {
         ])
     }
 
-    private func configureIconButton(_ button: UIButton, icon: String, title: String) {
-        button.setImage(UIImage(systemName: icon), for: .normal)
+    private func configureIconButton(
+        _ button: UIButton,
+        icon: String,
+        title: String,
+        horizontalOffset: CGFloat = 0
+    ) {
+        guard let iconImage = UIImage(systemName: icon) else { return }
+
+        let isWideIcon = icon.contains("radiowaves")
+
+        button.setImage(iconImage, for: .normal)
         button.setTitle(title, for: .normal)
         button.tintColor = .label
         button.titleLabel?.font = .systemFont(ofSize: 12)
+        button.titleLabel?.textAlignment = .center
+        button.titleLabel?.adjustsFontSizeToFitWidth = true
         button.contentHorizontalAlignment = .center
         button.contentVerticalAlignment = .center
-        button.titleEdgeInsets = UIEdgeInsets(top: 36, left: -28, bottom: 0, right: 0)
-        button.imageEdgeInsets = UIEdgeInsets(top: -10, left: 10, bottom: 10, right: 0)
+
+        let iconWidth = iconImage.size.width
+        let extraLeft = isWideIcon ? 20.0 : 10.0
+
+        button.titleEdgeInsets = UIEdgeInsets(
+            top: 36,
+            left: -iconWidth + horizontalOffset,
+            bottom: 0,
+            right: 0
+        )
+        button.imageEdgeInsets = UIEdgeInsets(
+            top: -10,
+            left: extraLeft + horizontalOffset,
+            bottom: 10,
+            right: 0
+        )
+
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.widthAnchor.constraint(equalToConstant: 64).isActive = true
+        button.heightAnchor.constraint(equalToConstant: 64).isActive = true
     }
+
+
+
 
 
     // MARK: - Action Handlers
@@ -150,4 +191,10 @@ class PlayerControlsView: UIView {
     func setVolumeSlider(value: Float) {
         volumeSlider.value = value
     }
+    func updateFadeIcon(isFadingOut: Bool) {
+        let iconName = isFadingOut ? "radiowaves.right" : "radiowaves.left"
+        let image = UIImage(systemName: iconName)
+        fadeButton.setImage(image, for: .normal)
+    }
+
 }
