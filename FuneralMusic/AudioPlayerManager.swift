@@ -1,9 +1,11 @@
 import Foundation
 import AVFoundation
 
-class AudioPlayerManager {
+class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     static let shared = AudioPlayerManager()
-    private init() {}
+    private override init() {
+        super.init()
+    }
 
     var player: AVAudioPlayer?
     private var playbackLimitTimer: Timer?
@@ -14,6 +16,8 @@ class AudioPlayerManager {
         case library
         case playlist
     }
+
+    var onPlaybackEnded: (() -> Void)?
 
     var isPaused: Bool {
         return player?.isPlaying == false && player != nil
@@ -54,6 +58,7 @@ class AudioPlayerManager {
         do {
             player = try AVAudioPlayer(contentsOf: url)
             player?.volume = volume
+            player?.delegate = self
             player?.prepareToPlay()
             player?.play()
             maybeStartPlaybackLimiter()
@@ -125,11 +130,10 @@ class AudioPlayerManager {
             play(url: url)
         }
     }
-    
+
     func seek(to time: TimeInterval) {
         player?.currentTime = time
     }
-
 
     func playPreviousInLibrary() {
         guard let current = currentTrackName else { return }
@@ -183,11 +187,22 @@ class AudioPlayerManager {
                 player.volume -= 0.05
             } else {
                 timer.invalidate()
-                player.stop()
-                player.volume = self.volume
+                let title = self.currentTrackName ?? "—"
+                player.volume = self.volume  // Restore volume first
+                DispatchQueue.main.async {
+                    PlayerControlsView.shared?.nowPlayingText("Paused after fade: \(title)")
+                }
+                player.stop()  // Stop only after UI update
                 completion()
             }
         }
     }
-}
 
+
+
+
+    func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
+        print("🔚 Playback finished")
+        onPlaybackEnded?()
+    }
+}

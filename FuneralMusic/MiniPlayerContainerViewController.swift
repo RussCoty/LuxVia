@@ -2,7 +2,7 @@ import UIKit
 
 class MiniPlayerContainerViewController: UIViewController {
 
-    let playerView = PlayerControlsView()  // or use a public getter
+    let playerView = PlayerControlsView()
     private var progressTimer: Timer?
     private var currentSong: SongEntry?
 
@@ -43,30 +43,87 @@ class MiniPlayerContainerViewController: UIViewController {
     }
 
     private func setupCallbacks() {
+        playerView.onPlayCued = { [weak self] in
+            guard let self = self else { return }
+            let audio = AudioPlayerManager.shared
+            print("--- Play Cued Pressed ---")
+            print("isTrackCued: \(audio.isTrackCued)")
+
+            guard audio.isTrackCued else {
+                print("→ No cued track to play")
+                return
+            }
+
+            audio.playCuedTrack()
+            let title = audio.currentTrackName ?? self.currentSong?.title ?? "—"
+            self.playerView.nowPlayingText("Now Playing: \(title)")
+            self.playerView.updatePlayButton(isPlaying: true)
+            self.playerView.setFadeButtonTitle("Fade Out")
+            self.playerView.updateFadeIcon(isFadingOut: false)
+            self.startProgressTimer()
+        }
+
         playerView.onPlayPause = { [weak self] in
             guard let self = self else { return }
             let audio = AudioPlayerManager.shared
 
+            print("--- Play/Pause Pressed ---")
+            print("isPlaying: \(audio.isPlaying)")
+            print("isTrackCued: \(audio.isTrackCued)")
+            print("hasFinishedPlaying: \(audio.hasFinishedPlaying)")
+            print("hasPlayableTrack: \(audio.hasPlayableTrack)")
+            print("currentTrackName: \(audio.currentTrackName ?? "nil")")
+            print("cuedTrack: \(audio.cuedTrack?.title ?? "nil")")
+
+            let title = audio.currentTrackName ?? self.currentSong?.title ?? "—"
+
             if audio.isPlaying {
+                print("→ Pause current track")
                 audio.pause()
                 self.playerView.updatePlayButton(isPlaying: false)
                 self.playerView.setFadeButtonTitle("Fade In")
                 self.playerView.updateFadeIcon(isFadingOut: true)
+                self.playerView.nowPlayingText("Paused: \(title)")
                 self.stopProgressTimer()
-            } else {
-                if audio.isTrackCued {
-                    audio.playCuedTrack()
-                } else {
-                    audio.resume()
-                }
+                return
+            }
 
-                let title = self.currentSong?.title ?? "—"
-                self.playerView.nowPlayingText("Now Playing: \(title)")
+            if audio.hasPlayableTrack {
+                print("→ Resume paused track")
+                audio.resume()
+                if audio.isPlaying {
+                    self.playerView.nowPlayingText("Now Playing: \(title)")
+                }
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
                 self.playerView.updateFadeIcon(isFadingOut: false)
                 self.startProgressTimer()
+                return
             }
+
+            if audio.hasFinishedPlaying && audio.isTrackCued {
+                print("→ Finished track, promote and play cue")
+                audio.playCuedTrack()
+                self.playerView.nowPlayingText("Now Playing: \(audio.currentTrackName ?? title)")
+                self.playerView.updatePlayButton(isPlaying: true)
+                self.playerView.setFadeButtonTitle("Fade Out")
+                self.playerView.updateFadeIcon(isFadingOut: false)
+                self.startProgressTimer()
+                return
+            }
+
+            if audio.isTrackCued {
+                print("→ No active track, play cued track")
+                audio.playCuedTrack()
+                self.playerView.nowPlayingText("Now Playing: \(audio.currentTrackName ?? title)")
+                self.playerView.updatePlayButton(isPlaying: true)
+                self.playerView.setFadeButtonTitle("Fade Out")
+                self.playerView.updateFadeIcon(isFadingOut: false)
+                self.startProgressTimer()
+                return
+            }
+
+            print("→ No action taken")
         }
 
         playerView.onNext = {
@@ -87,6 +144,12 @@ class MiniPlayerContainerViewController: UIViewController {
         playerView.onFadeOut = { [weak self] in
             self?.fadeOutMusic()
         }
+        
+        AudioPlayerManager.shared.onPlaybackEnded = {
+            self.playerView.updatePlayButton(isPlaying: false)
+            self.playerView.nowPlayingText("Finished: \(AudioPlayerManager.shared.currentTrackName ?? "—")")
+        }
+
     }
 
     private func startProgressTimer() {
@@ -137,6 +200,10 @@ class MiniPlayerContainerViewController: UIViewController {
         } else {
             player.volume = 0
             player.play()
+
+            let title = audio.currentTrackName ?? "—"
+            self.playerView.nowPlayingText("Now Playing: \(title)")
+
             self.playerView.updatePlayButton(isPlaying: true)
             self.playerView.setFadeButtonTitle("Fade Out")
             self.playerView.updateFadeIcon(isFadingOut: false)
@@ -150,5 +217,15 @@ class MiniPlayerContainerViewController: UIViewController {
                 }
             }
         }
+    }
+}
+
+extension AudioPlayerManager {
+    var hasFinishedPlaying: Bool {
+        return !isPlaying && duration > 0 && currentTime >= duration
+    }
+
+    var hasPlayableTrack: Bool {
+        return currentTrackName != nil && !isPlaying && currentTime < duration
     }
 }

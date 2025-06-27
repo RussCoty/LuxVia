@@ -19,6 +19,7 @@ class PlayerControlsView: UIView {
     var onScrubProgress: ((Float) -> Void)?
     var onVolumeChange: ((Float) -> Void)?
     var onFadeOut: (() -> Void)?
+    var onPlayCued: (() -> Void)?
 
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -52,7 +53,7 @@ class PlayerControlsView: UIView {
         fadeButton.onTap = { [weak self] in self?.onFadeOut?() }
         // Play-Pause
         playPauseButton.onTap = { [weak self] in self?.onPlayPause?() }
-        playCuedButton.onTap = { [weak self] in self?.onNext?() }
+        playCuedButton.onTap = { [weak self] in self?.onPlayCued?() }
 
         progressSlider.addTarget(self, action: #selector(handleScrub), for: .valueChanged)
         progressSlider.minimumValue = 0
