@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101293E62DC9FD7C0012B3DE /* LoginViewController.swift */; };
 		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
+		102B65562E0F440500FA2CBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */; };
 		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
 		10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10334E4D2DF70CEC005B9682 /* ServiceItem.swift */; };
 		103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D32DF700AF005D90DF /* ServiceOrderManager.swift */; };
@@ -62,6 +63,7 @@
 /* Begin PBXFileReference section */
 		101293E62DC9FD7C0012B3DE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
+		102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
 		10334E4D2DF70CEC005B9682 /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
 		103984D32DF700AF005D90DF /* ServiceOrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
@@ -202,6 +204,7 @@
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
+				102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -274,6 +277,7 @@
 				1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */,
 				102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */,
 				1089BCC62DCE077F005DF96A /* Audio in Resources */,
+				102B65562E0F440500FA2CBE /* LaunchScreen.storyboard in Resources */,
 				1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */,
 				1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */,
 			);
@@ -397,7 +401,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -452,7 +456,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -487,9 +491,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.soundhouse.lumabeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -518,9 +525,12 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.soundhouse.lumabeta;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

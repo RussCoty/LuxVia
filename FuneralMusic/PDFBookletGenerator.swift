@@ -14,8 +14,8 @@ final class PDFBookletGenerator {
         let format = UIGraphicsPDFRendererFormat()
         format.documentInfo = pdfMetaData
 
-        let pageWidth: CGFloat = 420     // A5 width in points
-        let pageHeight: CGFloat = 595    // A5 height in points
+        let pageWidth: CGFloat = 420     // A5
+        let pageHeight: CGFloat = 595
         let margin: CGFloat = 30
 
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
@@ -27,7 +27,7 @@ final class PDFBookletGenerator {
             try renderer.writePDF(to: outputURL, withActions: { ctx in
                 var y: CGFloat = margin
 
-                // Page 1: Cover Page
+                // Cover Page
                 ctx.beginPage()
 
                 if let photoData = info.photo, let image = UIImage(data: photoData) {
@@ -54,7 +54,6 @@ final class PDFBookletGenerator {
 
                 let dateFormatter = DateFormatter()
                 dateFormatter.dateStyle = .medium
-
                 let dob = dateFormatter.string(from: info.dateOfBirth)
                 let dop = dateFormatter.string(from: info.dateOfPassing)
                 "\(dob) - \(dop)".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: centeredAttrs())
@@ -69,15 +68,15 @@ final class PDFBookletGenerator {
 
                 "Conducted by \(info.celebrantName)".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: centeredAttrs())
 
-                // Page 2+: Service Items
+                // Service Items
                 ctx.beginPage()
                 y = margin
 
                 for item in items {
                     let header = "• \(item.title) (\(item.type.rawValue.capitalized))"
                     let headerHeight: CGFloat = 20
-                    let padding: CGFloat = 22
-                    var contentHeight: CGFloat = 0
+                    let topPadding: CGFloat = 12
+                    let bottomPadding: CGFloat = 20
 
                     if let htmlText = item.customText,
                        let data = htmlText.data(using: .utf8),
@@ -91,33 +90,45 @@ final class PDFBookletGenerator {
                         let framesetter = CTFramesetterCreateWithAttributedString(mutableAttr as CFAttributedString)
                         let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, mutableAttr.length), nil, CGSize(width: pageWidth - 2*margin, height: .greatestFiniteMagnitude), nil)
 
-                        contentHeight = suggestedSize.height
-
-                        if y + headerHeight + padding + contentHeight > pageHeight - margin {
+                        if y + headerHeight + topPadding + suggestedSize.height > pageHeight - margin {
                             ctx.beginPage()
                             y = margin
                         }
 
                         header.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: headerHeight), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 14), .paragraphStyle: centered()])
-                        y += padding
+                        y += headerHeight + topPadding
 
-                        let frameRect = CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: contentHeight)
-                        let path = CGMutablePath()
-                        path.addRect(frameRect)
-                        let frame = CTFramesetterCreateFrame(framesetter, CFRangeMake(0, mutableAttr.length), path, nil)
-                        let ctxRef = UIGraphicsGetCurrentContext()!
-                        ctxRef.saveGState()
-                        ctxRef.textMatrix = .identity
-                        ctxRef.translateBy(x: 0, y: pageHeight)
-                        ctxRef.scaleBy(x: 1.0, y: -1.0)
-                        CTFrameDraw(frame, ctxRef)
-                        ctxRef.restoreGState()
+                        var currentRange = CFRange(location: 0, length: 0)
+                        while currentRange.location < mutableAttr.length {
+                            let remaining = CFRange(location: currentRange.location, length: mutableAttr.length - currentRange.location)
+                            let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, remaining, nil, CGSize(width: pageWidth - 2*margin, height: pageHeight - y - margin), nil)
 
-                        y += contentHeight + 20
+                            if y + suggestedSize.height > pageHeight - margin {
+                                ctx.beginPage()
+                                y = margin
+                            }
+
+                            let frameRect = CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: suggestedSize.height)
+                            let path = CGMutablePath()
+                            path.addRect(frameRect)
+                            let frame = CTFramesetterCreateFrame(framesetter, remaining, path, nil)
+
+                            let ctxRef = UIGraphicsGetCurrentContext()!
+                            ctxRef.saveGState()
+                            ctxRef.textMatrix = .identity
+                            ctxRef.translateBy(x: 0, y: pageHeight)
+                            ctxRef.scaleBy(x: 1.0, y: -1.0)
+                            CTFrameDraw(frame, ctxRef)
+                            ctxRef.restoreGState()
+
+                            let visibleRange = CTFrameGetVisibleStringRange(frame)
+                            currentRange.location += visibleRange.length
+                            y += suggestedSize.height + bottomPadding
+                        }
                     }
                 }
 
-                // Page: Wake & Donations
+                // Wake & Donations
                 ctx.beginPage()
                 y = margin
 
