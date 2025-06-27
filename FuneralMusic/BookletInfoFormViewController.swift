@@ -7,7 +7,25 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
     private var selectedImageView: UIImageView?
-    
+    private var bookletInfo = BookletInfo.load() ?? BookletInfo(
+        userName: "",
+        userEmail: "",
+        deceasedName: "",
+        dateOfBirth: Date(),
+        dateOfPassing: Date(),
+        photo: nil,
+        location: "",
+        dateOfService: Date(),
+        timeHour: 10,
+        timeMinute: 30,
+        celebrantName: "",
+        committalLocation: nil,
+        wakeLocation: nil,
+        donationInfo: nil,
+        pallbearers: nil,
+        photographer: nil
+    )
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
@@ -27,7 +45,7 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
             scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor, constant: 16),
             scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor, constant: -16),
-            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
 
             stackView.topAnchor.constraint(equalTo: scrollView.topAnchor),
             stackView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
@@ -42,31 +60,31 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
 
     private func buildFormFields() {
         addSectionTitle("Your Details")
-        addTextField(placeholder: "Your Name")
-        addTextField(placeholder: "Your Email")
+        addTextField(placeholder: "Your Name", text: bookletInfo.userName)
+        addTextField(placeholder: "Your Email", text: bookletInfo.userEmail)
 
         addSectionTitle("Deceased Details")
-        addTextField(placeholder: "Full Name of Deceased")
-        addDatePicker(title: "Date of Birth")
-        addDatePicker(title: "Date of Passing")
+        addTextField(placeholder: "Full Name of Deceased", text: bookletInfo.deceasedName)
+        addDatePicker(title: "Date of Birth", date: bookletInfo.dateOfBirth)
+        addDatePicker(title: "Date of Passing", date: bookletInfo.dateOfPassing)
         addPhotoUploader()
 
         addSectionTitle("Service Details")
-        addTextField(placeholder: "Location of Service")
-        addDatePicker(title: "Date of Service")
-        addTimePicker(title: "Time of Service")
-        addTextField(placeholder: "Minister/Celebrant Name")
+        addTextField(placeholder: "Location of Service", text: bookletInfo.location)
+        addDatePicker(title: "Date of Service", date: bookletInfo.dateOfService)
+        addTimePicker(title: "Time of Service", hour: bookletInfo.timeHour, minute: bookletInfo.timeMinute)
+        addTextField(placeholder: "Minister/Celebrant Name", text: bookletInfo.celebrantName)
 
         addSectionTitle("Committal & Wake")
-        addTextField(placeholder: "Committal Location")
-        addTextField(placeholder: "Wake/Reception Location")
+        addTextField(placeholder: "Committal Location", text: bookletInfo.committalLocation)
+        addTextField(placeholder: "Wake/Reception Location", text: bookletInfo.wakeLocation)
 
         addSectionTitle("Flowers / Donations")
-        addTextView(placeholder: "Donation/Flower Instructions")
+        addTextView(placeholder: "Donation/Flower Instructions", text: bookletInfo.donationInfo)
 
         addSectionTitle("Additional Info")
-        addTextField(placeholder: "Photographer Name")
-        addTextField(placeholder: "Pallbearers")
+        addTextField(placeholder: "Photographer Name", text: bookletInfo.photographer)
+        addTextField(placeholder: "Pallbearers", text: bookletInfo.pallbearers)
 
         addSaveButton()
     }
@@ -78,18 +96,19 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         stackView.addArrangedSubview(label)
     }
 
-    private func addTextField(placeholder: String) {
+    private func addTextField(placeholder: String, text: String? = nil) {
         let field = UITextField()
         field.placeholder = placeholder
         field.borderStyle = .roundedRect
+        field.text = text
         stackView.addArrangedSubview(field)
     }
 
-    private func addTextView(placeholder: String) {
+    private func addTextView(placeholder: String, text: String? = nil) {
         let textView = UITextView()
         textView.font = .systemFont(ofSize: 16)
-        textView.text = placeholder
-        textView.textColor = .placeholderText
+        textView.text = text ?? placeholder
+        textView.textColor = text == nil ? .placeholderText : .label
         textView.heightAnchor.constraint(equalToConstant: 100).isActive = true
         textView.layer.cornerRadius = 8
         textView.layer.borderColor = UIColor.systemGray4.cgColor
@@ -97,7 +116,7 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         stackView.addArrangedSubview(textView)
     }
 
-    private func addDatePicker(title: String) {
+    private func addDatePicker(title: String, date: Date) {
         let label = UILabel()
         label.text = title
         label.font = .systemFont(ofSize: 14)
@@ -105,8 +124,28 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         let datePicker = UIDatePicker()
         datePicker.datePickerMode = .date
         datePicker.preferredDatePickerStyle = .compact
+        datePicker.date = date
 
         let container = UIStackView(arrangedSubviews: [label, datePicker])
+        container.axis = .vertical
+        container.spacing = 4
+        stackView.addArrangedSubview(container)
+    }
+
+    private func addTimePicker(title: String, hour: Int, minute: Int) {
+        let label = UILabel()
+        label.text = title
+        label.font = .systemFont(ofSize: 14)
+
+        let timePicker = UIDatePicker()
+        timePicker.datePickerMode = .time
+        timePicker.preferredDatePickerStyle = .compact
+        var components = DateComponents()
+        components.hour = hour
+        components.minute = minute
+        timePicker.date = Calendar.current.date(from: components) ?? Date()
+
+        let container = UIStackView(arrangedSubviews: [label, timePicker])
         container.axis = .vertical
         container.spacing = 4
         stackView.addArrangedSubview(container)
@@ -117,6 +156,9 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         selectedImageView?.contentMode = .scaleAspectFit
         selectedImageView?.heightAnchor.constraint(equalToConstant: 120).isActive = true
         selectedImageView?.backgroundColor = .secondarySystemBackground
+        if let data = bookletInfo.photo, let image = UIImage(data: data) {
+            selectedImageView?.image = image
+        }
         stackView.addArrangedSubview(selectedImageView!)
 
         let button = UIButton(type: .system)
@@ -138,20 +180,6 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         }
         dismiss(animated: true)
     }
-    private func addTimePicker(title: String) {
-        let label = UILabel()
-        label.text = title
-        label.font = .systemFont(ofSize: 14)
-
-        let timePicker = UIDatePicker()
-        timePicker.datePickerMode = .time
-        timePicker.preferredDatePickerStyle = .compact
-
-        let container = UIStackView(arrangedSubviews: [label, timePicker])
-        container.axis = .vertical
-        container.spacing = 4
-        stackView.addArrangedSubview(container)
-    }
 
     private func addSaveButton() {
         let button = UIButton(type: .system)
@@ -166,6 +194,63 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
     }
 
     @objc private func handleSave() {
-        print("✅ Booklet info saved. (Implement persistence logic here.)")
+        if let image = selectedImageView?.image {
+            bookletInfo.photo = image.jpegData(compressionQuality: 0.8)
+        }
+
+        for view in stackView.arrangedSubviews {
+            if let textField = view as? UITextField {
+                switch textField.placeholder {
+                case "Your Name":
+                    bookletInfo.userName = textField.text ?? ""
+                case "Your Email":
+                    bookletInfo.userEmail = textField.text ?? ""
+                case "Full Name of Deceased":
+                    bookletInfo.deceasedName = textField.text ?? ""
+                case "Location of Service":
+                    bookletInfo.location = textField.text ?? ""
+                case "Minister/Celebrant Name":
+                    bookletInfo.celebrantName = textField.text ?? ""
+                case "Committal Location":
+                    bookletInfo.committalLocation = textField.text
+                case "Wake/Reception Location":
+                    bookletInfo.wakeLocation = textField.text
+                case "Photographer Name":
+                    bookletInfo.photographer = textField.text
+                case "Pallbearers":
+                    bookletInfo.pallbearers = textField.text
+                default:
+                    break
+                }
+            }
+
+            if let textView = view as? UITextView, textView.textColor != .placeholderText {
+                bookletInfo.donationInfo = textView.text
+            }
+
+            if let container = view as? UIStackView {
+                for inner in container.arrangedSubviews {
+                    if let dp = inner as? UIDatePicker {
+                        switch (container.arrangedSubviews.first as? UILabel)?.text {
+                        case "Date of Birth":
+                            bookletInfo.dateOfBirth = dp.date
+                        case "Date of Passing":
+                            bookletInfo.dateOfPassing = dp.date
+                        case "Date of Service":
+                            bookletInfo.dateOfService = dp.date
+                        case "Time of Service":
+                            let comps = Calendar.current.dateComponents([.hour, .minute], from: dp.date)
+                            bookletInfo.timeHour = comps.hour ?? 10
+                            bookletInfo.timeMinute = comps.minute ?? 30
+                        default:
+                            break
+                        }
+                    }
+                }
+            }
+        }
+
+        bookletInfo.save()
+        print("✅ Booklet info saved.")
     }
 }

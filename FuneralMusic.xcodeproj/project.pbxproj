@@ -55,6 +55,8 @@
 		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
 		10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */; };
 		10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */; };
+		10E016FF2E0EC7EE0025C716 /* PDFBookletGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E016FE2E0EC7ED0025C716 /* PDFBookletGenerator.swift */; };
+		10E017012E0ED2370025C716 /* PDFBookletPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -107,6 +109,8 @@
 		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
 		10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerManager.swift; sourceTree = "<group>"; };
 		10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconLabelButtonView.swift; sourceTree = "<group>"; };
+		10E016FE2E0EC7ED0025C716 /* PDFBookletGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookletGenerator.swift; sourceTree = "<group>"; };
+		10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookletPreviewViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +159,8 @@
 				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
 				109851322DD8D490007C685B /* BaseViewController.swift */,
+				1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */,
+				1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */,
 				105BBACB2DF9A01C004B7F7A /* CustomReading.swift */,
 				105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */,
 				105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */,
@@ -179,6 +185,8 @@
 				1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */,
 				1099B6212DD784A000CA3194 /* NonceExtractor.swift */,
 				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
+				10E016FE2E0EC7ED0025C716 /* PDFBookletGenerator.swift */,
+				10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */,
 				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
 				10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
@@ -194,8 +202,6 @@
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
-				1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */,
-				1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -285,6 +291,7 @@
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */,
 				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
+				10E016FF2E0EC7EE0025C716 /* PDFBookletGenerator.swift in Sources */,
 				1099F2F12E0E9B81008E9D77 /* BookletInfoFormViewController.swift in Sources */,
 				10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */,
 				105BBACE2DF9A067004B7F7A /* CustomReadingManager.swift in Sources */,
@@ -313,6 +320,7 @@
 				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
 				109851312DD8D258007C685B /* AuthManager.swift in Sources */,
 				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
+				10E017012E0ED2370025C716 /* PDFBookletPreviewViewController.swift in Sources */,
 				105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */,
 				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
 				1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */,

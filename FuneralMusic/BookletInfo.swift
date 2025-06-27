@@ -2,7 +2,7 @@
 
 import Foundation
 
-struct BookletInfo {
+struct BookletInfo: Codable {
     // Personal Details
     var userName: String
     var userEmail: String
@@ -26,4 +26,21 @@ struct BookletInfo {
     var donationInfo: String?
     var pallbearers: String?
     var photographer: String?
+
+    // Persistence
+    private static let storageKey = "savedBookletInfo"
+
+    func save() {
+        if let data = try? JSONEncoder().encode(self) {
+            UserDefaults.standard.set(data, forKey: Self.storageKey)
+        }
+    }
+
+    static func load() -> BookletInfo? {
+        if let data = UserDefaults.standard.data(forKey: Self.storageKey),
+           let info = try? JSONDecoder().decode(BookletInfo.self, from: data) {
+            return info
+        }
+        return nil
+    }
 }
