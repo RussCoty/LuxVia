@@ -1,7 +1,7 @@
 import UIKit
 import UniformTypeIdentifiers
 
-class LibraryViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
+class MusicViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
@@ -20,34 +20,34 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-        title = "Music Library"
+        title = "Music"
 
         setupSearch()
         loadGroupedTrackList()
         setupUI()
         setupUserMenu()
 
-        PlayerControlsView.shared?.onNext = {
-            let mgr = AudioPlayerManager.shared
-            if mgr.isTrackCued {
-                mgr.playCuedTrack()
-            } else if mgr.currentSource == .playlist {
-                SharedPlaylistManager.shared.playNext()
-            } else if mgr.currentSource == .library {
-                mgr.playNextInLibrary()
-            }
-        }
+//        PlayerControlsView.shared?.onNext = {
+//            let mgr = AudioPlayerManager.shared
+//            if mgr.isTrackCued {
+//                mgr.playCuedTrack()
+//            } else if mgr.currentSource == .playlist {
+//                SharedPlaylistManager.shared.playNext()
+//            } else if mgr.currentSource == .library {
+//                mgr.playNextInLibrary()
+//            }
+//        }
 
-        PlayerControlsView.shared?.onPrevious = {
-            let mgr = AudioPlayerManager.shared
-            if mgr.isTrackCued {
-                mgr.cancelCue()
-            } else if mgr.currentSource == .playlist {
-                SharedPlaylistManager.shared.playPrevious()
-            } else if mgr.currentSource == .library {
-                mgr.playPreviousInLibrary()
-            }
-        }
+//        PlayerControlsView.shared?.onPrevious = {
+//            let mgr = AudioPlayerManager.shared
+//            if mgr.isTrackCued {
+//                mgr.cancelCue()
+//            } else if mgr.currentSource == .playlist {
+//                SharedPlaylistManager.shared.playPrevious()
+//            } else if mgr.currentSource == .library {
+//                mgr.playPreviousInLibrary()
+//            }
+//        }
     }
 
     func setupSearch() {
@@ -127,14 +127,25 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.dataSource = self
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+    }
+
+    func scrollToTrack(named fileName: String) {
+        for (sectionIndex, folder) in sortedFolders.enumerated() {
+            if let rowIndex = groupedTracks[folder]?.firstIndex(where: { $0.fileName == fileName }) {
+                let indexPath = IndexPath(row: rowIndex, section: sectionIndex)
+                tableView.scrollToRow(at: indexPath, at: .middle, animated: true)
+                return
+            }
+        }
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -155,7 +166,7 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
         let addButton = UIButton(type: .contactAdd)
         addButton.tag = indexPath.section * 1000 + indexPath.row
-        addButton.addTarget(self, action: #selector(addToPlaylistTapped(_:)), for: .touchUpInside)
+        addButton.addTarget(self, action: #selector(addToServiceTapped(_:)), for: .touchUpInside)
         cell.accessoryView = addButton
         return cell
     }
@@ -165,38 +176,59 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
         AudioPlayerManager.shared.cueTrack(track, source: .library)
-        PlayerControlsView.shared?.nowPlayingText("Cued: \(track.title.replacingOccurrences(of: "_", with: " ").capitalized)")
+        PlayerControlsView.shared?.updateCuedTrackText(track.title.replacingOccurrences(of: "_", with: " ").capitalized)
         tableView.reloadData()
     }
 
-    @objc func addToPlaylistTapped(_ sender: UIButton) {
+    @objc func addToServiceTapped(_ sender: UIButton) {
         let section = sender.tag / 1000
         let row = sender.tag % 1000
         let folder = isFiltering ? filteredFolders[section] : sortedFolders[section]
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[row] else { return }
 
-        if SharedPlaylistManager.shared.playlist.contains(where: { $0.title == track.title }) {
-            let alert = UIAlertController(
-                title: "Add Again?",
-                message: "\"\(track.title.capitalized)\" is already in the playlist. Add it again?",
-                preferredStyle: .alert
-            )
-            alert.addAction(UIAlertAction(title: "Add Again", style: .default) { _ in
-                SharedPlaylistManager.shared.playlist.append(track)
-                SharedPlaylistManager.shared.save()
-                self.showToast("Added again: \(track.title)")
-            })
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-            present(alert, animated: true)
-        } else {
-            SharedPlaylistManager.shared.playlist.append(track)
-            SharedPlaylistManager.shared.save()
-            showToast("Added: \(track.title)")
+        let trimmedTitle = track.title.replacingOccurrences(of: ".mp3", with: "")
+        guard let entry = SharedLibraryManager.shared.songForTrack(named: trimmedTitle) else {
+            showToast("MP3 not found for: \(track.title)")
+            return
         }
+
+        let alert = UIAlertController(title: "Add to Service", message: "Add as song or background music?", preferredStyle: .actionSheet)
+        alert.addAction(UIAlertAction(title: "Song", style: .default) { _ in
+            self.addMusicEntry(entry, type: .song)
+        })
+        alert.addAction(UIAlertAction(title: "Background Music", style: .default) { _ in
+            self.addMusicEntry(entry, type: .background)
+        })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+
+        if let popover = alert.popoverPresentationController {
+            popover.sourceView = sender
+            popover.sourceRect = sender.bounds
+        }
+
+        present(alert, animated: true)
+    }
+
+    private func addMusicEntry(_ entry: SongEntry, type: ServiceItemType) {
+        let serviceItem = ServiceItem(
+            type: type,
+            title: entry.title,
+            subtitle: nil,
+            fileName: entry.fileName,
+            customText: nil
+        )
+
+        if ServiceOrderManager.shared.items.contains(where: { $0.fileName == entry.fileName && $0.type == type }) {
+            showToast("Already in Order: \(entry.title)")
+            return
+        }
+
+        ServiceOrderManager.shared.add(serviceItem)
+        showToast("Added: \(entry.title)")
     }
 
     private func setupUserMenu() {
-        let menuButton = UIBarButtonItem(title: "⋯", style: .plain, target: self, action: #selector(showUserMenu))
+        let menuButton = UIBarButtonItem(title: "…", style: .plain, target: self, action: #selector(showUserMenu))
         navigationItem.rightBarButtonItem = menuButton
     }
 
@@ -236,7 +268,6 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
 
         UIView.animate(withDuration: 0.25, animations: {
             toastLabel.alpha = 1.0
-            toastLabel.transform = .identity
         }) { _ in
             UIView.animate(
                 withDuration: 0.25,
@@ -252,3 +283,4 @@ class LibraryViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
 }
+ 
