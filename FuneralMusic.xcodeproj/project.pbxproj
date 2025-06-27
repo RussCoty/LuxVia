@@ -47,6 +47,8 @@
 		1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6212DD784A000CA3194 /* NonceExtractor.swift */; };
 		1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6232DD793E600CA3194 /* KeychainHelper.swift */; };
 		1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */; };
+		1099F2F12E0E9B81008E9D77 /* BookletInfoFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */; };
+		1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */; };
 		10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */; };
 		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
 		10A90B1F2DCC005400B0FEE6 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */; };
@@ -97,6 +99,8 @@
 		1099B6212DD784A000CA3194 /* NonceExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonceExtractor.swift; sourceTree = "<group>"; };
 		1099B6232DD793E600CA3194 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
 		1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeLoginViewController.swift; sourceTree = "<group>"; };
+		1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfoFormViewController.swift; sourceTree = "<group>"; };
+		1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfo.swift; sourceTree = "<group>"; };
 		10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
 		10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LUMA_Launch.png; sourceTree = "<group>"; };
@@ -190,6 +194,8 @@
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
+				1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */,
+				1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */,
 			);
 			path = FuneralMusic;
 			sourceTree = "<group>";
@@ -279,6 +285,7 @@
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */,
 				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
+				1099F2F12E0E9B81008E9D77 /* BookletInfoFormViewController.swift in Sources */,
 				10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */,
 				105BBACE2DF9A067004B7F7A /* CustomReadingManager.swift in Sources */,
 				105BBAD42DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift in Sources */,
@@ -308,6 +315,7 @@
 				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
 				105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */,
 				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
+				1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,
 				10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */,
