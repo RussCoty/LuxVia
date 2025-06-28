@@ -10,6 +10,7 @@
 		101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101293E62DC9FD7C0012B3DE /* LoginViewController.swift */; };
 		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
 		102B65562E0F440500FA2CBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */; };
+		102B65582E0FF60800FA2CBE /* gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 102B65572E0FF60800FA2CBE /* gitignore */; };
 		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
 		10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10334E4D2DF70CEC005B9682 /* ServiceItem.swift */; };
 		103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D32DF700AF005D90DF /* ServiceOrderManager.swift */; };
@@ -64,6 +65,7 @@
 		101293E62DC9FD7C0012B3DE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
+		102B65572E0FF60800FA2CBE /* gitignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = gitignore; sourceTree = "<group>"; };
 		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
 		10334E4D2DF70CEC005B9682 /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
 		103984D32DF700AF005D90DF /* ServiceOrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
@@ -158,6 +160,7 @@
 				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
 				1089BCC52DCE077F005DF96A /* Audio */,
 				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
+				102B65572E0FF60800FA2CBE /* gitignore */,
 				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
 				109851322DD8D490007C685B /* BaseViewController.swift */,
@@ -274,6 +277,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				10A90B1F2DCC005400B0FEE6 /* LUMA_Launch.png in Resources */,
+				102B65582E0FF60800FA2CBE /* gitignore in Resources */,
 				1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */,
 				102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */,
 				1089BCC62DCE077F005DF96A /* Audio in Resources */,
