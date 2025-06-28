@@ -2,7 +2,7 @@
 
 import UIKit
 
-class ServiceViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class ServiceViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let segmentedControl = UISegmentedControl(items: ["Service", "Details", "Booklet"])
     private let tableView = UITableView()
@@ -12,6 +12,7 @@ class ServiceViewController: UIViewController, UITableViewDataSource, UITableVie
     private let containerView = UIView()
     private let bookletFormVC = BookletInfoFormViewController()
     private let bookletGeneratorVC = PDFBookletPreviewViewController()
+    
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,7 +54,7 @@ class ServiceViewController: UIViewController, UITableViewDataSource, UITableVie
             title: "Logout",
             style: .plain,
             target: self,
-            action: #selector(handleLogout)
+            action: #selector(BaseViewController.logoutTapped)
         )
     }
 
@@ -79,11 +80,12 @@ class ServiceViewController: UIViewController, UITableViewDataSource, UITableVie
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
-        tableView.setEditing(true, animated: false)
-        tableView.allowsSelectionDuringEditing = true
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
         tableView.backgroundColor = .clear
         tableView.separatorInset = .zero
+        tableView.isEditing = true
+        tableView.allowsSelectionDuringEditing = true
+
 
         containerView.addSubview(tableView)
 
@@ -138,10 +140,6 @@ class ServiceViewController: UIViewController, UITableViewDataSource, UITableVie
         bookletGeneratorVC.view.isHidden = true
     }
 
-    @objc private func handleLogout() {
-        AuthManager.shared.logout()
-    }
-
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         let index = sender.selectedSegmentIndex
 
@@ -157,83 +155,97 @@ class ServiceViewController: UIViewController, UITableViewDataSource, UITableVie
         }
     }
 
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ServiceOrderManager.shared.items.count
-    }
-
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let item = ServiceOrderManager.shared.items[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
 
+        let isSelected = (indexPath == selectedIndex)
+        let isPlaying = item.fileName != nil && item.fileName == AudioPlayerManager.shared.currentTrack?.fileName
+
         cell.textLabel?.text = "• \(item.title) (\(item.type.rawValue.capitalized))"
         cell.textLabel?.numberOfLines = 0
-        cell.backgroundColor = (indexPath == selectedIndex) ? UIColor.systemBlue.withAlphaComponent(0.2) : .clear
         cell.accessoryType = .none
         cell.selectionStyle = .none
+
+        if isPlaying {
+            cell.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.25)
+        } else if isSelected {
+            cell.backgroundColor = UIColor.systemBlue.withAlphaComponent(0.2)
+        } else {
+            cell.backgroundColor = .clear
+        }
 
         return cell
     }
 
-    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            ServiceOrderManager.shared.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-        }
+
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return true
     }
 
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         ServiceOrderManager.shared.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
     }
 
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, completion in
+            ServiceOrderManager.shared.remove(at: indexPath.row)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+            completion(true)
+        }
+
+        return UISwipeActionsConfiguration(actions: [delete])
+    }
+
+
     private func addDefaultWelcomeAndFarewell() {
-        // optional seed items
+        // Optional seeds
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let item = ServiceOrderManager.shared.items[indexPath.row]
-        print("Selected Row: \(indexPath.row) - \(item.title) [\(item.type.rawValue)]")
-        print("item.type = \(item.type.rawValue)")
-        print("item.fileName = \(item.fileName ?? "nil")")
-
-        if selectedIndex == indexPath {
-            print("Deselected same row")
-            selectedIndex = nil
-            tableView.reloadRows(at: [indexPath], with: .automatic)
-            return
-        }
-
-        selectedIndex = indexPath
+        print("Tapped row: \(indexPath.row)")
         tableView.reloadData()
 
+        let item = ServiceOrderManager.shared.items[indexPath.row]
+        print("➡️ Selected index \(indexPath.row): type=\(item.type.rawValue), fileName=\(item.fileName ?? "nil")")
+
         if [.song, .background, .music].contains(item.type), let fileName = item.fileName {
-            print("Looking for exact match for fileName: \(fileName)")
+            let allSongs = SharedLibraryManager.shared.allSongs
+            print("🔍 SharedLibrary has \(allSongs.count) songs")
+            let names = allSongs.map(\.fileName)
+            print("🎵 File names loaded: \(names.joined(separator: ", "))")
 
-            if let song = SharedLibraryManager.shared.allSongs.first(where: { $0.fileName == fileName }) {
-                print("Found SongEntry: \(song.title)")
-                AudioPlayerManager.shared.cueTrack(song, source: .library)
-
+            if let song = allSongs.first(where: { $0.fileName == fileName }) {
+                print("✅ Found \(song.title), cueing now")
                 PlayerControlsView.shared = miniPlayerVC.playerView
                 AudioPlayerManager.shared.cueTrack(song, source: .library)
                 PlayerControlsView.shared?.updateCuedTrackText(song.title)
             } else {
-                print("SongEntry not found in library for: \(fileName)")
+                print("❌ No match for fileName: \(fileName)")
             }
             return
         }
 
-        guard (item.type == .reading || item.type == .customReading),
-              let text = item.customText else {
-            print("Not a reading or missing text")
+        if (item.type == .reading || item.type == .customReading),
+           let text = item.customText {
+            print("📝 Presenting reading: \(item.title)")
+            let preview = ReadingPreviewViewController(title: item.title, text: text)
+            navigationController?.pushViewController(preview, animated: true)
             return
         }
 
-        if presentedViewController is ReadingPreviewViewController {
-            print("Preview already presented")
-            return
-        }
-
-        print("Presenting ReadingPreviewViewController with title: \(item.title)")
-        let preview = ReadingPreviewViewController(title: item.title, text: text)
-        navigationController?.pushViewController(preview, animated: true)
+        print("❓ Selected item not playable or readable")
     }
+
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return ServiceOrderManager.shared.items.count
+    }
+
+
+
 }

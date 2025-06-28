@@ -1,6 +1,6 @@
 import UIKit
 
-class WordsListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class WordsListViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let segmentedControl = UISegmentedControl(items: ["Readings", "Lyrics", "Custom"])
     private let tableView = UITableView()
@@ -38,7 +38,7 @@ class WordsListViewController: UIViewController, UITableViewDataSource, UITableV
             title: "Logout",
             style: .plain,
             target: self,
-            action: #selector(handleLogout)
+            action: #selector(BaseViewController.logoutTapped) // ✅ exact match
         )
     }
 
@@ -59,9 +59,7 @@ class WordsListViewController: UIViewController, UITableViewDataSource, UITableV
         ])
     }
 
-    @objc private func handleLogout() {
-        AuthManager.shared.logout()
-    }
+
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         customVC?.view.removeFromSuperview()

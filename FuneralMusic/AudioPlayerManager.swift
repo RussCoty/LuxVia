@@ -204,5 +204,10 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         print("🔚 Playback finished")
         onPlaybackEnded?()
+ }
+    var currentTrack: SongEntry? {
+        guard let name = currentTrackName else { return nil }
+        return SharedLibraryManager.shared.allSongs.first(where: { $0.title == name })
     }
+
 }

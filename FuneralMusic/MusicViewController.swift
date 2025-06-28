@@ -19,6 +19,7 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        MiniPlayerManager.shared.attach(to: self) // ✅ Attach mini player on load
         view.backgroundColor = .white
         title = "Music"
 
@@ -26,6 +27,8 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
         loadGroupedTrackList()
         setupUI()
         setupUserMenu()
+
+        MiniPlayerManager.shared.attach(to: self) // ✅ Attach mini player
 
 //        PlayerControlsView.shared?.onNext = {
 //            let mgr = AudioPlayerManager.shared
@@ -176,7 +179,13 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
         AudioPlayerManager.shared.cueTrack(track, source: .library)
-        PlayerControlsView.shared?.updateCuedTrackText(track.title.replacingOccurrences(of: "_", with: " ").capitalized)
+
+        // ✅ Clean title format: replace underscores with spaces, then capitalize
+        let formattedTitle = track.title.replacingOccurrences(of: "_", with: " ").capitalized
+        PlayerControlsView.shared?.updateCuedTrackText(formattedTitle)
+
+        MiniPlayerManager.shared.show(with: track)
+
         tableView.reloadData()
     }
 

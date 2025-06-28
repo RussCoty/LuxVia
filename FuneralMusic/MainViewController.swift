@@ -3,11 +3,11 @@ import Foundation
 
 class MainViewController: UIViewController {
 
-    let segmentedControl = UISegmentedControl(items: ["Import", "Library", "Playlist"])
+    let segmentedControl = UISegmentedControl(items: ["Import", "Library"])
     private let containerView = UIView()
 
     let libraryVC = MusicViewController()
-    let playlistVC = ServiceViewController()
+    //let playlistVC = ServiceViewController()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -47,6 +47,7 @@ class MainViewController: UIViewController {
     }
 
     @objc private func logoutTapped() {
+        print("✅ Running MainViewController.logoutTapped")
         let alert = UIAlertController(
             title: "Logout",
             message: "Are you sure you want to log out?",
@@ -63,7 +64,7 @@ class MainViewController: UIViewController {
         switch sender.selectedSegmentIndex {
         case 0: AudioImportManager.presentImportPicker(from: self)
         case 1: showLibrary()
-        case 2: showPlaylist()
+       // case 2: showPlaylist()
         default: break
         }
     }
@@ -77,9 +78,9 @@ class MainViewController: UIViewController {
         swapChild(to: libraryVC)
     }
 
-    private func showPlaylist() {
-        swapChild(to: playlistVC)
-    }
+//    private func showPlaylist() {
+//        swapChild(to: playlistVC)
+//    }
 
     private func swapChild(to newVC: UIViewController) {
         children.forEach {

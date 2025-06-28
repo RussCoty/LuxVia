@@ -24,3 +24,39 @@ extension UIViewController {
         return header
     }
 }
+
+class BaseViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        setupLogoutButton()
+    }
+
+    private func setupLogoutButton() {
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: "Logout",
+            style: .plain,
+            target: self,
+            action: #selector(logoutTapped)
+        )
+    }
+
+    @objc func logoutTapped() {
+        print("✅ Running BaseViewController.logoutTapped")
+
+        let alert = UIAlertController(
+            title: "Logout",
+            message: "Are you sure you want to log out?",
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
+            SessionManager.logout()
+        })
+        present(alert, animated: true)
+    }
+
+
+
+
+
+}

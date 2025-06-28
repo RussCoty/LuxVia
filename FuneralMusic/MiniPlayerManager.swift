@@ -17,13 +17,13 @@ final class MiniPlayerManager {
         miniPlayer.didMove(toParent: host)
 
         miniPlayer.view.translatesAutoresizingMaskIntoConstraints = false
-        let constraint = miniPlayer.view.bottomAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.bottomAnchor, constant: 80)
+        let constraint = miniPlayer.view.bottomAnchor.constraint(equalTo: host.view.safeAreaLayoutGuide.bottomAnchor, constant: 0)
 
         NSLayoutConstraint.activate([
             miniPlayer.view.leadingAnchor.constraint(equalTo: host.view.leadingAnchor),
             miniPlayer.view.trailingAnchor.constraint(equalTo: host.view.trailingAnchor),
             constraint,
-            miniPlayer.view.heightAnchor.constraint(equalToConstant: 80)
+            miniPlayer.view.heightAnchor.constraint(equalToConstant: 250)
         ])
 
         self.miniPlayerVC = miniPlayer
