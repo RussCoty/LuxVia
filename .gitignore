@@ -48,3 +48,5 @@ GoogleService-Info.plist
 
 # Ignore audio assets
 Audio/
+*.zip
+FuneralMusic 09_07_2025_12_17.zip
