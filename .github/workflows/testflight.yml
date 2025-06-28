@@ -24,11 +24,7 @@ jobs:
       - name: Create fastlane directory
         run: mkdir -p fastlane
 
-      - name: Write Fastfile
-        run: |
-          cat <<EOF > fastlane/Fastfile
-          ${FASTFILE_CONTENTS}
-          EOF
+
 
       - name: Build and upload to TestFlight
         env:
