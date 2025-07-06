@@ -1,5 +1,7 @@
 import UIKit
 
+
+
 final class MiniPlayerManager {
 
     static let shared = MiniPlayerManager()
@@ -7,6 +9,8 @@ final class MiniPlayerManager {
     private var miniPlayerVC: MiniPlayerContainerViewController?
     private var hostView: UIView?
     private var bottomConstraint: NSLayoutConstraint?
+
+    var playerView: PlayerControlsView?
 
     private init() {}
 
@@ -52,4 +56,21 @@ final class MiniPlayerManager {
             hostView.layoutIfNeeded()
         }
     }
+
+    // 🔵 Show "Now Playing"
+    func updateNowPlayingTrack(_ title: String) {
+        playerView?.updatePlayingTrackText(title)
+    }
+
+    // 🟢 Show "Cued"
+    func updateCuedTrackText(_ title: String) {
+        playerView?.updateCuedTrackText(title)
+    }
+
+    // 🔄 Clear/reset label
+    func clearTrackText() {
+        playerView?.clearTrackText()
+    }
+    
+    
 }

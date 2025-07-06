@@ -190,7 +190,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
                 let title = self.currentTrackName ?? "—"
                 player.volume = self.volume  // Restore volume first
                 DispatchQueue.main.async {
-                    PlayerControlsView.shared?.nowPlayingText("Paused after fade: \(title)")
+                    PlayerControlsView.shared?.updatePlayingTrackText("Paused after fade: \(title)")
                 }
                 player.stop()  // Stop only after UI update
                 completion()

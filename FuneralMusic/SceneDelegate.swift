@@ -89,6 +89,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         serviceNav.tabBarItem = UITabBarItem(title: "Service", image: nil, tag: 2)
 
         tabBarController.viewControllers = [wordsNav, musicTab, serviceNav]
+        
+        //Start on Music tab
+        tabBarController.selectedIndex = 1 // Music tab
 
         // Bold font for tab bar items
         let boldFont = UIFont.systemFont(ofSize: 14, weight: .bold)

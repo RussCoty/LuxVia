@@ -30,9 +30,9 @@ class MiniPlayerContainerViewController: UIViewController {
         PlayerControlsView.shared = playerView
         AudioPlayerManager.shared.cueTrack(song, source: .library)
 
-        let cueText = "🎧 Cued: \(song.title)"
-        print(cueText)
-        playerView.nowPlayingText(cueText)
+//        print(cueText)
+        //playerView.clearTrackText()
+        playerView.updateCuedTrackText(song.title)
 
         playerView.updatePlayButton(isPlaying: false)
         playerView.setFadeButtonTitle("Fade In")
@@ -56,7 +56,7 @@ class MiniPlayerContainerViewController: UIViewController {
 
             audio.playCuedTrack()
             let title = audio.currentTrackName ?? self.currentSong?.title ?? "—"
-            self.playerView.nowPlayingText("Now Playing: \(title)")
+            self.playerView.updatePlayingTrackText("Now Playing: \(title)")
             self.playerView.updatePlayButton(isPlaying: true)
             self.playerView.setFadeButtonTitle("Fade Out")
             self.playerView.updateFadeIcon(isFadingOut: false)
@@ -83,7 +83,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 self.playerView.updatePlayButton(isPlaying: false)
                 self.playerView.setFadeButtonTitle("Fade In")
                 self.playerView.updateFadeIcon(isFadingOut: true)
-                self.playerView.nowPlayingText("Paused: \(title)")
+                self.playerView.updatePlayingTrackText("Paused: \(title)")
                 self.stopProgressTimer()
                 return
             }
@@ -92,7 +92,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 print("→ Resume paused track")
                 audio.resume()
                 if audio.isPlaying {
-                    self.playerView.nowPlayingText("Now Playing: \(title)")
+                    self.playerView.updatePlayingTrackText("Now Playing: \(title)")
                 }
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
@@ -104,7 +104,7 @@ class MiniPlayerContainerViewController: UIViewController {
             if audio.hasFinishedPlaying && audio.isTrackCued {
                 print("→ Finished track, promote and play cue")
                 audio.playCuedTrack()
-                self.playerView.nowPlayingText("Now Playing: \(audio.currentTrackName ?? title)")
+                self.playerView.updatePlayingTrackText("Now Playing: \(audio.currentTrackName ?? title)")
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
                 self.playerView.updateFadeIcon(isFadingOut: false)
@@ -115,7 +115,7 @@ class MiniPlayerContainerViewController: UIViewController {
             if audio.isTrackCued {
                 print("→ No active track, play cued track")
                 audio.playCuedTrack()
-                self.playerView.nowPlayingText("Now Playing: \(audio.currentTrackName ?? title)")
+                self.playerView.updatePlayingTrackText("Now Playing: \(audio.currentTrackName ?? title)")
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
                 self.playerView.updateFadeIcon(isFadingOut: false)
@@ -147,7 +147,7 @@ class MiniPlayerContainerViewController: UIViewController {
         
         AudioPlayerManager.shared.onPlaybackEnded = {
             self.playerView.updatePlayButton(isPlaying: false)
-            self.playerView.nowPlayingText("Finished: \(AudioPlayerManager.shared.currentTrackName ?? "—")")
+            self.playerView.updatePlayingTrackText("Finished: \(AudioPlayerManager.shared.currentTrackName ?? "—")")
         }
 
     }
@@ -194,7 +194,7 @@ class MiniPlayerContainerViewController: UIViewController {
                     self.playerView.updatePlayButton(isPlaying: false)
                     self.playerView.setFadeButtonTitle("Fade In")
                     self.playerView.updateFadeIcon(isFadingOut: true)
-                    self.playerView.nowPlayingText("Paused after fade")
+                    self.playerView.updatePlayingTrackText("Paused after fade")
                 }
             }
         } else {
@@ -202,7 +202,7 @@ class MiniPlayerContainerViewController: UIViewController {
             player.play()
 
             let title = audio.currentTrackName ?? "—"
-            self.playerView.nowPlayingText("Now Playing: \(title)")
+            self.playerView.updatePlayingTrackText("Now Playing: \(title)")
 
             self.playerView.updatePlayButton(isPlaying: true)
             self.playerView.setFadeButtonTitle("Fade Out")

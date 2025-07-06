@@ -4,8 +4,26 @@ class PlayerControlsView: UIView {
 
     static var shared: PlayerControlsView?
 
-    private let titleLabel = UILabel()
-    private let cuedTrackLabel = UILabel()
+    private let nowPlayingLabel: UILabel = {
+        let label = UILabel()
+        label.font = .boldSystemFont(ofSize: 16)
+        label.textColor = .label
+        label.textAlignment = .center
+        label.text = ""
+        label.heightAnchor.constraint(equalToConstant: 20).isActive = true
+        return label
+    }()
+
+    private let cuedLabel: UILabel = {
+        let label = UILabel()
+        label.font = .systemFont(ofSize: 14)
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        label.text = ""
+        label.heightAnchor.constraint(equalToConstant: 18).isActive = true
+        return label
+    }()
+
     private let fadeButton = IconLabelButtonView(icon: "radiowaves.right", title: "Fade Out")
     private let playPauseButton = IconLabelButtonView(icon: "play.fill", title: "Play")
     private let playCuedButton = IconLabelButtonView(icon: "forward.fill", title: "Play Cued")
@@ -33,49 +51,26 @@ class PlayerControlsView: UIView {
 
     private func setupUI() {
         backgroundColor = .secondarySystemBackground
-        // Title Track Label
-        titleLabel.font = .systemFont(ofSize: 14, weight: .medium)
-        titleLabel.textAlignment = .center
-        titleLabel.numberOfLines = 1
-        titleLabel.text = " "
-        titleLabel.heightAnchor.constraint(equalToConstant: 18).isActive = true
-        
-        
-        
-        // Cued Track Label
-        cuedTrackLabel.font = .systemFont(ofSize: 12)
-        cuedTrackLabel.textColor = .secondaryLabel
-        cuedTrackLabel.textAlignment = .center
-        cuedTrackLabel.text = " " // Preserve height even when empty
-        cuedTrackLabel.heightAnchor.constraint(equalToConstant: 16).isActive = true
 
-        // Fade Button
-        fadeButton.onTap = { [weak self] in self?.onFadeOut?() }
-        // Play-Pause
-        playPauseButton.onTap = { [weak self] in self?.onPlayPause?() }
-        playCuedButton.onTap = { [weak self] in self?.onPlayCued?() }
-
-        progressSlider.addTarget(self, action: #selector(handleScrub), for: .valueChanged)
+        // Progress
         progressSlider.minimumValue = 0
         progressSlider.maximumValue = 1
         progressSlider.value = 0.001
         progressSlider.isContinuous = true
-        progressSlider.translatesAutoresizingMaskIntoConstraints = false
+        progressSlider.addTarget(self, action: #selector(handleScrub), for: .valueChanged)
         progressSlider.heightAnchor.constraint(equalToConstant: 20).isActive = true
 
+        // Time
         timeLabel.font = .systemFont(ofSize: 12)
         timeLabel.textAlignment = .center
         timeLabel.text = "00:00 / 00:00"
 
+        // Buttons
+        fadeButton.onTap = { [weak self] in self?.onFadeOut?() }
+        playPauseButton.onTap = { [weak self] in self?.onPlayPause?() }
+        playCuedButton.onTap = { [weak self] in self?.onPlayCued?() }
 
-        volumeSlider.addTarget(self, action: #selector(handleVolume), for: .valueChanged)
-        volumeSlider.value = AudioPlayerManager.shared.volume
-        //let speakerIcon = UIImageView(image: UIImage(systemName: "speaker.wave.2.fill"))
-
-
-        let buttonRow = UIStackView(arrangedSubviews: [
-            fadeButton, playPauseButton, playCuedButton
-        ])
+        let buttonRow = UIStackView(arrangedSubviews: [fadeButton, playPauseButton, playCuedButton])
         buttonRow.axis = .horizontal
         buttonRow.spacing = 24
         buttonRow.distribution = .equalSpacing
@@ -85,29 +80,30 @@ class PlayerControlsView: UIView {
         let transportContainer = UIView()
         transportContainer.translatesAutoresizingMaskIntoConstraints = false
         transportContainer.addSubview(buttonRow)
-
         NSLayoutConstraint.activate([
             buttonRow.topAnchor.constraint(equalTo: transportContainer.topAnchor),
             buttonRow.bottomAnchor.constraint(equalTo: transportContainer.bottomAnchor),
             buttonRow.centerXAnchor.constraint(equalTo: transportContainer.centerXAnchor)
         ])
-        
+
+        // Volume
         let speakerIcon = UIImageView(image: UIImage(systemName: "speaker.wave.2.fill"))
         speakerIcon.tintColor = UIColor.label
-        speakerIcon.setContentHuggingPriority(UILayoutPriority.required, for: NSLayoutConstraint.Axis.horizontal)
+        speakerIcon.setContentHuggingPriority(.required, for: .horizontal)
 
-        volumeSlider.addTarget(self, action: #selector(handleVolume), for: .valueChanged)
         volumeSlider.value = AudioPlayerManager.shared.volume
+        volumeSlider.addTarget(self, action: #selector(handleVolume), for: .valueChanged)
 
         let volumeRow = UIStackView(arrangedSubviews: [speakerIcon, volumeSlider])
-        volumeRow.axis = NSLayoutConstraint.Axis.horizontal
+        volumeRow.axis = .horizontal
         volumeRow.spacing = 8
-        volumeRow.alignment = UIStackView.Alignment.center
+        volumeRow.alignment = .center
         volumeRow.translatesAutoresizingMaskIntoConstraints = false
 
+        // Stack
         let stack = UIStackView(arrangedSubviews: [
-            titleLabel,
-            cuedTrackLabel,
+            nowPlayingLabel,
+            cuedLabel,
             transportContainer,
             progressSlider,
             timeLabel,
@@ -128,6 +124,7 @@ class PlayerControlsView: UIView {
         ])
     }
 
+    // MARK: - Interactions
 
     @objc private func handleScrub() {
         onScrubProgress?(progressSlider.value)
@@ -137,10 +134,19 @@ class PlayerControlsView: UIView {
         onVolumeChange?(volumeSlider.value)
     }
 
-    // MARK: - Public Methods
+    // MARK: - Public API
 
-    func nowPlayingText(_ text: String) {
-        titleLabel.text = text
+    func updatePlayingTrackText(_ title: String) {
+        nowPlayingLabel.text = title
+    }
+
+    func updateCuedTrackText(_ title: String) {
+        cuedLabel.text = "🎧 Cued: \(title)"
+    }
+
+    func clearTrackText() {
+        nowPlayingLabel.text = "Now Playing: —"
+        cuedLabel.text = ""
     }
 
     func updatePlayButton(isPlaying: Bool) {
@@ -174,12 +180,4 @@ class PlayerControlsView: UIView {
         let icon = isFadingOut ? "radiowaves.right" : "radiowaves.left"
         fadeButton.update(icon: icon, title: fadeButton.currentTitle ?? "")
     }
-    func updateCuedTrackText(_ title: String?) {
-        if let title = title, !title.isEmpty {
-            cuedTrackLabel.text = "🎧 Cued: \(title)"
-        } else {
-            cuedTrackLabel.text = " "
-        }
-    }
-
 }
