@@ -16,6 +16,11 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
     var isFiltering: Bool {
         return !(searchController.searchBar.text?.isEmpty ?? true)
     }
+    
+    var playerView: PlayerControlsView? {
+        return PlayerControlsView.shared
+    }
+
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -56,7 +56,8 @@ class MiniPlayerContainerViewController: UIViewController {
 
             audio.playCuedTrack()
             let title = audio.currentTrackName ?? self.currentSong?.title ?? "—"
-            self.playerView.updatePlayingTrackText("Now Playing: \(title)")
+            self.playerView.updatePlayingTrackText(title)
+            self.playerView.clearCuedText() // ✅ clear cued label here
             self.playerView.updatePlayButton(isPlaying: true)
             self.playerView.setFadeButtonTitle("Fade Out")
             self.playerView.updateFadeIcon(isFadingOut: false)
@@ -83,7 +84,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 self.playerView.updatePlayButton(isPlaying: false)
                 self.playerView.setFadeButtonTitle("Fade In")
                 self.playerView.updateFadeIcon(isFadingOut: true)
-                self.playerView.updatePlayingTrackText("Paused: \(title)")
+                self.playerView.updatePlayingTrackText(title)
                 self.stopProgressTimer()
                 return
             }
@@ -92,7 +93,7 @@ class MiniPlayerContainerViewController: UIViewController {
                 print("→ Resume paused track")
                 audio.resume()
                 if audio.isPlaying {
-                    self.playerView.updatePlayingTrackText("Now Playing: \(title)")
+                    self.playerView.updatePlayingTrackText(title)
                 }
                 self.playerView.updatePlayButton(isPlaying: true)
                 self.playerView.setFadeButtonTitle("Fade Out")
@@ -142,7 +143,7 @@ class MiniPlayerContainerViewController: UIViewController {
         }
 
         playerView.onFadeOut = { [weak self] in
-            self?.fadeOutMusic()
+            MiniPlayerManager.shared.fadeOutMusic()
         }
         
         AudioPlayerManager.shared.onPlaybackEnded = {
@@ -176,48 +177,7 @@ class MiniPlayerContainerViewController: UIViewController {
         playerView.updateTimeLabel(current: current, duration: duration)
     }
 
-    private func fadeOutMusic() {
-        let audio = AudioPlayerManager.shared
-        guard let player = audio.player else { return }
 
-        if audio.isPlaying {
-            let totalSteps = Int(7.0 / 0.01)
-            let decrement = audio.volume / Float(totalSteps)
-
-            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
-                if player.volume > decrement {
-                    player.volume -= decrement
-                } else {
-                    timer.invalidate()
-                    player.pause()
-                    player.volume = audio.volume
-                    self.playerView.updatePlayButton(isPlaying: false)
-                    self.playerView.setFadeButtonTitle("Fade In")
-                    self.playerView.updateFadeIcon(isFadingOut: true)
-                    self.playerView.updatePlayingTrackText("Paused after fade")
-                }
-            }
-        } else {
-            player.volume = 0
-            player.play()
-
-            let title = audio.currentTrackName ?? "—"
-            self.playerView.updatePlayingTrackText("Now Playing: \(title)")
-
-            self.playerView.updatePlayButton(isPlaying: true)
-            self.playerView.setFadeButtonTitle("Fade Out")
-            self.playerView.updateFadeIcon(isFadingOut: false)
-
-            Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
-                if player.volume < audio.volume - 0.01 {
-                    player.volume += 0.01
-                } else {
-                    player.volume = audio.volume
-                    timer.invalidate()
-                }
-            }
-        }
-    }
 }
 
 extension AudioPlayerManager {
@@ -228,4 +188,7 @@ extension AudioPlayerManager {
     var hasPlayableTrack: Bool {
         return currentTrackName != nil && !isPlaying && currentTime < duration
     }
+    
+ 
+
 }

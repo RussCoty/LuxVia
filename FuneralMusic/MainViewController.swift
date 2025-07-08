@@ -19,6 +19,7 @@ class MainViewController: UIViewController {
         showLibrary()
 
         MiniPlayerManager.shared.attach(to: self) // ✅ Correct usage
+
     }
 
     private func setupUI() {
@@ -95,5 +96,20 @@ class MainViewController: UIViewController {
         newVC.view.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         newVC.didMove(toParent: self)
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        if let playerView = libraryVC.playerView {
+            MiniPlayerManager.shared.playerView = playerView
+            MiniPlayerManager.shared.setupCallbacks(for: playerView)
+            MiniPlayerManager.shared.syncPlayerUI()
+        } else {
+            print("⚠️ Warning: libraryVC.playerView is nil")
+        }
+    }
+
+
+
 }
 

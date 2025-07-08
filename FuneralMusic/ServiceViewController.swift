@@ -63,7 +63,10 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+
         MiniPlayerManager.shared.playerView = miniPlayerVC.playerView
+        MiniPlayerManager.shared.setupCallbacks(for: miniPlayerVC.playerView)
+        MiniPlayerManager.shared.syncPlayerUI()
         tableView.reloadData()
     }
 

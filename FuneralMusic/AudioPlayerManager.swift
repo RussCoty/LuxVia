@@ -1,3 +1,5 @@
+// AudioPlayerManager.swift
+
 import Foundation
 import AVFoundation
 
@@ -5,6 +7,14 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     static let shared = AudioPlayerManager()
     private override init() {
         super.init()
+
+        do {
+            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            try AVAudioSession.sharedInstance().setActive(true)
+            print("✅ AVAudioSession set for background & silent switch playback")
+        } catch {
+            print("❌ Failed to set AVAudioSession:", error)
+        }
     }
 
     var player: AVAudioPlayer?
@@ -12,46 +22,34 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     private var fadeTimer: Timer?
 
     enum AudioSource {
-        case none
-        case library
-        case playlist
+        case none, library, playlist
     }
 
     var onPlaybackEnded: (() -> Void)?
-
-    var isPaused: Bool {
-        return player?.isPlaying == false && player != nil
-    }
-
-    var isStopped: Bool {
-        return player == nil
-    }
+    var onStateChanged: (() -> Void)?  // ✅ Sync UI callback
 
     var currentSource: AudioSource = .none
     var currentTrackName: String?
     var volume: Float = 0.75 {
         didSet {
             player?.volume = volume
+            onStateChanged?()  // ✅ Trigger UI update
         }
     }
 
     var cuedTrack: SongEntry?
     var cuedSource: AudioSource = .none
 
-    var isTrackCued: Bool {
-        return cuedTrack != nil
-    }
+    var isTrackCued: Bool { cuedTrack != nil }
+    var isPaused: Bool { player?.isPlaying == false && player != nil }
+    var isStopped: Bool { player == nil }
+    var isPlaying: Bool { player?.isPlaying ?? false }
+    var currentTime: TimeInterval { player?.currentTime ?? 0 }
+    var duration: TimeInterval { player?.duration ?? 1 }
 
-    var currentTime: TimeInterval {
-        return player?.currentTime ?? 0
-    }
-
-    var duration: TimeInterval {
-        return player?.duration ?? 1
-    }
-
-    var isPlaying: Bool {
-        return player?.isPlaying ?? false
+    var currentTrack: SongEntry? {
+        guard let name = currentTrackName else { return nil }
+        return SharedLibraryManager.shared.allSongs.first { $0.title == name }
     }
 
     func play(url: URL) {
@@ -60,8 +58,14 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
             player?.volume = volume
             player?.delegate = self
             player?.prepareToPlay()
+            //background play capabilities
+            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            try? AVAudioSession.sharedInstance().setActive(true)
+
             player?.play()
+
             maybeStartPlaybackLimiter()
+            onStateChanged?()  // ✅
         } catch {
             print("❌ Error playing audio: \(error)")
         }
@@ -70,11 +74,13 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
     func pause() {
         player?.pause()
         playbackLimitTimer?.invalidate()
+        onStateChanged?()  // ✅
     }
 
     func resume() {
         player?.play()
         maybeStartPlaybackLimiter()
+        onStateChanged?()  // ✅
     }
 
     func stop() {
@@ -83,43 +89,45 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         currentTrackName = nil
         cuedTrack = nil
         playbackLimitTimer?.invalidate()
+        onStateChanged?()  // ✅
     }
 
     func cueTrack(_ song: SongEntry, source: AudioSource) {
         cuedTrack = song
         cuedSource = source
+        onStateChanged?()  // ✅
     }
 
     func playCuedTrack() {
-        guard let song = cuedTrack else {
+        guard let song = cuedTrack,
+              let url = SharedLibraryManager.shared.urlForTrack(named: song.fileName) else {
             return
         }
 
-        if let url = SharedLibraryManager.shared.urlForTrack(named: song.fileName) {
-            play(url: url)
-            currentTrackName = song.title
-            currentSource = cuedSource
-            cuedTrack = nil
-        }
+        play(url: url)
+        currentTrackName = song.title
+        currentSource = cuedSource
+        cuedTrack = nil
+        cuedSource = .none
+        onStateChanged?()  // ✅
     }
 
     func playTrackFromPlaylist(at index: Int) {
         let playlist = SharedPlaylistManager.shared.playlist
-        guard index >= 0 && index < playlist.count else {
-            return
-        }
+        guard index >= 0, index < playlist.count else { return }
 
         let track = playlist[index]
         if let url = SharedLibraryManager.shared.urlForTrack(named: track.fileName) {
             currentSource = .playlist
             currentTrackName = track.title
             play(url: url)
+            onStateChanged?()  // ✅
         }
     }
 
     func playNextInLibrary() {
-        guard let current = currentTrackName else { return }
-        guard let index = SharedLibraryManager.shared.allSongs.firstIndex(where: { $0.title == current }),
+        guard let current = currentTrackName,
+              let index = SharedLibraryManager.shared.allSongs.firstIndex(where: { $0.title == current }),
               index + 1 < SharedLibraryManager.shared.allSongs.count else {
             return
         }
@@ -127,17 +135,15 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         let nextTrack = SharedLibraryManager.shared.allSongs[index + 1]
         if let url = SharedLibraryManager.shared.urlForTrack(named: nextTrack.fileName) {
             currentSource = .library
+            currentTrackName = nextTrack.title
             play(url: url)
+            onStateChanged?()
         }
     }
 
-    func seek(to time: TimeInterval) {
-        player?.currentTime = time
-    }
-
     func playPreviousInLibrary() {
-        guard let current = currentTrackName else { return }
-        guard let index = SharedLibraryManager.shared.allSongs.firstIndex(where: { $0.title == current }),
+        guard let current = currentTrackName,
+              let index = SharedLibraryManager.shared.allSongs.firstIndex(where: { $0.title == current }),
               index > 0 else {
             return
         }
@@ -145,18 +151,27 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         let prevTrack = SharedLibraryManager.shared.allSongs[index - 1]
         if let url = SharedLibraryManager.shared.urlForTrack(named: prevTrack.fileName) {
             currentSource = .library
+            currentTrackName = prevTrack.title
             play(url: url)
+            onStateChanged?()
         }
+    }
+
+    func seek(to time: TimeInterval) {
+        player?.currentTime = time
+        onStateChanged?()
     }
 
     func cancelCue() {
         cuedTrack = nil
         cuedSource = .none
+        onStateChanged?()
     }
 
     func restartTrack() {
         player?.currentTime = 0
         player?.play()
+        onStateChanged?()
     }
 
     private func maybeStartPlaybackLimiter() {
@@ -164,11 +179,9 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         let isMember = UserDefaults.standard.bool(forKey: "isMember")
         if !isMember {
             playbackLimitTimer = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] _ in
-                guard let self = self else { return }
-                if self.isPlaying {
-                    self.startFadeOut {
-                        self.stop()
-                    }
+                guard let self = self, self.isPlaying else { return }
+                self.startFadeOut {
+                    self.stop()
                 }
             }
         }
@@ -187,27 +200,21 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
                 player.volume -= 0.05
             } else {
                 timer.invalidate()
-                let title = self.currentTrackName ?? "—"
-                player.volume = self.volume  // Restore volume first
+                player.volume = self.volume
                 DispatchQueue.main.async {
-                    PlayerControlsView.shared?.updatePlayingTrackText("Paused after fade: \(title)")
+                    PlayerControlsView.shared?.updatePlayingTrackText("Paused after fade: \(self.currentTrackName ?? "—")")
                 }
-                player.stop()  // Stop only after UI update
+                player.stop()
+                self.onStateChanged?()  // ✅
                 completion()
             }
         }
     }
 
-
-
-
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         print("🔚 Playback finished")
         onPlaybackEnded?()
- }
-    var currentTrack: SongEntry? {
-        guard let name = currentTrackName else { return nil }
-        return SharedLibraryManager.shared.allSongs.first(where: { $0.title == name })
+        onStateChanged?()  // ✅
     }
-
 }
+

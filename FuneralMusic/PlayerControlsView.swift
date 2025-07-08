@@ -137,7 +137,9 @@ class PlayerControlsView: UIView {
     // MARK: - Public API
 
     func updatePlayingTrackText(_ title: String) {
-        nowPlayingLabel.text = title
+//        nowPlayingLabel.text = "Now Playing: \(title)"
+        nowPlayingLabel.text = (title)
+
     }
 
     func updateCuedTrackText(_ title: String) {
@@ -180,4 +182,9 @@ class PlayerControlsView: UIView {
         let icon = isFadingOut ? "radiowaves.right" : "radiowaves.left"
         fadeButton.update(icon: icon, title: fadeButton.currentTitle ?? "")
     }
+    
+    func clearCuedText() {
+        cuedLabel.text = ""
+    }
+
 }
