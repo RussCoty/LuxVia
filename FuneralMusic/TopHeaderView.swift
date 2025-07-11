@@ -21,9 +21,16 @@ class TopHeaderView: UIView {
     }
 
     private func setupView() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateLogoutButton),
+            name: .authStatusChanged,
+            object: nil
+        )
+
         backgroundColor = .systemGroupedBackground
 
-        logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
         logoutButton.setTitleColor(.systemBlue, for: .normal)
         logoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
@@ -37,7 +44,6 @@ class TopHeaderView: UIView {
             segmentedControl.translatesAutoresizingMaskIntoConstraints = false
             segmentedControl.setContentHuggingPriority(.required, for: .horizontal)
 
-            // Match music tab styling
             segmentedControl.backgroundColor = .tertiarySystemGroupedBackground
             segmentedControl.selectedSegmentTintColor = .white
             segmentedControl.layer.cornerRadius = 8
@@ -59,7 +65,6 @@ class TopHeaderView: UIView {
         }
 
         row.addArrangedSubview(logoutButton)
-
         row.translatesAutoresizingMaskIntoConstraints = false
         addSubview(row)
 
@@ -69,5 +74,9 @@ class TopHeaderView: UIView {
             row.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             row.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -8)
         ])
+    }
+
+    @objc private func updateLogoutButton() {
+        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
     }
 }

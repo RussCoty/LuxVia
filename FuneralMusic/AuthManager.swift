@@ -13,19 +13,18 @@ class AuthManager {
     private init() {}
 
     var isLoggedIn: Bool {
-        // Change to real logic if needed
         return UserDefaults.standard.bool(forKey: "loggedIn")
     }
 
     func logout() {
-        // Replace with your logout logic
         UserDefaults.standard.set(false, forKey: "loggedIn")
         print("🔓 Logged out")
+        NotificationCenter.default.post(name: .authStatusChanged, object: nil)
     }
 
     func login() {
-        // Optional helper
         UserDefaults.standard.set(true, forKey: "loggedIn")
+        print("🔐 Logged in")
+        NotificationCenter.default.post(name: .authStatusChanged, object: nil)
     }
 }
-

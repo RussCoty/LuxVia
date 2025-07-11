@@ -6,6 +6,11 @@
 //
 
 import UIKit
+import Foundation
+
+//extension Notification.Name {
+//    static let authStatusChanged = Notification.Name("authStatusChanged")
+//}
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -13,6 +18,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        AuthManager.shared.login() //debugging here     
+        print("🧭 updateLoginButton CALLED — logged in =", AuthManager.shared.isLoggedIn)
 
         let ivoryColor = UIColor(named: "IvoryBackground") ?? UIColor(red: 1.0, green: 0.996, blue: 0.949, alpha: 1.0) // Fallback if asset missing
 

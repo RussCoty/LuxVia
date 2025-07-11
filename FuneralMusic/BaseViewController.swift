@@ -4,6 +4,7 @@
 //
 //  Created by Russell Cottier on 17/05/2025.
 //
+
 import UIKit
 
 extension UIViewController {
@@ -28,12 +29,24 @@ extension UIViewController {
 class BaseViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
+            NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateLoginButton),
+            name: .authStatusChanged,
+            object: nil
+        )
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
         setupLogoutButton()
     }
 
+
     private func setupLogoutButton() {
+        let title = AuthManager.shared.isLoggedIn ? "Logout" : "Login"
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Logout",
+            title: title,
             style: .plain,
             target: self,
             action: #selector(logoutTapped)
@@ -43,20 +56,31 @@ class BaseViewController: UIViewController {
     @objc func logoutTapped() {
         print("✅ Running BaseViewController.logoutTapped")
 
+        let title = AuthManager.shared.isLoggedIn ? "Logout" : "Login"
         let alert = UIAlertController(
-            title: "Logout",
+            title: title,
             message: "Are you sure you want to log out?",
             preferredStyle: .alert
         )
+
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
+        alert.addAction(UIAlertAction(title: title, style: .destructive) { _ in
             SessionManager.logout()
         })
+
         present(alert, animated: true)
     }
 
-
-
+    @objc func updateLoginButton() {
+        print("🔄 updateLoginButton fired. Logged in =", AuthManager.shared.isLoggedIn)
+        
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
+            style: .plain,
+            target: self,
+            action: #selector(logoutTapped)
+        )
+    }
 
 
 }

@@ -13,14 +13,27 @@ class MainViewController: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         title = "Music"
+        
+        print("🔍 isLoggedIn =", AuthManager.shared.isLoggedIn)
+        print("📍 MainViewController loaded")
+
 
         setupUI()
-        setupLogoutButton()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateLoginButton),
+            name: .authStatusChanged,
+            object: nil
+        )
+
         showLibrary()
 
         MiniPlayerManager.shared.attach(to: self) // ✅ Correct usage
 
     }
+    
+
 
     private func setupUI() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -40,7 +53,7 @@ class MainViewController: UIViewController {
 
     private func setupLogoutButton() {
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Logout",
+            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
             style: .plain,
             target: self,
             action: #selector(logoutTapped)
@@ -50,13 +63,13 @@ class MainViewController: UIViewController {
     @objc private func logoutTapped() {
         print("✅ Running MainViewController.logoutTapped")
         let alert = UIAlertController(
-            title: "Logout",
+            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
             message: "Are you sure you want to log out?",
             preferredStyle: .alert
         )
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
-            SessionManager.logout()
+        // FIXED: removed invalid addition of voids
+        alert.addAction(UIAlertAction(title: AuthManager.shared.isLoggedIn ? "Logout" : "Login", style: .destructive) { _ in            SessionManager.logout()
         })
         present(alert, animated: true)
     }
@@ -99,6 +112,7 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        setupLogoutButton()
 
         if let playerView = libraryVC.playerView {
             MiniPlayerManager.shared.playerView = playerView
@@ -109,6 +123,16 @@ class MainViewController: UIViewController {
         }
     }
 
+    @objc private func updateLoginButton() {
+        print("🔄 MainViewController updateLoginButton fired. Logged in =", AuthManager.shared.isLoggedIn)
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
+            style: .plain,
+            target: self,
+            action: #selector(logoutTapped)
+        )
+    }
 
 
 }

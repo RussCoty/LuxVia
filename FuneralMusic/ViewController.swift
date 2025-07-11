@@ -15,7 +15,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
     let statusLabel = UILabel()
 
     override func viewDidLoad() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Logout", style: .plain, target: self, action: #selector(handleLogout))
+        navigationItem.rightBarButtonItem = UIBarButtonItem(title: AuthManager.shared.isLoggedIn ? "Logout" : "Login", style: .plain, target: self, action: #selector(handleLogout))
         super.viewDidLoad()
         view.backgroundColor = .white
 

@@ -27,6 +27,14 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
 
         setupNavigationBar()
         setupTableView()
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateLoginButton),
+            name: .authStatusChanged,
+            object: nil
+        )
+
     }
 
     private func setupNavigationBar() {
@@ -35,8 +43,7 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         navigationItem.titleView = segmentedControl
 
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Logout",
-            style: .plain,
+            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",            style: .plain,
             target: self,
             action: #selector(BaseViewController.logoutTapped) // ✅ exact match
         )
@@ -110,4 +117,8 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         let detailVC = LyricsDetailViewController(entry: entry)
         navigationController?.pushViewController(detailVC, animated: true)
     }
+    
+
+
+
 }

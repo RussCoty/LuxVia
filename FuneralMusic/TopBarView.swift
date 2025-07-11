@@ -27,7 +27,7 @@ class TopBarView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentContainer.addSubview(titleLabel)
 
-        logoutButton.setTitle("Logout", for: .normal)
+        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
         logoutButton.setTitleColor(.systemBlue, for: .normal)
         logoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
@@ -46,6 +46,18 @@ class TopBarView: UIView {
             logoutButton.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
             logoutButton.centerYAnchor.constraint(equalTo: centerYAnchor)
         ])
+
+        // Observer to update logout button when auth status changes
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(updateLogoutButton),
+            name: .authStatusChanged,
+            object: nil
+        )
+    }
+
+    @objc private func updateLogoutButton() {
+        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
     }
 
     func setTitle(_ text: String) {

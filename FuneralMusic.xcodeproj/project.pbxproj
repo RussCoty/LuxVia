@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		10066B4B2E1FD57000442DB2 /* Notifications+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */; };
 		101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101293E62DC9FD7C0012B3DE /* LoginViewController.swift */; };
 		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
 		102B65562E0F440500FA2CBE /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */; };
@@ -61,6 +62,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notifications+Extensions.swift"; sourceTree = "<group>"; };
 		101293E62DC9FD7C0012B3DE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 		10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
 		10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LUMA_Launch.png; sourceTree = "<group>"; };
+		10B007582E1FF94600A996E6 /* FuneralMusic.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = FuneralMusic.xcodeproj; sourceTree = SOURCE_ROOT; };
 		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
 		10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerManager.swift; sourceTree = "<group>"; };
 		10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconLabelButtonView.swift; sourceTree = "<group>"; };
@@ -127,6 +130,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		10066B4C2E1FD73100442DB2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				10066B4D2E1FD73E00442DB2 /* Notifications */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		10066B4D2E1FD73E00442DB2 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
 		101651CE2DF70D53008B41E5 /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -137,6 +156,7 @@
 		1084FA972DC8EC06009398EB = {
 			isa = PBXGroup;
 			children = (
+				10B007582E1FF94600A996E6 /* FuneralMusic.xcodeproj */,
 				1084FAA22DC8EC06009398EB /* FuneralMusic */,
 				1084FAA12DC8EC06009398EB /* Products */,
 				101651CE2DF70D53008B41E5 /* Recovered References */,
@@ -154,6 +174,7 @@
 		1084FAA22DC8EC06009398EB /* FuneralMusic */ = {
 			isa = PBXGroup;
 			children = (
+				10066B4C2E1FD73100442DB2 /* Shared */,
 				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
 				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
 				1089BCC52DCE077F005DF96A /* Audio */,
@@ -209,6 +230,11 @@
 			path = FuneralMusic;
 			sourceTree = "<group>";
 		};
+		10AD2F4B2E21069A0012D2DD /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -261,6 +287,12 @@
 			);
 			productRefGroup = 1084FAA12DC8EC06009398EB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 10AD2F4B2E21069A0012D2DD /* Products */;
+					ProjectRef = 10B007582E1FF94600A996E6 /* FuneralMusic.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1084FA9F2DC8EC06009398EB /* FuneralMusic */,
@@ -328,6 +360,7 @@
 				105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */,
 				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
 				1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */,
+				10066B4B2E1FD57000442DB2 /* Notifications+Extensions.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,
 				10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */,

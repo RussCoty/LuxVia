@@ -88,7 +88,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         
         navigationItem.titleView = segmentedControl
         navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: "Logout",
+            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
             style: .plain,
             target: self,
             action: #selector(BaseViewController.logoutTapped)
