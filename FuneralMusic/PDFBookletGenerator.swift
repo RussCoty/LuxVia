@@ -1,5 +1,3 @@
-// File: Utils/PDFBookletGenerator.swift
-
 import UIKit
 import CoreText
 
@@ -19,7 +17,6 @@ final class PDFBookletGenerator {
         let margin: CGFloat = 30
 
         let renderer = UIGraphicsPDFRenderer(bounds: CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight), format: format)
-
         let fileName = "OrderOfService_\(UUID().uuidString.prefix(8)).pdf"
         let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
 
@@ -60,90 +57,61 @@ final class PDFBookletGenerator {
                 y += 30
 
                 info.location.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: centeredAttrs())
-                y += 20
-                dateFormatter.timeStyle = .short
-                let timeStr = String(format: "%02d:%02d", info.timeHour, info.timeMinute)
-                "\(dateFormatter.string(from: info.dateOfService)) at \(timeStr)".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: centeredAttrs())
-                y += 20
-
-                "Conducted by \(info.celebrantName)".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: centeredAttrs())
+                y += 40
 
                 // Service Items
-                ctx.beginPage()
-                y = margin
-
                 for item in items {
-                    let header = "• \(item.title) (\(item.type.rawValue.capitalized))"
-                    let headerHeight: CGFloat = 20
-                    let topPadding: CGFloat = 12
-                    let bottomPadding: CGFloat = 20
+                    guard let htmlText = item.customText else { continue }
 
-                    if let htmlText = item.customText,
-                       let data = htmlText.data(using: .utf8),
-                       let attr = try? NSAttributedString(data: data, options: [.documentType: NSAttributedString.DocumentType.html], documentAttributes: nil) {
+                    // Fix broken character encodings
+                    let fixedString = htmlText
+                        .replacingOccurrences(of: "â€™", with: "’")
+                        .replacingOccurrences(of: "â€œ", with: "“")
+                        .replacingOccurrences(of: "â€", with: "”")
+                        .replacingOccurrences(of: "â€˜", with: "‘")
+                        .replacingOccurrences(of: "â€“", with: "–")
+                        .replacingOccurrences(of: "â€”", with: "—")
+                        .replacingOccurrences(of: "â€¦", with: "…")
 
-                        let centeredStyle = NSMutableParagraphStyle()
-                        centeredStyle.alignment = .center
-                        let mutableAttr = NSMutableAttributedString(attributedString: attr)
-                        mutableAttr.addAttribute(.paragraphStyle, value: centeredStyle, range: NSRange(location: 0, length: mutableAttr.length))
+                    guard let data = fixedString.data(using: .utf8),
+                          let attr = try? NSAttributedString(
+                              data: data,
+                              options: [.documentType: NSAttributedString.DocumentType.html],
+                              documentAttributes: nil
+                          ) else { continue }
 
-                        let framesetter = CTFramesetterCreateWithAttributedString(mutableAttr as CFAttributedString)
-                        let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRangeMake(0, mutableAttr.length), nil, CGSize(width: pageWidth - 2*margin, height: .greatestFiniteMagnitude), nil)
+                    let centeredStyle = NSMutableParagraphStyle()
+                    centeredStyle.alignment = .center
 
-                        if y + headerHeight + topPadding + suggestedSize.height > pageHeight - margin {
-                            ctx.beginPage()
-                            y = margin
-                        }
+                    let mutableAttr = NSMutableAttributedString(attributedString: attr)
+                    mutableAttr.addAttribute(.paragraphStyle, value: centeredStyle, range: NSRange(location: 0, length: mutableAttr.length))
 
-                        header.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: headerHeight), withAttributes: [.font: UIFont.boldSystemFont(ofSize: 14), .paragraphStyle: centered()])
-                        y += headerHeight + topPadding
+                    let framesetter = CTFramesetterCreateWithAttributedString(mutableAttr as CFAttributedString)
+                    let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(
+                        framesetter,
+                        CFRangeMake(0, mutableAttr.length),
+                        nil,
+                        CGSize(width: pageWidth - 2 * margin, height: .greatestFiniteMagnitude),
+                        nil
+                    )
 
-                        var currentRange = CFRange(location: 0, length: 0)
-                        while currentRange.location < mutableAttr.length {
-                            let remaining = CFRange(location: currentRange.location, length: mutableAttr.length - currentRange.location)
-                            let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, remaining, nil, CGSize(width: pageWidth - 2*margin, height: pageHeight - y - margin), nil)
+                    let fits = y + suggestedSize.height <= pageHeight - margin
 
-                            if y + suggestedSize.height > pageHeight - margin {
-                                ctx.beginPage()
-                                y = margin
-                            }
+                    if !fits {
+                        ctx.beginPage()
 
-                            let frameRect = CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: suggestedSize.height)
-                            let path = CGMutablePath()
-                            path.addRect(frameRect)
-                            let frame = CTFramesetterCreateFrame(framesetter, remaining, path, nil)
-
-                            let ctxRef = UIGraphicsGetCurrentContext()!
-                            ctxRef.saveGState()
-                            ctxRef.textMatrix = .identity
-                            ctxRef.translateBy(x: 0, y: pageHeight)
-                            ctxRef.scaleBy(x: 1.0, y: -1.0)
-                            CTFrameDraw(frame, ctxRef)
-                            ctxRef.restoreGState()
-
-                            let visibleRange = CTFrameGetVisibleStringRange(frame)
-                            currentRange.location += visibleRange.length
-                            y += suggestedSize.height + bottomPadding
-                        }
+                        // Center vertically only if item takes whole page
+                        let contentHeight = suggestedSize.height
+                        let availableHeight = pageHeight - 2 * margin
+                        y = (availableHeight - contentHeight) / 2 + margin
                     }
+
+
+                    let textRect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: suggestedSize.height)
+                    mutableAttr.draw(in: textRect)
+                    y += suggestedSize.height + 20
                 }
 
-                // Wake & Donations
-                ctx.beginPage()
-                y = margin
-
-                if let w = info.wakeLocation {
-                    "You are invited to a reception at".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: paragraphAttrs())
-                    y += 24
-                    w.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 40), withAttributes: paragraphAttrs())
-                    y += 50
-                }
-
-                if let d = info.donationInfo {
-                    "Flowers or Donations can be sent to".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: paragraphAttrs())
-                    y += 24
-                    d.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 40), withAttributes: paragraphAttrs())
-                }
             })
 
             return outputURL
@@ -154,16 +122,12 @@ final class PDFBookletGenerator {
     }
 
     private static func centered() -> NSMutableParagraphStyle {
-        let p = NSMutableParagraphStyle()
-        p.alignment = .center
-        return p
+        let style = NSMutableParagraphStyle()
+        style.alignment = .center
+        return style
     }
 
     private static func centeredAttrs() -> [NSAttributedString.Key: Any] {
-        [.font: UIFont.systemFont(ofSize: 14), .paragraphStyle: centered()]
-    }
-
-    private static func paragraphAttrs() -> [NSAttributedString.Key: Any] {
-        [.font: UIFont.systemFont(ofSize: 14), .paragraphStyle: centered()]
+        return [.font: UIFont.systemFont(ofSize: 16), .paragraphStyle: centered()]
     }
 }
