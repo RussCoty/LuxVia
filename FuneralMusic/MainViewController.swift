@@ -1,7 +1,7 @@
 import UIKit
 import Foundation
 
-class MainViewController: UIViewController {
+class MainViewController: BaseViewController {
 
     let segmentedControl = UISegmentedControl(items: ["Import", "Library"])
     private let containerView = UIView()
@@ -20,13 +20,6 @@ class MainViewController: UIViewController {
 
         setupUI()
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateLoginButton),
-            name: .authStatusChanged,
-            object: nil
-        )
-
         showLibrary()
 
         MiniPlayerManager.shared.attach(to: self) // ✅ Correct usage
@@ -51,28 +44,7 @@ class MainViewController: UIViewController {
         navigationItem.titleView = segmentedControl
     }
 
-    private func setupLogoutButton() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
-            style: .plain,
-            target: self,
-            action: #selector(logoutTapped)
-        )
-    }
 
-    @objc private func logoutTapped() {
-        print("✅ Running MainViewController.logoutTapped")
-        let alert = UIAlertController(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
-            message: "Are you sure you want to log out?",
-            preferredStyle: .alert
-        )
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        // FIXED: removed invalid addition of voids
-        alert.addAction(UIAlertAction(title: AuthManager.shared.isLoggedIn ? "Logout" : "Login", style: .destructive) { _ in            SessionManager.logout()
-        })
-        present(alert, animated: true)
-    }
 
     @objc private func segmentChanged(_ sender: UISegmentedControl) {
         switch sender.selectedSegmentIndex {
@@ -92,9 +64,6 @@ class MainViewController: UIViewController {
         swapChild(to: libraryVC)
     }
 
-//    private func showPlaylist() {
-//        swapChild(to: playlistVC)
-//    }
 
     private func swapChild(to newVC: UIViewController) {
         children.forEach {
@@ -112,7 +81,6 @@ class MainViewController: UIViewController {
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        setupLogoutButton()
 
         if let playerView = libraryVC.playerView {
             MiniPlayerManager.shared.playerView = playerView
@@ -121,17 +89,6 @@ class MainViewController: UIViewController {
         } else {
             print("⚠️ Warning: libraryVC.playerView is nil")
         }
-    }
-
-    @objc private func updateLoginButton() {
-        print("🔄 MainViewController updateLoginButton fired. Logged in =", AuthManager.shared.isLoggedIn)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
-            style: .plain,
-            target: self,
-            action: #selector(logoutTapped)
-        )
     }
 
 

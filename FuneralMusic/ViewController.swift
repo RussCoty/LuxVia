@@ -15,7 +15,6 @@ class ViewController: UIViewController, WKNavigationDelegate {
     let statusLabel = UILabel()
 
     override func viewDidLoad() {
-        navigationItem.rightBarButtonItem = UIBarButtonItem(title: AuthManager.shared.isLoggedIn ? "Logout" : "Login", style: .plain, target: self, action: #selector(handleLogout))
         super.viewDidLoad()
         view.backgroundColor = .white
 
@@ -36,21 +35,18 @@ class ViewController: UIViewController, WKNavigationDelegate {
         config.userContentController = contentController
 
         webView = WKWebView(frame: .zero, configuration: config)
+        webView.translatesAutoresizingMaskIntoConstraints = false
         webView.navigationDelegate = self
         webView.customUserAgent = "FuneralMusicApp"
-        webView.translatesAutoresizingMaskIntoConstraints = false
+
         view.addSubview(webView)
 
-        // ✅ Add constraints to respect safe area and avoid overlap
         NSLayoutConstraint.activate([
             webView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             webView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             webView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             webView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        webView.navigationDelegate = self
-        webView.customUserAgent = "FuneralMusicApp"
-        view.addSubview(webView)
 
         if let url = URL(string:"https://funeralmusic.co.uk/readings-library-121/") {
             let request = URLRequest(url: url)
@@ -58,8 +54,6 @@ class ViewController: UIViewController, WKNavigationDelegate {
         }
 
         setupStatusLabel()
-
-
     }
 
     // MARK: - Login Status Display
@@ -167,9 +161,4 @@ class ViewController: UIViewController, WKNavigationDelegate {
             }
         }.resume()
     }
-    
-    @objc private func handleLogout() {
-        SessionManager.logout()
-    }
-
 }

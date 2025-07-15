@@ -30,7 +30,8 @@ class TopHeaderView: UIView {
 
         backgroundColor = .systemGroupedBackground
 
-        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
+        logoutButton.setTitle((AuthManager.shared.isLoggedIn && !isGuest) ? "Logout" : "Login", for: .normal)
         logoutButton.setTitleColor(.systemBlue, for: .normal)
         logoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
 
@@ -77,6 +78,7 @@ class TopHeaderView: UIView {
     }
 
     @objc private func updateLogoutButton() {
-        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
+        logoutButton.setTitle((AuthManager.shared.isLoggedIn && !isGuest) ? "Logout" : "Login", for: .normal)
     }
 }

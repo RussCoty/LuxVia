@@ -92,10 +92,13 @@ class LoginViewController: UIViewController, WKNavigationDelegate {
         }
     }
 
-
     func finalizeLoginState(isMember: Bool) {
-        UserDefaults.standard.set(true, forKey: "isLoggedIn")
+        // ✅ Use shared AuthManager so key is consistent
+        AuthManager.shared.login()
         UserDefaults.standard.set(isMember, forKey: "isMember")
+
+        NotificationCenter.default.post(name: .authStatusChanged, object: nil)
+
         let sceneDelegate = UIApplication.shared.connectedScenes
             .first?.delegate as? SceneDelegate
         sceneDelegate?.showMainApp()

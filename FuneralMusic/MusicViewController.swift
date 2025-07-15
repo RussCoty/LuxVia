@@ -1,7 +1,7 @@
 import UIKit
 import UniformTypeIdentifiers
 
-class MusicViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
+class MusicViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
@@ -27,14 +27,6 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
         
         print("✅ viewDidLoad: isLoggedIn =", AuthManager.shared.isLoggedIn)
 
-        updateLoginButton()
-
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateLoginButton),
-            name: .authStatusChanged,
-            object: nil
-        )
         MiniPlayerManager.shared.attach(to: self) // ✅ Attach mini player on load
         view.backgroundColor = .white
         title = "Music"
@@ -252,24 +244,7 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
         showToast("Added: \(entry.title)")
     }
 
-//    private func setupUserMenu() {
-//        let menuButton = UIBarButtonItem(title: "…", style: .plain, target: self, action: #selector(showUserMenu))
-//        navigationItem.rightBarButtonItem = menuButton
-//    }
 
-    @objc private func showUserMenu() {
-        let status = AuthManager.shared.isLoggedIn ? "Member: Active" : "Guest"
-        let alert = UIAlertController(title: nil, message: nil, preferredStyle: .actionSheet)
-        alert.addAction(UIAlertAction(title: status, style: .default))
-        alert.addAction(UIAlertAction(title: "Log Out", style: .destructive) { _ in AuthManager.shared.logout() })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-
-        if let popover = alert.popoverPresentationController {
-            popover.barButtonItem = navigationItem.rightBarButtonItem
-        }
-
-        present(alert, animated: true)
-    }
 
     private func showToast(_ message: String) {
         let toastLabel = UILabel()
@@ -308,36 +283,8 @@ class MusicViewController: UIViewController, UITableViewDataSource, UITableViewD
         }
     }
     
-    @objc func updateLoginButton() {
-        print("🔄 MusicViewController updating button. Logged in =", AuthManager.shared.isLoggedIn)
-
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
-            style: .plain,
-            target: self,
-            action: #selector(logoutTapped)
-        )
-    }
-
-    @objc func logoutTapped() {
-        let title = AuthManager.shared.isLoggedIn ? "Logout" : "Login"
-
-        let alert = UIAlertController(
-            title: title,
-            message: "Are you sure you want to \(title.lowercased())?",
-            preferredStyle: .alert
-        )
-
-        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: title, style: .destructive) { _ in
-            SessionManager.logout()
-        })
-
-        present(alert, animated: true)
-    }
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        updateLoginButton()
     }
 
 

@@ -94,7 +94,9 @@ class NativeLoginViewController: UIViewController {
 
                 // Set login status
                 UserDefaults.standard.set(true, forKey: "isLoggedIn")
-                UserDefaults.standard.set(true, forKey: "isMember") // assume true for now
+                UserDefaults.standard.set(true, forKey: "isMember") // assume true
+                UserDefaults.standard.set(false, forKey: "guestMode")
+
 
                 DispatchQueue.main.async {
                     if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
@@ -115,10 +117,13 @@ class NativeLoginViewController: UIViewController {
     @objc private func guestTapped() {
         UserDefaults.standard.set(true, forKey: "isLoggedIn")
         UserDefaults.standard.set(false, forKey: "isMember")
+        UserDefaults.standard.set(true, forKey: "guestMode") // 👈 NEW
+
         if let sceneDelegate = UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate {
             sceneDelegate.showMainApp()
         }
     }
+
 
     @objc private func registerTapped() {
         if let url = URL(string: "https://funeralmusic.co.uk/wp-login.php?action=register") {

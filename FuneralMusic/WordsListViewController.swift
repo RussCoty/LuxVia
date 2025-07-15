@@ -1,6 +1,10 @@
 import UIKit
 
 class WordsListViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+    deinit {
+        // If you ever reintroduce observers
+        NotificationCenter.default.removeObserver(self)
+    }
 
     private let segmentedControl = UISegmentedControl(items: ["Readings", "Lyrics", "Custom"])
     private let tableView = UITableView()
@@ -28,13 +32,6 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         setupNavigationBar()
         setupTableView()
         
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(updateLoginButton),
-            name: .authStatusChanged,
-            object: nil
-        )
-
     }
 
     private func setupNavigationBar() {
@@ -42,11 +39,7 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
 
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",            style: .plain,
-            target: self,
-            action: #selector(BaseViewController.logoutTapped) // ✅ exact match
-        )
+        // Let BaseViewController handle login/logout button
     }
 
     private func setupTableView() {

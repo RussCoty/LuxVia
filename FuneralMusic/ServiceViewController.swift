@@ -87,14 +87,10 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         ], for: .selected)
         
         navigationItem.titleView = segmentedControl
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
-            style: .plain,
-            target: self,
-            action: #selector(BaseViewController.logoutTapped)
-        )
+        
+        // Let BaseViewController handle login/logout button
+        
     }
-    
     private func setupMiniPlayer() {
         addChild(miniPlayerVC)
         view.addSubview(miniPlayerVC.view)

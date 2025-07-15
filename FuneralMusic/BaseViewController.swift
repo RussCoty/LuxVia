@@ -27,60 +27,72 @@ extension UIViewController {
 }
 
 class BaseViewController: UIViewController {
+
     override func viewDidLoad() {
         super.viewDidLoad()
-            NotificationCenter.default.addObserver(
+
+        setupLoginLogoutButton()
+
+        NotificationCenter.default.addObserver(
             self,
             selector: #selector(updateLoginButton),
             name: .authStatusChanged,
             object: nil
         )
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        setupLogoutButton()
-    }
 
-
-    private func setupLogoutButton() {
-        let title = AuthManager.shared.isLoggedIn ? "Logout" : "Login"
+    private func setupLoginLogoutButton() {
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
+        let title = (AuthManager.shared.authState == .loggedIn && !isGuest) ? "Logout" : "Login"
         navigationItem.rightBarButtonItem = UIBarButtonItem(
             title: title,
             style: .plain,
             target: self,
             action: #selector(logoutTapped)
         )
+    }
+
+    @objc func updateLoginButton() {
+        print("🔄 updateLoginButton fired. Logged in =", AuthManager.shared.isLoggedIn)
+
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
+        let title = (AuthManager.shared.authState == .loggedIn && !isGuest) ? "Logout" : "Login"
+        navigationItem.rightBarButtonItem?.title = title
+
+        if AuthManager.shared.authState == .guest {
+            print("👤 Guest mode active")
+        }
     }
 
     @objc func logoutTapped() {
         print("✅ Running BaseViewController.logoutTapped")
 
-        let title = AuthManager.shared.isLoggedIn ? "Logout" : "Login"
-        let alert = UIAlertController(
-            title: title,
-            message: "Are you sure you want to log out?",
-            preferredStyle: .alert
-        )
+        let isLoggedIn = AuthManager.shared.isLoggedIn
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
 
+        let title = (isLoggedIn && !isGuest) ? "Logout" : "Login"
+        let message = (isLoggedIn && !isGuest)
+            ? "Are you sure you want to log out?"
+            : "Would you like to log in?"
+
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        alert.addAction(UIAlertAction(title: title, style: .destructive) { _ in
-            SessionManager.logout()
-        })
+
+        if isLoggedIn && !isGuest {
+            alert.addAction(UIAlertAction(title: "Logout", style: .destructive) { _ in
+                SessionManager.logout()
+            })
+        } else {
+            alert.addAction(UIAlertAction(title: "Login", style: .default) { _ in
+                let loginVC = NativeLoginViewController()
+                   loginVC.modalPresentationStyle = .fullScreen
+                   self.present(loginVC, animated: true)
+                // Trigger login
+                print("👉 Login button tapped – implement login flow.")
+            })
+        }
+
 
         present(alert, animated: true)
     }
-
-    @objc func updateLoginButton() {
-        print("🔄 updateLoginButton fired. Logged in =", AuthManager.shared.isLoggedIn)
-        
-        navigationItem.rightBarButtonItem = UIBarButtonItem(
-            title: AuthManager.shared.isLoggedIn ? "Logout" : "Login",
-            style: .plain,
-            target: self,
-            action: #selector(logoutTapped)
-        )
-    }
-
-
 }

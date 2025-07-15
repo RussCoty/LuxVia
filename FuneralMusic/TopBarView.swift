@@ -27,7 +27,8 @@ class TopBarView: UIView {
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
         contentContainer.addSubview(titleLabel)
 
-        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
+        logoutButton.setTitle((AuthManager.shared.isLoggedIn && !isGuest) ? "Logout" : "Login", for: .normal)
         logoutButton.setTitleColor(.systemBlue, for: .normal)
         logoutButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .medium)
         logoutButton.translatesAutoresizingMaskIntoConstraints = false
@@ -57,7 +58,8 @@ class TopBarView: UIView {
     }
 
     @objc private func updateLogoutButton() {
-        logoutButton.setTitle(AuthManager.shared.isLoggedIn ? "Logout" : "Login", for: .normal)
+        let isGuest = UserDefaults.standard.bool(forKey: "guestMode")
+        logoutButton.setTitle((AuthManager.shared.isLoggedIn && !isGuest) ? "Logout" : "Login", for: .normal)
     }
 
     func setTitle(_ text: String) {

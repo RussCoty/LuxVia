@@ -1,12 +1,6 @@
-//
-//  SceneDelegate.swift
-//  FuneralMusic
-//
-//  Created by Russell Cottier on 05/05/2025.
-//
-
 import UIKit
 import SafariServices
+import WebKit
 
 class SessionManager {
     static func logout() {
@@ -30,6 +24,21 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                willConnectTo session: UISceneSession,
                options connectionOptions: UIScene.ConnectionOptions) {
 
+        // ✅ Force guest mode on first launch
+        let forcedGuestMode = true
+        if forcedGuestMode {
+            UserDefaults.standard.set(false, forKey: "isLoggedIn")
+            UserDefaults.standard.synchronize()
+        }
+
+        // 🔧 Clear WKWebView cookies to avoid auto-login via cookie
+        let dataStore = WKWebsiteDataStore.default()
+        dataStore.fetchDataRecords(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes()) { records in
+            dataStore.removeData(ofTypes: WKWebsiteDataStore.allWebsiteDataTypes(), for: records) {
+                print("🧹 Cleared WKWebView cookies")
+            }
+        }
+
         // ✅ Apply global tab bar appearance
         if #available(iOS 13.0, *) {
             let appearance = UITabBarAppearance()
@@ -38,7 +47,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             appearance.shadowImage = nil
             appearance.shadowColor = nil
 
-            // ✅ Fix: Set tab item title font & color
             let attributes: [NSAttributedString.Key: Any] = [
                 .font: UIFont.systemFont(ofSize: 14, weight: .bold),
                 .foregroundColor: UIColor.gray
@@ -50,12 +58,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             ]
 
             UITabBar.appearance().standardAppearance = appearance
-
             if #available(iOS 15.0, *) {
                 UITabBar.appearance().scrollEdgeAppearance = appearance
             }
         }
-
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
@@ -76,24 +82,18 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func showMainApp() {
         let tabBarController = UITabBarController()
 
-        // Words Tab
         let wordsNav = UINavigationController(rootViewController: WordsListViewController())
         wordsNav.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)
 
-        // Music Tab
         let musicTab = UINavigationController(rootViewController: MainViewController())
         musicTab.tabBarItem = UITabBarItem(title: "Music", image: nil, tag: 1)
 
-        // Service Tab
         let serviceNav = UINavigationController(rootViewController: ServiceViewController())
         serviceNav.tabBarItem = UITabBarItem(title: "Service", image: nil, tag: 2)
 
         tabBarController.viewControllers = [wordsNav, musicTab, serviceNav]
-        
-        //Start on Music tab
-        tabBarController.selectedIndex = 1 // Music tab
+        tabBarController.selectedIndex = 1
 
-        // Bold font for tab bar items
         let boldFont = UIFont.systemFont(ofSize: 14, weight: .bold)
         UITabBarItem.appearance().setTitleTextAttributes([.font: boldFont], for: .normal)
 
@@ -120,7 +120,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         }
     }
 
-    // App Lifecycle
     func sceneDidDisconnect(_ scene: UIScene) { }
     func sceneDidBecomeActive(_ scene: UIScene) {
         LyricsSyncManager.shared.syncLyrics { result in
@@ -135,13 +134,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     func sceneWillResignActive(_ scene: UIScene) { }
     func sceneWillEnterForeground(_ scene: UIScene) { }
     func sceneDidEnterBackground(_ scene: UIScene) { }
-    
-    
+
     func presentLoginScreen() {
         let loginVC = NativeLoginViewController()
         let nav = UINavigationController(rootViewController: loginVC)
         self.window?.rootViewController = nav
         self.window?.makeKeyAndVisible()
     }
-
 }
