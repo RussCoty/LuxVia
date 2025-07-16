@@ -5,6 +5,11 @@ class SharedLibraryManager {
     static let shared = SharedLibraryManager()
 
     var allSongs: [SongEntry] = []
+    
+    var allReadings: [LyricEntry] {
+        return LyricsSyncManager.shared.loadCachedLyrics()
+    }
+
 
     func urlForTrack(named name: String) -> URL? {
         // Match by title or filename, ignoring case

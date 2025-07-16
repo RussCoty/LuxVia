@@ -58,7 +58,7 @@ class ReadingPreviewViewController: UIViewController {
             textView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             textView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             textView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            textView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            textView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -250)
         ])
     }
 }

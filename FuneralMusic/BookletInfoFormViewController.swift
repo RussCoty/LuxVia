@@ -253,4 +253,19 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         bookletInfo.save()
         print("✅ Booklet info saved.")
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        print("📘 BookletInfoFormViewController appeared")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if !(UIApplication.shared.windows.first?.rootViewController is MainTabBarController &&
+                  (UIApplication.shared.windows.first?.rootViewController as? MainTabBarController)?.selectedIndex == 0) {
+                if !UIApplication.isServiceTabActive() {
+                    MiniPlayerManager.shared.setVisible(false)
+                }
+            }
+        }
+    }
+
+
 }

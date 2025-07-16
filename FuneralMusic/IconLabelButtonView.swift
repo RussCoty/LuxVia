@@ -32,10 +32,13 @@ class IconLabelButtonView: UIView {
         iconView.setContentHuggingPriority(.defaultHigh, for: .vertical)
 
         titleLabel.text = title
+        titleLabel.textColor = .label
         titleLabel.textAlignment = .center
         titleLabel.font = .systemFont(ofSize: 12)
         titleLabel.adjustsFontSizeToFitWidth = true
         titleLabel.minimumScaleFactor = 0.8
+        titleLabel.numberOfLines = 1
+        titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let stack = UIStackView(arrangedSubviews: [iconView, titleLabel])
@@ -54,7 +57,7 @@ class IconLabelButtonView: UIView {
 
             iconView.widthAnchor.constraint(equalToConstant: 24),
             iconView.heightAnchor.constraint(equalToConstant: 24),
-            titleLabel.widthAnchor.constraint(equalToConstant: 64) // prevent jitter
+            titleLabel.widthAnchor.constraint(equalToConstant: 64)
         ])
 
         tapGesture = UITapGestureRecognizer(target: self, action: #selector(tapped))
@@ -68,6 +71,7 @@ class IconLabelButtonView: UIView {
     }
 
     func update(icon: String, title: String) {
+        print("🎯 IconLabelButtonView.update called — title =", title)
         currentIconName = icon
         iconView.image = UIImage(systemName: icon)
         titleLabel.text = title

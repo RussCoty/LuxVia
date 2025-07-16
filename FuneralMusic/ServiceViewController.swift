@@ -1,176 +1,95 @@
 import UIKit
+import Foundation
+import WebKit
+
+fileprivate func logMiniPlayer(_ context: String, visible: Bool) {
+    print("🎛️ MiniPlayer visibility set to \(visible ? "VISIBLE" : "HIDDEN") — from \(context)")
+}
+
+extension String {
+    var normalized: String {
+        return self.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+    }
+}
 
 extension Notification.Name {
     static let AudioPlayerTrackChanged = Notification.Name("AudioPlayerTrackChanged")
 }
 
-class ServiceViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate
- {
+class ServiceViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
 
     private let segmentedControl = UISegmentedControl(items: ["Service", "Details", "Booklet"])
     private let tableView = UITableView()
+    private let containerView = UIView()
+
+    private let bookletFormVC = BookletInfoFormViewController()
+    private let bookletGeneratorVC = PDFBookletPreviewViewController()
+
     private var lastTappedIndexPath: IndexPath?
     private var highlightedFlashIndex: IndexPath?
     private var playbackTimer: Timer?
-    private let miniPlayerVC = MiniPlayerContainerViewController()
-    private var miniPlayerHeightConstraint: NSLayoutConstraint!
-    private let containerView = UIView()
-    private let bookletFormVC = BookletInfoFormViewController()
-    private let bookletGeneratorVC = PDFBookletPreviewViewController()
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemGroupedBackground
+
         definesPresentationContext = true
         providesPresentationContextTransitionStyle = true
-        
-        view.backgroundColor = .systemGroupedBackground
+
         setupNavigationBar()
-        
-        navigationItem.leftBarButtonItem = UIBarButtonItem(
-            title: "Edit",
-            style: .plain,
-            target: self,
-            action: #selector(editButtonTapped)
-        )
-
-
-        setupMiniPlayer()
         setupContainerView()
         setupTableView()
         setupBookletFormView()
         setupBookletGeneratorView()
-        addDefaultWelcomeAndFarewell()
-        
+
+        segmentedControl.selectedSegmentIndex = 0
+        segmentChanged(segmentedControl)
+        updateMiniPlayerVisibility()
+
         NotificationCenter.default.addObserver(
             self,
             selector: #selector(handleTrackChange),
             name: .AudioPlayerTrackChanged,
             object: nil
         )
+
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleMiniPlayerHeight(_:)),
+            name: NSNotification.Name("MiniPlayerHeightChanged"),
+            object: nil
+        )
+
         startPlaybackProgressTimer()
-        
     }
-    
-    private func startPlaybackProgressTimer() {
-        playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
-            self?.tableView.reloadData()
-        }
+
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        updateMiniPlayerVisibility()
+        logMiniPlayer("viewDidAppear", visible: segmentedControl.selectedSegmentIndex == 0)
     }
-    
-    
-    deinit {
-        NotificationCenter.default.removeObserver(self, name: .AudioPlayerTrackChanged, object: nil)
-    }
-    
+
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-
-        ServiceOrderManager.shared.load() // ✅ Reload saved state
-        MiniPlayerManager.shared.playerView = miniPlayerVC.playerView
-        MiniPlayerManager.shared.setupCallbacks(for: miniPlayerVC.playerView)
-        MiniPlayerManager.shared.syncPlayerUI()
-        tableView.reloadData()
+        updateMiniPlayerVisibility()
+        logMiniPlayer("viewWillAppear", visible: segmentedControl.selectedSegmentIndex == 0)
     }
 
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
 
-    
     private func setupNavigationBar() {
-        segmentedControl.selectedSegmentIndex = 0
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
-        
-        segmentedControl.backgroundColor = .tertiarySystemGroupedBackground
-        segmentedControl.selectedSegmentTintColor = .white
-        segmentedControl.setTitleTextAttributes([
-            .font: UIFont.systemFont(ofSize: 14, weight: .medium),
-            .foregroundColor: UIColor.systemBlue
-        ], for: .normal)
-        segmentedControl.setTitleTextAttributes([
-            .font: UIFont.systemFont(ofSize: 14, weight: .semibold),
-            .foregroundColor: UIColor.label
-        ], for: .selected)
-        
         navigationItem.titleView = segmentedControl
-        
-        // Let BaseViewController handle login/logout button
-        
+        navigationItem.leftBarButtonItem = UIBarButtonItem(
+            title: "Edit",
+            style: .plain,
+            target: self,
+            action: #selector(editButtonTapped)
+        )
     }
-    private func setupMiniPlayer() {
-        addChild(miniPlayerVC)
-        view.addSubview(miniPlayerVC.view)
-        miniPlayerVC.didMove(toParent: self)
-        
-        miniPlayerVC.view.translatesAutoresizingMaskIntoConstraints = false
-        miniPlayerVC.view.backgroundColor = .systemGray6
-        
-        miniPlayerHeightConstraint = miniPlayerVC.view.heightAnchor.constraint(equalToConstant: 250)
-        
-        NSLayoutConstraint.activate([
-            miniPlayerVC.view.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            miniPlayerVC.view.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            miniPlayerVC.view.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
-            miniPlayerHeightConstraint
-        ])
-    }
-    
-    private func setupTableView() {
-        
-//        tableView.dragDelegate = self
-//        tableView.dropDelegate = self
-//        tableView.dragInteractionEnabled = true
 
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        tableView.dataSource = self
-        tableView.delegate = self
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
-        tableView.backgroundColor = .clear
-        tableView.separatorInset = .zero
-        tableView.isEditing = false
-        tableView.allowsSelectionDuringEditing = true
-        
-        containerView.addSubview(tableView)
-        
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
-            tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
-            tableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
-        ])
-    }
-    
-//    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
-//        let item = ServiceOrderManager.shared.items[indexPath.row]
-//        let provider = NSItemProvider(object: NSString(string: item.title))
-//        let dragItem = UIDragItem(itemProvider: provider)
-//        dragItem.localObject = item
-//        return [dragItem]
-//    }
-
-//    func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
-//        return session.localDragSession != nil
-//    }
-
-//    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
-//        guard let item = coordinator.items.first,
-//              let sourceIndexPath = item.sourceIndexPath,
-//              let destinationIndexPath = coordinator.destinationIndexPath else { return }
-//
-//        tableView.performBatchUpdates {
-//            ServiceOrderManager.shared.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
-//            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
-//        }
-//
-//        // ✅ Optional: verify localObject is what we expect
-//        if let draggedItem = item.dragItem.localObject as? ServiceItem {
-//            print("✅ Drag completed for: \(draggedItem.title)")
-//        }
-//
-//        ServiceOrderManager.shared.save()
-//        coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
-//    }
-
-
-
-    
     private func setupContainerView() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(containerView)
@@ -178,15 +97,35 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             containerView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             containerView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             containerView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            containerView.bottomAnchor.constraint(equalTo: miniPlayerVC.view.topAnchor)
+            containerView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
     }
-    
+
+    private func setupTableView() {
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        tableView.dataSource = self
+        tableView.delegate = self
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.backgroundColor = .clear
+        tableView.separatorInset = .zero
+        tableView.allowsSelectionDuringEditing = true
+
+        tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
+        tableView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
+
+        containerView.addSubview(tableView)
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: containerView.topAnchor),
+            tableView.leadingAnchor.constraint(equalTo: containerView.leadingAnchor),
+            tableView.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
+            tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
+        ])
+    }
+
     private func setupBookletFormView() {
         addChild(bookletFormVC)
         containerView.addSubview(bookletFormVC.view)
         bookletFormVC.didMove(toParent: self)
-        
         bookletFormVC.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             bookletFormVC.view.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -194,15 +133,13 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             bookletFormVC.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             bookletFormVC.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
-        
         bookletFormVC.view.isHidden = true
     }
-    
+
     private func setupBookletGeneratorView() {
         addChild(bookletGeneratorVC)
         containerView.addSubview(bookletGeneratorVC.view)
         bookletGeneratorVC.didMove(toParent: self)
-        
         bookletGeneratorVC.view.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
             bookletGeneratorVC.view.topAnchor.constraint(equalTo: containerView.topAnchor),
@@ -210,53 +147,31 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             bookletGeneratorVC.view.trailingAnchor.constraint(equalTo: containerView.trailingAnchor),
             bookletGeneratorVC.view.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
-        
         bookletGeneratorVC.view.isHidden = true
     }
-    
-    @objc private func segmentChanged(_ sender: UISegmentedControl) {
-        let index = sender.selectedSegmentIndex
 
+    @objc private func segmentChanged(_ sender: UISegmentedControl) {
+        updateMiniPlayerVisibility()
+        let index = sender.selectedSegmentIndex
+        tableView.setEditing(false, animated: true)
+        navigationItem.leftBarButtonItem = (index == 0) ? UIBarButtonItem(
+            title: "Edit",
+            style: .plain,
+            target: self,
+            action: #selector(editButtonTapped)
+        ) : nil
         tableView.isHidden = index != 0
         bookletFormVC.view.isHidden = index != 1
         bookletGeneratorVC.view.isHidden = index != 2
-        miniPlayerVC.view.isHidden = index != 0
-
-        miniPlayerHeightConstraint.constant = index == 0 ? 250 : 0
-
-        if index == 0 {
-            tableView.setEditing(true, animated: true)
-            navigationItem.leftBarButtonItem = UIBarButtonItem(
-                title: "Done",
-                style: .plain,
-                target: self,
-                action: #selector(editButtonTapped)
-            )
-        } else {
-            tableView.setEditing(false, animated: true)
-            navigationItem.leftBarButtonItem = nil
-        }
-
-        UIView.animate(withDuration: 0.25) {
-            self.view.layoutIfNeeded()
-        }
     }
 
-
-    
-    
     @objc private func editButtonTapped() {
         let isEditing = tableView.isEditing
         tableView.setEditing(!isEditing, animated: true)
         navigationItem.leftBarButtonItem?.title = !isEditing ? "Done" : "Edit"
+        isEditing ? playbackTimer?.invalidate() : startPlaybackProgressTimer()
     }
 
-
-
-
-
-
-    
     @objc private func handleTrackChange() {
         if let current = AudioPlayerManager.shared.currentTrack {
             MiniPlayerManager.shared.updateNowPlayingTrack(current.title)
@@ -266,24 +181,40 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         tableView.reloadData()
     }
 
-    
+    @objc private func handleMiniPlayerHeight(_ notification: Notification) {
+        guard let height = notification.userInfo?["height"] as? CGFloat else { return }
+        tableView.contentInset.bottom = height
+        tableView.verticalScrollIndicatorInsets.bottom = height
+    }
+
+    private func updateMiniPlayerVisibility() {
+        let shouldShow = segmentedControl.selectedSegmentIndex == 0 && navigationController?.topViewController == self
+        logMiniPlayer("updateMiniPlayerVisibility()", visible: shouldShow)
+        MiniPlayerManager.shared.setVisible(shouldShow)
+    }
+
+    private func item(for indexPath: IndexPath) -> ServiceItem? {
+        guard indexPath.row < ServiceOrderManager.shared.items.count else { return nil }
+        return ServiceOrderManager.shared.items[indexPath.row]
+    }
+
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return ServiceOrderManager.shared.items.count
+    }
+
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let item = ServiceOrderManager.shared.items[indexPath.row]
+        guard let item = item(for: indexPath) else { return UITableViewCell() }
+
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        
         let isPlaying = item.fileName != nil && item.fileName == AudioPlayerManager.shared.currentTrack?.fileName
-        
+
         cell.textLabel?.text = "• \(item.title) (\(item.type.rawValue.capitalized))"
         cell.textLabel?.numberOfLines = 0
         cell.accessoryType = .none
         cell.selectionStyle = .none
-        
-        if isPlaying {
-            addProgressBar(to: cell, for: item)
-        } else {
-            removeProgressBar(from: cell)
-        }
-        
+
+        isPlaying ? addProgressBar(to: cell, for: item) : removeProgressBar(from: cell)
+
         if indexPath == highlightedFlashIndex {
             cell.backgroundColor = UIColor.systemGreen.withAlphaComponent(0.35)
         } else if indexPath == lastTappedIndexPath {
@@ -291,56 +222,41 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         } else {
             cell.backgroundColor = .clear
         }
-        
+
         return cell
     }
-    
-    
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
-    func tableView(_ tableView: UITableView,
-                   moveRowAt sourceIndexPath: IndexPath,
-                   to destinationIndexPath: IndexPath) {
-        print("🔁 Moving item from \(sourceIndexPath.row) to \(destinationIndexPath.row)")
-        
-        ServiceOrderManager.shared.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            print("📋 New order after move:")
-            ServiceOrderManager.shared.items.enumerated().forEach {
-                print("  \($0.offset): \($0.element.title)")
-            }
-            tableView.reloadData()
-        }
-    }
 
-    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, completion in
-            ServiceOrderManager.shared.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            completion(true)
-        }
-        
-        return UISwipeActionsConfiguration(actions: [delete])
-    }
-    
-    private func addDefaultWelcomeAndFarewell() {
-        // Optional seeds
-    }
-    
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         lastTappedIndexPath = indexPath
-        let item = ServiceOrderManager.shared.items[indexPath.row]
+        guard let item = item(for: indexPath) else { return }
 
-        if [.song, .background, .music].contains(item.type), let fileName = item.fileName {
-            let allSongs = SharedLibraryManager.shared.allSongs
-            if let song = allSongs.first(where: { $0.fileName == fileName }) {
+        if item.type == .reading || item.type == .customReading,
+           let text = item.customText {
+            logMiniPlayer("didSelectRowAt (reading)", visible: false)
+            if !UIApplication.isServiceTabActive() {
+                MiniPlayerManager.shared.setVisible(false)
+            }
+            let preview = ReadingPreviewViewController(title: item.title, text: text)
+            navigationController?.pushViewController(preview, animated: true)
+            tableView.reloadData()
+            return
+        }
+
+        if [.song, .background, .music].contains(item.type),
+           let fileName = item.fileName {
+            let isCued = AudioPlayerManager.shared.currentTrack?.fileName == fileName
+
+            if isCued, let lyrics = lyricForPlayingTrack() {
+                print("🎤 Showing lyrics for cued track: \(lyrics.title)")
+                if !UIApplication.isServiceTabActive() {
+                    MiniPlayerManager.shared.setVisible(false)
+                }
+                let preview = ReadingPreviewViewController(title: "Lyrics", text: lyrics.body)
+                navigationController?.pushViewController(preview, animated: true)
+                return
+            }
+
+            if let song = SharedLibraryManager.shared.allSongs.first(where: { $0.fileName == fileName }) {
                 AudioPlayerManager.shared.cueTrack(song, source: .library)
                 MiniPlayerManager.shared.updateCuedTrackText(song.title)
 
@@ -354,26 +270,42 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
                     }
                 }
             }
-            return
         }
+    }
 
-        if (item.type == .reading || item.type == .customReading), let text = item.customText {
-            let preview = ReadingPreviewViewController(title: item.title, text: text)
-            navigationController?.pushViewController(preview, animated: true)
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        return true
+    }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
+        return false
+    }
+
+    func tableView(_ tableView: UITableView,
+                   moveRowAt sourceIndexPath: IndexPath,
+                   to destinationIndexPath: IndexPath) {
+        guard let fromItem = item(for: sourceIndexPath),
+              let toItem = item(for: destinationIndexPath),
+              let fromIndex = ServiceOrderManager.shared.items.firstIndex(where: { $0.id == fromItem.id }),
+              let toIndex = ServiceOrderManager.shared.items.firstIndex(where: { $0.id == toItem.id }) else { return }
+
+        ServiceOrderManager.shared.move(from: fromIndex, to: toIndex)
+        ServiceOrderManager.shared.save()
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
             tableView.reloadData()
-            return
         }
-
-        print("❓ Selected item not playable or readable")
     }
 
-    
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return ServiceOrderManager.shared.items.count
+    func lyricForPlayingTrack() -> LyricEntry? {
+        guard let currentTrack = AudioPlayerManager.shared.currentTrack else { return nil }
+        return SharedLibraryManager.shared.allReadings.first {
+            $0.title.normalized == currentTrack.title.normalized
+        }
     }
+
     private func addProgressBar(to cell: UITableViewCell, for item: ServiceItem) {
         removeProgressBar(from: cell)
-
         let progressView = UIProgressView(progressViewStyle: .bar)
         progressView.translatesAutoresizingMaskIntoConstraints = false
         progressView.tag = 99
@@ -388,24 +320,24 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
         if let current = AudioPlayerManager.shared.currentTrack,
            current.fileName == item.fileName {
-            
             let duration = AudioPlayerManager.shared.duration
             let time = AudioPlayerManager.shared.currentTime
-            
-            guard duration > 0 else { return }
-            progressView.progress = Float(time / duration)
+            if duration > 0 {
+                progressView.progress = Float(time / duration)
+            }
         }
-
     }
 
     private func removeProgressBar(from cell: UITableViewCell) {
         cell.contentView.subviews.filter { $0.tag == 99 }.forEach { $0.removeFromSuperview() }
     }
     
-    func tableView(_ tableView: UITableView,
-                   targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath,
-                   toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        return proposedDestinationIndexPath
+    
+    private func startPlaybackProgressTimer() {
+        playbackTimer?.invalidate()
+        playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            self?.tableView.reloadData()
+        }
     }
 
 }

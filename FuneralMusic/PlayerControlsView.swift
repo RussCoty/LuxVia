@@ -116,7 +116,8 @@ class PlayerControlsView: UIView {
         addSubview(stack)
 
         NSLayoutConstraint.activate([
-            transportContainer.widthAnchor.constraint(equalTo: widthAnchor, multiplier: 0.95),
+            transportContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
+            transportContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -8),
             stack.topAnchor.constraint(equalTo: topAnchor, constant: 8),
             stack.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 2),
             stack.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -2),
@@ -170,10 +171,21 @@ class PlayerControlsView: UIView {
                                 duration / 60, duration % 60)
     }
 
+//    func setFadeButtonTitle(_ title: String) {
+//        print("🧪 Fade Button Title →", title)  // ✅ Debug log
+//        
+//        fadeButton.update(icon: fadeButton.currentIconName, title: title)
+//    }
+
     func setFadeButtonTitle(_ title: String) {
+        print("🧪 Fade Button Title →", title)
+
         fadeButton.update(icon: fadeButton.currentIconName, title: title)
+//        fadeButton.setTitleColor(.white)
+//        fadeButton.setBackgroundColor(.red)
     }
 
+    
     func setVolumeSlider(value: Float) {
         volumeSlider.value = value
     }

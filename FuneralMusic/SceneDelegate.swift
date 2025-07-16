@@ -80,7 +80,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
 
     func showMainApp() {
-        let tabBarController = UITabBarController()
+        let tabBarController = MainTabBarController()
 
         let wordsNav = UINavigationController(rootViewController: WordsListViewController())
         wordsNav.tabBarItem = UITabBarItem(title: "Words", image: nil, tag: 0)

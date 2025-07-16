@@ -189,9 +189,22 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     private func startFadeOut(completion: @escaping () -> Void) {
         fadeTimer?.invalidate()
+
+        // ✅ Show "Fading Out" on the fade button
+        DispatchQueue.main.async {
+            PlayerControlsView.shared?.setFadeButtonTitle("Fading Out")
+
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3) {
+                PlayerControlsView.shared?.setFadeButtonTitle("Fade")
+            }
+        }
+
         fadeTimer = Timer.scheduledTimer(withTimeInterval: 0.05, repeats: true) { [weak self] timer in
             guard let self = self, let player = self.player else {
                 timer.invalidate()
+                DispatchQueue.main.async {
+                    PlayerControlsView.shared?.setFadeButtonTitle("Fade") // Reset on early cancel
+                }
                 completion()
                 return
             }
@@ -201,15 +214,20 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
             } else {
                 timer.invalidate()
                 player.volume = self.volume
+
                 DispatchQueue.main.async {
+                    PlayerControlsView.shared?.setFadeButtonTitle("Fade") // ✅ Reset button after fade
                     PlayerControlsView.shared?.updatePlayingTrackText("Paused after fade: \(self.currentTrackName ?? "—")")
                 }
+
                 player.stop()
-                self.onStateChanged?()  // ✅
+                self.onStateChanged?()
                 completion()
             }
         }
     }
+
+
 
     func audioPlayerDidFinishPlaying(_ player: AVAudioPlayer, successfully flag: Bool) {
         print("🔚 Playback finished")

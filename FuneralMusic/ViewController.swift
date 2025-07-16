@@ -75,7 +75,7 @@ class ViewController: UIViewController, WKNavigationDelegate {
             statusLabel.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
             statusLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -12),
             statusLabel.heightAnchor.constraint(equalToConstant: 26),
-            statusLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 80)
+            statusLabel.widthAnchor.constraint(greaterThanOrEqualToConstant: 200)
         ])
     }
 

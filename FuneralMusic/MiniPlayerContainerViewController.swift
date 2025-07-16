@@ -23,6 +23,11 @@ class MiniPlayerContainerViewController: UIViewController {
             playerView.topAnchor.constraint(equalTo: view.topAnchor),
             playerView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+
+        MiniPlayerManager.shared.playerView = playerView
+
+        // Notify visible view controllers to respect MiniPlayer height
+        NotificationCenter.default.post(name: NSNotification.Name("MiniPlayerHeightChanged"), object: nil, userInfo: ["height": 250])
     }
 
     func configure(with song: SongEntry) {
@@ -30,10 +35,7 @@ class MiniPlayerContainerViewController: UIViewController {
         PlayerControlsView.shared = playerView
         AudioPlayerManager.shared.cueTrack(song, source: .library)
 
-//        print(cueText)
-        //playerView.clearTrackText()
         playerView.updateCuedTrackText(song.title)
-
         playerView.updatePlayButton(isPlaying: false)
         playerView.setFadeButtonTitle("Fade In")
         playerView.updateFadeIcon(isFadingOut: true)
@@ -57,7 +59,7 @@ class MiniPlayerContainerViewController: UIViewController {
             audio.playCuedTrack()
             let title = audio.currentTrackName ?? self.currentSong?.title ?? "—"
             self.playerView.updatePlayingTrackText(title)
-            self.playerView.clearCuedText() // ✅ clear cued label here
+            self.playerView.clearCuedText()
             self.playerView.updatePlayButton(isPlaying: true)
             self.playerView.setFadeButtonTitle("Fade Out")
             self.playerView.updateFadeIcon(isFadingOut: false)
@@ -145,12 +147,11 @@ class MiniPlayerContainerViewController: UIViewController {
         playerView.onFadeOut = { [weak self] in
             MiniPlayerManager.shared.fadeOutMusic()
         }
-        
+
         AudioPlayerManager.shared.onPlaybackEnded = {
             self.playerView.updatePlayButton(isPlaying: false)
             self.playerView.updatePlayingTrackText("Finished: \(AudioPlayerManager.shared.currentTrackName ?? "—")")
         }
-
     }
 
     private func startProgressTimer() {
@@ -176,8 +177,6 @@ class MiniPlayerContainerViewController: UIViewController {
         let duration = Int(AudioPlayerManager.shared.duration)
         playerView.updateTimeLabel(current: current, duration: duration)
     }
-
-
 }
 
 extension AudioPlayerManager {
@@ -188,7 +187,4 @@ extension AudioPlayerManager {
     var hasPlayableTrack: Bool {
         return currentTrackName != nil && !isPlaying && currentTime < duration
     }
-    
- 
-
 }

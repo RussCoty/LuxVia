@@ -1,7 +1,23 @@
 import UIKit
 import UniformTypeIdentifiers
 
-class MusicViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate, UISearchResultsUpdating, UIDocumentPickerDelegate {
+class MusicViewController: BaseViewController,
+                           UITableViewDataSource,
+                           UITableViewDelegate,
+                           UISearchResultsUpdating,
+                           UIDocumentPickerDelegate {
+
+    // MARK: - Initializers
+    
+    override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+
+    // MARK: - Properties
 
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
@@ -16,50 +32,34 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
     var isFiltering: Bool {
         return !(searchController.searchBar.text?.isEmpty ?? true)
     }
-    
-    var playerView: PlayerControlsView? {
-        return PlayerControlsView.shared
-    }
 
+//    var playerView: PlayerControlsView? {
+//        return PlayerControlsView.shared
+//    }
+
+    // MARK: - Lifecycle
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+
         print("✅ viewDidLoad: isLoggedIn =", AuthManager.shared.isLoggedIn)
 
-        MiniPlayerManager.shared.attach(to: self) // ✅ Attach mini player on load
+//        MiniPlayerManager.shared.attach(to: self)
         view.backgroundColor = .white
         title = "Music"
 
         setupSearch()
         loadGroupedTrackList()
         setupUI()
-        //setupUserMenu()
-
-        MiniPlayerManager.shared.attach(to: self) // ✅ Attach mini player
-
-//        PlayerControlsView.shared?.onNext = {
-//            let mgr = AudioPlayerManager.shared
-//            if mgr.isTrackCued {
-//                mgr.playCuedTrack()
-//            } else if mgr.currentSource == .playlist {
-//                SharedPlaylistManager.shared.playNext()
-//            } else if mgr.currentSource == .library {
-//                mgr.playNextInLibrary()
-//            }
-//        }
-
-//        PlayerControlsView.shared?.onPrevious = {
-//            let mgr = AudioPlayerManager.shared
-//            if mgr.isTrackCued {
-//                mgr.cancelCue()
-//            } else if mgr.currentSource == .playlist {
-//                SharedPlaylistManager.shared.playPrevious()
-//            } else if mgr.currentSource == .library {
-//                mgr.playPreviousInLibrary()
-//            }
-//        }
     }
+
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        MiniPlayerManager.shared.setVisible(true)  // ✅ Re-show MiniPlayer when Music tab appears
+
+    }
+
+    // MARK: - Setup
 
     func setupSearch() {
         searchController.searchResultsUpdater = self
@@ -83,7 +83,7 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
                 }
             }
             filteredGroupedTracks = temp
-            filteredFolders = temp.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+            filteredFolders = temp.keys.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
         }
         tableView.reloadData()
     }
@@ -100,12 +100,10 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
 
         if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio"),
            let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
-            for case let fileURL as URL in enumerator {
-                if fileURL.pathExtension.lowercased() == "mp3" {
-                    let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
-                    let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                    appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
-                }
+            for case let fileURL as URL in enumerator where fileURL.pathExtension.lowercased() == "mp3" {
+                let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
+                let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
             }
         }
 
@@ -113,22 +111,20 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
             let importedURL = docsURL.appendingPathComponent("audio")
             if fileManager.fileExists(atPath: importedURL.path),
                let enumerator = fileManager.enumerator(at: importedURL, includingPropertiesForKeys: nil) {
-                for case let fileURL as URL in enumerator {
-                    if fileURL.pathExtension.lowercased() == "mp3" {
-                        let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
-                        let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                        appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
-                    }
+                for case let fileURL as URL in enumerator where fileURL.pathExtension.lowercased() == "mp3" {
+                    let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
+                    let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                    appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
                 }
             }
         }
 
         for (folder, tracks) in tempGroups {
-            tempGroups[folder] = tracks.sorted(by: { $0.title.localizedStandardCompare($1.title) == .orderedAscending })
+            tempGroups[folder] = tracks.sorted { $0.title.localizedStandardCompare($1.title) == .orderedAscending }
         }
 
         groupedTracks = tempGroups
-        sortedFolders = tempGroups.keys.sorted(by: { $0.localizedStandardCompare($1) == .orderedAscending })
+        sortedFolders = tempGroups.keys.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
 
         SharedLibraryManager.shared.allSongs = tempGroups.values.flatMap { $0 }
         tableView.reloadData()
@@ -159,6 +155,8 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
         }
     }
 
+    // MARK: - TableView
+
     func numberOfSections(in tableView: UITableView) -> Int {
         return isFiltering ? filteredFolders.count : sortedFolders.count
     }
@@ -188,11 +186,10 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
 
         AudioPlayerManager.shared.cueTrack(track, source: .library)
 
-        // ✅ Clean title format: replace underscores with spaces, then capitalize
         let formattedTitle = track.title.replacingOccurrences(of: "_", with: " ").capitalized
         PlayerControlsView.shared?.updateCuedTrackText(formattedTitle)
 
-        MiniPlayerManager.shared.show(with: track)
+        MiniPlayerManager.shared.show()
 
         tableView.reloadData()
     }
@@ -244,8 +241,6 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
         showToast("Added: \(entry.title)")
     }
 
-
-
     private func showToast(_ message: String) {
         let toastLabel = UILabel()
         toastLabel.text = message
@@ -282,11 +277,4 @@ class MusicViewController: BaseViewController, UITableViewDataSource, UITableVie
             )
         }
     }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-
-
 }
- 
