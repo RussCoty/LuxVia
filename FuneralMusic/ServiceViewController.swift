@@ -4,8 +4,9 @@ extension Notification.Name {
     static let AudioPlayerTrackChanged = Notification.Name("AudioPlayerTrackChanged")
 }
 
-class ServiceViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
-    
+class ServiceViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate
+ {
+
     private let segmentedControl = UISegmentedControl(items: ["Service", "Details", "Booklet"])
     private let tableView = UITableView()
     private var lastTappedIndexPath: IndexPath?
@@ -64,11 +65,13 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
 
+        ServiceOrderManager.shared.load() // ✅ Reload saved state
         MiniPlayerManager.shared.playerView = miniPlayerVC.playerView
         MiniPlayerManager.shared.setupCallbacks(for: miniPlayerVC.playerView)
         MiniPlayerManager.shared.syncPlayerUI()
         tableView.reloadData()
     }
+
 
     
     private func setupNavigationBar() {
@@ -110,6 +113,11 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     }
     
     private func setupTableView() {
+        
+//        tableView.dragDelegate = self
+//        tableView.dropDelegate = self
+//        tableView.dragInteractionEnabled = true
+
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
         tableView.delegate = self
@@ -128,6 +136,40 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
+    
+//    func tableView(_ tableView: UITableView, itemsForBeginning session: UIDragSession, at indexPath: IndexPath) -> [UIDragItem] {
+//        let item = ServiceOrderManager.shared.items[indexPath.row]
+//        let provider = NSItemProvider(object: NSString(string: item.title))
+//        let dragItem = UIDragItem(itemProvider: provider)
+//        dragItem.localObject = item
+//        return [dragItem]
+//    }
+
+//    func tableView(_ tableView: UITableView, canHandle session: UIDropSession) -> Bool {
+//        return session.localDragSession != nil
+//    }
+
+//    func tableView(_ tableView: UITableView, performDropWith coordinator: UITableViewDropCoordinator) {
+//        guard let item = coordinator.items.first,
+//              let sourceIndexPath = item.sourceIndexPath,
+//              let destinationIndexPath = coordinator.destinationIndexPath else { return }
+//
+//        tableView.performBatchUpdates {
+//            ServiceOrderManager.shared.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
+//            tableView.moveRow(at: sourceIndexPath, to: destinationIndexPath)
+//        }
+//
+//        // ✅ Optional: verify localObject is what we expect
+//        if let draggedItem = item.dragItem.localObject as? ServiceItem {
+//            print("✅ Drag completed for: \(draggedItem.title)")
+//        }
+//
+//        ServiceOrderManager.shared.save()
+//        coordinator.drop(item.dragItem, toRowAt: destinationIndexPath)
+//    }
+
+
+
     
     private func setupContainerView() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
@@ -182,21 +224,36 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
         miniPlayerHeightConstraint.constant = index == 0 ? 250 : 0
 
-        navigationItem.leftBarButtonItem = index == 0
-            ? UIBarButtonItem(title: tableView.isEditing ? "Done" : "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
-            : nil
+        if index == 0 {
+            tableView.setEditing(true, animated: true)
+            navigationItem.leftBarButtonItem = UIBarButtonItem(
+                title: "Done",
+                style: .plain,
+                target: self,
+                action: #selector(editButtonTapped)
+            )
+        } else {
+            tableView.setEditing(false, animated: true)
+            navigationItem.leftBarButtonItem = nil
+        }
 
         UIView.animate(withDuration: 0.25) {
             self.view.layoutIfNeeded()
         }
     }
 
+
     
     
     @objc private func editButtonTapped() {
-        tableView.setEditing(!tableView.isEditing, animated: true)
-        navigationItem.leftBarButtonItem?.title = tableView.isEditing ? "Done" : "Edit"
+        let isEditing = tableView.isEditing
+        tableView.setEditing(!isEditing, animated: true)
+        navigationItem.leftBarButtonItem?.title = !isEditing ? "Done" : "Edit"
     }
+
+
+
+
 
 
     
@@ -247,10 +304,22 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         return true
     }
     
-    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+    func tableView(_ tableView: UITableView,
+                   moveRowAt sourceIndexPath: IndexPath,
+                   to destinationIndexPath: IndexPath) {
+        print("🔁 Moving item from \(sourceIndexPath.row) to \(destinationIndexPath.row)")
+        
         ServiceOrderManager.shared.move(from: sourceIndexPath.row, to: destinationIndexPath.row)
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
+            print("📋 New order after move:")
+            ServiceOrderManager.shared.items.enumerated().forEach {
+                print("  \($0.offset): \($0.element.title)")
+            }
+            tableView.reloadData()
+        }
     }
-    
+
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
         let delete = UIContextualAction(style: .destructive, title: "Delete") { _, _, completion in
             ServiceOrderManager.shared.remove(at: indexPath.row)
@@ -331,6 +400,12 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
     private func removeProgressBar(from cell: UITableViewCell) {
         cell.contentView.subviews.filter { $0.tag == 99 }.forEach { $0.removeFromSuperview() }
+    }
+    
+    func tableView(_ tableView: UITableView,
+                   targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath,
+                   toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        return proposedDestinationIndexPath
     }
 
 }

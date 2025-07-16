@@ -29,10 +29,21 @@ class ServiceOrderManager {
         guard sourceIndex != destinationIndex,
               sourceIndex >= 0, sourceIndex < items.count,
               destinationIndex >= 0, destinationIndex <= items.count else { return }
-        let item = items.remove(at: sourceIndex)
+
+        let item = items[sourceIndex]
+        print("🔁 Moving '\(item.title)' from \(sourceIndex) to \(destinationIndex)")
+
+        items.remove(at: sourceIndex)
         items.insert(item, at: destinationIndex)
+
+        print("✅ New internal order:")
+        for (i, item) in items.enumerated() {
+            print("  \(i): \(item.title)")
+        }
+
         save()
     }
+
 
     func save() {
         do {
