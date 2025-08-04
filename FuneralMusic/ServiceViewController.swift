@@ -298,11 +298,32 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     }
 
     func lyricForPlayingTrack() -> LyricEntry? {
-        guard let currentTrack = AudioPlayerManager.shared.currentTrack else { return nil }
-        return SharedLibraryManager.shared.allReadings.first {
-            $0.title.normalized == currentTrack.title.normalized
+        guard let currentTrack = AudioPlayerManager.shared.currentTrack else {
+            print("❌ No current track available.")
+            return nil
         }
+
+        let normalizedTrackTitle = currentTrack.title.normalized
+        print("🎧 Current playing track title: '\(currentTrack.title)' → normalized: '\(normalizedTrackTitle)'")
+
+        let allLyrics = SharedLibraryManager.shared.allReadings
+        print("📚 Total lyrics in library: \(allLyrics.count)")
+
+        for lyric in allLyrics {
+            let normalizedLyricTitle = lyric.title.normalized
+            print("🔍 Checking lyric title: '\(lyric.title)' → normalized: '\(normalizedLyricTitle)'")
+
+            if normalizedLyricTitle == normalizedTrackTitle {
+                print("✅ Matched lyric: \(lyric.title)")
+                return lyric
+            }
+        }
+
+        print("⚠️ No exact match found for: '\(normalizedTrackTitle)'")
+        return nil
     }
+
+
 
     private func addProgressBar(to cell: UITableViewCell, for item: ServiceItem) {
         removeProgressBar(from: cell)
