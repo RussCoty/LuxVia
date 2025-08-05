@@ -140,7 +140,7 @@ class LyricsDetailViewController: UIViewController {
             let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
             if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
                 let serviceItem = ServiceItem(
-                    type: .music,
+                    type: .song,
                     title: song.title,
                     subtitle: nil,
                     fileName: song.fileName,

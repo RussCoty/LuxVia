@@ -8,10 +8,25 @@ class MiniPlayerContainerViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         view.backgroundColor = .systemGray6
+
+        let topBorder = UIView()
+        topBorder.translatesAutoresizingMaskIntoConstraints = false
+        topBorder.backgroundColor = UIColor.darkGray
+        view.addSubview(topBorder)
+
+        NSLayoutConstraint.activate([
+            topBorder.topAnchor.constraint(equalTo: view.topAnchor),
+            topBorder.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            topBorder.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            topBorder.heightAnchor.constraint(equalToConstant: 1)
+        ])
+        
         setupPlayer()
         setupCallbacks()
     }
+
 
     private func setupPlayer() {
         playerView.translatesAutoresizingMaskIntoConstraints = false

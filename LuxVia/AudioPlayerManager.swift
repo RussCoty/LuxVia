@@ -178,7 +178,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         playbackLimitTimer?.invalidate()
         let isMember = UserDefaults.standard.bool(forKey: "isMember")
         if !isMember {
-            playbackLimitTimer = Timer.scheduledTimer(withTimeInterval: 20.0, repeats: false) { [weak self] _ in
+            playbackLimitTimer = Timer.scheduledTimer(withTimeInterval: 45.0, repeats: false) { [weak self] _ in
                 guard let self = self, self.isPlaying else { return }
                 self.startFadeOut {
                     self.stop()
