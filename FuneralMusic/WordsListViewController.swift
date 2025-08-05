@@ -27,6 +27,7 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         navigationController?.navigationBar.tintColor = .systemBlue
 
         lyrics = LyricsSyncManager.shared.loadCachedLyrics()
+            .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
         filteredLyrics = lyrics
 
         setupNavigationBar()

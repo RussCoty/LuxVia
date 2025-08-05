@@ -68,6 +68,10 @@
 		10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */; };
 		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
 		10A90B1F2DCC005400B0FEE6 /* LUMA_Launch.png in Resources */ = {isa = PBXBuildFile; fileRef = 10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */; };
+		10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DA2E41799F0015E379 /* Lyric.swift */; };
+		10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */; };
+		10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */; };
+		10AB97E22E417C650015E379 /* lyrics.csv in Resources */ = {isa = PBXBuildFile; fileRef = 10AB97E12E417C650015E379 /* lyrics.csv */; };
 		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
 		10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */; };
 		10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */; };
@@ -139,6 +143,10 @@
 		10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
 		10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = LUMA_Launch.png; sourceTree = "<group>"; };
+		10AB97DA2E41799F0015E379 /* Lyric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
+		10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
+		10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
+		10AB97E12E417C650015E379 /* lyrics.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = lyrics.csv; sourceTree = "<group>"; };
 		10B007582E1FF94600A996E6 /* FuneralMusic.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = FuneralMusic.xcodeproj; sourceTree = SOURCE_ROOT; };
 		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
 		10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerManager.swift; sourceTree = "<group>"; };
@@ -233,28 +241,34 @@
 		1084FAA22DC8EC06009398EB /* FuneralMusic */ = {
 			isa = PBXGroup;
 			children = (
-				1089BCC52DCE077F005DF96A /* Audio */,
-				1084FAB12DC8EC09009398EB /* Info.plist */,
-				103D02B32E409C7D0014C812 /* Graphics */,
-				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
-				1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */,
-				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
-				102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */,
 				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
+				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
+				1089BCC52DCE077F005DF96A /* Audio */,
 				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
 				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
 				109851322DD8D490007C685B /* BaseViewController.swift */,
 				1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */,
 				1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */,
+				10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */,
 				105BBACB2DF9A01C004B7F7A /* CustomReading.swift */,
 				105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */,
 				105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */,
 				105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */,
 				105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */,
+				107676BA2E367B3D00C42404 /* Extensions */,
+				103D02B32E409C7D0014C812 /* Graphics */,
 				10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */,
+				1084FAB12DC8EC09009398EB /* Info.plist */,
 				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
+				102B65552E0F440500FA2CBE /* LaunchScreen.storyboard */,
+				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
+				10AB97DE2E417AB30015E379 /* Libraries */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
+				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
+				1049D4DA2DCA4DDC005D5667 /* LUMA_Launch.png */,
+				10A90B1E2DCC005400B0FEE6 /* LUMA_Launch.png */,
+				10AB97DA2E41799F0015E379 /* Lyric.swift */,
 				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
 				10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */,
 				10E265D32E32995700D9D2AD /* MainTabBarController.swift */,
@@ -272,11 +286,13 @@
 				10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */,
 				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
 				10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */,
+				10AB97E12E417C650015E379 /* lyrics.csv */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
 				103984D42DF700AF005D90DF /* ServiceItem.swift */,
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				103984D32DF700AF005D90DF /* ServiceOrderManager.swift */,
 				103984D52DF700AF005D90DF /* ServiceViewController.swift */,
+				10066B4C2E1FD73100442DB2 /* Shared */,
 				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
 				105FC7322DD9048A00C93490 /* TopBarView.swift */,
@@ -285,12 +301,16 @@
 				10E265D72E3299E500D9D2AD /* Untitled.swift */,
 				1084FAA72DC8EC06009398EB /* ViewController.swift */,
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
-				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
-				107676BA2E367B3D00C42404 /* Extensions */,
-				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
-				10066B4C2E1FD73100442DB2 /* Shared */,
 			);
 			path = FuneralMusic;
+			sourceTree = "<group>";
+		};
+		10AB97DE2E417AB30015E379 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */,
+			);
+			path = Libraries;
 			sourceTree = "<group>";
 		};
 		10AD2F4B2E21069A0012D2DD /* Products */ = {
@@ -373,6 +393,7 @@
 				103D02C32E409CD10014C812 /* Icon-83.5@2x.png in Resources */,
 				1049D4DB2DCA4DDD005D5667 /* LUMA_Launch.png in Resources */,
 				103D02CD2E409CD10014C812 /* Icon-40.png in Resources */,
+				10AB97E22E417C650015E379 /* lyrics.csv in Resources */,
 				102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */,
 				103D02CB2E409CD10014C812 /* Icon-60@2x.png in Resources */,
 				103D02C52E409CD10014C812 /* Icon-76.png in Resources */,
@@ -428,13 +449,16 @@
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
 				103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */,
 				10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */,
+				10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */,
 				10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */,
 				1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */,
 				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
 				109851312DD8D258007C685B /* AuthManager.swift in Sources */,
+				10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */,
 				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
 				10E017012E0ED2370025C716 /* PDFBookletPreviewViewController.swift in Sources */,
 				105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */,
+				10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */,
 				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
 				10E265D42E32996400D9D2AD /* MainTabBarController.swift in Sources */,
 				1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */,

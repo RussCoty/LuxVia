@@ -17,28 +17,20 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        AuthManager.shared.login() //debugging here     
+    func application(_ application: UIApplication,
+                     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        AuthManager.shared.login() //debugging here
         print("🧭 updateLoginButton CALLED — logged in =", AuthManager.shared.isLoggedIn)
-
+        
+        // ✅ Load lyrics CSV into memory
+        LyricsLibraryManager.shared.loadLyricsFromCSV()
+        
         let ivoryColor = UIColor(named: "IvoryBackground") ?? UIColor(red: 1.0, green: 0.996, blue: 0.949, alpha: 1.0) // Fallback if asset missing
-
-//        // Navigation Bar
-//        let navBarAppearance = UINavigationBarAppearance()
-//        navBarAppearance.configureWithOpaqueBackground()
-//        navBarAppearance.backgroundColor = ivoryColor
-//        UINavigationBar.appearance().standardAppearance = navBarAppearance
-//        UINavigationBar.appearance().scrollEdgeAppearance = navBarAppearance
-//
-//        // Tab Bar
-//        let tabBarAppearance = UITabBarAppearance()
-//        tabBarAppearance.configureWithOpaqueBackground()
-//        tabBarAppearance.backgroundColor = ivoryColor
-//        UITabBar.appearance().standardAppearance = tabBarAppearance
-//       // UITabBar.appearance().scrollEdgeAppearance = tabBarAppearance
 
         return true
     }
+
 
 
     // MARK: UISceneSession Lifecycle
