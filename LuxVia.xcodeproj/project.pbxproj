@@ -1,0 +1,879 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 55;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		10066B4B2E1FD57000442DB2 /* Notifications+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */; };
+		101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101293E62DC9FD7C0012B3DE /* LoginViewController.swift */; };
+		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
+		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
+		10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10334E4D2DF70CEC005B9682 /* ServiceItem.swift */; };
+		103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D32DF700AF005D90DF /* ServiceOrderManager.swift */; };
+		103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D42DF700AF005D90DF /* ServiceItem.swift */; };
+		103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D52DF700AF005D90DF /* ServiceViewController.swift */; };
+		103D02C12E409CD10014C812 /* iTunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02B42E409CCD0014C812 /* iTunesArtwork@2x.png */; };
+		103D02C22E409CD10014C812 /* Icon-60.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02B52E409CCE0014C812 /* Icon-60.png */; };
+		103D02C32E409CD10014C812 /* Icon-83.5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02B62E409CCE0014C812 /* Icon-83.5@2x.png */; };
+		103D02C42E409CD10014C812 /* Icon-29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02B72E409CCE0014C812 /* Icon-29@2x.png */; };
+		103D02C52E409CD10014C812 /* Icon-76.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02B82E409CCF0014C812 /* Icon-76.png */; };
+		103D02C62E409CD10014C812 /* Icon-40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02B92E409CCF0014C812 /* Icon-40@2x.png */; };
+		103D02C72E409CD10014C812 /* Icon-29.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02BA2E409CCF0014C812 /* Icon-29.png */; };
+		103D02C82E409CD10014C812 /* Icon-20.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02BB2E409CCF0014C812 /* Icon-20.png */; };
+		103D02C92E409CD10014C812 /* Icon-76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02BC2E409CD00014C812 /* Icon-76@2x.png */; };
+		103D02CA2E409CD10014C812 /* Icon-60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02BD2E409CD00014C812 /* Icon-60@3x.png */; };
+		103D02CB2E409CD10014C812 /* Icon-60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02BE2E409CD00014C812 /* Icon-60@2x.png */; };
+		103D02CC2E409CD10014C812 /* Icon-29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02BF2E409CD00014C812 /* Icon-29@3x.png */; };
+		103D02CD2E409CD10014C812 /* Icon-40.png in Resources */ = {isa = PBXBuildFile; fileRef = 103D02C02E409CD10014C812 /* Icon-40.png */; };
+		1044DAEE2E4270CB00F34C82 /* ItunesArtwork@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA52E4270CB00F34C82 /* ItunesArtwork@2x.png */; };
+		1044DAEF2E4270CB00F34C82 /* icon-messages-app-27x20@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC32E4270CB00F34C82 /* icon-messages-app-27x20@1x.png */; };
+		1044DAF12E4270CB00F34C82 /* icon-messages-app-27x20@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC52E4270CB00F34C82 /* icon-messages-app-27x20@3x.png */; };
+		1044DAF22E4270CB00F34C82 /* iTunesArtwork@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAEA2E4270CB00F34C82 /* iTunesArtwork@3x.png */; };
+		1044DAF42E4270CB00F34C82 /* Contents.json in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA962E4270CB00F34C82 /* Contents.json */; };
+		1044DAF52E4270CB00F34C82 /* Icon-App-29x29@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA9A2E4270CB00F34C82 /* Icon-App-29x29@1x.png */; };
+		1044DAF62E4270CB00F34C82 /* icon-messages-transcript-32x24@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAD12E4270CB00F34C82 /* icon-messages-transcript-32x24@3x.png */; };
+		1044DAFE2E4270CB00F34C82 /* iTunesArtwork@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA72E4270CB00F34C82 /* iTunesArtwork@1x.png */; };
+		1044DAFF2E4270CB00F34C82 /* Icon-App-20x20@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA972E4270CB00F34C82 /* Icon-App-20x20@1x.png */; };
+		1044DB002E4270CB00F34C82 /* icon-messages-app-iPadAir-74x55@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC72E4270CB00F34C82 /* icon-messages-app-iPadAir-74x55@2x.png */; };
+		1044DB012E4270CB00F34C82 /* Icon-App-76x76@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA32E4270CB00F34C82 /* Icon-App-76x76@2x.png */; };
+		1044DB022E4270CB00F34C82 /* icon-messages-app-iPadAir-67x50@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC62E4270CB00F34C82 /* icon-messages-app-iPadAir-67x50@2x.png */; };
+		1044DB042E4270CB00F34C82 /* Icon-App-20x20@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA992E4270CB00F34C82 /* Icon-App-20x20@3x.png */; };
+		1044DB052E4270CB00F34C82 /* Icon-App-20x20@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA982E4270CB00F34C82 /* Icon-App-20x20@2x.png */; };
+		1044DB072E4270CB00F34C82 /* icon-messages-app-store-1024x768.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DACB2E4270CB00F34C82 /* icon-messages-app-store-1024x768.png */; };
+		1044DB082E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC92E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@2x.png */; };
+		1044DB092E4270CB00F34C82 /* Icon-App-76x76@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA22E4270CB00F34C82 /* Icon-App-76x76@1x.png */; };
+		1044DB0A2E4270CB00F34C82 /* Icon-App-40x40@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA9D2E4270CB00F34C82 /* Icon-App-40x40@1x.png */; };
+		1044DB0B2E4270CB00F34C82 /* icon-messages-settings-29x29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DACD2E4270CB00F34C82 /* icon-messages-settings-29x29@2x.png */; };
+		1044DB0F2E4270CB00F34C82 /* icon-messages-transcript-32x24@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DACF2E4270CB00F34C82 /* icon-messages-transcript-32x24@1x.png */; };
+		1044DB112E4270CB00F34C82 /* Icon-App-83.5x83.5@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA42E4270CB00F34C82 /* Icon-App-83.5x83.5@2x.png */; };
+		1044DB122E4270CB00F34C82 /* iTunesArtwork@2x copy.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAE92E4270CB00F34C82 /* iTunesArtwork@2x copy.png */; };
+		1044DB142E4270CB00F34C82 /* icon-messages-app-27x20@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC42E4270CB00F34C82 /* icon-messages-app-27x20@2x.png */; };
+		1044DB152E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DACA2E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@3x.png */; };
+		1044DB162E4270CB00F34C82 /* Icon-App-29x29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA9C2E4270CB00F34C82 /* Icon-App-29x29@3x.png */; };
+		1044DB182E4270CB00F34C82 /* icon-messages-settings-29x29@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DACE2E4270CB00F34C82 /* icon-messages-settings-29x29@3x.png */; };
+		1044DB192E4270CB00F34C82 /* icon-messages-transcript-32x24@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAD02E4270CB00F34C82 /* icon-messages-transcript-32x24@2x.png */; };
+		1044DB1B2E4270CB00F34C82 /* Icon-App-60x60@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA12E4270CB00F34C82 /* Icon-App-60x60@3x.png */; };
+		1044DB212E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@1x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAC82E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@1x.png */; };
+		1044DB222E4270CB00F34C82 /* Icon-App-29x29@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA9B2E4270CB00F34C82 /* Icon-App-29x29@2x.png */; };
+		1044DB232E4270CB00F34C82 /* Icon-App-40x40@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA9E2E4270CB00F34C82 /* Icon-App-40x40@2x.png */; };
+		1044DB242E4270CB00F34C82 /* Icon-App-60x60@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DAA02E4270CB00F34C82 /* Icon-App-60x60@2x.png */; };
+		1044DB262E4270CB00F34C82 /* icon-messages-app-store-1024x1024.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DACC2E4270CB00F34C82 /* icon-messages-app-store-1024x1024.png */; };
+		1044DB282E4270CB00F34C82 /* Icon-App-40x40@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 1044DA9F2E4270CB00F34C82 /* Icon-App-40x40@3x.png */; };
+		105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */; };
+		105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105679A92DD3BF79008AF276 /* MainViewController.swift */; };
+		105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBACB2DF9A01C004B7F7A /* CustomReading.swift */; };
+		105BBACE2DF9A067004B7F7A /* CustomReadingManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */; };
+		105BBAD02DF9A08D004B7F7A /* CustomReadingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */; };
+		105BBAD42DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */; };
+		105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */; };
+		105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105FC7322DD9048A00C93490 /* TopBarView.swift */; };
+		107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */; };
+		107676B92E367B3100C42404 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107676B82E367B2B00C42404 /* String+Extensions.swift */; };
+		10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 10824D7A2DF339B100CDF11B /* SwiftSoup */; };
+		10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */; };
+		10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */; };
+		10824D832DF3989300CDF11B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D822DF3989300CDF11B /* Models.swift */; };
+		10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */; };
+		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
+		1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA52DC8EC06009398EB /* SceneDelegate.swift */; };
+		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
+		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
+		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
+		1089BCC62DCE077F005DF96A /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 1089BCC52DCE077F005DF96A /* Audio */; };
+		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
+		108DB36C2DF8DE6F00DEB58C /* TopHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */; };
+		10903B262E0324E700397384 /* MiniPlayerContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10903B252E0324E700397384 /* MiniPlayerContainerViewController.swift */; };
+		109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109366782DD22611007127CC /* SharedPlaylistManager.swift */; };
+		10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10964F762DDA3174000BAF5A /* AudioImportManager.swift */; };
+		1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1098512E2DD8CCCF007C685B /* PaddedLabel.swift */; };
+		109851312DD8D258007C685B /* AuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109851302DD8D258007C685B /* AuthManager.swift */; };
+		109851332DD8D490007C685B /* BaseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 109851322DD8D490007C685B /* BaseViewController.swift */; };
+		1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B61F2DD7744300CA3194 /* MembershipManager.swift */; };
+		1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6212DD784A000CA3194 /* NonceExtractor.swift */; };
+		1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6232DD793E600CA3194 /* KeychainHelper.swift */; };
+		1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */; };
+		1099F2F12E0E9B81008E9D77 /* BookletInfoFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */; };
+		1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */; };
+		10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */; };
+		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
+		10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DA2E41799F0015E379 /* Lyric.swift */; };
+		10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */; };
+		10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */; };
+		10AB97E22E417C650015E379 /* lyrics.csv in Resources */ = {isa = PBXBuildFile; fileRef = 10AB97E12E417C650015E379 /* lyrics.csv */; };
+		10B87C022E42050100D8D66C /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 10B87C012E42050100D8D66C /* CodableCSV */; };
+		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
+		10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */; };
+		10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */; };
+		10E016FF2E0EC7EE0025C716 /* PDFBookletGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E016FE2E0EC7ED0025C716 /* PDFBookletGenerator.swift */; };
+		10E017012E0ED2370025C716 /* PDFBookletPreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */; };
+		10E265D42E32996400D9D2AD /* MainTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10E265D32E32995700D9D2AD /* MainTabBarController.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notifications+Extensions.swift"; sourceTree = "<group>"; };
+		101293E62DC9FD7C0012B3DE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
+		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
+		10334E4D2DF70CEC005B9682 /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		103984D32DF700AF005D90DF /* ServiceOrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
+		103984D42DF700AF005D90DF /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		103984D52DF700AF005D90DF /* ServiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceViewController.swift; sourceTree = "<group>"; };
+		103D02B42E409CCD0014C812 /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
+		103D02B52E409CCE0014C812 /* Icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60.png"; sourceTree = "<group>"; };
+		103D02B62E409CCE0014C812 /* Icon-83.5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-83.5@2x.png"; sourceTree = "<group>"; };
+		103D02B72E409CCE0014C812 /* Icon-29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@2x.png"; sourceTree = "<group>"; };
+		103D02B82E409CCF0014C812 /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
+		103D02B92E409CCF0014C812 /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
+		103D02BA2E409CCF0014C812 /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
+		103D02BB2E409CCF0014C812 /* Icon-20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-20.png"; sourceTree = "<group>"; };
+		103D02BC2E409CD00014C812 /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		103D02BD2E409CD00014C812 /* Icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@3x.png"; sourceTree = "<group>"; };
+		103D02BE2E409CD00014C812 /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
+		103D02BF2E409CD00014C812 /* Icon-29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@3x.png"; sourceTree = "<group>"; };
+		103D02C02E409CD10014C812 /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
+		1044DA962E4270CB00F34C82 /* Contents.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
+		1044DA972E4270CB00F34C82 /* Icon-App-20x20@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-20x20@1x.png"; sourceTree = "<group>"; };
+		1044DA982E4270CB00F34C82 /* Icon-App-20x20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-20x20@2x.png"; sourceTree = "<group>"; };
+		1044DA992E4270CB00F34C82 /* Icon-App-20x20@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-20x20@3x.png"; sourceTree = "<group>"; };
+		1044DA9A2E4270CB00F34C82 /* Icon-App-29x29@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-29x29@1x.png"; sourceTree = "<group>"; };
+		1044DA9B2E4270CB00F34C82 /* Icon-App-29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-29x29@2x.png"; sourceTree = "<group>"; };
+		1044DA9C2E4270CB00F34C82 /* Icon-App-29x29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-29x29@3x.png"; sourceTree = "<group>"; };
+		1044DA9D2E4270CB00F34C82 /* Icon-App-40x40@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-40x40@1x.png"; sourceTree = "<group>"; };
+		1044DA9E2E4270CB00F34C82 /* Icon-App-40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-40x40@2x.png"; sourceTree = "<group>"; };
+		1044DA9F2E4270CB00F34C82 /* Icon-App-40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-40x40@3x.png"; sourceTree = "<group>"; };
+		1044DAA02E4270CB00F34C82 /* Icon-App-60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-60x60@2x.png"; sourceTree = "<group>"; };
+		1044DAA12E4270CB00F34C82 /* Icon-App-60x60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-60x60@3x.png"; sourceTree = "<group>"; };
+		1044DAA22E4270CB00F34C82 /* Icon-App-76x76@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-76x76@1x.png"; sourceTree = "<group>"; };
+		1044DAA32E4270CB00F34C82 /* Icon-App-76x76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-76x76@2x.png"; sourceTree = "<group>"; };
+		1044DAA42E4270CB00F34C82 /* Icon-App-83.5x83.5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-83.5x83.5@2x.png"; sourceTree = "<group>"; };
+		1044DAA52E4270CB00F34C82 /* ItunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ItunesArtwork@2x.png"; sourceTree = "<group>"; };
+		1044DAA72E4270CB00F34C82 /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
+		1044DAC32E4270CB00F34C82 /* icon-messages-app-27x20@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-27x20@1x.png"; sourceTree = "<group>"; };
+		1044DAC42E4270CB00F34C82 /* icon-messages-app-27x20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-27x20@2x.png"; sourceTree = "<group>"; };
+		1044DAC52E4270CB00F34C82 /* icon-messages-app-27x20@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-27x20@3x.png"; sourceTree = "<group>"; };
+		1044DAC62E4270CB00F34C82 /* icon-messages-app-iPadAir-67x50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPadAir-67x50@2x.png"; sourceTree = "<group>"; };
+		1044DAC72E4270CB00F34C82 /* icon-messages-app-iPadAir-74x55@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPadAir-74x55@2x.png"; sourceTree = "<group>"; };
+		1044DAC82E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPhone-60x45@1x.png"; sourceTree = "<group>"; };
+		1044DAC92E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPhone-60x45@2x.png"; sourceTree = "<group>"; };
+		1044DACA2E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPhone-60x45@3x.png"; sourceTree = "<group>"; };
+		1044DACB2E4270CB00F34C82 /* icon-messages-app-store-1024x768.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-store-1024x768.png"; sourceTree = "<group>"; };
+		1044DACC2E4270CB00F34C82 /* icon-messages-app-store-1024x1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-store-1024x1024.png"; sourceTree = "<group>"; };
+		1044DACD2E4270CB00F34C82 /* icon-messages-settings-29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-settings-29x29@2x.png"; sourceTree = "<group>"; };
+		1044DACE2E4270CB00F34C82 /* icon-messages-settings-29x29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-settings-29x29@3x.png"; sourceTree = "<group>"; };
+		1044DACF2E4270CB00F34C82 /* icon-messages-transcript-32x24@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-transcript-32x24@1x.png"; sourceTree = "<group>"; };
+		1044DAD02E4270CB00F34C82 /* icon-messages-transcript-32x24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-transcript-32x24@2x.png"; sourceTree = "<group>"; };
+		1044DAD12E4270CB00F34C82 /* icon-messages-transcript-32x24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-transcript-32x24@3x.png"; sourceTree = "<group>"; };
+		1044DAE92E4270CB00F34C82 /* iTunesArtwork@2x copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x copy.png"; sourceTree = "<group>"; };
+		1044DAEA2E4270CB00F34C82 /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
+		105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		105679A92DD3BF79008AF276 /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		105BBACB2DF9A01C004B7F7A /* CustomReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReading.swift; sourceTree = "<group>"; };
+		105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingManager.swift; sourceTree = "<group>"; };
+		105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingsViewController.swift; sourceTree = "<group>"; };
+		105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingEditorViewController.swift; sourceTree = "<group>"; };
+		105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingStore.swift; sourceTree = "<group>"; };
+		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
+		107676B82E367B2B00C42404 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsListViewController.swift; sourceTree = "<group>"; };
+		10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsDetailViewController.swift; sourceTree = "<group>"; };
+		10824D822DF3989300CDF11B /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LyricsSyncManager.swift; sourceTree = "<group>"; };
+		1084FAA02DC8EC06009398EB /* LuxVia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuxVia.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		1084FAA32DC8EC06009398EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1084FAA52DC8EC06009398EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		1084FAA72DC8EC06009398EB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1084FAAC2DC8EC09009398EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1084FAAF2DC8EC09009398EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1084FAB12DC8EC09009398EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1089BCC52DCE077F005DF96A /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
+		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
+		108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopHeaderView.swift; sourceTree = "<group>"; };
+		10903B252E0324E700397384 /* MiniPlayerContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerContainerViewController.swift; sourceTree = "<group>"; };
+		109366782DD22611007127CC /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
+		10964F762DDA3174000BAF5A /* AudioImportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportManager.swift; sourceTree = "<group>"; };
+		1098512E2DD8CCCF007C685B /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
+		109851302DD8D258007C685B /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		109851322DD8D490007C685B /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		1099B61F2DD7744300CA3194 /* MembershipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipManager.swift; sourceTree = "<group>"; };
+		1099B6212DD784A000CA3194 /* NonceExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonceExtractor.swift; sourceTree = "<group>"; };
+		1099B6232DD793E600CA3194 /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeLoginViewController.swift; sourceTree = "<group>"; };
+		1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfoFormViewController.swift; sourceTree = "<group>"; };
+		1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfo.swift; sourceTree = "<group>"; };
+		10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
+		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
+		10AB97DA2E41799F0015E379 /* Lyric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
+		10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
+		10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
+		10AB97E12E417C650015E379 /* lyrics.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = lyrics.csv; sourceTree = "<group>"; };
+		10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LuxVia.xcodeproj; sourceTree = SOURCE_ROOT; };
+		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
+		10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerManager.swift; sourceTree = "<group>"; };
+		10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconLabelButtonView.swift; sourceTree = "<group>"; };
+		10E016FE2E0EC7ED0025C716 /* PDFBookletGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookletGenerator.swift; sourceTree = "<group>"; };
+		10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookletPreviewViewController.swift; sourceTree = "<group>"; };
+		10E265D32E32995700D9D2AD /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		10E265D72E3299E500D9D2AD /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		1084FA9D2DC8EC06009398EB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				10B87C022E42050100D8D66C /* CodableCSV in Frameworks */,
+				10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		10066B4C2E1FD73100442DB2 /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				10066B4D2E1FD73E00442DB2 /* Notifications */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		10066B4D2E1FD73E00442DB2 /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		101651CE2DF70D53008B41E5 /* Recovered References */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "Recovered References";
+			sourceTree = "<group>";
+		};
+		103D02B32E409C7D0014C812 /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				1044DAA62E4270CB00F34C82 /* AppIcon.appiconset */,
+				1044DAA72E4270CB00F34C82 /* iTunesArtwork@1x.png */,
+				1044DAE82E4270CB00F34C82 /* iTunesArtwork@2x */,
+				1044DAE92E4270CB00F34C82 /* iTunesArtwork@2x copy.png */,
+				1044DAEA2E4270CB00F34C82 /* iTunesArtwork@3x.png */,
+				103D02BB2E409CCF0014C812 /* Icon-20.png */,
+				103D02BA2E409CCF0014C812 /* Icon-29.png */,
+				103D02B72E409CCE0014C812 /* Icon-29@2x.png */,
+				103D02BF2E409CD00014C812 /* Icon-29@3x.png */,
+				103D02C02E409CD10014C812 /* Icon-40.png */,
+				103D02B92E409CCF0014C812 /* Icon-40@2x.png */,
+				103D02B52E409CCE0014C812 /* Icon-60.png */,
+				103D02BE2E409CD00014C812 /* Icon-60@2x.png */,
+				103D02BD2E409CD00014C812 /* Icon-60@3x.png */,
+				103D02B82E409CCF0014C812 /* Icon-76.png */,
+				103D02BC2E409CD00014C812 /* Icon-76@2x.png */,
+				103D02B62E409CCE0014C812 /* Icon-83.5@2x.png */,
+				103D02B42E409CCD0014C812 /* iTunesArtwork@2x.png */,
+			);
+			path = Graphics;
+			sourceTree = "<group>";
+		};
+		1044DAA62E4270CB00F34C82 /* AppIcon.appiconset */ = {
+			isa = PBXGroup;
+			children = (
+				1044DA962E4270CB00F34C82 /* Contents.json */,
+				1044DA972E4270CB00F34C82 /* Icon-App-20x20@1x.png */,
+				1044DA982E4270CB00F34C82 /* Icon-App-20x20@2x.png */,
+				1044DA992E4270CB00F34C82 /* Icon-App-20x20@3x.png */,
+				1044DA9A2E4270CB00F34C82 /* Icon-App-29x29@1x.png */,
+				1044DA9B2E4270CB00F34C82 /* Icon-App-29x29@2x.png */,
+				1044DA9C2E4270CB00F34C82 /* Icon-App-29x29@3x.png */,
+				1044DA9D2E4270CB00F34C82 /* Icon-App-40x40@1x.png */,
+				1044DA9E2E4270CB00F34C82 /* Icon-App-40x40@2x.png */,
+				1044DA9F2E4270CB00F34C82 /* Icon-App-40x40@3x.png */,
+				1044DAA02E4270CB00F34C82 /* Icon-App-60x60@2x.png */,
+				1044DAA12E4270CB00F34C82 /* Icon-App-60x60@3x.png */,
+				1044DAA22E4270CB00F34C82 /* Icon-App-76x76@1x.png */,
+				1044DAA32E4270CB00F34C82 /* Icon-App-76x76@2x.png */,
+				1044DAA42E4270CB00F34C82 /* Icon-App-83.5x83.5@2x.png */,
+				1044DAA52E4270CB00F34C82 /* ItunesArtwork@2x.png */,
+			);
+			path = AppIcon.appiconset;
+			sourceTree = "<group>";
+		};
+		1044DAD22E4270CB00F34C82 /* imessenger */ = {
+			isa = PBXGroup;
+			children = (
+				1044DAC32E4270CB00F34C82 /* icon-messages-app-27x20@1x.png */,
+				1044DAC42E4270CB00F34C82 /* icon-messages-app-27x20@2x.png */,
+				1044DAC52E4270CB00F34C82 /* icon-messages-app-27x20@3x.png */,
+				1044DAC62E4270CB00F34C82 /* icon-messages-app-iPadAir-67x50@2x.png */,
+				1044DAC72E4270CB00F34C82 /* icon-messages-app-iPadAir-74x55@2x.png */,
+				1044DAC82E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@1x.png */,
+				1044DAC92E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@2x.png */,
+				1044DACA2E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@3x.png */,
+				1044DACB2E4270CB00F34C82 /* icon-messages-app-store-1024x768.png */,
+				1044DACC2E4270CB00F34C82 /* icon-messages-app-store-1024x1024.png */,
+				1044DACD2E4270CB00F34C82 /* icon-messages-settings-29x29@2x.png */,
+				1044DACE2E4270CB00F34C82 /* icon-messages-settings-29x29@3x.png */,
+				1044DACF2E4270CB00F34C82 /* icon-messages-transcript-32x24@1x.png */,
+				1044DAD02E4270CB00F34C82 /* icon-messages-transcript-32x24@2x.png */,
+				1044DAD12E4270CB00F34C82 /* icon-messages-transcript-32x24@3x.png */,
+			);
+			path = imessenger;
+			sourceTree = "<group>";
+		};
+		1044DAD32E4270CB00F34C82 /* ios */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		1044DAE82E4270CB00F34C82 /* iTunesArtwork@2x */ = {
+			isa = PBXGroup;
+			children = (
+				1044DAD22E4270CB00F34C82 /* imessenger */,
+				1044DAD32E4270CB00F34C82 /* ios */,
+			);
+			path = "iTunesArtwork@2x";
+			sourceTree = "<group>";
+		};
+		107676BA2E367B3D00C42404 /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				107676B82E367B2B00C42404 /* String+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1084FA972DC8EC06009398EB = {
+			isa = PBXGroup;
+			children = (
+				10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */,
+				1084FAA22DC8EC06009398EB /* LuxVia */,
+				1084FAA12DC8EC06009398EB /* Products */,
+				101651CE2DF70D53008B41E5 /* Recovered References */,
+			);
+			sourceTree = "<group>";
+		};
+		1084FAA12DC8EC06009398EB /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				1084FAA02DC8EC06009398EB /* LuxVia.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		1084FAA22DC8EC06009398EB /* LuxVia */ = {
+			isa = PBXGroup;
+			children = (
+				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
+				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
+				1089BCC52DCE077F005DF96A /* Audio */,
+				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
+				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
+				109851302DD8D258007C685B /* AuthManager.swift */,
+				109851322DD8D490007C685B /* BaseViewController.swift */,
+				1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */,
+				1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */,
+				10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */,
+				105BBACB2DF9A01C004B7F7A /* CustomReading.swift */,
+				105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */,
+				105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */,
+				105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */,
+				105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */,
+				107676BA2E367B3D00C42404 /* Extensions */,
+				103D02B32E409C7D0014C812 /* Graphics */,
+				10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */,
+				1084FAB12DC8EC09009398EB /* Info.plist */,
+				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
+				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
+				10AB97DE2E417AB30015E379 /* Libraries */,
+				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
+				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
+				10AB97DA2E41799F0015E379 /* Lyric.swift */,
+				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
+				10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */,
+				10E265D32E32995700D9D2AD /* MainTabBarController.swift */,
+				105679A92DD3BF79008AF276 /* MainViewController.swift */,
+				1099B61F2DD7744300CA3194 /* MembershipManager.swift */,
+				10903B252E0324E700397384 /* MiniPlayerContainerViewController.swift */,
+				10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */,
+				10824D822DF3989300CDF11B /* Models.swift */,
+				108D26BD2DD206880049806F /* MusicTabViewController.swift */,
+				1022FA822DF704BB0030074B /* MusicViewController.swift */,
+				1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */,
+				1099B6212DD784A000CA3194 /* NonceExtractor.swift */,
+				1098512E2DD8CCCF007C685B /* PaddedLabel.swift */,
+				10E016FE2E0EC7ED0025C716 /* PDFBookletGenerator.swift */,
+				10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */,
+				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
+				10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */,
+				10AB97E12E417C650015E379 /* lyrics.csv */,
+				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
+				103984D42DF700AF005D90DF /* ServiceItem.swift */,
+				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
+				103984D32DF700AF005D90DF /* ServiceOrderManager.swift */,
+				103984D52DF700AF005D90DF /* ServiceViewController.swift */,
+				10066B4C2E1FD73100442DB2 /* Shared */,
+				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
+				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
+				105FC7322DD9048A00C93490 /* TopBarView.swift */,
+				108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */,
+				10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
+				10E265D72E3299E500D9D2AD /* Untitled.swift */,
+				1084FAA72DC8EC06009398EB /* ViewController.swift */,
+				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
+			);
+			path = LuxVia;
+			sourceTree = "<group>";
+		};
+		10AB97DE2E417AB30015E379 /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		1084FA9F2DC8EC06009398EB /* LuxVia */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 1084FAB42DC8EC09009398EB /* Build configuration list for PBXNativeTarget "LuxVia" */;
+			buildPhases = (
+				1084FA9C2DC8EC06009398EB /* Sources */,
+				1084FA9D2DC8EC06009398EB /* Frameworks */,
+				1084FA9E2DC8EC06009398EB /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = LuxVia;
+			packageProductDependencies = (
+				10824D7A2DF339B100CDF11B /* SwiftSoup */,
+				10B87C012E42050100D8D66C /* CodableCSV */,
+			);
+			productName = FuneralMusic;
+			productReference = 1084FAA02DC8EC06009398EB /* LuxVia.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		1084FA982DC8EC06009398EB /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1320;
+				LastUpgradeCheck = 1320;
+				TargetAttributes = {
+					1084FA9F2DC8EC06009398EB = {
+						CreatedOnToolsVersion = 13.2.1;
+					};
+				};
+			};
+			buildConfigurationList = 1084FA9B2DC8EC06009398EB /* Build configuration list for PBXProject "LuxVia" */;
+			compatibilityVersion = "Xcode 13.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 1084FA972DC8EC06009398EB;
+			packageReferences = (
+				10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				10B87C002E42050100D8D66C /* XCRemoteSwiftPackageReference "CodableCSV" */,
+			);
+			productRefGroup = 1084FAA12DC8EC06009398EB /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				1084FA9F2DC8EC06009398EB /* LuxVia */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		1084FA9E2DC8EC06009398EB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				103D02C42E409CD10014C812 /* Icon-29@2x.png in Resources */,
+				103D02C32E409CD10014C812 /* Icon-83.5@2x.png in Resources */,
+				103D02CD2E409CD10014C812 /* Icon-40.png in Resources */,
+				10AB97E22E417C650015E379 /* lyrics.csv in Resources */,
+				102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */,
+				103D02CB2E409CD10014C812 /* Icon-60@2x.png in Resources */,
+				103D02C52E409CD10014C812 /* Icon-76.png in Resources */,
+				103D02C12E409CD10014C812 /* iTunesArtwork@2x.png in Resources */,
+				103D02C72E409CD10014C812 /* Icon-29.png in Resources */,
+				103D02C82E409CD10014C812 /* Icon-20.png in Resources */,
+				1089BCC62DCE077F005DF96A /* Audio in Resources */,
+				103D02C22E409CD10014C812 /* Icon-60.png in Resources */,
+				103D02C62E409CD10014C812 /* Icon-40@2x.png in Resources */,
+				1044DAEE2E4270CB00F34C82 /* ItunesArtwork@2x.png in Resources */,
+				1044DAEF2E4270CB00F34C82 /* icon-messages-app-27x20@1x.png in Resources */,
+				1044DAF12E4270CB00F34C82 /* icon-messages-app-27x20@3x.png in Resources */,
+				1044DAF22E4270CB00F34C82 /* iTunesArtwork@3x.png in Resources */,
+				1044DAF42E4270CB00F34C82 /* Contents.json in Resources */,
+				1044DAF52E4270CB00F34C82 /* Icon-App-29x29@1x.png in Resources */,
+				1044DAF62E4270CB00F34C82 /* icon-messages-transcript-32x24@3x.png in Resources */,
+				1044DAFE2E4270CB00F34C82 /* iTunesArtwork@1x.png in Resources */,
+				1044DAFF2E4270CB00F34C82 /* Icon-App-20x20@1x.png in Resources */,
+				1044DB002E4270CB00F34C82 /* icon-messages-app-iPadAir-74x55@2x.png in Resources */,
+				1044DB012E4270CB00F34C82 /* Icon-App-76x76@2x.png in Resources */,
+				1044DB022E4270CB00F34C82 /* icon-messages-app-iPadAir-67x50@2x.png in Resources */,
+				1044DB042E4270CB00F34C82 /* Icon-App-20x20@3x.png in Resources */,
+				1044DB052E4270CB00F34C82 /* Icon-App-20x20@2x.png in Resources */,
+				1044DB072E4270CB00F34C82 /* icon-messages-app-store-1024x768.png in Resources */,
+				1044DB082E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@2x.png in Resources */,
+				1044DB092E4270CB00F34C82 /* Icon-App-76x76@1x.png in Resources */,
+				1044DB0A2E4270CB00F34C82 /* Icon-App-40x40@1x.png in Resources */,
+				1044DB0B2E4270CB00F34C82 /* icon-messages-settings-29x29@2x.png in Resources */,
+				1044DB0F2E4270CB00F34C82 /* icon-messages-transcript-32x24@1x.png in Resources */,
+				1044DB112E4270CB00F34C82 /* Icon-App-83.5x83.5@2x.png in Resources */,
+				1044DB122E4270CB00F34C82 /* iTunesArtwork@2x copy.png in Resources */,
+				1044DB142E4270CB00F34C82 /* icon-messages-app-27x20@2x.png in Resources */,
+				1044DB152E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@3x.png in Resources */,
+				1044DB162E4270CB00F34C82 /* Icon-App-29x29@3x.png in Resources */,
+				1044DB182E4270CB00F34C82 /* icon-messages-settings-29x29@3x.png in Resources */,
+				1044DB192E4270CB00F34C82 /* icon-messages-transcript-32x24@2x.png in Resources */,
+				1044DB1B2E4270CB00F34C82 /* Icon-App-60x60@3x.png in Resources */,
+				1044DB212E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@1x.png in Resources */,
+				1044DB222E4270CB00F34C82 /* Icon-App-29x29@2x.png in Resources */,
+				1044DB232E4270CB00F34C82 /* Icon-App-40x40@2x.png in Resources */,
+				1044DB242E4270CB00F34C82 /* Icon-App-60x60@2x.png in Resources */,
+				1044DB262E4270CB00F34C82 /* icon-messages-app-store-1024x1024.png in Resources */,
+				1044DB282E4270CB00F34C82 /* Icon-App-40x40@3x.png in Resources */,
+				1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */,
+				103D02C92E409CD10014C812 /* Icon-76@2x.png in Resources */,
+				103D02CC2E409CD10014C812 /* Icon-29@3x.png in Resources */,
+				103D02CA2E409CD10014C812 /* Icon-60@3x.png in Resources */,
+				1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		1084FA9C2DC8EC06009398EB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */,
+				103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */,
+				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
+				10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */,
+				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
+				10E016FF2E0EC7EE0025C716 /* PDFBookletGenerator.swift in Sources */,
+				1099F2F12E0E9B81008E9D77 /* BookletInfoFormViewController.swift in Sources */,
+				10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */,
+				105BBACE2DF9A067004B7F7A /* CustomReadingManager.swift in Sources */,
+				105BBAD42DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift in Sources */,
+				108DB36C2DF8DE6F00DEB58C /* TopHeaderView.swift in Sources */,
+				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
+				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
+				10903B262E0324E700397384 /* MiniPlayerContainerViewController.swift in Sources */,
+				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
+				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
+				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
+				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
+				105BBAD02DF9A08D004B7F7A /* CustomReadingsViewController.swift in Sources */,
+				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
+				10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */,
+				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
+				10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */,
+				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
+				105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */,
+				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,
+				107676B92E367B3100C42404 /* String+Extensions.swift in Sources */,
+				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
+				103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */,
+				10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */,
+				10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */,
+				10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */,
+				1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */,
+				105679A82DD39BAE008AF276 /* AudioPlayerManager.swift in Sources */,
+				109851312DD8D258007C685B /* AuthManager.swift in Sources */,
+				10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */,
+				107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */,
+				10E017012E0ED2370025C716 /* PDFBookletPreviewViewController.swift in Sources */,
+				105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */,
+				10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */,
+				10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */,
+				10E265D42E32996400D9D2AD /* MainTabBarController.swift in Sources */,
+				1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */,
+				10066B4B2E1FD57000442DB2 /* Notifications+Extensions.swift in Sources */,
+				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
+				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,
+				10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */,
+				1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */,
+				10824D832DF3989300CDF11B /* Models.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1084FAAF2DC8EC09009398EB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		1084FAB22DC8EC09009398EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		1084FAB32DC8EC09009398EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++17";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		1084FAB52DC8EC09009398EB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CFBundleDisplayName = "Lux-Via";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 63784RA483;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LuxVia/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soundhouse.luxvia;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		1084FAB62DC8EC09009398EB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CFBundleDisplayName = "Lux-Via";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 63784RA483;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = LuxVia/Info.plist;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen.storyboard;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 14.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.soundhouse.luxvia;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		1084FA9B2DC8EC06009398EB /* Build configuration list for PBXProject "LuxVia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1084FAB22DC8EC09009398EB /* Debug */,
+				1084FAB32DC8EC09009398EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		1084FAB42DC8EC09009398EB /* Build configuration list for PBXNativeTarget "LuxVia" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				1084FAB52DC8EC09009398EB /* Debug */,
+				1084FAB62DC8EC09009398EB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.0.0;
+			};
+		};
+		10B87C002E42050100D8D66C /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dehesa/CodableCSV";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		10824D7A2DF339B100CDF11B /* SwiftSoup */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */;
+			productName = SwiftSoup;
+		};
+		10B87C012E42050100D8D66C /* CodableCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10B87C002E42050100D8D66C /* XCRemoteSwiftPackageReference "CodableCSV" */;
+			productName = CodableCSV;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = 1084FA982DC8EC06009398EB /* Project object */;
+}
