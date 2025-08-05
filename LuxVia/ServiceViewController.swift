@@ -106,9 +106,15 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+
         tableView.backgroundColor = .clear
         tableView.separatorInset = .zero
+
+        // ✅ Required for reorder + edit mode
+        tableView.allowsSelection = true
         tableView.allowsSelectionDuringEditing = true
+        tableView.allowsMultipleSelection = false
+        tableView.allowsMultipleSelectionDuringEditing = false
 
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
         tableView.verticalScrollIndicatorInsets = UIEdgeInsets(top: 0, left: 0, bottom: 250, right: 0)
@@ -121,6 +127,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
+
 
     private func setupBookletFormView() {
         addChild(bookletFormVC)
@@ -283,9 +290,13 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return true
     }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     func tableView(_ tableView: UITableView,
@@ -391,7 +402,15 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             self?.tableView.reloadData()
         }
     }
-
+    func tableView(_ tableView: UITableView,
+                   commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            ServiceOrderManager.shared.remove(at: indexPath.row)
+            ServiceOrderManager.shared.save()
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+        }
+    }
 }
 extension String {
     var cleanedWhitespace: String {
@@ -401,4 +420,5 @@ extension String {
     var normalizedFilename: String {
         return cleanedWhitespace.lowercased().precomposedStringWithCanonicalMapping
     }
+
 }
