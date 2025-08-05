@@ -2,14 +2,14 @@ import UIKit
 
 class LyricsDetailViewController: UIViewController {
 
-    private let entry: LyricEntry
+    private let entry: Lyric
     private let textView = UITextView()
     private let playButton = UIButton(type: .system)
     private let addButton = UIButton(type: .system)
     private let bottomBanner = UIView()
     //private var isPlaying = false
 
-    init(entry: LyricEntry) {
+    init(entry: Lyric) {
         self.entry = entry
         super.init(nibName: nil, bundle: nil)
     }
@@ -44,7 +44,7 @@ class LyricsDetailViewController: UIViewController {
         playButton.tintColor = .label
         playButton.addTarget(self, action: #selector(playMatchingSong), for: .touchUpInside)
 
-        let hasAudio = entry.musicFilename != nil
+        let hasAudio = entry.audioFileName != nil
         playButton.isEnabled = hasAudio
         playButton.alpha = hasAudio ? 1.0 : 0.5
 
@@ -101,8 +101,8 @@ class LyricsDetailViewController: UIViewController {
     }
 
     @objc private func playMatchingSong() {
-        guard let filename = entry.musicFilename else {
-            print("[DEBUG] No musicFilename in entry: \(entry.title)")
+        guard let filename = entry.audioFileName else {
+            print("[DEBUG] No audioFileName in entry: \(entry.title)")
             return
         }
 
@@ -136,7 +136,7 @@ class LyricsDetailViewController: UIViewController {
 //    }
 
     @objc private func addToService() {
-        if let filename = entry.musicFilename {
+        if let filename = entry.audioFileName {
             let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
             if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
                 let serviceItem = ServiceItem(

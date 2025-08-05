@@ -1,13 +1,11 @@
-//
-//  Untitled 2.swift
-//  FuneralMusic
-//
-//  Created by Russell Cottier on 05/08/2025.
-//
-
+// CSVLyricsLoader.swift
 import Foundation
+import CodableCSV
 
-class CSVLyricsLoader {
+final class CSVLyricsLoader {
+    static let shared = CSVLyricsLoader()
+
+    private init() {}
 
     func loadLyrics() -> [Lyric] {
         guard let url = Bundle.main.url(forResource: "lyrics", withExtension: "csv") else {
@@ -16,35 +14,48 @@ class CSVLyricsLoader {
         }
 
         do {
-            let data = try String(contentsOf: url)
-            var result: [Lyric] = []
+            let data = try Data(contentsOf: url)
 
-            let lines = data.components(separatedBy: .newlines)
-            for (index, line) in lines.enumerated() where !line.trimmingCharacters(in: .whitespaces).isEmpty && index > 0 {
-                let components = line.components(separatedBy: ",")
-                guard components.count >= 4 else {
-                    print("⚠️ Invalid row at \(index): \(line)")
-                    continue
-                }
-
-                let title = components[0].trimmingCharacters(in: .whitespaces)
-                let body = components[1].trimmingCharacters(in: .whitespaces)
-                let fileName = components[2].trimmingCharacters(in: .whitespaces)
-                let typeRaw = components[3].trimmingCharacters(in: .whitespaces)
-
-                guard let type = Lyric.LyricType(rawValue: typeRaw.lowercased()) else {
-                    print("⚠️ Unknown type at \(index): \(typeRaw)")
-                    continue
-                }
-
-                result.append(Lyric(title: title, body: body, audioFileName: fileName.isEmpty ? nil : fileName, type: type))
+            let decoder = CSVDecoder {
+                $0.headerStrategy = .firstLine
+                $0.bufferingStrategy = .sequential
+                $0.trimStrategy = .whitespaces
             }
 
-            print("✅ Loaded \(result.count) lyrics from CSV")
-            return result
+            let rawLyrics = try decoder.decode([RawLyricRow].self, from: data)
+
+            let entries: [Lyric] = rawLyrics.compactMap { row -> Lyric? in
+                guard let type = LyricType(rawValue: row.type.lowercased()) else {
+                    print("⚠️ Unknown lyric type: \(row.type)")
+                    return nil
+                }
+
+                guard !row.content.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else {
+                    return nil
+                }
+
+                return Lyric(
+                    title: row.title,
+                    body: row.content,
+                    type: type,
+                    audioFileName: row.audio_file_name.isEmpty ? nil : row.audio_file_name
+                )
+            }
+
+            print("✅ Loaded \(entries.count) lyrics from CSV")
+            return entries
+
         } catch {
-            print("❌ Failed to read CSV: \(error)")
+            print("❌ Failed to parse lyrics.csv: \(error)")
             return []
         }
     }
+}
+
+// Matches CSV header
+struct RawLyricRow: Codable {
+    let title: String
+    let content: String
+    let type: String
+    let audio_file_name: String
 }

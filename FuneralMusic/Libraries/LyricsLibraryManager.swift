@@ -1,5 +1,5 @@
 //
-//  Untitled.swift
+//  LyricsLibraryManager.swift
 //  FuneralMusic
 //
 //  Created by Russell Cottier on 05/08/2025.
@@ -16,24 +16,11 @@ final class LyricsLibraryManager {
 
     /// Loads lyrics from bundled CSV
     func loadLyricsFromCSV() {
-        guard let url = Bundle.main.url(forResource: "lyrics", withExtension: "csv") else {
-            print("❌ Could not find lyrics.csv in bundle.")
-            return
-        }
+        lyrics = CSVLyricsLoader.shared.loadLyrics()
+            .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
 
-        do {
-            let content = try String(contentsOf: url)
-            let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
-
-            lyrics = lines.compactMap { Lyric(csvLine: $0) }
-                          .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
-
-            print("✅ Loaded \(lyrics.count) lyrics from CSV.")
-            lyrics.prefix(10).forEach { print("• \($0.title) [\($0.type)]") }
-
-        } catch {
-            print("❌ Error reading lyrics CSV:", error)
-        }
+        print("✅ Loaded \(lyrics.count) lyrics from CSV.")
+        lyrics.prefix(10).forEach { print("• \($0.title) [\($0.type)]") }
     }
 
 
@@ -52,25 +39,5 @@ final class LyricsLibraryManager {
             $0.title.lowercased().trimmingCharacters(in: .whitespacesAndNewlines) == normalized
         }
     }
-    
-    private func loadLyrics() {
-        guard let url = Bundle.main.url(forResource: "lyrics", withExtension: "csv") else {
-            print("❌ Could not find lyrics.csv in bundle.")
-            return
-        }
-
-        do {
-            let content = try String(contentsOf: url)
-            let lines = content.components(separatedBy: .newlines).filter { !$0.isEmpty }
-
-            lyrics = lines.compactMap { Lyric(csvLine: $0) }
-                          .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
-
-
-            print("✅ Loaded \(lyrics.count) lyrics from CSV.")
-        } catch {
-            print("❌ Error reading lyrics CSV:", error)
-        }
-    }
-
 }
+

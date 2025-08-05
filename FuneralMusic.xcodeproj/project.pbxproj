@@ -72,6 +72,7 @@
 		10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */; };
 		10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */; };
 		10AB97E22E417C650015E379 /* lyrics.csv in Resources */ = {isa = PBXBuildFile; fileRef = 10AB97E12E417C650015E379 /* lyrics.csv */; };
+		10B87C022E42050100D8D66C /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 10B87C012E42050100D8D66C /* CodableCSV */; };
 		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
 		10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D232E0D369200B8FAB3 /* MiniPlayerManager.swift */; };
 		10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */; };
@@ -162,6 +163,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				10B87C022E42050100D8D66C /* CodableCSV in Frameworks */,
 				10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -336,6 +338,7 @@
 			name = FuneralMusic;
 			packageProductDependencies = (
 				10824D7A2DF339B100CDF11B /* SwiftSoup */,
+				10B87C012E42050100D8D66C /* CodableCSV */,
 			);
 			productName = FuneralMusic;
 			productReference = 1084FAA02DC8EC06009398EB /* FuneralMusic.app */;
@@ -367,6 +370,7 @@
 			mainGroup = 1084FA972DC8EC06009398EB;
 			packageReferences = (
 				10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */,
+				10B87C002E42050100D8D66C /* XCRemoteSwiftPackageReference "CodableCSV" */,
 			);
 			productRefGroup = 1084FAA12DC8EC06009398EB /* Products */;
 			projectDirPath = "";
@@ -701,6 +705,14 @@
 				minimumVersion = 2.0.0;
 			};
 		};
+		10B87C002E42050100D8D66C /* XCRemoteSwiftPackageReference "CodableCSV" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/dehesa/CodableCSV";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.6.7;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -708,6 +720,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 10824D792DF339B100CDF11B /* XCRemoteSwiftPackageReference "SwiftSoup" */;
 			productName = SwiftSoup;
+		};
+		10B87C012E42050100D8D66C /* CodableCSV */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 10B87C002E42050100D8D66C /* XCRemoteSwiftPackageReference "CodableCSV" */;
+			productName = CodableCSV;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

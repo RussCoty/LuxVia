@@ -10,8 +10,12 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
     private let tableView = UITableView()
     private var customVC: CustomReadingsViewController?
 
-    private var lyrics: [LyricEntry] = []
-    private var filteredLyrics: [LyricEntry] = []
+    //private var lyrics: [Lyric] = []
+    //private var filteredLyrics: [Lyric] = []
+    private var lyrics: [Lyric] = []
+    private var readings: [Lyric] = []
+    private var lyricOnly: [Lyric] = []
+    private var filteredLyrics: [Lyric] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,14 +30,32 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         navigationController?.navigationBar.compactAppearance = appearance
         navigationController?.navigationBar.tintColor = .systemBlue
 
-        lyrics = LyricsSyncManager.shared.loadCachedLyrics()
+        let allLyrics = CSVLyricsLoader.shared.loadLyrics()
+
             .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
-        filteredLyrics = lyrics
+
+        lyrics = allLyrics
+        readings = allLyrics.filter { $0.type == LyricType.reading }
+        lyricOnly = allLyrics.filter { $0.type == LyricType.lyric }
+        filteredLyrics = readings // Default to "Readings" tab
 
         setupNavigationBar()
         setupTableView()
         
+        print("🎼 Total lyrics loaded: \(allLyrics.count)")
+        print("📖 Readings count: \(readings.count)")
+        print("🎤 Lyrics count: \(lyricOnly.count)")
+
+        for reading in readings.prefix(5) {
+            print("📖 \(reading.title) – \(reading.type)")
+        }
+
+        for lyric in lyricOnly.prefix(5) {
+            print("🎤 \(lyric.title) – \(lyric.type)")
+        }
+
     }
+
 
     private func setupNavigationBar() {
         segmentedControl.selectedSegmentIndex = 0
@@ -67,8 +89,12 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         customVC?.removeFromParent()
 
         switch sender.selectedSegmentIndex {
+        case 0:
+            filteredLyrics = readings
+            tableView.isHidden = false
+            tableView.reloadData()
         case 1:
-            filteredLyrics = lyrics.enumerated().compactMap { $0.offset % 2 == 0 ? $0.element : nil }
+            filteredLyrics = lyricOnly
             tableView.isHidden = false
             tableView.reloadData()
         case 2:
@@ -86,11 +112,10 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
             custom.didMove(toParent: self)
             self.customVC = custom
         default:
-            filteredLyrics = lyrics
-            tableView.isHidden = false
-            tableView.reloadData()
+            break
         }
     }
+
 
     // MARK: - UITableViewDataSource
 

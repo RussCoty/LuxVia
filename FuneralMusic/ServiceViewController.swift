@@ -297,7 +297,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         }
     }
 
-    func lyricForPlayingTrack() -> LyricEntry? {
+    func lyricForPlayingTrack() -> Lyric? {
         guard let currentTrack = AudioPlayerManager.shared.currentTrack else {
             print("❌ No current track available.")
             return nil

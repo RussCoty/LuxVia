@@ -6,7 +6,7 @@ class SharedLibraryManager {
 
     var allSongs: [SongEntry] = []
     
-    var allReadings: [LyricEntry] {
+    var allReadings: [Lyric] {
         return LyricsSyncManager.shared.loadCachedLyrics()
     }
 

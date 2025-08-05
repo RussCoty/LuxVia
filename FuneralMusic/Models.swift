@@ -1,10 +1,21 @@
+//
+//  Models.swift
+//  FuneralMusic
+//
+//  Created by Russell Cottier on 05/08/2025.
+//
+
 import Foundation
 
-struct LyricEntry: Codable {
+enum LyricType: String, Codable {
+    case reading
+    case lyric
+}
+struct Lyric: Codable {
     let title: String
     let body: String
-    let url: String
-    let musicFilename: String?
+    let type: LyricType
+    let audioFileName: String?
 }
 
 struct SongEntry: Codable, Equatable {
