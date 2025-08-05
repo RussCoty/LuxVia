@@ -342,6 +342,11 @@
 			path = "iTunesArtwork@2x";
 			sourceTree = "<group>";
 		};
+		104AECF62E42B29D00F21CA7 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 		107676BA2E367B3D00C42404 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -494,6 +499,12 @@
 			);
 			productRefGroup = 1084FAA12DC8EC06009398EB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 104AECF62E42B29D00F21CA7 /* Products */;
+					ProjectRef = 10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1084FA9F2DC8EC06009398EB /* LuxVia */,

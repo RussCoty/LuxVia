@@ -1,6 +1,6 @@
 import UIKit
 
-class MusicTabViewController: UITabBarController {
+class MusicTabViewController: UITabBarController, UITabBarControllerDelegate {
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -12,6 +12,7 @@ class MusicTabViewController: UITabBarController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        delegate = self
 
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
@@ -25,5 +26,18 @@ class MusicTabViewController: UITabBarController {
         serviceVC.tabBarItem = UITabBarItem(title: "Service", image: UIImage(systemName: "music.note"), tag: 1)
 
         viewControllers = [musicVC, serviceVC]
+    }
+
+    // 👇 Prevent re-tap on Service if not at root
+    func tabBarController(_ tabBarController: UITabBarController, shouldSelect viewController: UIViewController) -> Bool {
+        if viewController == selectedViewController {
+            if let nav = viewController as? UINavigationController,
+               nav.viewControllers.first is ServiceViewController {
+                if nav.viewControllers.count > 1 {
+                    return false
+                }
+            }
+        }
+        return true
     }
 }

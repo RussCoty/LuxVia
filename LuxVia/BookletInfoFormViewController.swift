@@ -3,6 +3,9 @@
 import UIKit
 
 class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    private var keyboardVisible = false
+    private var originalInset: UIEdgeInsets = .zero
 
     private let scrollView = UIScrollView()
     private let stackView = UIStackView()
@@ -31,7 +34,44 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         view.backgroundColor = .systemBackground
         title = "Booklet Details"
         setupScrollView()
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil)
+
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+
+        let tap = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+
         buildFormFields()
+    }
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard !keyboardVisible,
+              let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+
+        keyboardVisible = true
+        originalInset = scrollView.contentInset
+
+        let bottomInset = keyboardFrame.height + 20
+        scrollView.contentInset.bottom = bottomInset
+        scrollView.scrollIndicatorInsets.bottom = bottomInset
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        guard keyboardVisible else { return }
+
+        scrollView.contentInset = originalInset
+        scrollView.scrollIndicatorInsets = originalInset
+        keyboardVisible = false
+    }
+
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
     }
 
     private func setupScrollView() {

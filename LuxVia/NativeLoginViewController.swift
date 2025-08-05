@@ -2,6 +2,10 @@ import UIKit
 import SafariServices
 
 class NativeLoginViewController: UIViewController {
+    
+    private let scrollView = UIScrollView()
+    private var keyboardVisible = false
+    private var originalContentInset: UIEdgeInsets = .zero
 
     private let logoImageView: UIImageView = {
         let image = UIImage(named: "LuxViaLogo") ?? UIImage()
@@ -23,6 +27,47 @@ class NativeLoginViewController: UIViewController {
         view.backgroundColor = .white
         setupUI()
         animateLogo()
+        
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil)
+
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+        
+        let tapGesture = UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard))
+        tapGesture.cancelsTouchesInView = false
+        view.addGestureRecognizer(tapGesture)
+
+
+    }
+    
+    @objc private func dismissKeyboard() {
+        view.endEditing(true)
+    }
+
+    
+    @objc private func keyboardWillShow(notification: NSNotification) {
+        guard !keyboardVisible,
+              let keyboardFrame = notification.userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect else { return }
+
+        keyboardVisible = true
+        originalContentInset = scrollView.contentInset
+
+        let bottomInset = keyboardFrame.height + 20
+        scrollView.contentInset.bottom = bottomInset
+        scrollView.scrollIndicatorInsets.bottom = bottomInset
+    }
+
+    @objc private func keyboardWillHide(notification: NSNotification) {
+        guard keyboardVisible else { return }
+
+        scrollView.contentInset = originalContentInset
+        scrollView.scrollIndicatorInsets = originalContentInset
+        keyboardVisible = false
     }
 
     private func setupUI() {
@@ -64,14 +109,25 @@ class NativeLoginViewController: UIViewController {
         fullStack.spacing = 32
         fullStack.translatesAutoresizingMaskIntoConstraints = false
 
-        view.addSubview(fullStack)
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(scrollView)
+        scrollView.addSubview(fullStack)
+        
+        NSLayoutConstraint.activate([
+            scrollView.topAnchor.constraint(equalTo: view.topAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
+        ])
 
         NSLayoutConstraint.activate([
-            fullStack.centerXAnchor.constraint(equalTo: view.centerXAnchor),
-            fullStack.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: 40), // 👈 pushes it down
-            fullStack.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 24),
-            fullStack.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -24)
+            fullStack.centerXAnchor.constraint(equalTo: scrollView.centerXAnchor),
+            fullStack.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 60),
+            fullStack.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 24),
+            fullStack.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -24),
+            fullStack.bottomAnchor.constraint(lessThanOrEqualTo: scrollView.bottomAnchor)
         ])
+
     }
 
 
