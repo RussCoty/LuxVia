@@ -97,20 +97,71 @@ final class PDFBookletGenerator {
 
                     let fits = y + suggestedSize.height <= pageHeight - margin
 
-                    if !fits {
+                    if (!fits) {
                         ctx.beginPage()
-
-                        // Center vertically only if item takes whole page
                         let contentHeight = suggestedSize.height
                         let availableHeight = pageHeight - 2 * margin
                         y = (availableHeight - contentHeight) / 2 + margin
                     }
 
-
                     let textRect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: suggestedSize.height)
                     mutableAttr.draw(in: textRect)
                     y += suggestedSize.height + 20
                 }
+
+                // --- ADDITION: Final page with other details ---
+                ctx.beginPage()
+                y = margin
+
+                let sectionTitleAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 16),
+                    .paragraphStyle: centered()
+                ]
+                let detailAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 14),
+                    .paragraphStyle: centered()
+                ]
+
+                // Committal Location
+                if let committal = info.committalLocation, !committal.isEmpty {
+                    "Committal Location".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    committal.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+
+                // Wake/Reception Location
+                if let wake = info.wakeLocation, !wake.isEmpty {
+                    "Wake/Reception Location".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    wake.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+
+                // Donation/Flower Instructions
+                if let donation = info.donationInfo, !donation.isEmpty {
+                    "Donation/Flower Instructions".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    donation.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 40), withAttributes: detailAttrs)
+                    y += 48
+                }
+
+                // Photographer Name
+                if let photographer = info.photographer, !photographer.isEmpty {
+                    "Photographer".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    photographer.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+
+                // Pallbearers
+                if let pallbearers = info.pallbearers, !pallbearers.isEmpty {
+                    "Pallbearers".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    pallbearers.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+                // --- END ADDITION ---
 
             })
 
