@@ -28,7 +28,7 @@ final class PDFBookletGenerator {
                 ctx.beginPage()
 
                 if let photoData = info.photo, let image = UIImage(data: photoData) {
-                    let maxWidth: CGFloat = pageWidth - 2 * margin
+                    let maxWidth: CGFloat = pageWidth - 4 * margin
                     let aspectRatio = image.size.height / image.size.width
                     let imageHeight: CGFloat = maxWidth * aspectRatio
                     let imageRect = CGRect(x: margin, y: y, width: maxWidth, height: imageHeight)

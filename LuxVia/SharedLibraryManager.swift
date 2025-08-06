@@ -17,10 +17,23 @@ class SharedLibraryManager {
             $0.title.lowercased() == name.lowercased() ||
             $0.fileName.lowercased() == name.lowercased()
         }) {
-            // Looks inside 'Audio/' folder in bundle
-            let path = Bundle.main.path(forResource: song.fileName, ofType: "mp3", inDirectory: "Audio")
-            return path != nil ? URL(fileURLWithPath: path!) : nil
+            // 1. Check bundle path
+            if let path = Bundle.main.path(forResource: song.fileName, ofType: "mp3", inDirectory: "Audio") {
+                return URL(fileURLWithPath: path)
+            }
+
+            // 2. Check imported files in Documents/audio/imported/
+            if let docsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
+                let importedURL = docsURL
+                    .appendingPathComponent("audio/imported")
+                    .appendingPathComponent(song.fileName + ".mp3")
+
+                if FileManager.default.fileExists(atPath: importedURL.path) {
+                    return importedURL
+                }
+            }
         }
+
         return nil
     }
 
@@ -32,5 +45,9 @@ class SharedLibraryManager {
         })
     }
     
-    
+    func preloadAllReadings() {
+        _ = LyricsSyncManager.shared.loadCachedLyrics()
+        print("✅ Preloaded all lyrics from cache.")
+    }
+
 }

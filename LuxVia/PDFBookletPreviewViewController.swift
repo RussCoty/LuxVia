@@ -61,9 +61,31 @@ class PDFBookletPreviewViewController: UIViewController {
             committalLocation: nil, wakeLocation: nil, donationInfo: nil, pallbearers: nil, photographer: nil
         )
 
-        let items = ServiceOrderManager.shared.items
+        var finalItems = [ServiceItem]()
+        
+        SharedLibraryManager.shared.preloadAllReadings()
 
-        if let fileURL = PDFBookletGenerator.generate(from: info, items: items),
+        for item in ServiceOrderManager.shared.items {
+            finalItems.append(item)
+
+            if [.song, .music, .background].contains(item.type),
+               let fileName = item.fileName?.normalizedFilename {
+
+                if let lyric = SharedLibraryManager.shared.allReadings.first(where: {
+                    $0.audioFileName?.normalizedFilename == fileName && !$0.body.isEmpty
+                }) {
+                    let lyricItem = ServiceItem(
+                        type: .customReading,
+                        title: "Lyrics: \(lyric.title)",
+                        fileName: lyric.audioFileName,
+                        customText: lyric.body
+                    )
+                    finalItems.append(lyricItem)
+                }
+            }
+        }
+
+        if let fileURL = PDFBookletGenerator.generate(from: info, items: finalItems),
            let data = try? Data(contentsOf: fileURL) {
             self.pdfData = data
             self.pdfView.document = PDFDocument(data: data)

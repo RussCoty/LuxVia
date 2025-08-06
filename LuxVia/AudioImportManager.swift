@@ -46,9 +46,14 @@ class AudioImportManager: NSObject, UIDocumentPickerDelegate {
             if let nav = presenter?.navigationController,
                let mainVC = nav.viewControllers.first(where: { $0 is MainViewController }) as? MainViewController {
                 mainVC.selectSegment(index: 1) // 1 = Library
+
+                if let musicVC = mainVC.children.first(where: { $0 is MusicViewController }) as? MusicViewController {
+                    musicVC.loadGroupedTrackList() // ✅ Rescan music
+                }
             }
         } catch {
             print("❌ Failed to import: \(error)")
         }
     }
+
 }
