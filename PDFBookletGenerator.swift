@@ -40,6 +40,7 @@ final class PDFBookletGenerator {
                         imageHeight = maxImageHeight
                         imageWidth = imageHeight / aspectRatio
                     }
+                    // Center horizontally using pageWidth, not margin
                     let imageX = (pageWidth - imageWidth) / 2
                     let imageRect = CGRect(x: imageX, y: y, width: imageWidth, height: imageHeight)
                     image.draw(in: imageRect)
