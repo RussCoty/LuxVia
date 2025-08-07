@@ -207,6 +207,144 @@
 		105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingEditorViewController.swift; sourceTree = "<group>"; };
 		105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingStore.swift; sourceTree = "<group>"; };
 		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		1061E8CE2E4503F400F3CFAE /* 01 Abide With Me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "01 Abide With Me.mp3"; sourceTree = "<group>"; };
+		1061E8CF2E4503F400F3CFAE /* 02 All Things Bright And Beautiful.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "02 All Things Bright And Beautiful.mp3"; sourceTree = "<group>"; };
+		1061E8D02E4503F400F3CFAE /* 03 Amazing Grace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "03 Amazing Grace.mp3"; sourceTree = "<group>"; };
+		1061E8D12E4503F400F3CFAE /* 04 Ave Maria (Gounod).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "04 Ave Maria (Gounod).mp3"; sourceTree = "<group>"; };
+		1061E8D22E4503F400F3CFAE /* 05 Ave Maria (Schubert).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "05 Ave Maria (Schubert).mp3"; sourceTree = "<group>"; };
+		1061E8D32E4503F400F3CFAE /* 06 Christ Be Beside Me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "06 Christ Be Beside Me.mp3"; sourceTree = "<group>"; };
+		1061E8D42E4503F400F3CFAE /* 07 Do Not Be Afraid.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "07 Do Not Be Afraid.mp3"; sourceTree = "<group>"; };
+		1061E8D52E4503F400F3CFAE /* 08 Going Home.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "08 Going Home.mp3"; sourceTree = "<group>"; };
+		1061E8D62E4503F400F3CFAE /* 09 Here I Am Lord.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "09 Here I Am Lord.mp3"; sourceTree = "<group>"; };
+		1061E8D72E4503F400F3CFAE /* 10 How Great Thou Art.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "10 How Great Thou Art.mp3"; sourceTree = "<group>"; };
+		1061E8D82E4503F400F3CFAE /* 11 Watch The Sunrise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "11 Watch The Sunrise.mp3"; sourceTree = "<group>"; };
+		1061E8D92E4503F400F3CFAE /* 12 I Will Be With You.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "12 I Will Be With You.mp3"; sourceTree = "<group>"; };
+		1061E8DA2E4503F400F3CFAE /* 13 I'll Walk With God.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "13 I'll Walk With God.mp3"; sourceTree = "<group>"; };
+		1061E8DB2E4503F400F3CFAE /* 14 Jerusalem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "14 Jerusalem.mp3"; sourceTree = "<group>"; };
+		1061E8DC2E4503F400F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "15 Make Me A Channel Of Your Peace.mp3"; sourceTree = "<group>"; };
+		1061E8DD2E4503F400F3CFAE /* 16 Morning Has Broken.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "16 Morning Has Broken.mp3"; sourceTree = "<group>"; };
+		1061E8DE2E4503F400F3CFAE /* 16 Morning Has Broken 3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "16 Morning Has Broken 3.mp3"; sourceTree = "<group>"; };
+		1061E8DF2E4503F400F3CFAE /* 17 My Way (Female).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "17 My Way (Female).mp3"; sourceTree = "<group>"; };
+		1061E8E02E4503F400F3CFAE /* 18 My Way (Male).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "18 My Way (Male).mp3"; sourceTree = "<group>"; };
+		1061E8E12E4503F400F3CFAE /* 19 New Angel In Heaven.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "19 New Angel In Heaven.mp3"; sourceTree = "<group>"; };
+		1061E8E22E4503F400F3CFAE /* 20 Over The Rainbow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "20 Over The Rainbow.mp3"; sourceTree = "<group>"; };
+		1061E8E32E4503F400F3CFAE /* 21 Panis Angelicus.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "21 Panis Angelicus.mp3"; sourceTree = "<group>"; };
+		1061E8E42E4503F400F3CFAE /* 22 Smile.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "22 Smile.mp3"; sourceTree = "<group>"; };
+		1061E8E52E4503F400F3CFAE /* 23 Song Of Farewell.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "23 Song Of Farewell.mp3"; sourceTree = "<group>"; };
+		1061E8E62E4503F400F3CFAE /* 24 The lord's My Shepherd.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "24 The lord's My Shepherd.mp3"; sourceTree = "<group>"; };
+		1061E8E72E4503F400F3CFAE /* 25 The Old Rugged Cross.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "25 The Old Rugged Cross.mp3"; sourceTree = "<group>"; };
+		1061E8E82E4503F400F3CFAE /* 26 The Wind Beneath My Wings.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "26 The Wind Beneath My Wings.mp3"; sourceTree = "<group>"; };
+		1061E8E92E4503F400F3CFAE /* 27 Time To Say Goodbye.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "27 Time To Say Goodbye.mp3"; sourceTree = "<group>"; };
+		1061E8EA2E4503F400F3CFAE /* 28 What A Wonderful World.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "28 What A Wonderful World.mp3"; sourceTree = "<group>"; };
+		1061E8EB2E4503F400F3CFAE /* 29 You'll Never Walk Alone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "29 You'll Never Walk Alone.mp3"; sourceTree = "<group>"; };
+		1061E8ED2E4503F400F3CFAE /* FuneralMusic_Diagram.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FuneralMusic_Diagram.png; sourceTree = "<group>"; };
+		1061E8EE2E4503F400F3CFAE /* FuneralMusic_File_Guide.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = FuneralMusic_File_Guide.md; sourceTree = "<group>"; };
+		1061E8EF2E4503F400F3CFAE /* FuneralMusic_Functions.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = FuneralMusic_Functions.md; sourceTree = "<group>"; };
+		1061E8F02E4503F400F3CFAE /* FuneralMusic_Types.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = FuneralMusic_Types.md; sourceTree = "<group>"; };
+		1061E8F12E4503F400F3CFAE /* FuneralMusic_Variables.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = FuneralMusic_Variables.md; sourceTree = "<group>"; };
+		1061E8F32E4503F400F3CFAE /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		1061E8F52E4503F400F3CFAE /* Contents.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = Contents.json; sourceTree = "<group>"; };
+		1061E8F62E4503F400F3CFAE /* Icon-App-20x20@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-20x20@1x.png"; sourceTree = "<group>"; };
+		1061E8F72E4503F400F3CFAE /* Icon-App-20x20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-20x20@2x.png"; sourceTree = "<group>"; };
+		1061E8F82E4503F400F3CFAE /* Icon-App-20x20@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-20x20@3x.png"; sourceTree = "<group>"; };
+		1061E8F92E4503F400F3CFAE /* Icon-App-29x29@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-29x29@1x.png"; sourceTree = "<group>"; };
+		1061E8FA2E4503F400F3CFAE /* Icon-App-29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-29x29@2x.png"; sourceTree = "<group>"; };
+		1061E8FB2E4503F400F3CFAE /* Icon-App-29x29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-29x29@3x.png"; sourceTree = "<group>"; };
+		1061E8FC2E4503F400F3CFAE /* Icon-App-40x40@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-40x40@1x.png"; sourceTree = "<group>"; };
+		1061E8FD2E4503F400F3CFAE /* Icon-App-40x40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-40x40@2x.png"; sourceTree = "<group>"; };
+		1061E8FE2E4503F400F3CFAE /* Icon-App-40x40@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-40x40@3x.png"; sourceTree = "<group>"; };
+		1061E8FF2E4503F400F3CFAE /* Icon-App-60x60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-60x60@2x.png"; sourceTree = "<group>"; };
+		1061E9002E4503F400F3CFAE /* Icon-App-60x60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-60x60@3x.png"; sourceTree = "<group>"; };
+		1061E9012E4503F400F3CFAE /* Icon-App-76x76@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-76x76@1x.png"; sourceTree = "<group>"; };
+		1061E9022E4503F400F3CFAE /* Icon-App-76x76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-76x76@2x.png"; sourceTree = "<group>"; };
+		1061E9032E4503F400F3CFAE /* Icon-App-83.5x83.5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-App-83.5x83.5@2x.png"; sourceTree = "<group>"; };
+		1061E9042E4503F400F3CFAE /* ItunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "ItunesArtwork@2x.png"; sourceTree = "<group>"; };
+		1061E9062E4503F400F3CFAE /* icon-messages-app-27x20@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-27x20@1x.png"; sourceTree = "<group>"; };
+		1061E9072E4503F400F3CFAE /* icon-messages-app-27x20@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-27x20@2x.png"; sourceTree = "<group>"; };
+		1061E9082E4503F400F3CFAE /* icon-messages-app-27x20@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-27x20@3x.png"; sourceTree = "<group>"; };
+		1061E9092E4503F400F3CFAE /* icon-messages-app-iPadAir-67x50@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPadAir-67x50@2x.png"; sourceTree = "<group>"; };
+		1061E90A2E4503F400F3CFAE /* icon-messages-app-iPadAir-74x55@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPadAir-74x55@2x.png"; sourceTree = "<group>"; };
+		1061E90B2E4503F400F3CFAE /* icon-messages-app-iPhone-60x45@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPhone-60x45@1x.png"; sourceTree = "<group>"; };
+		1061E90C2E4503F400F3CFAE /* icon-messages-app-iPhone-60x45@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPhone-60x45@2x.png"; sourceTree = "<group>"; };
+		1061E90D2E4503F400F3CFAE /* icon-messages-app-iPhone-60x45@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-iPhone-60x45@3x.png"; sourceTree = "<group>"; };
+		1061E90E2E4503F400F3CFAE /* icon-messages-app-store-1024x768.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-store-1024x768.png"; sourceTree = "<group>"; };
+		1061E90F2E4503F400F3CFAE /* icon-messages-app-store-1024x1024.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-app-store-1024x1024.png"; sourceTree = "<group>"; };
+		1061E9102E4503F400F3CFAE /* icon-messages-settings-29x29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-settings-29x29@2x.png"; sourceTree = "<group>"; };
+		1061E9112E4503F400F3CFAE /* icon-messages-settings-29x29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-settings-29x29@3x.png"; sourceTree = "<group>"; };
+		1061E9122E4503F400F3CFAE /* icon-messages-transcript-32x24@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-transcript-32x24@1x.png"; sourceTree = "<group>"; };
+		1061E9132E4503F400F3CFAE /* icon-messages-transcript-32x24@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-transcript-32x24@2x.png"; sourceTree = "<group>"; };
+		1061E9142E4503F400F3CFAE /* icon-messages-transcript-32x24@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "icon-messages-transcript-32x24@3x.png"; sourceTree = "<group>"; };
+		1061E9182E4503F400F3CFAE /* Icon-20.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-20.png"; sourceTree = "<group>"; };
+		1061E9192E4503F400F3CFAE /* Icon-29.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29.png"; sourceTree = "<group>"; };
+		1061E91A2E4503F400F3CFAE /* Icon-29@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@2x.png"; sourceTree = "<group>"; };
+		1061E91B2E4503F400F3CFAE /* Icon-29@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-29@3x.png"; sourceTree = "<group>"; };
+		1061E91C2E4503F400F3CFAE /* Icon-40.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40.png"; sourceTree = "<group>"; };
+		1061E91D2E4503F400F3CFAE /* Icon-40@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-40@2x.png"; sourceTree = "<group>"; };
+		1061E91E2E4503F400F3CFAE /* Icon-60.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60.png"; sourceTree = "<group>"; };
+		1061E91F2E4503F400F3CFAE /* Icon-60@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@2x.png"; sourceTree = "<group>"; };
+		1061E9202E4503F400F3CFAE /* Icon-60@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-60@3x.png"; sourceTree = "<group>"; };
+		1061E9212E4503F400F3CFAE /* Icon-76.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76.png"; sourceTree = "<group>"; };
+		1061E9222E4503F400F3CFAE /* Icon-76@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-76@2x.png"; sourceTree = "<group>"; };
+		1061E9232E4503F400F3CFAE /* Icon-83.5@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Icon-83.5@2x.png"; sourceTree = "<group>"; };
+		1061E9242E4503F400F3CFAE /* iTunesArtwork@1x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@1x.png"; sourceTree = "<group>"; };
+		1061E9252E4503F400F3CFAE /* iTunesArtwork@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x.png"; sourceTree = "<group>"; };
+		1061E9262E4503F400F3CFAE /* iTunesArtwork@2x copy.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@2x copy.png"; sourceTree = "<group>"; };
+		1061E9272E4503F400F3CFAE /* iTunesArtwork@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "iTunesArtwork@3x.png"; sourceTree = "<group>"; };
+		1061E9292E4503F400F3CFAE /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
+		1061E92B2E4503F400F3CFAE /* Notifications+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notifications+Extensions.swift"; sourceTree = "<group>"; };
+		1061E92E2E4503F400F3CFAE /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		1061E92F2E4503F400F3CFAE /* Archive.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; path = Archive.zip; sourceTree = "<group>"; };
+		1061E9302E4503F400F3CFAE /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		1061E9312E4503F400F3CFAE /* AudioImportManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioImportManager.swift; sourceTree = "<group>"; };
+		1061E9322E4503F400F3CFAE /* AudioPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AudioPlayerManager.swift; sourceTree = "<group>"; };
+		1061E9332E4503F400F3CFAE /* AuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthManager.swift; sourceTree = "<group>"; };
+		1061E9342E4503F400F3CFAE /* BaseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseViewController.swift; sourceTree = "<group>"; };
+		1061E9352E4503F400F3CFAE /* BookletInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfo.swift; sourceTree = "<group>"; };
+		1061E9362E4503F400F3CFAE /* BookletInfoFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfoFormViewController.swift; sourceTree = "<group>"; };
+		1061E9372E4503F400F3CFAE /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
+		1061E9382E4503F400F3CFAE /* CustomReading.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReading.swift; sourceTree = "<group>"; };
+		1061E9392E4503F400F3CFAE /* CustomReadingEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingEditorViewController.swift; sourceTree = "<group>"; };
+		1061E93A2E4503F400F3CFAE /* CustomReadingManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingManager.swift; sourceTree = "<group>"; };
+		1061E93B2E4503F400F3CFAE /* CustomReadingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingStore.swift; sourceTree = "<group>"; };
+		1061E93C2E4503F400F3CFAE /* CustomReadingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingsViewController.swift; sourceTree = "<group>"; };
+		1061E93D2E4503F400F3CFAE /* IconLabelButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconLabelButtonView.swift; sourceTree = "<group>"; };
+		1061E93E2E4503F400F3CFAE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		1061E93F2E4503F400F3CFAE /* KeychainHelper.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainHelper.swift; sourceTree = "<group>"; };
+		1061E9402E4503F400F3CFAE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		1061E9422E4503F400F3CFAE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		1061E9432E4503F400F3CFAE /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
+		1061E9442E4503F400F3CFAE /* Lyric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
+		1061E9452E4503F400F3CFAE /* lyrics.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = lyrics.csv; sourceTree = "<group>"; };
+		1061E9462E4503F400F3CFAE /* LyricsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsDetailViewController.swift; sourceTree = "<group>"; };
+		1061E9472E4503F400F3CFAE /* LyricsSyncManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsSyncManager.swift; sourceTree = "<group>"; };
+		1061E9482E4503F400F3CFAE /* MainTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTabBarController.swift; sourceTree = "<group>"; };
+		1061E9492E4503F400F3CFAE /* MainViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainViewController.swift; sourceTree = "<group>"; };
+		1061E94A2E4503F400F3CFAE /* MembershipManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MembershipManager.swift; sourceTree = "<group>"; };
+		1061E94B2E4503F400F3CFAE /* MiniPlayerContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerContainerViewController.swift; sourceTree = "<group>"; };
+		1061E94C2E4503F400F3CFAE /* MiniPlayerManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerManager.swift; sourceTree = "<group>"; };
+		1061E94D2E4503F400F3CFAE /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		1061E94E2E4503F400F3CFAE /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
+		1061E94F2E4503F400F3CFAE /* MusicViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
+		1061E9502E4503F400F3CFAE /* NativeLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeLoginViewController.swift; sourceTree = "<group>"; };
+		1061E9512E4503F400F3CFAE /* NonceExtractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NonceExtractor.swift; sourceTree = "<group>"; };
+		1061E9522E4503F400F3CFAE /* PaddedLabel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaddedLabel.swift; sourceTree = "<group>"; };
+		1061E9532E4503F400F3CFAE /* PDFBookletGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookletGenerator.swift; sourceTree = "<group>"; };
+		1061E9542E4503F400F3CFAE /* PDFBookletPreviewViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PDFBookletPreviewViewController.swift; sourceTree = "<group>"; };
+		1061E9552E4503F400F3CFAE /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
+		1061E9562E4503F400F3CFAE /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
+		1061E9572E4503F400F3CFAE /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		1061E9582E4503F400F3CFAE /* ServiceItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		1061E9592E4503F400F3CFAE /* ServiceOrderManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
+		1061E95A2E4503F400F3CFAE /* ServiceViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceViewController.swift; sourceTree = "<group>"; };
+		1061E95B2E4503F400F3CFAE /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
+		1061E95C2E4503F400F3CFAE /* SharedPlaylistManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedPlaylistManager.swift; sourceTree = "<group>"; };
+		1061E95D2E4503F400F3CFAE /* TextRenderingUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRenderingUtility.swift; sourceTree = "<group>"; };
+		1061E95E2E4503F400F3CFAE /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		1061E95F2E4503F400F3CFAE /* TopHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopHeaderView.swift; sourceTree = "<group>"; };
+		1061E9602E4503F400F3CFAE /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
+		1061E9612E4503F400F3CFAE /* Untitled.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Untitled.swift; sourceTree = "<group>"; };
+		1061E9622E4503F400F3CFAE /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		1061E9632E4503F400F3CFAE /* WordsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsListViewController.swift; sourceTree = "<group>"; };
 		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
 		107676B82E367B2B00C42404 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRenderingUtility.swift; sourceTree = "<group>"; };
@@ -409,6 +547,239 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1061E8EC2E4503F400F3CFAE /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				1061E8CE2E4503F400F3CFAE /* 01 Abide With Me.mp3 */,
+				1061E8CF2E4503F400F3CFAE /* 02 All Things Bright And Beautiful.mp3 */,
+				1061E8D02E4503F400F3CFAE /* 03 Amazing Grace.mp3 */,
+				1061E8D12E4503F400F3CFAE /* 04 Ave Maria (Gounod).mp3 */,
+				1061E8D22E4503F400F3CFAE /* 05 Ave Maria (Schubert).mp3 */,
+				1061E8D32E4503F400F3CFAE /* 06 Christ Be Beside Me.mp3 */,
+				1061E8D42E4503F400F3CFAE /* 07 Do Not Be Afraid.mp3 */,
+				1061E8D52E4503F400F3CFAE /* 08 Going Home.mp3 */,
+				1061E8D62E4503F400F3CFAE /* 09 Here I Am Lord.mp3 */,
+				1061E8D72E4503F400F3CFAE /* 10 How Great Thou Art.mp3 */,
+				1061E8D82E4503F400F3CFAE /* 11 Watch The Sunrise.mp3 */,
+				1061E8D92E4503F400F3CFAE /* 12 I Will Be With You.mp3 */,
+				1061E8DA2E4503F400F3CFAE /* 13 I'll Walk With God.mp3 */,
+				1061E8DB2E4503F400F3CFAE /* 14 Jerusalem.mp3 */,
+				1061E8DC2E4503F400F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 */,
+				1061E8DD2E4503F400F3CFAE /* 16 Morning Has Broken.mp3 */,
+				1061E8DE2E4503F400F3CFAE /* 16 Morning Has Broken 3.mp3 */,
+				1061E8DF2E4503F400F3CFAE /* 17 My Way (Female).mp3 */,
+				1061E8E02E4503F400F3CFAE /* 18 My Way (Male).mp3 */,
+				1061E8E12E4503F400F3CFAE /* 19 New Angel In Heaven.mp3 */,
+				1061E8E22E4503F400F3CFAE /* 20 Over The Rainbow.mp3 */,
+				1061E8E32E4503F400F3CFAE /* 21 Panis Angelicus.mp3 */,
+				1061E8E42E4503F400F3CFAE /* 22 Smile.mp3 */,
+				1061E8E52E4503F400F3CFAE /* 23 Song Of Farewell.mp3 */,
+				1061E8E62E4503F400F3CFAE /* 24 The lord's My Shepherd.mp3 */,
+				1061E8E72E4503F400F3CFAE /* 25 The Old Rugged Cross.mp3 */,
+				1061E8E82E4503F400F3CFAE /* 26 The Wind Beneath My Wings.mp3 */,
+				1061E8E92E4503F400F3CFAE /* 27 Time To Say Goodbye.mp3 */,
+				1061E8EA2E4503F400F3CFAE /* 28 What A Wonderful World.mp3 */,
+				1061E8EB2E4503F400F3CFAE /* 29 You'll Never Walk Alone.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
+		1061E8F22E4503F400F3CFAE /* Dev Documentation */ = {
+			isa = PBXGroup;
+			children = (
+				1061E8ED2E4503F400F3CFAE /* FuneralMusic_Diagram.png */,
+				1061E8EE2E4503F400F3CFAE /* FuneralMusic_File_Guide.md */,
+				1061E8EF2E4503F400F3CFAE /* FuneralMusic_Functions.md */,
+				1061E8F02E4503F400F3CFAE /* FuneralMusic_Types.md */,
+				1061E8F12E4503F400F3CFAE /* FuneralMusic_Variables.md */,
+			);
+			path = "Dev Documentation";
+			sourceTree = "<group>";
+		};
+		1061E8F42E4503F400F3CFAE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				1061E8F32E4503F400F3CFAE /* String+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		1061E9052E4503F400F3CFAE /* AppIcon.appiconset */ = {
+			isa = PBXGroup;
+			children = (
+				1061E8F52E4503F400F3CFAE /* Contents.json */,
+				1061E8F62E4503F400F3CFAE /* Icon-App-20x20@1x.png */,
+				1061E8F72E4503F400F3CFAE /* Icon-App-20x20@2x.png */,
+				1061E8F82E4503F400F3CFAE /* Icon-App-20x20@3x.png */,
+				1061E8F92E4503F400F3CFAE /* Icon-App-29x29@1x.png */,
+				1061E8FA2E4503F400F3CFAE /* Icon-App-29x29@2x.png */,
+				1061E8FB2E4503F400F3CFAE /* Icon-App-29x29@3x.png */,
+				1061E8FC2E4503F400F3CFAE /* Icon-App-40x40@1x.png */,
+				1061E8FD2E4503F400F3CFAE /* Icon-App-40x40@2x.png */,
+				1061E8FE2E4503F400F3CFAE /* Icon-App-40x40@3x.png */,
+				1061E8FF2E4503F400F3CFAE /* Icon-App-60x60@2x.png */,
+				1061E9002E4503F400F3CFAE /* Icon-App-60x60@3x.png */,
+				1061E9012E4503F400F3CFAE /* Icon-App-76x76@1x.png */,
+				1061E9022E4503F400F3CFAE /* Icon-App-76x76@2x.png */,
+				1061E9032E4503F400F3CFAE /* Icon-App-83.5x83.5@2x.png */,
+				1061E9042E4503F400F3CFAE /* ItunesArtwork@2x.png */,
+			);
+			path = AppIcon.appiconset;
+			sourceTree = "<group>";
+		};
+		1061E9152E4503F400F3CFAE /* imessenger */ = {
+			isa = PBXGroup;
+			children = (
+				1061E9062E4503F400F3CFAE /* icon-messages-app-27x20@1x.png */,
+				1061E9072E4503F400F3CFAE /* icon-messages-app-27x20@2x.png */,
+				1061E9082E4503F400F3CFAE /* icon-messages-app-27x20@3x.png */,
+				1061E9092E4503F400F3CFAE /* icon-messages-app-iPadAir-67x50@2x.png */,
+				1061E90A2E4503F400F3CFAE /* icon-messages-app-iPadAir-74x55@2x.png */,
+				1061E90B2E4503F400F3CFAE /* icon-messages-app-iPhone-60x45@1x.png */,
+				1061E90C2E4503F400F3CFAE /* icon-messages-app-iPhone-60x45@2x.png */,
+				1061E90D2E4503F400F3CFAE /* icon-messages-app-iPhone-60x45@3x.png */,
+				1061E90E2E4503F400F3CFAE /* icon-messages-app-store-1024x768.png */,
+				1061E90F2E4503F400F3CFAE /* icon-messages-app-store-1024x1024.png */,
+				1061E9102E4503F400F3CFAE /* icon-messages-settings-29x29@2x.png */,
+				1061E9112E4503F400F3CFAE /* icon-messages-settings-29x29@3x.png */,
+				1061E9122E4503F400F3CFAE /* icon-messages-transcript-32x24@1x.png */,
+				1061E9132E4503F400F3CFAE /* icon-messages-transcript-32x24@2x.png */,
+				1061E9142E4503F400F3CFAE /* icon-messages-transcript-32x24@3x.png */,
+			);
+			path = imessenger;
+			sourceTree = "<group>";
+		};
+		1061E9162E4503F400F3CFAE /* ios */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = ios;
+			sourceTree = "<group>";
+		};
+		1061E9172E4503F400F3CFAE /* iTunesArtwork@2x */ = {
+			isa = PBXGroup;
+			children = (
+				1061E9152E4503F400F3CFAE /* imessenger */,
+				1061E9162E4503F400F3CFAE /* ios */,
+			);
+			path = "iTunesArtwork@2x";
+			sourceTree = "<group>";
+		};
+		1061E9282E4503F400F3CFAE /* Graphics */ = {
+			isa = PBXGroup;
+			children = (
+				1061E9052E4503F400F3CFAE /* AppIcon.appiconset */,
+				1061E9172E4503F400F3CFAE /* iTunesArtwork@2x */,
+				1061E9182E4503F400F3CFAE /* Icon-20.png */,
+				1061E9192E4503F400F3CFAE /* Icon-29.png */,
+				1061E91A2E4503F400F3CFAE /* Icon-29@2x.png */,
+				1061E91B2E4503F400F3CFAE /* Icon-29@3x.png */,
+				1061E91C2E4503F400F3CFAE /* Icon-40.png */,
+				1061E91D2E4503F400F3CFAE /* Icon-40@2x.png */,
+				1061E91E2E4503F400F3CFAE /* Icon-60.png */,
+				1061E91F2E4503F400F3CFAE /* Icon-60@2x.png */,
+				1061E9202E4503F400F3CFAE /* Icon-60@3x.png */,
+				1061E9212E4503F400F3CFAE /* Icon-76.png */,
+				1061E9222E4503F400F3CFAE /* Icon-76@2x.png */,
+				1061E9232E4503F400F3CFAE /* Icon-83.5@2x.png */,
+				1061E9242E4503F400F3CFAE /* iTunesArtwork@1x.png */,
+				1061E9252E4503F400F3CFAE /* iTunesArtwork@2x.png */,
+				1061E9262E4503F400F3CFAE /* iTunesArtwork@2x copy.png */,
+				1061E9272E4503F400F3CFAE /* iTunesArtwork@3x.png */,
+			);
+			path = Graphics;
+			sourceTree = "<group>";
+		};
+		1061E92A2E4503F400F3CFAE /* Libraries */ = {
+			isa = PBXGroup;
+			children = (
+				1061E9292E4503F400F3CFAE /* LyricsLibraryManager.swift */,
+			);
+			path = Libraries;
+			sourceTree = "<group>";
+		};
+		1061E92C2E4503F400F3CFAE /* Notifications */ = {
+			isa = PBXGroup;
+			children = (
+				1061E92B2E4503F400F3CFAE /* Notifications+Extensions.swift */,
+			);
+			path = Notifications;
+			sourceTree = "<group>";
+		};
+		1061E92D2E4503F400F3CFAE /* Shared */ = {
+			isa = PBXGroup;
+			children = (
+				1061E92C2E4503F400F3CFAE /* Notifications */,
+			);
+			path = Shared;
+			sourceTree = "<group>";
+		};
+		1061E9642E4503F400F3CFAE /* wrong */ = {
+			isa = PBXGroup;
+			children = (
+				1061E8EC2E4503F400F3CFAE /* Audio */,
+				1061E8F22E4503F400F3CFAE /* Dev Documentation */,
+				1061E8F42E4503F400F3CFAE /* Extensions */,
+				1061E9282E4503F400F3CFAE /* Graphics */,
+				1061E92A2E4503F400F3CFAE /* Libraries */,
+				1061E92D2E4503F400F3CFAE /* Shared */,
+				1061E92E2E4503F400F3CFAE /* AppDelegate.swift */,
+				1061E92F2E4503F400F3CFAE /* Archive.zip */,
+				1061E9302E4503F400F3CFAE /* Assets.xcassets */,
+				1061E9312E4503F400F3CFAE /* AudioImportManager.swift */,
+				1061E9322E4503F400F3CFAE /* AudioPlayerManager.swift */,
+				1061E9332E4503F400F3CFAE /* AuthManager.swift */,
+				1061E9342E4503F400F3CFAE /* BaseViewController.swift */,
+				1061E9352E4503F400F3CFAE /* BookletInfo.swift */,
+				1061E9362E4503F400F3CFAE /* BookletInfoFormViewController.swift */,
+				1061E9372E4503F400F3CFAE /* CSVLyricsLoader.swift */,
+				1061E9382E4503F400F3CFAE /* CustomReading.swift */,
+				1061E9392E4503F400F3CFAE /* CustomReadingEditorViewController.swift */,
+				1061E93A2E4503F400F3CFAE /* CustomReadingManager.swift */,
+				1061E93B2E4503F400F3CFAE /* CustomReadingStore.swift */,
+				1061E93C2E4503F400F3CFAE /* CustomReadingsViewController.swift */,
+				1061E93D2E4503F400F3CFAE /* IconLabelButtonView.swift */,
+				1061E93E2E4503F400F3CFAE /* Info.plist */,
+				1061E93F2E4503F400F3CFAE /* KeychainHelper.swift */,
+				1061E9412E4503F400F3CFAE /* LaunchScreen.storyboard */,
+				1061E9422E4503F400F3CFAE /* LoginViewController.swift */,
+				1061E9432E4503F400F3CFAE /* LUMA transparent launch screen .png */,
+				1061E9442E4503F400F3CFAE /* Lyric.swift */,
+				1061E9452E4503F400F3CFAE /* lyrics.csv */,
+				1061E9462E4503F400F3CFAE /* LyricsDetailViewController.swift */,
+				1061E9472E4503F400F3CFAE /* LyricsSyncManager.swift */,
+				1061E9482E4503F400F3CFAE /* MainTabBarController.swift */,
+				1061E9492E4503F400F3CFAE /* MainViewController.swift */,
+				1061E94A2E4503F400F3CFAE /* MembershipManager.swift */,
+				1061E94B2E4503F400F3CFAE /* MiniPlayerContainerViewController.swift */,
+				1061E94C2E4503F400F3CFAE /* MiniPlayerManager.swift */,
+				1061E94D2E4503F400F3CFAE /* Models.swift */,
+				1061E94E2E4503F400F3CFAE /* MusicTabViewController.swift */,
+				1061E94F2E4503F400F3CFAE /* MusicViewController.swift */,
+				1061E9502E4503F400F3CFAE /* NativeLoginViewController.swift */,
+				1061E9512E4503F400F3CFAE /* NonceExtractor.swift */,
+				1061E9522E4503F400F3CFAE /* PaddedLabel.swift */,
+				1061E9532E4503F400F3CFAE /* PDFBookletGenerator.swift */,
+				1061E9542E4503F400F3CFAE /* PDFBookletPreviewViewController.swift */,
+				1061E9552E4503F400F3CFAE /* PlayerControlsView.swift */,
+				1061E9562E4503F400F3CFAE /* ReadingPreviewController.swift */,
+				1061E9572E4503F400F3CFAE /* SceneDelegate.swift */,
+				1061E9582E4503F400F3CFAE /* ServiceItem.swift */,
+				1061E9592E4503F400F3CFAE /* ServiceOrderManager.swift */,
+				1061E95A2E4503F400F3CFAE /* ServiceViewController.swift */,
+				1061E95B2E4503F400F3CFAE /* SharedLibraryManager.swift */,
+				1061E95C2E4503F400F3CFAE /* SharedPlaylistManager.swift */,
+				1061E95D2E4503F400F3CFAE /* TextRenderingUtility.swift */,
+				1061E95E2E4503F400F3CFAE /* TopBarView.swift */,
+				1061E95F2E4503F400F3CFAE /* TopHeaderView.swift */,
+				1061E9602E4503F400F3CFAE /* UIDocumentPickerViewController.swift */,
+				1061E9612E4503F400F3CFAE /* Untitled.swift */,
+				1061E9622E4503F400F3CFAE /* ViewController.swift */,
+				1061E9632E4503F400F3CFAE /* WordsListViewController.swift */,
+			);
+			path = wrong;
+			sourceTree = "<group>";
+		};
 		107676BA2E367B3D00C42404 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -420,6 +791,7 @@
 		1084FA972DC8EC06009398EB = {
 			isa = PBXGroup;
 			children = (
+				1061E9642E4503F400F3CFAE /* wrong */,
 				10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */,
 				1084FAA22DC8EC06009398EB /* LuxVia */,
 				1084FAA12DC8EC06009398EB /* Products */,
@@ -766,6 +1138,14 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
+		1061E9412E4503F400F3CFAE /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				1061E9402E4503F400F3CFAE /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
 		1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
