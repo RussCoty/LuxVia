@@ -1,2 +1,0 @@
-# lumabeta
-lumabeta
