@@ -70,6 +70,35 @@
 		105BBAD42DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */; };
 		105BBAD62DF9F8E9004B7F7A /* CustomReadingStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */; };
 		105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105FC7322DD9048A00C93490 /* TopBarView.swift */; };
+		1061E9842E4505CE00F3CFAE /* 17 My Way (Female).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9762E4505CE00F3CFAE /* 17 My Way (Female).mp3 */; };
+		1061E9852E4505CE00F3CFAE /* 28 What A Wonderful World.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9812E4505CE00F3CFAE /* 28 What A Wonderful World.mp3 */; };
+		1061E9862E4505CE00F3CFAE /* 20 Over The Rainbow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9792E4505CE00F3CFAE /* 20 Over The Rainbow.mp3 */; };
+		1061E9872E4505CE00F3CFAE /* 05 Ave Maria (Schubert).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E96A2E4505CE00F3CFAE /* 05 Ave Maria (Schubert).mp3 */; };
+		1061E9882E4505CE00F3CFAE /* 23 Song Of Farewell.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E97C2E4505CE00F3CFAE /* 23 Song Of Farewell.mp3 */; };
+		1061E9892E4505CE00F3CFAE /* 27 Time To Say Goodbye.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9802E4505CE00F3CFAE /* 27 Time To Say Goodbye.mp3 */; };
+		1061E98A2E4505CE00F3CFAE /* 29 You'll Never Walk Alone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9822E4505CE00F3CFAE /* 29 You'll Never Walk Alone.mp3 */; };
+		1061E98B2E4505CE00F3CFAE /* 01 Abide With Me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9662E4505CE00F3CFAE /* 01 Abide With Me.mp3 */; };
+		1061E98C2E4505CE00F3CFAE /* 10 How Great Thou Art.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E96F2E4505CE00F3CFAE /* 10 How Great Thou Art.mp3 */; };
+		1061E98D2E4505CE00F3CFAE /* 25 The Old Rugged Cross.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E97E2E4505CE00F3CFAE /* 25 The Old Rugged Cross.mp3 */; };
+		1061E98E2E4505CE00F3CFAE /* 11 Watch The Sunrise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9702E4505CE00F3CFAE /* 11 Watch The Sunrise.mp3 */; };
+		1061E98F2E4505CE00F3CFAE /* 08 Going Home.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E96D2E4505CE00F3CFAE /* 08 Going Home.mp3 */; };
+		1061E9902E4505CE00F3CFAE /* 18 My Way (Male).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9772E4505CE00F3CFAE /* 18 My Way (Male).mp3 */; };
+		1061E9912E4505CE00F3CFAE /* 07 Do Not Be Afraid.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E96C2E4505CE00F3CFAE /* 07 Do Not Be Afraid.mp3 */; };
+		1061E9922E4505CE00F3CFAE /* 19 New Angel In Heaven.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9782E4505CE00F3CFAE /* 19 New Angel In Heaven.mp3 */; };
+		1061E9932E4505CE00F3CFAE /* 24 The lord's My Shepherd.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E97D2E4505CE00F3CFAE /* 24 The lord's My Shepherd.mp3 */; };
+		1061E9942E4505CE00F3CFAE /* 22 Smile.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E97B2E4505CE00F3CFAE /* 22 Smile.mp3 */; };
+		1061E9952E4505CE00F3CFAE /* 03 Amazing Grace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9682E4505CE00F3CFAE /* 03 Amazing Grace.mp3 */; };
+		1061E9962E4505CE00F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9742E4505CE00F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 */; };
+		1061E9972E4505CE00F3CFAE /* 14 Jerusalem.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9732E4505CE00F3CFAE /* 14 Jerusalem.mp3 */; };
+		1061E9982E4505CE00F3CFAE /* 12 I Will Be With You.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9712E4505CE00F3CFAE /* 12 I Will Be With You.mp3 */; };
+		1061E9992E4505CE00F3CFAE /* 09 Here I Am Lord.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E96E2E4505CE00F3CFAE /* 09 Here I Am Lord.mp3 */; };
+		1061E99A2E4505CE00F3CFAE /* 02 All Things Bright And Beautiful.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9672E4505CE00F3CFAE /* 02 All Things Bright And Beautiful.mp3 */; };
+		1061E99B2E4505CE00F3CFAE /* 16 Morning Has Broken.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9752E4505CE00F3CFAE /* 16 Morning Has Broken.mp3 */; };
+		1061E99C2E4505CE00F3CFAE /* 21 Panis Angelicus.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E97A2E4505CE00F3CFAE /* 21 Panis Angelicus.mp3 */; };
+		1061E99D2E4505CE00F3CFAE /* 26 The Wind Beneath My Wings.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E97F2E4505CE00F3CFAE /* 26 The Wind Beneath My Wings.mp3 */; };
+		1061E99E2E4505CE00F3CFAE /* 04 Ave Maria (Gounod).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9692E4505CE00F3CFAE /* 04 Ave Maria (Gounod).mp3 */; };
+		1061E99F2E4505CE00F3CFAE /* 13 I'll Walk With God.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E9722E4505CE00F3CFAE /* 13 I'll Walk With God.mp3 */; };
+		1061E9A02E4505CE00F3CFAE /* 06 Christ Be Beside Me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 1061E96B2E4505CE00F3CFAE /* 06 Christ Be Beside Me.mp3 */; };
 		107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */; };
 		107676B92E367B3100C42404 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107676B82E367B2B00C42404 /* String+Extensions.swift */; };
 		107E0D232E44FB3E0061A409 /* TextRenderingUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */; };
@@ -83,7 +112,6 @@
 		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
 		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
 		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
-		1089BCC62DCE077F005DF96A /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 1089BCC52DCE077F005DF96A /* Audio */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
 		108DB36C2DF8DE6F00DEB58C /* TopHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */; };
 		10903B262E0324E700397384 /* MiniPlayerContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10903B252E0324E700397384 /* MiniPlayerContainerViewController.swift */; };
@@ -98,36 +126,6 @@
 		1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */; };
 		1099F2F12E0E9B81008E9D77 /* BookletInfoFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */; };
 		1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */; };
-		109AB6CD2E44F14D0058A1D9 /* 25 The Old Rugged Cross.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C72E44F14D0058A1D9 /* 25 The Old Rugged Cross.mp3 */; };
-		109AB6CE2E44F14D0058A1D9 /* 24 The lord's My Shepherd.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C62E44F14D0058A1D9 /* 24 The lord's My Shepherd.mp3 */; };
-		109AB6CF2E44F14D0058A1D9 /* 18 My Way (Male).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C02E44F14D0058A1D9 /* 18 My Way (Male).mp3 */; };
-		109AB6D02E44F14D0058A1D9 /* 11 Watch The Sunrise.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B82E44F14D0058A1D9 /* 11 Watch The Sunrise.mp3 */; };
-		109AB6D12E44F14D0058A1D9 /* 12 I Will Be With You.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B92E44F14D0058A1D9 /* 12 I Will Be With You.mp3 */; };
-		109AB6D22E44F14D0058A1D9 /* 09 Here I Am Lord.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B62E44F14D0058A1D9 /* 09 Here I Am Lord.mp3 */; };
-		109AB6D32E44F14D0058A1D9 /* 02 All Things Bright And Beautiful.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6AF2E44F14D0058A1D9 /* 02 All Things Bright And Beautiful.mp3 */; };
-		109AB6D42E44F14D0058A1D9 /* 21 Panis Angelicus.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C32E44F14D0058A1D9 /* 21 Panis Angelicus.mp3 */; };
-		109AB6D52E44F14D0058A1D9 /* 05 Ave Maria (Schubert).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B22E44F14D0058A1D9 /* 05 Ave Maria (Schubert).mp3 */; };
-		109AB6D62E44F14D0058A1D9 /* 10 How Great Thou Art.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B72E44F14D0058A1D9 /* 10 How Great Thou Art.mp3 */; };
-		109AB6D72E44F14D0058A1D9 /* 28 What A Wonderful World.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6CA2E44F14D0058A1D9 /* 28 What A Wonderful World.mp3 */; };
-		109AB6D82E44F14D0058A1D9 /* 07 Do Not Be Afraid.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B42E44F14D0058A1D9 /* 07 Do Not Be Afraid.mp3 */; };
-		109AB6D92E44F14D0058A1D9 /* 08 Going Home.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B52E44F14D0058A1D9 /* 08 Going Home.mp3 */; };
-		109AB6DA2E44F14D0058A1D9 /* 06 Christ Be Beside Me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B32E44F14D0058A1D9 /* 06 Christ Be Beside Me.mp3 */; };
-		109AB6DB2E44F14D0058A1D9 /* 20 Over The Rainbow.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C22E44F14D0058A1D9 /* 20 Over The Rainbow.mp3 */; };
-		109AB6DC2E44F14D0058A1D9 /* 16 Morning Has Broken 3.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6BE2E44F14D0058A1D9 /* 16 Morning Has Broken 3.mp3 */; };
-		109AB6DD2E44F14D0058A1D9 /* 13 I'll Walk With God.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6BA2E44F14D0058A1D9 /* 13 I'll Walk With God.mp3 */; };
-		109AB6DE2E44F14D0058A1D9 /* 26 The Wind Beneath My Wings.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C82E44F14D0058A1D9 /* 26 The Wind Beneath My Wings.mp3 */; };
-		109AB6DF2E44F14D0058A1D9 /* 03 Amazing Grace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B02E44F14D0058A1D9 /* 03 Amazing Grace.mp3 */; };
-		109AB6E02E44F14D0058A1D9 /* 01 Abide With Me.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6AE2E44F14D0058A1D9 /* 01 Abide With Me.mp3 */; };
-		109AB6E12E44F14D0058A1D9 /* 04 Ave Maria (Gounod).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6B12E44F14D0058A1D9 /* 04 Ave Maria (Gounod).mp3 */; };
-		109AB6E22E44F14D0058A1D9 /* 14 Jerusalem.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6BB2E44F14D0058A1D9 /* 14 Jerusalem.mp3 */; };
-		109AB6E32E44F14D0058A1D9 /* 16 Morning Has Broken.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6BD2E44F14D0058A1D9 /* 16 Morning Has Broken.mp3 */; };
-		109AB6E42E44F14D0058A1D9 /* 19 New Angel In Heaven.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C12E44F14D0058A1D9 /* 19 New Angel In Heaven.mp3 */; };
-		109AB6E52E44F14D0058A1D9 /* 29 You'll Never Walk Alone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6CB2E44F14D0058A1D9 /* 29 You'll Never Walk Alone.mp3 */; };
-		109AB6E62E44F14D0058A1D9 /* 17 My Way (Female).mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6BF2E44F14D0058A1D9 /* 17 My Way (Female).mp3 */; };
-		109AB6E72E44F14D0058A1D9 /* 15 Make Me A Channel Of Your Peace.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6BC2E44F14D0058A1D9 /* 15 Make Me A Channel Of Your Peace.mp3 */; };
-		109AB6E82E44F14D0058A1D9 /* 27 Time To Say Goodbye.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C92E44F14D0058A1D9 /* 27 Time To Say Goodbye.mp3 */; };
-		109AB6E92E44F14D0058A1D9 /* 23 Song Of Farewell.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C52E44F14D0058A1D9 /* 23 Song Of Farewell.mp3 */; };
-		109AB6EA2E44F14D0058A1D9 /* 22 Smile.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 109AB6C42E44F14D0058A1D9 /* 22 Smile.mp3 */; };
 		10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */; };
 		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
 		10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DA2E41799F0015E379 /* Lyric.swift */; };
@@ -207,6 +205,35 @@
 		105BBAD32DF9B7AC004B7F7A /* CustomReadingEditorViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingEditorViewController.swift; sourceTree = "<group>"; };
 		105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomReadingStore.swift; sourceTree = "<group>"; };
 		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
+		1061E9662E4505CE00F3CFAE /* 01 Abide With Me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "01 Abide With Me.mp3"; sourceTree = "<group>"; };
+		1061E9672E4505CE00F3CFAE /* 02 All Things Bright And Beautiful.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "02 All Things Bright And Beautiful.mp3"; sourceTree = "<group>"; };
+		1061E9682E4505CE00F3CFAE /* 03 Amazing Grace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "03 Amazing Grace.mp3"; sourceTree = "<group>"; };
+		1061E9692E4505CE00F3CFAE /* 04 Ave Maria (Gounod).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "04 Ave Maria (Gounod).mp3"; sourceTree = "<group>"; };
+		1061E96A2E4505CE00F3CFAE /* 05 Ave Maria (Schubert).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "05 Ave Maria (Schubert).mp3"; sourceTree = "<group>"; };
+		1061E96B2E4505CE00F3CFAE /* 06 Christ Be Beside Me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "06 Christ Be Beside Me.mp3"; sourceTree = "<group>"; };
+		1061E96C2E4505CE00F3CFAE /* 07 Do Not Be Afraid.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "07 Do Not Be Afraid.mp3"; sourceTree = "<group>"; };
+		1061E96D2E4505CE00F3CFAE /* 08 Going Home.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "08 Going Home.mp3"; sourceTree = "<group>"; };
+		1061E96E2E4505CE00F3CFAE /* 09 Here I Am Lord.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "09 Here I Am Lord.mp3"; sourceTree = "<group>"; };
+		1061E96F2E4505CE00F3CFAE /* 10 How Great Thou Art.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "10 How Great Thou Art.mp3"; sourceTree = "<group>"; };
+		1061E9702E4505CE00F3CFAE /* 11 Watch The Sunrise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "11 Watch The Sunrise.mp3"; sourceTree = "<group>"; };
+		1061E9712E4505CE00F3CFAE /* 12 I Will Be With You.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "12 I Will Be With You.mp3"; sourceTree = "<group>"; };
+		1061E9722E4505CE00F3CFAE /* 13 I'll Walk With God.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "13 I'll Walk With God.mp3"; sourceTree = "<group>"; };
+		1061E9732E4505CE00F3CFAE /* 14 Jerusalem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "14 Jerusalem.mp3"; sourceTree = "<group>"; };
+		1061E9742E4505CE00F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "15 Make Me A Channel Of Your Peace.mp3"; sourceTree = "<group>"; };
+		1061E9752E4505CE00F3CFAE /* 16 Morning Has Broken.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "16 Morning Has Broken.mp3"; sourceTree = "<group>"; };
+		1061E9762E4505CE00F3CFAE /* 17 My Way (Female).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "17 My Way (Female).mp3"; sourceTree = "<group>"; };
+		1061E9772E4505CE00F3CFAE /* 18 My Way (Male).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "18 My Way (Male).mp3"; sourceTree = "<group>"; };
+		1061E9782E4505CE00F3CFAE /* 19 New Angel In Heaven.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "19 New Angel In Heaven.mp3"; sourceTree = "<group>"; };
+		1061E9792E4505CE00F3CFAE /* 20 Over The Rainbow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "20 Over The Rainbow.mp3"; sourceTree = "<group>"; };
+		1061E97A2E4505CE00F3CFAE /* 21 Panis Angelicus.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "21 Panis Angelicus.mp3"; sourceTree = "<group>"; };
+		1061E97B2E4505CE00F3CFAE /* 22 Smile.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "22 Smile.mp3"; sourceTree = "<group>"; };
+		1061E97C2E4505CE00F3CFAE /* 23 Song Of Farewell.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "23 Song Of Farewell.mp3"; sourceTree = "<group>"; };
+		1061E97D2E4505CE00F3CFAE /* 24 The lord's My Shepherd.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "24 The lord's My Shepherd.mp3"; sourceTree = "<group>"; };
+		1061E97E2E4505CE00F3CFAE /* 25 The Old Rugged Cross.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "25 The Old Rugged Cross.mp3"; sourceTree = "<group>"; };
+		1061E97F2E4505CE00F3CFAE /* 26 The Wind Beneath My Wings.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "26 The Wind Beneath My Wings.mp3"; sourceTree = "<group>"; };
+		1061E9802E4505CE00F3CFAE /* 27 Time To Say Goodbye.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "27 Time To Say Goodbye.mp3"; sourceTree = "<group>"; };
+		1061E9812E4505CE00F3CFAE /* 28 What A Wonderful World.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "28 What A Wonderful World.mp3"; sourceTree = "<group>"; };
+		1061E9822E4505CE00F3CFAE /* 29 You'll Never Walk Alone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "29 You'll Never Walk Alone.mp3"; sourceTree = "<group>"; };
 		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
 		107676B82E367B2B00C42404 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
 		107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRenderingUtility.swift; sourceTree = "<group>"; };
@@ -221,7 +248,6 @@
 		1084FAAC2DC8EC09009398EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1084FAAF2DC8EC09009398EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		1084FAB12DC8EC09009398EB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		1089BCC52DCE077F005DF96A /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Audio; sourceTree = "<group>"; };
 		108D26BD2DD206880049806F /* MusicTabViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MusicTabViewController.swift; sourceTree = "<group>"; };
 		108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopHeaderView.swift; sourceTree = "<group>"; };
 		10903B252E0324E700397384 /* MiniPlayerContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MiniPlayerContainerViewController.swift; sourceTree = "<group>"; };
@@ -236,36 +262,6 @@
 		1099B6252DD79ED100CA3194 /* NativeLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NativeLoginViewController.swift; sourceTree = "<group>"; };
 		1099F2F02E0E9B81008E9D77 /* BookletInfoFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfoFormViewController.swift; sourceTree = "<group>"; };
 		1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfo.swift; sourceTree = "<group>"; };
-		109AB6AE2E44F14D0058A1D9 /* 01 Abide With Me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "01 Abide With Me.mp3"; sourceTree = "<group>"; };
-		109AB6AF2E44F14D0058A1D9 /* 02 All Things Bright And Beautiful.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "02 All Things Bright And Beautiful.mp3"; sourceTree = "<group>"; };
-		109AB6B02E44F14D0058A1D9 /* 03 Amazing Grace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "03 Amazing Grace.mp3"; sourceTree = "<group>"; };
-		109AB6B12E44F14D0058A1D9 /* 04 Ave Maria (Gounod).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "04 Ave Maria (Gounod).mp3"; sourceTree = "<group>"; };
-		109AB6B22E44F14D0058A1D9 /* 05 Ave Maria (Schubert).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "05 Ave Maria (Schubert).mp3"; sourceTree = "<group>"; };
-		109AB6B32E44F14D0058A1D9 /* 06 Christ Be Beside Me.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "06 Christ Be Beside Me.mp3"; sourceTree = "<group>"; };
-		109AB6B42E44F14D0058A1D9 /* 07 Do Not Be Afraid.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "07 Do Not Be Afraid.mp3"; sourceTree = "<group>"; };
-		109AB6B52E44F14D0058A1D9 /* 08 Going Home.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "08 Going Home.mp3"; sourceTree = "<group>"; };
-		109AB6B62E44F14D0058A1D9 /* 09 Here I Am Lord.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "09 Here I Am Lord.mp3"; sourceTree = "<group>"; };
-		109AB6B72E44F14D0058A1D9 /* 10 How Great Thou Art.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "10 How Great Thou Art.mp3"; sourceTree = "<group>"; };
-		109AB6B82E44F14D0058A1D9 /* 11 Watch The Sunrise.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "11 Watch The Sunrise.mp3"; sourceTree = "<group>"; };
-		109AB6B92E44F14D0058A1D9 /* 12 I Will Be With You.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "12 I Will Be With You.mp3"; sourceTree = "<group>"; };
-		109AB6BA2E44F14D0058A1D9 /* 13 I'll Walk With God.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "13 I'll Walk With God.mp3"; sourceTree = "<group>"; };
-		109AB6BB2E44F14D0058A1D9 /* 14 Jerusalem.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "14 Jerusalem.mp3"; sourceTree = "<group>"; };
-		109AB6BC2E44F14D0058A1D9 /* 15 Make Me A Channel Of Your Peace.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "15 Make Me A Channel Of Your Peace.mp3"; sourceTree = "<group>"; };
-		109AB6BD2E44F14D0058A1D9 /* 16 Morning Has Broken.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "16 Morning Has Broken.mp3"; sourceTree = "<group>"; };
-		109AB6BE2E44F14D0058A1D9 /* 16 Morning Has Broken 3.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "16 Morning Has Broken 3.mp3"; sourceTree = "<group>"; };
-		109AB6BF2E44F14D0058A1D9 /* 17 My Way (Female).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "17 My Way (Female).mp3"; sourceTree = "<group>"; };
-		109AB6C02E44F14D0058A1D9 /* 18 My Way (Male).mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "18 My Way (Male).mp3"; sourceTree = "<group>"; };
-		109AB6C12E44F14D0058A1D9 /* 19 New Angel In Heaven.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "19 New Angel In Heaven.mp3"; sourceTree = "<group>"; };
-		109AB6C22E44F14D0058A1D9 /* 20 Over The Rainbow.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "20 Over The Rainbow.mp3"; sourceTree = "<group>"; };
-		109AB6C32E44F14D0058A1D9 /* 21 Panis Angelicus.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "21 Panis Angelicus.mp3"; sourceTree = "<group>"; };
-		109AB6C42E44F14D0058A1D9 /* 22 Smile.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "22 Smile.mp3"; sourceTree = "<group>"; };
-		109AB6C52E44F14D0058A1D9 /* 23 Song Of Farewell.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "23 Song Of Farewell.mp3"; sourceTree = "<group>"; };
-		109AB6C62E44F14D0058A1D9 /* 24 The lord's My Shepherd.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "24 The lord's My Shepherd.mp3"; sourceTree = "<group>"; };
-		109AB6C72E44F14D0058A1D9 /* 25 The Old Rugged Cross.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "25 The Old Rugged Cross.mp3"; sourceTree = "<group>"; };
-		109AB6C82E44F14D0058A1D9 /* 26 The Wind Beneath My Wings.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "26 The Wind Beneath My Wings.mp3"; sourceTree = "<group>"; };
-		109AB6C92E44F14D0058A1D9 /* 27 Time To Say Goodbye.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "27 Time To Say Goodbye.mp3"; sourceTree = "<group>"; };
-		109AB6CA2E44F14D0058A1D9 /* 28 What A Wonderful World.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "28 What A Wonderful World.mp3"; sourceTree = "<group>"; };
-		109AB6CB2E44F14D0058A1D9 /* 29 You'll Never Walk Alone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; path = "29 You'll Never Walk Alone.mp3"; sourceTree = "<group>"; };
 		10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
 		10AB97DA2E41799F0015E379 /* Lyric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
@@ -409,6 +405,42 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		1061E9832E4505CE00F3CFAE /* Audio */ = {
+			isa = PBXGroup;
+			children = (
+				1061E9662E4505CE00F3CFAE /* 01 Abide With Me.mp3 */,
+				1061E9672E4505CE00F3CFAE /* 02 All Things Bright And Beautiful.mp3 */,
+				1061E9682E4505CE00F3CFAE /* 03 Amazing Grace.mp3 */,
+				1061E9692E4505CE00F3CFAE /* 04 Ave Maria (Gounod).mp3 */,
+				1061E96A2E4505CE00F3CFAE /* 05 Ave Maria (Schubert).mp3 */,
+				1061E96B2E4505CE00F3CFAE /* 06 Christ Be Beside Me.mp3 */,
+				1061E96C2E4505CE00F3CFAE /* 07 Do Not Be Afraid.mp3 */,
+				1061E96D2E4505CE00F3CFAE /* 08 Going Home.mp3 */,
+				1061E96E2E4505CE00F3CFAE /* 09 Here I Am Lord.mp3 */,
+				1061E96F2E4505CE00F3CFAE /* 10 How Great Thou Art.mp3 */,
+				1061E9702E4505CE00F3CFAE /* 11 Watch The Sunrise.mp3 */,
+				1061E9712E4505CE00F3CFAE /* 12 I Will Be With You.mp3 */,
+				1061E9722E4505CE00F3CFAE /* 13 I'll Walk With God.mp3 */,
+				1061E9732E4505CE00F3CFAE /* 14 Jerusalem.mp3 */,
+				1061E9742E4505CE00F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 */,
+				1061E9752E4505CE00F3CFAE /* 16 Morning Has Broken.mp3 */,
+				1061E9762E4505CE00F3CFAE /* 17 My Way (Female).mp3 */,
+				1061E9772E4505CE00F3CFAE /* 18 My Way (Male).mp3 */,
+				1061E9782E4505CE00F3CFAE /* 19 New Angel In Heaven.mp3 */,
+				1061E9792E4505CE00F3CFAE /* 20 Over The Rainbow.mp3 */,
+				1061E97A2E4505CE00F3CFAE /* 21 Panis Angelicus.mp3 */,
+				1061E97B2E4505CE00F3CFAE /* 22 Smile.mp3 */,
+				1061E97C2E4505CE00F3CFAE /* 23 Song Of Farewell.mp3 */,
+				1061E97D2E4505CE00F3CFAE /* 24 The lord's My Shepherd.mp3 */,
+				1061E97E2E4505CE00F3CFAE /* 25 The Old Rugged Cross.mp3 */,
+				1061E97F2E4505CE00F3CFAE /* 26 The Wind Beneath My Wings.mp3 */,
+				1061E9802E4505CE00F3CFAE /* 27 Time To Say Goodbye.mp3 */,
+				1061E9812E4505CE00F3CFAE /* 28 What A Wonderful World.mp3 */,
+				1061E9822E4505CE00F3CFAE /* 29 You'll Never Walk Alone.mp3 */,
+			);
+			path = Audio;
+			sourceTree = "<group>";
+		};
 		107676BA2E367B3D00C42404 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -438,11 +470,10 @@
 		1084FAA22DC8EC06009398EB /* LuxVia */ = {
 			isa = PBXGroup;
 			children = (
-				107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */,
+				10AB97E12E417C650015E379 /* lyrics.csv */,
+				1084FAB12DC8EC09009398EB /* Info.plist */,
+				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
 				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
-				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
-				1089BCC52DCE077F005DF96A /* Audio */,
-				109AB6CC2E44F14D0058A1D9 /* Audio */,
 				10964F762DDA3174000BAF5A /* AudioImportManager.swift */,
 				105679A72DD39BAE008AF276 /* AudioPlayerManager.swift */,
 				109851302DD8D258007C685B /* AuthManager.swift */,
@@ -455,15 +486,9 @@
 				105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */,
 				105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */,
 				105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */,
-				107676BA2E367B3D00C42404 /* Extensions */,
-				103D02B32E409C7D0014C812 /* Graphics */,
 				10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */,
-				1084FAB12DC8EC09009398EB /* Info.plist */,
 				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
-				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
-				10AB97DE2E417AB30015E379 /* Libraries */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
-				102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */,
 				10AB97DA2E41799F0015E379 /* Lyric.swift */,
 				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
 				10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */,
@@ -482,60 +507,29 @@
 				10E017002E0ED2370025C716 /* PDFBookletPreviewViewController.swift */,
 				10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */,
 				10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */,
-				10AB97E12E417C650015E379 /* lyrics.csv */,
 				1084FAA52DC8EC06009398EB /* SceneDelegate.swift */,
 				103984D42DF700AF005D90DF /* ServiceItem.swift */,
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				103984D32DF700AF005D90DF /* ServiceOrderManager.swift */,
 				103984D52DF700AF005D90DF /* ServiceViewController.swift */,
-				10066B4C2E1FD73100442DB2 /* Shared */,
 				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
+				107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */,
 				105FC7322DD9048A00C93490 /* TopBarView.swift */,
 				108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */,
 				10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
 				10E265D72E3299E500D9D2AD /* Untitled.swift */,
 				1084FAA72DC8EC06009398EB /* ViewController.swift */,
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
+				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
+				1061E9832E4505CE00F3CFAE /* Audio */,
+				107676BA2E367B3D00C42404 /* Extensions */,
+				103D02B32E409C7D0014C812 /* Graphics */,
+				1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */,
+				10AB97DE2E417AB30015E379 /* Libraries */,
+				10066B4C2E1FD73100442DB2 /* Shared */,
 			);
 			path = LuxVia;
-			sourceTree = "<group>";
-		};
-		109AB6CC2E44F14D0058A1D9 /* Audio */ = {
-			isa = PBXGroup;
-			children = (
-				109AB6AE2E44F14D0058A1D9 /* 01 Abide With Me.mp3 */,
-				109AB6AF2E44F14D0058A1D9 /* 02 All Things Bright And Beautiful.mp3 */,
-				109AB6B02E44F14D0058A1D9 /* 03 Amazing Grace.mp3 */,
-				109AB6B12E44F14D0058A1D9 /* 04 Ave Maria (Gounod).mp3 */,
-				109AB6B22E44F14D0058A1D9 /* 05 Ave Maria (Schubert).mp3 */,
-				109AB6B32E44F14D0058A1D9 /* 06 Christ Be Beside Me.mp3 */,
-				109AB6B42E44F14D0058A1D9 /* 07 Do Not Be Afraid.mp3 */,
-				109AB6B52E44F14D0058A1D9 /* 08 Going Home.mp3 */,
-				109AB6B62E44F14D0058A1D9 /* 09 Here I Am Lord.mp3 */,
-				109AB6B72E44F14D0058A1D9 /* 10 How Great Thou Art.mp3 */,
-				109AB6B82E44F14D0058A1D9 /* 11 Watch The Sunrise.mp3 */,
-				109AB6B92E44F14D0058A1D9 /* 12 I Will Be With You.mp3 */,
-				109AB6BA2E44F14D0058A1D9 /* 13 I'll Walk With God.mp3 */,
-				109AB6BB2E44F14D0058A1D9 /* 14 Jerusalem.mp3 */,
-				109AB6BC2E44F14D0058A1D9 /* 15 Make Me A Channel Of Your Peace.mp3 */,
-				109AB6BD2E44F14D0058A1D9 /* 16 Morning Has Broken.mp3 */,
-				109AB6BE2E44F14D0058A1D9 /* 16 Morning Has Broken 3.mp3 */,
-				109AB6BF2E44F14D0058A1D9 /* 17 My Way (Female).mp3 */,
-				109AB6C02E44F14D0058A1D9 /* 18 My Way (Male).mp3 */,
-				109AB6C12E44F14D0058A1D9 /* 19 New Angel In Heaven.mp3 */,
-				109AB6C22E44F14D0058A1D9 /* 20 Over The Rainbow.mp3 */,
-				109AB6C32E44F14D0058A1D9 /* 21 Panis Angelicus.mp3 */,
-				109AB6C42E44F14D0058A1D9 /* 22 Smile.mp3 */,
-				109AB6C52E44F14D0058A1D9 /* 23 Song Of Farewell.mp3 */,
-				109AB6C62E44F14D0058A1D9 /* 24 The lord's My Shepherd.mp3 */,
-				109AB6C72E44F14D0058A1D9 /* 25 The Old Rugged Cross.mp3 */,
-				109AB6C82E44F14D0058A1D9 /* 26 The Wind Beneath My Wings.mp3 */,
-				109AB6C92E44F14D0058A1D9 /* 27 Time To Say Goodbye.mp3 */,
-				109AB6CA2E44F14D0058A1D9 /* 28 What A Wonderful World.mp3 */,
-				109AB6CB2E44F14D0058A1D9 /* 29 You'll Never Walk Alone.mp3 */,
-			);
-			path = Audio;
 			sourceTree = "<group>";
 		};
 		10AB97DE2E417AB30015E379 /* Libraries */ = {
@@ -628,7 +622,6 @@
 				103D02C12E409CD10014C812 /* iTunesArtwork@2x.png in Resources */,
 				103D02C72E409CD10014C812 /* Icon-29.png in Resources */,
 				103D02C82E409CD10014C812 /* Icon-20.png in Resources */,
-				1089BCC62DCE077F005DF96A /* Audio in Resources */,
 				103D02C22E409CD10014C812 /* Icon-60.png in Resources */,
 				103D02C62E409CD10014C812 /* Icon-40@2x.png in Resources */,
 				1044DAEE2E4270CB00F34C82 /* ItunesArtwork@2x.png in Resources */,
@@ -661,37 +654,36 @@
 				1044DB1B2E4270CB00F34C82 /* Icon-App-60x60@3x.png in Resources */,
 				1044DB212E4270CB00F34C82 /* icon-messages-app-iPhone-60x45@1x.png in Resources */,
 				1044DB222E4270CB00F34C82 /* Icon-App-29x29@2x.png in Resources */,
-				109AB6CD2E44F14D0058A1D9 /* 25 The Old Rugged Cross.mp3 in Resources */,
-				109AB6CE2E44F14D0058A1D9 /* 24 The lord's My Shepherd.mp3 in Resources */,
-				109AB6CF2E44F14D0058A1D9 /* 18 My Way (Male).mp3 in Resources */,
-				109AB6D02E44F14D0058A1D9 /* 11 Watch The Sunrise.mp3 in Resources */,
-				109AB6D12E44F14D0058A1D9 /* 12 I Will Be With You.mp3 in Resources */,
-				109AB6D22E44F14D0058A1D9 /* 09 Here I Am Lord.mp3 in Resources */,
-				109AB6D32E44F14D0058A1D9 /* 02 All Things Bright And Beautiful.mp3 in Resources */,
-				109AB6D42E44F14D0058A1D9 /* 21 Panis Angelicus.mp3 in Resources */,
-				109AB6D52E44F14D0058A1D9 /* 05 Ave Maria (Schubert).mp3 in Resources */,
-				109AB6D62E44F14D0058A1D9 /* 10 How Great Thou Art.mp3 in Resources */,
-				109AB6D72E44F14D0058A1D9 /* 28 What A Wonderful World.mp3 in Resources */,
-				109AB6D82E44F14D0058A1D9 /* 07 Do Not Be Afraid.mp3 in Resources */,
-				109AB6D92E44F14D0058A1D9 /* 08 Going Home.mp3 in Resources */,
-				109AB6DA2E44F14D0058A1D9 /* 06 Christ Be Beside Me.mp3 in Resources */,
-				109AB6DB2E44F14D0058A1D9 /* 20 Over The Rainbow.mp3 in Resources */,
-				109AB6DC2E44F14D0058A1D9 /* 16 Morning Has Broken 3.mp3 in Resources */,
-				109AB6DD2E44F14D0058A1D9 /* 13 I'll Walk With God.mp3 in Resources */,
-				109AB6DE2E44F14D0058A1D9 /* 26 The Wind Beneath My Wings.mp3 in Resources */,
-				109AB6DF2E44F14D0058A1D9 /* 03 Amazing Grace.mp3 in Resources */,
-				109AB6E02E44F14D0058A1D9 /* 01 Abide With Me.mp3 in Resources */,
-				109AB6E12E44F14D0058A1D9 /* 04 Ave Maria (Gounod).mp3 in Resources */,
-				109AB6E22E44F14D0058A1D9 /* 14 Jerusalem.mp3 in Resources */,
-				109AB6E32E44F14D0058A1D9 /* 16 Morning Has Broken.mp3 in Resources */,
-				109AB6E42E44F14D0058A1D9 /* 19 New Angel In Heaven.mp3 in Resources */,
-				109AB6E52E44F14D0058A1D9 /* 29 You'll Never Walk Alone.mp3 in Resources */,
-				109AB6E62E44F14D0058A1D9 /* 17 My Way (Female).mp3 in Resources */,
-				109AB6E72E44F14D0058A1D9 /* 15 Make Me A Channel Of Your Peace.mp3 in Resources */,
-				109AB6E82E44F14D0058A1D9 /* 27 Time To Say Goodbye.mp3 in Resources */,
-				109AB6E92E44F14D0058A1D9 /* 23 Song Of Farewell.mp3 in Resources */,
-				109AB6EA2E44F14D0058A1D9 /* 22 Smile.mp3 in Resources */,
 				1044DB232E4270CB00F34C82 /* Icon-App-40x40@2x.png in Resources */,
+				1061E9842E4505CE00F3CFAE /* 17 My Way (Female).mp3 in Resources */,
+				1061E9852E4505CE00F3CFAE /* 28 What A Wonderful World.mp3 in Resources */,
+				1061E9862E4505CE00F3CFAE /* 20 Over The Rainbow.mp3 in Resources */,
+				1061E9872E4505CE00F3CFAE /* 05 Ave Maria (Schubert).mp3 in Resources */,
+				1061E9882E4505CE00F3CFAE /* 23 Song Of Farewell.mp3 in Resources */,
+				1061E9892E4505CE00F3CFAE /* 27 Time To Say Goodbye.mp3 in Resources */,
+				1061E98A2E4505CE00F3CFAE /* 29 You'll Never Walk Alone.mp3 in Resources */,
+				1061E98B2E4505CE00F3CFAE /* 01 Abide With Me.mp3 in Resources */,
+				1061E98C2E4505CE00F3CFAE /* 10 How Great Thou Art.mp3 in Resources */,
+				1061E98D2E4505CE00F3CFAE /* 25 The Old Rugged Cross.mp3 in Resources */,
+				1061E98E2E4505CE00F3CFAE /* 11 Watch The Sunrise.mp3 in Resources */,
+				1061E98F2E4505CE00F3CFAE /* 08 Going Home.mp3 in Resources */,
+				1061E9902E4505CE00F3CFAE /* 18 My Way (Male).mp3 in Resources */,
+				1061E9912E4505CE00F3CFAE /* 07 Do Not Be Afraid.mp3 in Resources */,
+				1061E9922E4505CE00F3CFAE /* 19 New Angel In Heaven.mp3 in Resources */,
+				1061E9932E4505CE00F3CFAE /* 24 The lord's My Shepherd.mp3 in Resources */,
+				1061E9942E4505CE00F3CFAE /* 22 Smile.mp3 in Resources */,
+				1061E9952E4505CE00F3CFAE /* 03 Amazing Grace.mp3 in Resources */,
+				1061E9962E4505CE00F3CFAE /* 15 Make Me A Channel Of Your Peace.mp3 in Resources */,
+				1061E9972E4505CE00F3CFAE /* 14 Jerusalem.mp3 in Resources */,
+				1061E9982E4505CE00F3CFAE /* 12 I Will Be With You.mp3 in Resources */,
+				1061E9992E4505CE00F3CFAE /* 09 Here I Am Lord.mp3 in Resources */,
+				1061E99A2E4505CE00F3CFAE /* 02 All Things Bright And Beautiful.mp3 in Resources */,
+				1061E99B2E4505CE00F3CFAE /* 16 Morning Has Broken.mp3 in Resources */,
+				1061E99C2E4505CE00F3CFAE /* 21 Panis Angelicus.mp3 in Resources */,
+				1061E99D2E4505CE00F3CFAE /* 26 The Wind Beneath My Wings.mp3 in Resources */,
+				1061E99E2E4505CE00F3CFAE /* 04 Ave Maria (Gounod).mp3 in Resources */,
+				1061E99F2E4505CE00F3CFAE /* 13 I'll Walk With God.mp3 in Resources */,
+				1061E9A02E4505CE00F3CFAE /* 06 Christ Be Beside Me.mp3 in Resources */,
 				1044DB242E4270CB00F34C82 /* Icon-App-60x60@2x.png in Resources */,
 				1044DB262E4270CB00F34C82 /* icon-messages-app-store-1024x1024.png in Resources */,
 				1044DB282E4270CB00F34C82 /* Icon-App-40x40@3x.png in Resources */,
