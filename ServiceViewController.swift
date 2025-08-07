@@ -170,6 +170,10 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         tableView.isHidden = index != 0
         bookletFormVC.view.isHidden = index != 1
         bookletGeneratorVC.view.isHidden = index != 2
+        
+        if index == 2 {
+            bookletGeneratorVC.regeneratePDF()
+        }
     }
 
     @objc private func editButtonTapped() {

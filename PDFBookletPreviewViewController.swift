@@ -53,7 +53,7 @@ class PDFBookletPreviewViewController: UIViewController {
         ])
     }
 
-    private func regeneratePDF() {
+    @objc func regeneratePDF() {
         let info = BookletInfo.load() ?? BookletInfo(
             userName: "", userEmail: "",
             deceasedName: "", dateOfBirth: Date(), dateOfPassing: Date(), photo: nil,
