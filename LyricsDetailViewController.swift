@@ -78,26 +78,8 @@ class LyricsDetailViewController: UIViewController {
     }
 
     private func renderLyrics() {
-        if let data = entry.body.data(using: .utf8) {
-            let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-                .documentType: NSAttributedString.DocumentType.html,
-                .characterEncoding: String.Encoding.utf8.rawValue
-            ]
-            if let attributed = try? NSMutableAttributedString(data: data, options: options, documentAttributes: nil) {
-                let paragraphStyle = NSMutableParagraphStyle()
-                paragraphStyle.alignment = .center
-                paragraphStyle.paragraphSpacing = 8
-                attributed.addAttributes([
-                    .font: UIFont.systemFont(ofSize: 18),
-                    .paragraphStyle: paragraphStyle
-                ], range: NSRange(location: 0, length: attributed.length))
-                textView.attributedText = attributed
-            } else {
-                textView.text = entry.body
-            }
-        } else {
-            textView.text = entry.body
-        }
+        let attributedText = TextRenderingUtility.renderText(entry.body, fontSize: 18, alignment: .center)
+        textView.attributedText = attributedText
     }
 
     @objc private func playMatchingSong() {
