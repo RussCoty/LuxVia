@@ -292,6 +292,8 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
 
         bookletInfo.save()
         print("✅ Booklet info saved.")
+        showToast("Booklet info saved")
+
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -306,6 +308,42 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
             }
         }
     }
+    private func showToast(_ message: String) {
+        let toastLabel = UILabel()
+        toastLabel.text = message
+        toastLabel.backgroundColor = UIColor.systemGreen
+        toastLabel.textColor = .white
+        toastLabel.textAlignment = .center
+        toastLabel.alpha = 0
+        toastLabel.layer.cornerRadius = 6
+        toastLabel.clipsToBounds = true
+        toastLabel.font = UIFont.boldSystemFont(ofSize: 14)
 
+        let padding: CGFloat = 12
+        toastLabel.frame = CGRect(
+            x: padding,
+            y: view.safeAreaInsets.top + 16,
+            width: view.frame.width - padding * 2,
+            height: 36
+        )
+        view.addSubview(toastLabel)
+
+        UIView.animate(withDuration: 0.25, animations: {
+            toastLabel.alpha = 1.0
+            toastLabel.transform = .identity
+        }) { _ in
+            UIView.animate(
+                withDuration: 0.25,
+                delay: 2.0,
+                options: .curveEaseInOut,
+                animations: {
+                    toastLabel.alpha = 0.0
+                    toastLabel.transform = CGAffineTransform(translationX: 0, y: -10)
+                }, completion: { _ in
+                    toastLabel.removeFromSuperview()
+                }
+            )
+        }
+    }
 
 }
