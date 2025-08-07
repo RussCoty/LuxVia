@@ -27,18 +27,32 @@ final class PDFBookletGenerator {
                 // Cover Page
                 ctx.beginPage()
 
+                // Image settings
+                let maxImageWidth: CGFloat = pageWidth - 2 * margin
+                let maxImageHeight: CGFloat = 180 // You can adjust this as needed
+
                 if let photoData = info.photo, let image = UIImage(data: photoData) {
-                    let maxWidth: CGFloat = pageWidth - 4 * margin
-                    let aspectRatio = image.size.height / image.size.width
-                    let imageHeight: CGFloat = maxWidth * aspectRatio
-                    let imageRect = CGRect(x: margin, y: y, width: maxWidth, height: imageHeight)
+                    // Calculate aspect ratio and fit image within maxImageWidth and maxImageHeight
+                    let aspectRatio = image.size.width > 0 ? image.size.height / image.size.width : 1.0
+                    var imageWidth = maxImageWidth
+                    var imageHeight = imageWidth * aspectRatio
+                    if imageHeight > maxImageHeight {
+                        imageHeight = maxImageHeight
+                        imageWidth = imageHeight / aspectRatio
+                    }
+                    // Center horizontally using pageWidth, not margin
+                    let imageX = (pageWidth - imageWidth) / 2
+                    let imageRect = CGRect(x: imageX, y: y, width: imageWidth, height: imageHeight)
                     image.draw(in: imageRect)
                     y += imageHeight + 20
                 } else {
+                    // Placeholder image centered
+                    let placeholderSize: CGFloat = 100
+                    let imageX = (pageWidth - placeholderSize) / 2
+                    let rect = CGRect(x: imageX, y: y, width: placeholderSize, height: placeholderSize)
                     let placeholder = UIImage(systemName: "photo") ?? UIImage()
-                    let rect = CGRect(x: (pageWidth - 100)/2, y: y, width: 100, height: 100)
                     placeholder.draw(in: rect)
-                    y += 120
+                    y += placeholderSize + 20
                 }
 
                 let titleAttrs: [NSAttributedString.Key: Any] = [.font: UIFont.boldSystemFont(ofSize: 18), .paragraphStyle: centered()]
@@ -111,6 +125,60 @@ final class PDFBookletGenerator {
                     mutableAttr.draw(in: textRect)
                     y += suggestedSize.height + 20
                 }
+
+                // --- ADDITION: Final page with other details ---
+                ctx.beginPage()
+                y = margin
+
+                let sectionTitleAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 16),
+                    .paragraphStyle: centered()
+                ]
+                let detailAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.systemFont(ofSize: 14),
+                    .paragraphStyle: centered()
+                ]
+
+                // Committal Location
+                if let committal = info.committalLocation, !committal.isEmpty {
+                    "Committal Location".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    committal.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+
+                // Wake/Reception Location
+                if let wake = info.wakeLocation, !wake.isEmpty {
+                    "Wake/Reception Location".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    wake.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+
+                // Donation/Flower Instructions
+                if let donation = info.donationInfo, !donation.isEmpty {
+                    "Donation/Flower Instructions".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    donation.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 40), withAttributes: detailAttrs)
+                    y += 48
+                }
+
+                // Photographer Name
+                if let photographer = info.photographer, !photographer.isEmpty {
+                    "Photographer".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    photographer.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+
+                // Pallbearers
+                if let pallbearers = info.pallbearers, !pallbearers.isEmpty {
+                    "Pallbearers".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    y += 22
+                    pallbearers.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    y += 26
+                }
+                // --- END ADDITION ---
 
             })
 
