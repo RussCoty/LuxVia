@@ -23,14 +23,14 @@ final class TextRenderingUtility {
     private static func cleanupText(_ text: String) -> String {
         // Fix common HTML encoding issues
         let cleaned = text
-            .replacingOccurrences(of: "â€™", with: "'")
-            .replacingOccurrences(of: "â€œ", with: """)
-            .replacingOccurrences(of: "â€", with: """)
-            .replacingOccurrences(of: "â€˜", with: "'")
-            .replacingOccurrences(of: "â€"", with: "–")
-            .replacingOccurrences(of: "â€"", with: "—")
-            .replacingOccurrences(of: "â€¦", with: "…")
-            .trimmingCharacters(in: .whitespacesAndNewlines)
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{99}", with: "'")
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{9C}", with: "\"")
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{9D}", with: "\"")
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{98}", with: "'")
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{93}", with: "–")
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{94}", with: "—")
+            .replacingOccurrences(of: "\u{E2}\u{80}\u{A6}", with: "…")
+            .trimmingCharacters(in: CharacterSet.whitespacesAndNewlines)
         
         // Fix malformed HTML tags
         let fixedHTML = cleaned
@@ -66,13 +66,14 @@ final class TextRenderingUtility {
         // Apply consistent styling
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = alignment
-        paragraphStyle.paragraphSpacing = 8
-        paragraphStyle.lineSpacing = 2
+        paragraphStyle.paragraphSpacing = 16  // Consistent with plain text
+        paragraphStyle.lineSpacing = 6        // Consistent with plain text
         
         let range = NSRange(location: 0, length: attributedString.length)
         attributedString.addAttributes([
-            .font: UIFont.systemFont(ofSize: fontSize),
-            .paragraphStyle: paragraphStyle
+            .font: UIFont.systemFont(ofSize: fontSize, weight: .regular),
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: UIColor.label  // Ensures proper color in dark/light mode
         ], range: range)
         
         return attributedString
@@ -84,29 +85,58 @@ final class TextRenderingUtility {
         
         let paragraphStyle = NSMutableParagraphStyle()
         paragraphStyle.alignment = alignment
-        paragraphStyle.paragraphSpacing = 12
-        paragraphStyle.lineSpacing = 4
+        paragraphStyle.paragraphSpacing = 16  // Increased for better visual separation
+        paragraphStyle.lineSpacing = 6       // Increased for better readability
+        paragraphStyle.firstLineHeadIndent = 0
+        paragraphStyle.headIndent = 0
         
         let attributes: [NSAttributedString.Key: Any] = [
-            .font: UIFont.systemFont(ofSize: fontSize),
-            .paragraphStyle: paragraphStyle
+            .font: UIFont.systemFont(ofSize: fontSize, weight: .regular),
+            .paragraphStyle: paragraphStyle,
+            .foregroundColor: UIColor.label  // Ensures proper color in dark/light mode
         ]
         
         return NSAttributedString(string: normalizedText, attributes: attributes)
     }
     
     private static func normalizeLineBreaks(_ text: String) -> String {
-        // Replace multiple consecutive newlines with double newlines for paragraph spacing
-        let singleSpaced = text.replacingOccurrences(of: "\n+", with: "\n", options: .regularExpression)
+        // Remove excessive whitespace while preserving intentional formatting
+        var normalized = text
+            .trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Convert sequences of 3+ newlines to double newlines
-        let doubleSpaced = singleSpaced.replacingOccurrences(of: "\n{3,}", with: "\n\n", options: .regularExpression)
+        // Replace carriage returns and mixed line endings with standard newlines
+        normalized = normalized
+            .replacingOccurrences(of: "\r\n", with: "\n")
+            .replacingOccurrences(of: "\r", with: "\n")
         
-        // Ensure proper paragraph spacing
-        return doubleSpaced
-            .components(separatedBy: "\n\n")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.isEmpty }
-            .joined(separator: "\n\n")
+        // Replace multiple consecutive spaces with single spaces (except at line start)
+        normalized = normalized.replacingOccurrences(of: " +", with: " ", options: .regularExpression)
+        
+        // Normalize excessive newlines to at most double newlines for paragraph spacing
+        normalized = normalized.replacingOccurrences(of: "\n{3,}", with: "\n\n", options: .regularExpression)
+        
+        // Clean up trailing whitespace on each line while preserving line breaks
+        let lines = normalized.components(separatedBy: "\n")
+        let cleanedLines = lines.map { line in
+            line.trimmingCharacters(in: .whitespaces)
+        }
+        
+        // Filter out completely empty lines except for intentional paragraph breaks
+        var result: [String] = []
+        var lastWasEmpty = false
+        
+        for line in cleanedLines {
+            if line.isEmpty {
+                if !lastWasEmpty && !result.isEmpty {
+                    result.append(line) // Keep one empty line for paragraph spacing
+                }
+                lastWasEmpty = true
+            } else {
+                result.append(line)
+                lastWasEmpty = false
+            }
+        }
+        
+        return result.joined(separator: "\n")
     }
 }

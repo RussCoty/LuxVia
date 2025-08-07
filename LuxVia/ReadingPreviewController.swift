@@ -29,26 +29,9 @@ class ReadingPreviewViewController: UIViewController {
         textView.backgroundColor = .clear
 
         if let data = readingText.data(using: .utf8) {
-            let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
-                // Beware below commenting
-                //.documentType: .html,
-                
-                .documentType: NSAttributedString.DocumentType.html,
-
-                .characterEncoding: String.Encoding.utf8.rawValue
-            ]
-            if let attributed = try? NSMutableAttributedString(data: data, options: options, documentAttributes: nil) {
-                let style = NSMutableParagraphStyle()
-                style.alignment = .center
-                style.paragraphSpacing = 8
-                attributed.addAttributes([
-                    .font: UIFont.systemFont(ofSize: 18),
-                    .paragraphStyle: style
-                ], range: NSRange(location: 0, length: attributed.length))
-                textView.attributedText = attributed
-            } else {
-                textView.text = readingText
-            }
+            // Use the improved TextRenderingUtility for better text parsing and layout
+            let attributedText = TextRenderingUtility.renderText(readingText, fontSize: 18, alignment: .center)
+            textView.attributedText = attributedText
         } else {
             textView.text = readingText
         }

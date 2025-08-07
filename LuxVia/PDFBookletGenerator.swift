@@ -77,28 +77,10 @@ final class PDFBookletGenerator {
                 for item in items {
                     guard let htmlText = item.customText else { continue }
 
-                    // Fix broken character encodings
-                    let fixedString = htmlText
-                        .replacingOccurrences(of: "â€™", with: "’")
-                        .replacingOccurrences(of: "â€œ", with: "“")
-                        .replacingOccurrences(of: "â€", with: "”")
-                        .replacingOccurrences(of: "â€˜", with: "‘")
-                        .replacingOccurrences(of: "â€“", with: "–")
-                        .replacingOccurrences(of: "â€”", with: "—")
-                        .replacingOccurrences(of: "â€¦", with: "…")
-
-                    guard let data = fixedString.data(using: .utf8),
-                          let attr = try? NSAttributedString(
-                              data: data,
-                              options: [.documentType: NSAttributedString.DocumentType.html],
-                              documentAttributes: nil
-                          ) else { continue }
-
-                    let centeredStyle = NSMutableParagraphStyle()
-                    centeredStyle.alignment = .center
+                    // Use the improved TextRenderingUtility for consistent text processing
+                    let attr = TextRenderingUtility.renderText(htmlText, fontSize: 14, alignment: .center)
 
                     let mutableAttr = NSMutableAttributedString(attributedString: attr)
-                    mutableAttr.addAttribute(.paragraphStyle, value: centeredStyle, range: NSRange(location: 0, length: mutableAttr.length))
 
                     let framesetter = CTFramesetterCreateWithAttributedString(mutableAttr as CFAttributedString)
                     let suggestedSize = CTFramesetterSuggestFrameSizeWithConstraints(
