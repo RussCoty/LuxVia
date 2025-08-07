@@ -72,6 +72,7 @@
 		105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 105FC7322DD9048A00C93490 /* TopBarView.swift */; };
 		107017A42DE5B4C500FF4D87 /* SharedLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */; };
 		107676B92E367B3100C42404 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107676B82E367B2B00C42404 /* String+Extensions.swift */; };
+		107E0D232E44FB3E0061A409 /* TextRenderingUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */; };
 		10824D7B2DF339B100CDF11B /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 10824D7A2DF339B100CDF11B /* SwiftSoup */; };
 		10824D7D2DF33F9300CDF11B /* WordsListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */; };
 		10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */; };
@@ -208,6 +209,7 @@
 		105FC7322DD9048A00C93490 /* TopBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TopBarView.swift; sourceTree = "<group>"; };
 		107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedLibraryManager.swift; sourceTree = "<group>"; };
 		107676B82E367B2B00C42404 /* String+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextRenderingUtility.swift; sourceTree = "<group>"; };
 		10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordsListViewController.swift; sourceTree = "<group>"; };
 		10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsDetailViewController.swift; sourceTree = "<group>"; };
 		10824D822DF3989300CDF11B /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
@@ -436,6 +438,7 @@
 		1084FAA22DC8EC06009398EB /* LuxVia */ = {
 			isa = PBXGroup;
 			children = (
+				107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */,
 				1084FAA32DC8EC06009398EB /* AppDelegate.swift */,
 				1084FAAC2DC8EC09009398EB /* Assets.xcassets */,
 				1089BCC52DCE077F005DF96A /* Audio */,
@@ -733,6 +736,7 @@
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */,
 				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,
+				107E0D232E44FB3E0061A409 /* TextRenderingUtility.swift in Sources */,
 				107676B92E367B3100C42404 /* String+Extensions.swift in Sources */,
 				1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */,
 				103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */,
