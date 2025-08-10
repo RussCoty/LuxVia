@@ -1,8 +1,15 @@
+// File: LuxVia/ServiceOrderManager.swift
 import Foundation
+
+// Broadcast when the service order changes.
+// (VCs should observe and reload on this.)
+extension Notification.Name {
+    static let serviceItemsUpdated = Notification.Name("serviceItemsUpdated")
+}
 
 class ServiceOrderManager {
     static let shared = ServiceOrderManager()
-
+    
     private let storageKey = "serviceOrder"
     private(set) var items: [ServiceItem] = []
 
@@ -15,14 +22,13 @@ class ServiceOrderManager {
         print("🟢 Added to service order: \(item.title) [\(item.type.rawValue)]")
         print("📋 Current service items:")
         items.forEach { print("• \($0.title) [\($0.type.rawValue)]") }
-        save()
+        save() // will notify
     }
-
 
     func remove(at index: Int) {
         guard index >= 0 && index < items.count else { return }
         items.remove(at: index)
-        save()
+        save() // will notify
     }
 
     func move(from sourceIndex: Int, to destinationIndex: Int) {
@@ -41,9 +47,8 @@ class ServiceOrderManager {
             print("  \(i): \(item.title)")
         }
 
-        save()
+        save() // will notify
     }
-
 
     func save() {
         do {
@@ -51,6 +56,10 @@ class ServiceOrderManager {
             UserDefaults.standard.set(data, forKey: storageKey)
         } catch {
             print("Failed to save service order: \(error)")
+        }
+        // Notify on main so UI updates are safe.
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .serviceItemsUpdated, object: nil)
         }
     }
 
@@ -62,10 +71,18 @@ class ServiceOrderManager {
                 print("Failed to load service order: \(error)")
             }
         }
+        // Notify after initial load so first display is up-to-date.
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .serviceItemsUpdated, object: nil)
+        }
     }
 
     func clear() {
         items.removeAll()
         UserDefaults.standard.removeObject(forKey: storageKey)
+        // Notify so UI clears immediately.
+        DispatchQueue.main.async {
+            NotificationCenter.default.post(name: .serviceItemsUpdated, object: nil)
+        }
     }
 }

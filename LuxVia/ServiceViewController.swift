@@ -35,7 +35,6 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
         definesPresentationContext = true
         providesPresentationContextTransitionStyle = true
-
         setupNavigationBar()
         setupContainerView()
         setupTableView()
@@ -296,7 +295,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     }
     
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .delete
+        return tableView.isEditing ? .none : .delete
     }
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
