@@ -1,3 +1,4 @@
+// File: LuxVia/ServiceViewController.swift
 import UIKit
 import Foundation
 import WebKit
@@ -35,6 +36,15 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
         definesPresentationContext = true
         providesPresentationContextTransitionStyle = true
+
+        // Observe service updates so new/removed/reordered items appear instantly.
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(handleServiceItemsUpdated),
+            name: .serviceItemsUpdated,
+            object: nil
+        )
+
         setupNavigationBar()
         setupContainerView()
         setupTableView()
@@ -70,6 +80,8 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
+        // Ensure latest data when returning to the tab.
+        tableView.reloadData()
         updateMiniPlayerVisibility()
         logMiniPlayer("viewWillAppear", visible: segmentedControl.selectedSegmentIndex == 0)
     }
@@ -109,7 +121,6 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         tableView.backgroundColor = .clear
         tableView.separatorInset = .zero
 
-        // ✅ Required for reorder + edit mode
         tableView.allowsSelection = true
         tableView.allowsSelectionDuringEditing = true
         tableView.allowsMultipleSelection = false
@@ -126,7 +137,6 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             tableView.bottomAnchor.constraint(equalTo: containerView.bottomAnchor)
         ])
     }
-
 
     private func setupBookletFormView() {
         addChild(bookletFormVC)
@@ -169,17 +179,22 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         tableView.isHidden = index != 0
         bookletFormVC.view.isHidden = index != 1
         bookletGeneratorVC.view.isHidden = index != 2
-        
+
         if index == 2 {
             bookletGeneratorVC.regeneratePDF()
         }
     }
 
     @objc private func editButtonTapped() {
-        let isEditing = tableView.isEditing
-        tableView.setEditing(!isEditing, animated: true)
-        navigationItem.leftBarButtonItem?.title = !isEditing ? "Done" : "Edit"
-        isEditing ? playbackTimer?.invalidate() : startPlaybackProgressTimer()
+        let newEditing = !tableView.isEditing
+        tableView.setEditing(newEditing, animated: true)
+        navigationItem.leftBarButtonItem?.title = newEditing ? "Done" : "Edit"
+        if newEditing {
+            // Stop periodic reloads; they fight with reordering gestures.
+            playbackTimer?.invalidate()
+        } else {
+            startPlaybackProgressTimer()
+        }
     }
 
     @objc private func handleTrackChange() {
@@ -218,17 +233,15 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
         let isPlaying = item.fileName != nil && item.fileName == AudioPlayerManager.shared.currentTrack?.fileName
 
-        let typeText: String
-        if isPlaying && item.type == .song {
-            typeText = "Show Lyrics"
-        } else {
-            typeText = item.type.rawValue.capitalized
-        }
+        let typeText: String = (isPlaying && item.type == .song) ? "Show Lyrics" : item.type.rawValue.capitalized
 
         cell.textLabel?.text = "• \(item.title) (\(typeText))"
         cell.textLabel?.numberOfLines = 0
         cell.accessoryType = .none
         cell.selectionStyle = .none
+
+        // Keep layout stable in edit mode; drag handle only.
+        cell.showsReorderControl = tableView.isEditing
 
         isPlaying ? addProgressBar(to: cell, for: item) : removeProgressBar(from: cell)
 
@@ -241,6 +254,9 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         }
 
         return cell
+    }
+    func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
+        return false
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -290,17 +306,37 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         }
     }
 
-    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return true
-    }
-    
+    // Keep editable for swipe actions; disable delete in edit mode.
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool { true }
+
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return tableView.isEditing ? .none : .delete
+        return .none // avoid red "-" even in non-edit; we use swipe actions instead
     }
 
-    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return true
+    // Swipe-to-delete with confirmation (only meaningful when not editing).
+    func tableView(_ tableView: UITableView,
+                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+        guard !tableView.isEditing else { return nil }
+        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
+            guard let self = self else { return }
+            let alert = UIAlertController(title: "Delete Item?",
+                                          message: "This will remove the service item from the order.",
+                                          preferredStyle: .alert)
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
+                completion(false)
+            })
+            alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
+                ServiceOrderManager.shared.remove(at: indexPath.row)
+                // Row animation; data source is already changed.
+                self.tableView.deleteRows(at: [indexPath], with: .automatic)
+                completion(true)
+            })
+            self.present(alert, animated: true)
+        }
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
+
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
 
     func tableView(_ tableView: UITableView,
                    moveRowAt sourceIndexPath: IndexPath,
@@ -312,12 +348,8 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
         ServiceOrderManager.shared.move(from: fromIndex, to: toIndex)
         ServiceOrderManager.shared.save()
-
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.01) {
-            tableView.reloadData()
-        }
+        // No reload here; UIKit animates move smoothly. Extra reloads cause jitter.
     }
-
 
     func lyricForPlayingTrack() -> Lyric? {
         guard let currentTrack = AudioPlayerManager.shared.currentTrack else {
@@ -351,12 +383,13 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             return byFileName
         }
 
-        // Fallback: match by normalized title (strip number prefix)
-        let normalizedTrackTitle = currentTrack.title.normalized.replacingOccurrences(of: #"^\d+\s*"#, with: "", options: .regularExpression)
+        let normalizedTrackTitle = currentTrack.title.normalized
+            .replacingOccurrences(of: #"^\d+\s*"#, with: "", options: .regularExpression)
         print("🎧 Normalized title for fallback: '\(normalizedTrackTitle)'")
 
         for lyric in allLyrics {
-            let normalizedLyricTitle = lyric.title.normalized.replacingOccurrences(of: #"^\d+\s*"#, with: "", options: .regularExpression)
+            let normalizedLyricTitle = lyric.title.normalized
+                .replacingOccurrences(of: #"^\d+\s*"#, with: "", options: .regularExpression)
             print("🔍 Checking lyric title: '\(lyric.title)' → normalized: '\(normalizedLyricTitle)'")
 
             if normalizedLyricTitle == normalizedTrackTitle {
@@ -368,7 +401,6 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         print("⚠️ No matching lyric found for: '\(normalizedTrackTitle)'")
         return nil
     }
-
 
     private func addProgressBar(to cell: UITableViewCell, for item: ServiceItem) {
         removeProgressBar(from: cell)
@@ -397,24 +429,24 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     private func removeProgressBar(from cell: UITableViewCell) {
         cell.contentView.subviews.filter { $0.tag == 99 }.forEach { $0.removeFromSuperview() }
     }
-    
-    
+
     private func startPlaybackProgressTimer() {
         playbackTimer?.invalidate()
         playbackTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.tableView.reloadData()
         }
     }
-    func tableView(_ tableView: UITableView,
-                   commit editingStyle: UITableViewCell.EditingStyle,
-                   forRowAt indexPath: IndexPath) {
-        if editingStyle == .delete {
-            ServiceOrderManager.shared.remove(at: indexPath.row)
-            ServiceOrderManager.shared.save()
-            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+    // Notification handler must be inside the class; reload safely on main.
+    @objc private func handleServiceItemsUpdated() {
+        guard !tableView.isEditing else { return }
+        DispatchQueue.main.async { [weak self] in
+            self?.tableView.reloadData()
         }
     }
 }
+
+// Keep filename helpers separate from controller logic.
 extension String {
     var cleanedWhitespace: String {
         let whitespaceSet = CharacterSet.whitespacesAndNewlines.union(CharacterSet(charactersIn: "\u{00A0}"))
@@ -423,5 +455,4 @@ extension String {
     var normalizedFilename: String {
         return cleanedWhitespace.lowercased().precomposedStringWithCanonicalMapping
     }
-
 }
