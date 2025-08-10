@@ -24,11 +24,11 @@ final class TextRenderingUtility {
         // Fix common HTML encoding issues
         let cleaned = text
             .replacingOccurrences(of: "â€™", with: "'")
-            .replacingOccurrences(of: "â€œ", with: """)
-            .replacingOccurrences(of: "â€", with: """)
+            .replacingOccurrences(of: "â€œ", with: "\"")
+            .replacingOccurrences(of: "â€\u{9C}", with: "\"") // closing quote
             .replacingOccurrences(of: "â€˜", with: "'")
-            .replacingOccurrences(of: "â€"", with: "–")
-            .replacingOccurrences(of: "â€"", with: "—")
+            .replacingOccurrences(of: "â€“", with: "–") // en dash
+            .replacingOccurrences(of: "â€”", with: "—") // em dash
             .replacingOccurrences(of: "â€¦", with: "…")
             .trimmingCharacters(in: .whitespacesAndNewlines)
         
@@ -40,6 +40,7 @@ final class TextRenderingUtility {
         
         return fixedHTML
     }
+
     
     private static func isValidHTML(_ text: String) -> Bool {
         // Simple heuristic: check if text contains properly formed HTML tags
