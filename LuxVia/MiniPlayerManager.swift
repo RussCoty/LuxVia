@@ -213,7 +213,7 @@ final class MiniPlayerManager {
         if audio.isPlaying {
             let totalSteps = Int(7.0 / 0.01)
             let decrement = audio.volume / Float(totalSteps)
-            
+            self.playerView?.setFadeButtonTitle("Fading Out")
             Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
                 if player.volume > decrement {
                     player.volume -= decrement
@@ -229,15 +229,13 @@ final class MiniPlayerManager {
             }
         } else {
             player.volume = 0
+            self.playerView?.setFadeButtonTitle("Fading In")
             player.play()
-            
             let title = audio.currentTrackName ?? "—"
             self.playerView?.updatePlayingTrackText(title)
             self.playerView?.updatePlayButton(isPlaying: true)
             self.playerView?.setFadeButtonTitle("Fade Out")
             self.playerView?.updateFadeIcon(isFadingOut: false)
-            
-            
             
             Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
                 if player.volume < audio.volume - 0.01 {
