@@ -23,6 +23,7 @@ struct SongEntry: Codable, Equatable {
     let fileName: String
     let artist: String?
     let duration: TimeInterval?
+    let filePath: String? // Path to the actual file for deletion
 }
 
 struct ReadingEntry: Codable, Equatable {

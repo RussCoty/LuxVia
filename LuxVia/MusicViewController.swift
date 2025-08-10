@@ -92,9 +92,9 @@ class MusicViewController: BaseViewController,
         let fileManager = FileManager.default
         var tempGroups: [String: [SongEntry]] = [:]
 
-        func appendTrack(folder: String, fileURL: URL) {
+        func appendTrack(folder: String, fileURL: URL, isImported: Bool = false) {
             let title = fileURL.deletingPathExtension().lastPathComponent
-            let entry = SongEntry(title: title, fileName: title, artist: nil, duration: nil)
+            let entry = SongEntry(title: title, fileName: title, artist: nil, duration: nil, filePath: isImported ? fileURL.path : nil)
             tempGroups[folder, default: []].append(entry)
         }
 
@@ -114,7 +114,7 @@ class MusicViewController: BaseViewController,
                 for case let fileURL as URL in enumerator where fileURL.pathExtension.lowercased() == "mp3" {
                     let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
                     let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                    appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
+                    appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL, isImported: true)
                 }
             }
         }
@@ -275,6 +275,83 @@ class MusicViewController: BaseViewController,
                     toastLabel.removeFromSuperview()
                 }
             )
+        }
+    }
+
+    // MARK: - Table View Editing (Delete Functionality)
+    
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return false }
+        
+        // Only allow editing (deletion) of imported files that have a file path
+        return track.filePath != nil
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+            guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row],
+                  let filePath = track.filePath else { return }
+            
+            // Show confirmation dialog
+            let alert = UIAlertController(
+                title: "Delete Audio File", 
+                message: "Are you sure you want to delete \"\(track.title)\"? This action cannot be undone.",
+                preferredStyle: .alert
+            )
+            
+            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
+                self.deleteAudioFile(at: indexPath, folder: folder, track: track, filePath: filePath)
+            })
+            
+            present(alert, animated: true)
+        }
+    }
+    
+    private func deleteAudioFile(at indexPath: IndexPath, folder: String, track: SongEntry, filePath: String) {
+        let fileManager = FileManager.default
+        
+        do {
+            // Delete the actual file
+            try fileManager.removeItem(atPath: filePath)
+            
+            // Update data source
+            if isFiltering {
+                filteredGroupedTracks[folder]?.remove(at: indexPath.row)
+                if filteredGroupedTracks[folder]?.isEmpty == true {
+                    filteredGroupedTracks.removeValue(forKey: folder)
+                    filteredFolders.removeAll { $0 == folder }
+                }
+            }
+            
+            groupedTracks[folder]?.remove(at: indexPath.row)
+            if groupedTracks[folder]?.isEmpty == true {
+                groupedTracks.removeValue(forKey: folder)
+                sortedFolders.removeAll { $0 == folder }
+            }
+            
+            // Update SharedLibraryManager
+            SharedLibraryManager.shared.allSongs = groupedTracks.values.flatMap { $0 }
+            
+            // Update UI
+            if isFiltering && filteredGroupedTracks[folder]?.isEmpty == true {
+                // Delete entire section if it's now empty
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+            } else if !isFiltering && groupedTracks[folder]?.isEmpty == true {
+                // Delete entire section if it's now empty
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+            } else {
+                // Just delete the row
+                tableView.deleteRows(at: [indexPath], with: .automatic)
+            }
+            
+            showToast("Deleted: \(track.title)")
+            
+        } catch {
+            print("❌ Failed to delete file: \(error)")
+            showToast("Failed to delete: \(track.title)")
         }
     }
 }
