@@ -333,7 +333,9 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             })
             self.present(alert, animated: true)
         }
-        return UISwipeActionsConfiguration(actions: [deleteAction])
+        let config = UISwipeActionsConfiguration(actions: [deleteAction])
+        config.performsFirstActionWithFullSwipe = false // Keep delete visible until tapped
+        return config
     }
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
