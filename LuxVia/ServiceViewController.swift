@@ -255,6 +255,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
 
         return cell
     }
+
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
         return false
     }
@@ -306,37 +307,33 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         }
     }
 
-    // Keep editable for swipe actions; disable delete in edit mode.
+    // MARK: - Editing / Deleting
+
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool { true }
 
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        return .none // avoid red "-" even in non-edit; we use swipe actions instead
+        // Only show red '-' while in edit mode.
+        return tableView.isEditing ? .delete : .none
     }
 
-    // Swipe-to-delete with confirmation (only meaningful when not editing).
     func tableView(_ tableView: UITableView,
-                   trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
-        guard !tableView.isEditing else { return nil }
-        let deleteAction = UIContextualAction(style: .destructive, title: "Delete") { [weak self] _, _, completion in
+                   commit editingStyle: UITableViewCell.EditingStyle,
+                   forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        // Confirm before destructive action (to prevent accidental deletes while reordering).
+        let alert = UIAlertController(title: "Delete Item?",
+                                      message: "This will remove the service item from the order.",
+                                      preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
+        alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
-            let alert = UIAlertController(title: "Delete Item?",
-                                          message: "This will remove the service item from the order.",
-                                          preferredStyle: .alert)
-            alert.addAction(UIAlertAction(title: "Cancel", style: .cancel) { _ in
-                completion(false)
-            })
-            alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { _ in
-                ServiceOrderManager.shared.remove(at: indexPath.row)
-                // Row animation; data source is already changed.
-                self.tableView.deleteRows(at: [indexPath], with: .automatic)
-                completion(true)
-            })
-            self.present(alert, animated: true)
-        }
-        let config = UISwipeActionsConfiguration(actions: [deleteAction])
-        config.performsFirstActionWithFullSwipe = false // Keep delete visible until tapped
-        return config
+            ServiceOrderManager.shared.remove(at: indexPath.row)
+            self.tableView.deleteRows(at: [indexPath], with: .automatic)
+        })
+        present(alert, animated: true)
     }
+
+    // Remove swipe-to-delete entirely by not implementing trailingSwipeActionsConfigurationForRowAt.
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool { true }
 
