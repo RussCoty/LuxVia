@@ -202,7 +202,7 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         stackView.addArrangedSubview(selectedImageView!)
 
         let button = UIButton(type: .system)
-        button.setTitle("Upload Photograph", for: .normal)
+        button.setTitle("Add Photograph", for: .normal)
         button.addTarget(self, action: #selector(handlePhotoUpload), for: .touchUpInside)
         stackView.addArrangedSubview(button)
     }
