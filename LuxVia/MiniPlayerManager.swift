@@ -106,8 +106,10 @@ final class MiniPlayerManager {
         let audio = AudioPlayerManager.shared
         
         // 🎵 Now Playing
-        if let title = audio.currentTrackName {
-            playerView.updatePlayingTrackText(title)
+        if let name = audio.currentTrackName,
+           let song = SharedLibraryManager.shared.allSongs.first(where: { $0.fileName == name }) {
+            let displayTitle = song.title.replacingOccurrences(of: "_", with: " ").capitalized
+            playerView.updatePlayingTrackText(displayTitle)
         } else {
             playerView.updatePlayingTrackText("—")
         }
