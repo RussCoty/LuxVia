@@ -100,10 +100,13 @@ class MusicViewController: BaseViewController,
 
         if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio"),
            let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
-            for case let fileURL as URL in enumerator where fileURL.pathExtension.lowercased() == "mp3" {
-                let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
-                let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
+            for case let fileURL as URL in enumerator {
+                let ext = fileURL.pathExtension.lowercased()
+                if ext == "mp3" || ext == "wav" {
+                    let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
+                    let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                    appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
+                }
             }
         }
 
@@ -111,10 +114,13 @@ class MusicViewController: BaseViewController,
             let importedURL = docsURL.appendingPathComponent("audio")
             if fileManager.fileExists(atPath: importedURL.path),
                let enumerator = fileManager.enumerator(at: importedURL, includingPropertiesForKeys: nil) {
-                for case let fileURL as URL in enumerator where fileURL.pathExtension.lowercased() == "mp3" {
-                    let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
-                    let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                    appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
+                for case let fileURL as URL in enumerator {
+                    let ext = fileURL.pathExtension.lowercased()
+                    if ext == "mp3" || ext == "wav" {
+                        let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
+                        let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                        appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
+                    }
                 }
             }
         }
