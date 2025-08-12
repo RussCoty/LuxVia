@@ -178,7 +178,10 @@ class MusicViewController: BaseViewController,
         let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row]
 
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
-        cell.textLabel?.text = track?.title.replacingOccurrences(of: "_", with: " ").capitalized
+        if let track = track {
+            // Show title and extension
+            cell.textLabel?.text = "\(track.title) (\(track.fileName.split(separator: ".").last?.uppercased() ?? ""))"
+        }
 
         let addButton = UIButton(type: .contactAdd)
         addButton.tag = indexPath.section * 1000 + indexPath.row
@@ -191,14 +194,14 @@ class MusicViewController: BaseViewController,
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
-        AudioPlayerManager.shared.cueTrack(track, source: .library)
+    AudioPlayerManager.shared.cueTrack(track, source: .library)
 
-        let formattedTitle = track.title.replacingOccurrences(of: "_", with: " ").capitalized
-        PlayerControlsView.shared?.updateCuedTrackText(formattedTitle)
+    // Show full filename in now playing area
+    PlayerControlsView.shared?.updateCuedTrackText(track.fileName)
 
-        MiniPlayerManager.shared.show()
+    MiniPlayerManager.shared.show()
 
-        tableView.reloadData()
+    tableView.reloadData()
     }
 
     @objc func addToServiceTapped(_ sender: UIButton) {
