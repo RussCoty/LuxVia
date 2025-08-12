@@ -179,8 +179,8 @@ class MusicViewController: BaseViewController,
 
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
         if let track = track {
-            // Show title and extension
-            cell.textLabel?.text = "\(track.title) (\(track.fileName.split(separator: ".").last?.uppercased() ?? ""))"
+            // Show only the title
+            cell.textLabel?.text = track.title.replacingOccurrences(of: "_", with: " ").capitalized
         }
 
         let addButton = UIButton(type: .contactAdd)
@@ -196,8 +196,8 @@ class MusicViewController: BaseViewController,
 
     AudioPlayerManager.shared.cueTrack(track, source: .library)
 
-    // Show full filename in now playing area
-    PlayerControlsView.shared?.updateCuedTrackText(track.fileName)
+    // Show only the title in now playing area
+    PlayerControlsView.shared?.updateCuedTrackText(track.title.replacingOccurrences(of: "_", with: " ").capitalized)
 
     MiniPlayerManager.shared.show()
 
