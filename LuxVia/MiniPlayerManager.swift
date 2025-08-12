@@ -108,7 +108,12 @@ final class MiniPlayerManager {
         // 🎵 Now Playing
         if let name = audio.currentTrackName,
            let song = SharedLibraryManager.shared.allSongs.first(where: { $0.fileName == name }) {
-            let displayTitle = song.title.replacingOccurrences(of: "_", with: " ").capitalized
+            // Remove extension if present in title
+            var displayTitle = song.title.replacingOccurrences(of: "_", with: " ").capitalized
+            // If title contains extension, strip it
+            if let dotIndex = displayTitle.lastIndex(of: ".") {
+                displayTitle = String(displayTitle[..<dotIndex])
+            }
             playerView.updatePlayingTrackText(displayTitle)
         } else {
             playerView.updatePlayingTrackText("—")
