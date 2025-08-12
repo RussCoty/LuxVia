@@ -11,7 +11,8 @@ class AudioImportManager: NSObject, UIDocumentPickerDelegate {
         shared.presenter = viewController
 
         let mp3Type = UTType(filenameExtension: "mp3")!
-        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [mp3Type], asCopy: true)
+        let wavType = UTType(filenameExtension: "wav")!
+        let picker = UIDocumentPickerViewController(forOpeningContentTypes: [mp3Type, wavType], asCopy: true)
         picker.delegate = shared
         picker.allowsMultipleSelection = false
         viewController.present(picker, animated: true)
