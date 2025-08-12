@@ -31,7 +31,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     var currentSource: AudioSource = .none
     var currentTrackName: String?
-    var volume: Float = 0.75 {
+    var volume: Float = 0.35 {
         didSet {
             player?.volume = volume
             onStateChanged?()  // ✅ Trigger UI update
