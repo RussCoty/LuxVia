@@ -49,7 +49,8 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
 
     var currentTrack: SongEntry? {
         guard let name = currentTrackName else { return nil }
-        return SharedLibraryManager.shared.allSongs.first { $0.title == name }
+        // Match by fileName instead of title to support extensions
+        return SharedLibraryManager.shared.allSongs.first { $0.fileName == name }
     }
 
     func play(url: URL) {
@@ -105,7 +106,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         }
 
         play(url: url)
-        currentTrackName = song.title
+        currentTrackName = song.fileName // Use fileName (with extension) for playback
         currentSource = cuedSource
         cuedTrack = nil
         cuedSource = .none
