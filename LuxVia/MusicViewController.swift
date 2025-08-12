@@ -94,7 +94,8 @@ class MusicViewController: BaseViewController,
 
         func appendTrack(folder: String, fileURL: URL) {
             let title = fileURL.deletingPathExtension().lastPathComponent
-            let entry = SongEntry(title: title, fileName: title, artist: nil, duration: nil)
+            let fileName = fileURL.lastPathComponent // includes extension
+            let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
             tempGroups[folder, default: []].append(entry)
         }
 
