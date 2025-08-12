@@ -17,8 +17,12 @@ class SharedLibraryManager {
             $0.title.lowercased() == name.lowercased() ||
             $0.fileName.lowercased() == name.lowercased()
         }) {
+            let fileName = song.fileName
+            let ext = (fileName as NSString).pathExtension.lowercased()
+            let baseName = (fileName as NSString).deletingPathExtension
+
             // 1. Check bundle path
-            if let path = Bundle.main.path(forResource: song.fileName, ofType: "mp3", inDirectory: "Audio") {
+            if let path = Bundle.main.path(forResource: baseName, ofType: ext, inDirectory: "Audio") {
                 return URL(fileURLWithPath: path)
             }
 
@@ -26,7 +30,7 @@ class SharedLibraryManager {
             if let docsURL = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first {
                 let importedURL = docsURL
                     .appendingPathComponent("audio/imported")
-                    .appendingPathComponent(song.fileName + ".mp3")
+                    .appendingPathComponent(fileName)
 
                 if FileManager.default.fileExists(atPath: importedURL.path) {
                     return importedURL
