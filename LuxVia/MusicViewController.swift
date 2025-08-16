@@ -22,6 +22,9 @@ class MusicViewController: BaseViewController,
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
 
+        var editButton: UIBarButtonItem?
+        var isEditingLibrary: Bool = false
+
     var groupedTracks: [String: [SongEntry]] = [:]
     var sortedFolders: [String] = []
     var collapsedSections: Set<String> = []
@@ -51,6 +54,14 @@ class MusicViewController: BaseViewController,
         setupSearch()
         loadGroupedTrackList()
         setupUI()
+
+        editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
+        navigationItem.leftBarButtonItem = editButton
+    }
+    @objc func editButtonTapped() {
+        isEditingLibrary.toggle()
+        tableView.setEditing(isEditingLibrary, animated: true)
+        editButton?.title = isEditingLibrary ? "Done" : "Edit"
     }
 
     override func viewWillAppear(_ animated: Bool) {
@@ -142,6 +153,9 @@ class MusicViewController: BaseViewController,
         tableView.delegate = self
         tableView.translatesAutoresizingMaskIntoConstraints = false
 
+        tableView.allowsSelectionDuringEditing = true
+        tableView.allowsMultipleSelectionDuringEditing = false
+
         view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
@@ -187,7 +201,50 @@ class MusicViewController: BaseViewController,
         addButton.tag = indexPath.section * 1000 + indexPath.row
         addButton.addTarget(self, action: #selector(addToServiceTapped(_:)), for: .touchUpInside)
         cell.accessoryView = addButton
+
+            // Only show delete indicator for imported audio when editing
+            if isEditingLibrary && folder == "Imported" {
+                cell.showsReorderControl = false
+            }
         return cell
+    }
+    // Enable red minus delete control for imported audio in editing mode
+    func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        // Only allow delete for imported audio
+        return isEditingLibrary && folder == "Imported"
+    }
+
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        // Only show red minus for imported audio in editing mode
+        return (isEditingLibrary && folder == "Imported") ? .delete : .none
+    }
+
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        guard editingStyle == .delete else { return }
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        guard folder == "Imported" else { return }
+        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
+
+        // Remove file from disk
+        let fileManager = FileManager.default
+        if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
+            let importedURL = docsURL.appendingPathComponent("audio/imported/").appendingPathComponent(track.fileName)
+            do {
+                if fileManager.fileExists(atPath: importedURL.path) {
+                    try fileManager.removeItem(at: importedURL)
+                }
+            } catch {
+                showToast("Failed to delete: \(track.title)")
+                return
+            }
+        }
+
+        // Remove from data source and reload
+        groupedTracks[folder]?.remove(at: indexPath.row)
+        loadGroupedTrackList()
+        showToast("Deleted: \(track.title)")
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
