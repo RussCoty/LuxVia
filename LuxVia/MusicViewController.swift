@@ -55,11 +55,6 @@ class MusicViewController: BaseViewController,
         setupUI()
 
     }
-    @objc func editButtonTapped() {
-        isEditingLibrary.toggle()
-        tableView.setEditing(isEditingLibrary, animated: true)
-        editButton?.title = isEditingLibrary ? "Done" : "Edit"
-    }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
