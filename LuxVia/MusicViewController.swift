@@ -200,7 +200,8 @@ class MusicViewController: BaseViewController,
         }
 
         // Only show delete indicator for imported audio when editing
-        if isEditingLibrary && folder == "Imported" {
+        // The isImportedFolder helper checks for both "Imported" and empty folder names
+        if isEditingLibrary && isImportedFolder(folder) {
             cell.showsReorderControl = false
             cell.selectionStyle = .none
         }
@@ -208,23 +209,32 @@ class MusicViewController: BaseViewController,
     }
     // Enable red minus delete control for imported audio in editing mode
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        // Only allow delete for imported audio
-        return isEditingLibrary && folder == "Imported"
+    let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+    // Only allow delete for imported audio ("Imported" or empty folder)
+    return isEditingLibrary && isImportedFolder(folder)
     }
 
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
-        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        print("[DEBUG] editingStyleForRowAt: section=\(indexPath.section), folder=\(folder), isEditingLibrary=\(isEditingLibrary)")
-        // Only show red minus for imported audio in editing mode
-        return (isEditingLibrary && folder == "Imported") ? .delete : .none
+    let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+    print("[DEBUG] editingStyleForRowAt: section=\(indexPath.section), folder=\(folder), isEditingLibrary=\(isEditingLibrary)")
+    // Only show red minus for imported audio in editing mode ("Imported" or empty folder)
+    return (isEditingLibrary && isImportedFolder(folder)) ? .delete : .none
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-        guard editingStyle == .delete else { return }
-        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        guard folder == "Imported" else { return }
-        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
+    guard editingStyle == .delete else { return }
+    let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+    // Only allow deletion for imported audio ("Imported" or empty folder)
+    guard isImportedFolder(folder) else { return }
+    guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
+
+    // Remove file from disk
+    /// Helper to check if a folder is in the imported audio directory
+    /// Returns true for both "Imported" and empty folder names (root of imported audio)
+    private func isImportedFolder(_ folder: String) -> Bool {
+        // Consider any folder that is empty or named "Imported" as imported audio
+        return folder.isEmpty || folder == "Imported"
+    }
 
         // Remove file from disk
         let fileManager = FileManager.default
