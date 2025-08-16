@@ -2,6 +2,18 @@ import UIKit
 import Foundation
 
 class MainViewController: BaseViewController {
+    // Programmatically select a segment in the segmented control
+    @objc func selectSegment(index: Int) {
+        segmentedControl.selectedSegmentIndex = index
+        segmentChanged(segmentedControl)
+    }
+    // Called when Edit button is tapped in Library segment
+    // Toggles editing mode in MusicViewController, enabling red minus delete for imported audio
+    @objc func editButtonTapped() {
+        libraryVC.isEditingLibrary.toggle()
+        libraryVC.tableView.setEditing(libraryVC.isEditingLibrary, animated: true)
+        editButton?.title = libraryVC.isEditingLibrary ? "Done" : "Edit"
+    }
     // Edit button for toggling Music Library editing mode
     var editButton: UIBarButtonItem?
     
