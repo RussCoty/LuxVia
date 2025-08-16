@@ -189,8 +189,8 @@ class MusicViewController: BaseViewController,
             cell.textLabel?.text = track.title.replacingOccurrences(of: "_", with: " ").capitalized
         }
 
-        // Only show addButton accessory when NOT in editing mode for imported audio
-        if !(isEditingLibrary && folder == "Imported") {
+        // Only show addButton accessory when NOT in editing mode
+        if !tableView.isEditing {
             let addButton = UIButton(type: .contactAdd)
             addButton.tag = indexPath.section * 1000 + indexPath.row
             addButton.addTarget(self, action: #selector(addToServiceTapped(_:)), for: .touchUpInside)
