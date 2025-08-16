@@ -22,7 +22,6 @@ class MusicViewController: BaseViewController,
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
 
-        var editButton: UIBarButtonItem?
         var isEditingLibrary: Bool = false
 
     var groupedTracks: [String: [SongEntry]] = [:]
@@ -55,8 +54,6 @@ class MusicViewController: BaseViewController,
         loadGroupedTrackList()
         setupUI()
 
-        editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
-        navigationItem.leftBarButtonItem = editButton
     }
     @objc func editButtonTapped() {
         isEditingLibrary.toggle()
