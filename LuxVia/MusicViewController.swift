@@ -202,6 +202,7 @@ class MusicViewController: BaseViewController,
         // Only show delete indicator for imported audio when editing
         if isEditingLibrary && folder == "Imported" {
             cell.showsReorderControl = false
+            cell.selectionStyle = .none
         }
         return cell
     }
