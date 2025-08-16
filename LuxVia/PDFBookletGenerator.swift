@@ -22,10 +22,15 @@ final class PDFBookletGenerator {
 
         do {
             try renderer.writePDF(to: outputURL, withActions: { ctx in
+                var pageIndex = 0
+                let borderInsetX = pageWidth * 0.10
+                let borderInsetY = pageHeight * 0.10
+                let contentWidth = pageWidth - 2 * borderInsetX
                 var y: CGFloat = margin
 
                 // Cover Page
                 ctx.beginPage()
+                pageIndex += 1
 
                 // Image settings
                 let maxImageWidth: CGFloat = pageWidth - 2 * margin
@@ -105,30 +110,50 @@ final class PDFBookletGenerator {
                         framesetter,
                         CFRangeMake(0, mutableAttr.length),
                         nil,
-                        CGSize(width: pageWidth - 2 * margin, height: .greatestFiniteMagnitude),
+                        CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude),
                         nil
                     )
 
-                    let fits = y + suggestedSize.height <= pageHeight - margin
+                    let fits = y + suggestedSize.height <= pageHeight - borderInsetY - 10
 
                     if !fits {
                         ctx.beginPage()
-
-                        // Center vertically only if item takes whole page
-                        let contentHeight = suggestedSize.height
-                        let availableHeight = pageHeight - 2 * margin
-                        y = (availableHeight - contentHeight) / 2 + margin
+                        pageIndex += 1
+                        // Draw border on all pages except page 1
+                        if pageIndex > 1 {
+                            let borderRect = CGRect(x: borderInsetX, y: borderInsetY, width: pageWidth - 2 * borderInsetX, height: pageHeight - 2 * borderInsetY)
+                            ctx.cgContext.setStrokeColor(UIColor.gray.cgColor)
+                            ctx.cgContext.setLineWidth(1)
+                            ctx.cgContext.stroke(borderRect)
+                            y = borderInsetY + 10
+                        } else {
+                            y = margin
+                        }
                     }
 
-
-                    let textRect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: suggestedSize.height)
+                    let textRect: CGRect
+                    if pageIndex > 1 {
+                        textRect = CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: suggestedSize.height)
+                    } else {
+                        textRect = CGRect(x: margin, y: y, width: pageWidth - 2 * margin, height: suggestedSize.height)
+                    }
                     mutableAttr.draw(in: textRect)
                     y += suggestedSize.height + 20
                 }
 
                 // --- ADDITION: Final page with other details ---
                 ctx.beginPage()
-                y = margin
+                pageIndex += 1
+                // Draw border on all pages except page 1
+                if pageIndex > 1 {
+                    let borderRect = CGRect(x: borderInsetX, y: borderInsetY, width: pageWidth - 2 * borderInsetX, height: pageHeight - 2 * borderInsetY)
+                    ctx.cgContext.setStrokeColor(UIColor.gray.cgColor)
+                    ctx.cgContext.setLineWidth(1)
+                    ctx.cgContext.stroke(borderRect)
+                    y = borderInsetY + 10
+                } else {
+                    y = margin
+                }
 
                 let sectionTitleAttrs: [NSAttributedString.Key: Any] = [
                     .font: UIFont.boldSystemFont(ofSize: 16),
@@ -141,41 +166,41 @@ final class PDFBookletGenerator {
 
                 // Committal Location
                 if let committal = info.committalLocation, !committal.isEmpty {
-                    "Committal Location".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    "Committal Location".draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 20), withAttributes: sectionTitleAttrs)
                     y += 22
-                    committal.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    committal.draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 18), withAttributes: detailAttrs)
                     y += 26
                 }
 
                 // Wake/Reception Location
                 if let wake = info.wakeLocation, !wake.isEmpty {
-                    "Wake/Reception Location".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    "Wake/Reception Location".draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 20), withAttributes: sectionTitleAttrs)
                     y += 22
-                    wake.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    wake.draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 18), withAttributes: detailAttrs)
                     y += 26
                 }
 
                 // Donation/Flower Instructions
                 if let donation = info.donationInfo, !donation.isEmpty {
-                    "Donation/Flower Instructions".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    "Donation/Flower Instructions".draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 20), withAttributes: sectionTitleAttrs)
                     y += 22
-                    donation.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 40), withAttributes: detailAttrs)
+                    donation.draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 40), withAttributes: detailAttrs)
                     y += 48
                 }
 
                 // Photographer Name
                 if let photographer = info.photographer, !photographer.isEmpty {
-                    "Photographer".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    "Photographer".draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 20), withAttributes: sectionTitleAttrs)
                     y += 22
-                    photographer.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    photographer.draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 18), withAttributes: detailAttrs)
                     y += 26
                 }
 
                 // Pallbearers
                 if let pallbearers = info.pallbearers, !pallbearers.isEmpty {
-                    "Pallbearers".draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 20), withAttributes: sectionTitleAttrs)
+                    "Pallbearers".draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 20), withAttributes: sectionTitleAttrs)
                     y += 22
-                    pallbearers.draw(in: CGRect(x: margin, y: y, width: pageWidth - 2*margin, height: 18), withAttributes: detailAttrs)
+                    pallbearers.draw(in: CGRect(x: borderInsetX + 10, y: y, width: contentWidth - 20, height: 18), withAttributes: detailAttrs)
                     y += 26
                 }
                 // --- END ADDITION ---
