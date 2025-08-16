@@ -246,6 +246,25 @@ class MusicViewController: BaseViewController,
             return
         }
 
+        // Prevent deletion if currently playing
+        let audioManager = AudioPlayerManager.shared
+        if audioManager.isPlaying, let currentTrackName = audioManager.currentTrackName, currentTrackName == track.fileName {
+            showToast("Cannot delete: Track is currently playing.")
+            return
+        }
+
+        // Remove from service list if present
+        let serviceManager = ServiceOrderManager.shared
+        if let idx = serviceManager.items.firstIndex(where: { $0.fileName == track.fileName }) {
+            serviceManager.remove(at: idx)
+        }
+
+        // Clear cued position if this track is cued
+        if let cuedTrack = audioManager.cuedTrack, cuedTrack.fileName == track.fileName {
+            audioManager.cuedTrack = nil
+            audioManager.cuedSource = .none
+        }
+
         do {
             try FileManager.default.removeItem(at: fileURL)
         } catch {
