@@ -78,7 +78,13 @@ class LyricsDetailViewController: UIViewController {
     }
 
     private func renderLyrics() {
-        if let data = entry.body.data(using: .utf8) {
+        textView.attributedText = LyricsDetailViewController.attributedText(for: entry.body)
+    }
+
+    /// Utility for rendering lyrics/readings/booklet text with preserved newlines and clean formatting
+    static func attributedText(for text: String) -> NSAttributedString {
+        // Try to parse as HTML first
+        if let data = text.data(using: .utf8) {
             let options: [NSAttributedString.DocumentReadingOptionKey: Any] = [
                 .documentType: NSAttributedString.DocumentType.html,
                 .characterEncoding: String.Encoding.utf8.rawValue
@@ -87,17 +93,26 @@ class LyricsDetailViewController: UIViewController {
                 let paragraphStyle = NSMutableParagraphStyle()
                 paragraphStyle.alignment = .center
                 paragraphStyle.paragraphSpacing = 8
+                paragraphStyle.lineBreakMode = .byWordWrapping
                 attributed.addAttributes([
                     .font: UIFont.systemFont(ofSize: 18),
                     .paragraphStyle: paragraphStyle
                 ], range: NSRange(location: 0, length: attributed.length))
-                textView.attributedText = attributed
-            } else {
-                textView.text = entry.body
+                return attributed
             }
-        } else {
-            textView.text = entry.body
         }
+        // Fallback: plain text with preserved newlines
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .center
+        paragraphStyle.paragraphSpacing = 8
+        paragraphStyle.lineBreakMode = .byWordWrapping
+        return NSAttributedString(
+            string: text,
+            attributes: [
+                .font: UIFont.systemFont(ofSize: 18),
+                .paragraphStyle: paragraphStyle
+            ]
+        )
     }
 
     @objc private func playMatchingSong() {
