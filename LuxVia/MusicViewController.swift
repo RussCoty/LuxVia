@@ -2,6 +2,12 @@ import UIKit
 import UniformTypeIdentifiers
 
 class MusicViewController: BaseViewController,
+    /// Helper to check if a folder is in the imported audio directory
+    /// Returns true for both "Imported" and empty folder names (root of imported audio)
+    private func isImportedFolder(_ folder: String) -> Bool {
+        // Consider any folder that is empty or named "Imported" as imported audio
+        return folder.isEmpty || folder == "Imported"
+    }
                            UITableViewDataSource,
                            UITableViewDelegate,
                            UISearchResultsUpdating,
@@ -222,19 +228,11 @@ class MusicViewController: BaseViewController,
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
-    guard editingStyle == .delete else { return }
-    let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-    // Only allow deletion for imported audio ("Imported" or empty folder)
-    guard isImportedFolder(folder) else { return }
-    guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
-
-    // Remove file from disk
-    /// Helper to check if a folder is in the imported audio directory
-    /// Returns true for both "Imported" and empty folder names (root of imported audio)
-    private func isImportedFolder(_ folder: String) -> Bool {
-        // Consider any folder that is empty or named "Imported" as imported audio
-        return folder.isEmpty || folder == "Imported"
-    }
+        guard editingStyle == .delete else { return }
+        let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        // Only allow deletion for imported audio ("Imported" or empty folder)
+        guard isImportedFolder(folder) else { return }
+        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
         // Remove file from disk
         let fileManager = FileManager.default
@@ -254,6 +252,13 @@ class MusicViewController: BaseViewController,
         groupedTracks[folder]?.remove(at: indexPath.row)
         loadGroupedTrackList()
         showToast("Deleted: \(track.title)")
+    }
+
+    /// Helper to check if a folder is in the imported audio directory
+    /// Returns true for both "Imported" and empty folder names (root of imported audio)
+    private func isImportedFolder(_ folder: String) -> Bool {
+        // Consider any folder that is empty or named "Imported" as imported audio
+        return folder.isEmpty || folder == "Imported"
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
