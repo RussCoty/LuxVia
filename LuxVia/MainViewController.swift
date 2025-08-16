@@ -2,6 +2,7 @@ import UIKit
 import Foundation
 
 class MainViewController: BaseViewController {
+    // Edit button for toggling Music Library editing mode
     var editButton: UIBarButtonItem?
     
     let segmentedControl = UISegmentedControl(items: ["Import", "Library"])
@@ -44,7 +45,8 @@ class MainViewController: BaseViewController {
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
 
-    // Setup Edit button for Library segment
+    // Setup Edit button for Library segment only
+    // The button toggles editing mode in MusicViewController (for imported audio deletion)
     editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
     navigationItem.leftBarButtonItem = segmentedControl.selectedSegmentIndex == 1 ? editButton : nil
     }
@@ -60,9 +62,11 @@ class MainViewController: BaseViewController {
         }
 
     // Show Edit button only for Library segment
+    // Hide for Import segment
     navigationItem.leftBarButtonItem = sender.selectedSegmentIndex == 1 ? editButton : nil
+    // Called when Edit button is tapped in Library segment
+    // Toggles editing mode in MusicViewController, enabling red minus delete for imported audio
     @objc func editButtonTapped() {
-        // Toggle editing mode in MusicViewController
         libraryVC.isEditingLibrary.toggle()
         libraryVC.tableView.setEditing(libraryVC.isEditingLibrary, animated: true)
         editButton?.title = libraryVC.isEditingLibrary ? "Done" : "Edit"
