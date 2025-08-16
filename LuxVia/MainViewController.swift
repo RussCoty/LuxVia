@@ -9,6 +9,7 @@ class MainViewController: BaseViewController {
         libraryVC.isEditingLibrary.toggle()
         libraryVC.tableView.setEditing(libraryVC.isEditingLibrary, animated: true)
         editButton?.title = libraryVC.isEditingLibrary ? "Done" : "Edit"
+        libraryVC.tableView.reloadData() // Ensure table view reloads to update delete controls
     }
     // Edit button for toggling Music Library editing mode
     var editButton: UIBarButtonItem?

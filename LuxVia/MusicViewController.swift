@@ -189,15 +189,20 @@ class MusicViewController: BaseViewController,
             cell.textLabel?.text = track.title.replacingOccurrences(of: "_", with: " ").capitalized
         }
 
-        let addButton = UIButton(type: .contactAdd)
-        addButton.tag = indexPath.section * 1000 + indexPath.row
-        addButton.addTarget(self, action: #selector(addToServiceTapped(_:)), for: .touchUpInside)
-        cell.accessoryView = addButton
+        // Only show addButton accessory when NOT in editing mode for imported audio
+        if !(isEditingLibrary && folder == "Imported") {
+            let addButton = UIButton(type: .contactAdd)
+            addButton.tag = indexPath.section * 1000 + indexPath.row
+            addButton.addTarget(self, action: #selector(addToServiceTapped(_:)), for: .touchUpInside)
+            cell.accessoryView = addButton
+        } else {
+            cell.accessoryView = nil
+        }
 
-            // Only show delete indicator for imported audio when editing
-            if isEditingLibrary && folder == "Imported" {
-                cell.showsReorderControl = false
-            }
+        // Only show delete indicator for imported audio when editing
+        if isEditingLibrary && folder == "Imported" {
+            cell.showsReorderControl = false
+        }
         return cell
     }
     // Enable red minus delete control for imported audio in editing mode
@@ -209,6 +214,7 @@ class MusicViewController: BaseViewController,
 
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
+        print("[DEBUG] editingStyleForRowAt: section=\(indexPath.section), folder=\(folder), isEditingLibrary=\(isEditingLibrary)")
         // Only show red minus for imported audio in editing mode
         return (isEditingLibrary && folder == "Imported") ? .delete : .none
     }
