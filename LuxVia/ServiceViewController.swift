@@ -327,6 +327,14 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         alert.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: nil))
         alert.addAction(UIAlertAction(title: "Delete", style: .destructive) { [weak self] _ in
             guard let self = self else { return }
+            // Check if the deleted item is currently cued
+            if let deletedItem = ServiceOrderManager.shared.items[safe: indexPath.row],
+               let cuedTrack = AudioPlayerManager.shared.cuedTrack,
+               deletedItem.fileName != nil,
+               deletedItem.fileName == cuedTrack.fileName {
+                AudioPlayerManager.shared.cancelCue()
+                // Do not clear now playing text; keep it as is
+            }
             ServiceOrderManager.shared.remove(at: indexPath.row)
             self.tableView.deleteRows(at: [indexPath], with: .automatic)
         })
