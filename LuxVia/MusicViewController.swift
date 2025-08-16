@@ -1,3 +1,10 @@
+// File: MusicViewController.swift
+// Purpose: Patch to enable delete (red minus) for *imported* audio everywhere it appears.
+// Key changes:
+// 1) Show delete only for rows backed by a file under Documents/audio (or Documents/audio/imported for legacy).
+// 2) Remove hard dependency on folder name == "Imported".
+// 3) Ensure table view actually enters/leaves editing mode via setEditing.
+
 import UIKit
 import UniformTypeIdentifiers
 
@@ -8,21 +15,18 @@ class MusicViewController: BaseViewController,
                            UIDocumentPickerDelegate {
 
     // MARK: - Initializers
-    
     override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
     }
-
     required init?(coder: NSCoder) {
         super.init(coder: coder)
     }
 
     // MARK: - Properties
-
     let tableView = UITableView(frame: .zero, style: .insetGrouped)
     let searchController = UISearchController(searchResultsController: nil)
 
-        var isEditingLibrary: Bool = false
+    var isEditingLibrary: Bool = false
 
     var groupedTracks: [String: [SongEntry]] = [:]
     var sortedFolders: [String] = []
@@ -35,35 +39,37 @@ class MusicViewController: BaseViewController,
         return !(searchController.searchBar.text?.isEmpty ?? true)
     }
 
-//    var playerView: PlayerControlsView? {
-//        return PlayerControlsView.shared
-//    }
-
     // MARK: - Lifecycle
-
     override func viewDidLoad() {
         super.viewDidLoad()
 
         print("✅ viewDidLoad: isLoggedIn =", AuthManager.shared.isLoggedIn)
-
-//        MiniPlayerManager.shared.attach(to: self)
         view.backgroundColor = .white
         title = "Music"
+
+        if navigationItem.rightBarButtonItem == nil { // keep existing button if already set elsewhere
+            navigationItem.rightBarButtonItem = editButtonItem
+        }
 
         setupSearch()
         loadGroupedTrackList()
         setupUI()
+    }
 
+    /// Propagate edit/done to the table and our flag.
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        isEditingLibrary = editing
+        tableView.setEditing(editing, animated: animated)
+        tableView.reloadData() // refresh accessories and minus controls
     }
 
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        MiniPlayerManager.shared.setVisible(true)  // ✅ Re-show MiniPlayer when Music tab appears
-
+        MiniPlayerManager.shared.setVisible(true)
     }
 
     // MARK: - Setup
-
     func setupSearch() {
         searchController.searchResultsUpdater = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -102,6 +108,7 @@ class MusicViewController: BaseViewController,
             tempGroups[folder, default: []].append(entry)
         }
 
+        // Bundle assets
         if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio"),
            let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
             for case let fileURL as URL in enumerator {
@@ -114,14 +121,15 @@ class MusicViewController: BaseViewController,
             }
         }
 
+        // Imported assets live under Documents/audio (optionally /imported/... for legacy)
         if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let importedURL = docsURL.appendingPathComponent("audio")
-            if fileManager.fileExists(atPath: importedURL.path),
-               let enumerator = fileManager.enumerator(at: importedURL, includingPropertiesForKeys: nil) {
+            let audioRoot = docsURL.appendingPathComponent("audio")
+            if fileManager.fileExists(atPath: audioRoot.path),
+               let enumerator = fileManager.enumerator(at: audioRoot, includingPropertiesForKeys: nil) {
                 for case let fileURL as URL in enumerator {
                     let ext = fileURL.pathExtension.lowercased()
                     if ext == "mp3" || ext == "wav" {
-                        let relPath = fileURL.path.replacingOccurrences(of: importedURL.path + "/", with: "")
+                        let relPath = fileURL.path.replacingOccurrences(of: audioRoot.path + "/", with: "")
                         let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
                         appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
                     }
@@ -168,8 +176,20 @@ class MusicViewController: BaseViewController,
         }
     }
 
-    // MARK: - TableView
+    // MARK: - Imported file detection
+    /// Returns the on-disk URL for an imported track if it exists under Documents/audio or Documents/audio/imported.
+    private func importedFileURL(for track: SongEntry) -> URL? {
+        let fm = FileManager.default
+        guard let docsURL = fm.urls(for: .documentDirectory, in: .userDomainMask).first else { return nil }
+        let audioRoot = docsURL.appendingPathComponent("audio")
+        let direct = audioRoot.appendingPathComponent(track.fileName)
+        if fm.fileExists(atPath: direct.path) { return direct }
+        let legacy = audioRoot.appendingPathComponent("imported").appendingPathComponent(track.fileName)
+        if fm.fileExists(atPath: legacy.path) { return legacy }
+        return nil
+    }
 
+    // MARK: - TableView
     func numberOfSections(in tableView: UITableView) -> Int {
         return isFiltering ? filteredFolders.count : sortedFolders.count
     }
@@ -185,11 +205,10 @@ class MusicViewController: BaseViewController,
 
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
         if let track = track {
-            // Show only the title
             cell.textLabel?.text = track.title.replacingOccurrences(of: "_", with: " ").capitalized
         }
 
-        // Only show addButton accessory when NOT in editing mode
+        // Show + only when NOT editing
         if !tableView.isEditing {
             let addButton = UIButton(type: .contactAdd)
             addButton.tag = indexPath.section * 1000 + indexPath.row
@@ -199,49 +218,42 @@ class MusicViewController: BaseViewController,
             cell.accessoryView = nil
         }
 
-        // Only show delete indicator for imported audio when editing
-        if isEditingLibrary && folder == "Imported" {
-            cell.showsReorderControl = false
-            cell.selectionStyle = .none
-        }
         return cell
     }
-    // Enable red minus delete control for imported audio in editing mode
+
+    // Enable delete control only for imported audio when editing
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
+        guard isEditingLibrary else { return false }
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        // Only allow delete for imported audio
-        return isEditingLibrary && folder == "Imported"
+        guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return false }
+        return importedFileURL(for: track) != nil
     }
 
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        print("[DEBUG] editingStyleForRowAt: section=\(indexPath.section), folder=\(folder), isEditingLibrary=\(isEditingLibrary)")
-        // Only show red minus for imported audio in editing mode
-        return (isEditingLibrary && folder == "Imported") ? .delete : .none
+        let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row]
+        let deletable = (isEditingLibrary && track.flatMap { importedFileURL(for: $0) } != nil)
+        return deletable ? .delete : .none
     }
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         guard editingStyle == .delete else { return }
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
-        guard folder == "Imported" else { return }
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
-        // Remove file from disk
-        let fileManager = FileManager.default
-        if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
-            let importedURL = docsURL.appendingPathComponent("audio/imported/").appendingPathComponent(track.fileName)
-            do {
-                if fileManager.fileExists(atPath: importedURL.path) {
-                    try fileManager.removeItem(at: importedURL)
-                }
-            } catch {
-                showToast("Failed to delete: \(track.title)")
-                return
-            }
+        guard let fileURL = importedFileURL(for: track) else {
+            showToast("This track is not deletable.")
+            return
         }
 
-        // Remove from data source and reload
-        groupedTracks[folder]?.remove(at: indexPath.row)
+        do {
+            try FileManager.default.removeItem(at: fileURL)
+        } catch {
+            showToast("Failed to delete: \(track.title)")
+            return
+        }
+
+        // Simplest: re-enumerate and reload from disk to stay in sync across sections/filters
         loadGroupedTrackList()
         showToast("Deleted: \(track.title)")
     }
@@ -250,14 +262,10 @@ class MusicViewController: BaseViewController,
         let folder = isFiltering ? filteredFolders[indexPath.section] : sortedFolders[indexPath.section]
         guard let track = (isFiltering ? filteredGroupedTracks : groupedTracks)[folder]?[indexPath.row] else { return }
 
-    AudioPlayerManager.shared.cueTrack(track, source: .library)
-
-    // Show only the title in now playing area
-    PlayerControlsView.shared?.updateCuedTrackText(track.title.replacingOccurrences(of: "_", with: " ").capitalized)
-
-    MiniPlayerManager.shared.show()
-
-    tableView.reloadData()
+        AudioPlayerManager.shared.cueTrack(track, source: .library)
+        PlayerControlsView.shared?.updateCuedTrackText(track.title.replacingOccurrences(of: "_", with: " ").capitalized)
+        MiniPlayerManager.shared.show()
+        tableView.reloadData()
     }
 
     @objc func addToServiceTapped(_ sender: UIButton) {
