@@ -2,6 +2,7 @@ import UIKit
 import Foundation
 
 class MainViewController: BaseViewController {
+    var editButton: UIBarButtonItem?
     
     let segmentedControl = UISegmentedControl(items: ["Import", "Library"])
     private let containerView = UIView()
@@ -42,6 +43,10 @@ class MainViewController: BaseViewController {
         segmentedControl.selectedSegmentIndex = 1
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
+
+    // Setup Edit button for Library segment
+    editButton = UIBarButtonItem(title: "Edit", style: .plain, target: self, action: #selector(editButtonTapped))
+    navigationItem.leftBarButtonItem = segmentedControl.selectedSegmentIndex == 1 ? editButton : nil
     }
     
     
@@ -53,6 +58,15 @@ class MainViewController: BaseViewController {
             // case 2: showPlaylist()
         default: break
         }
+
+    // Show Edit button only for Library segment
+    navigationItem.leftBarButtonItem = sender.selectedSegmentIndex == 1 ? editButton : nil
+    @objc func editButtonTapped() {
+        // Toggle editing mode in MusicViewController
+        libraryVC.isEditingLibrary.toggle()
+        libraryVC.tableView.setEditing(libraryVC.isEditingLibrary, animated: true)
+        editButton?.title = libraryVC.isEditingLibrary ? "Done" : "Edit"
+    }
     }
     
     @objc func selectSegment(index: Int) {
