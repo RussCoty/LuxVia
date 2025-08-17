@@ -54,6 +54,18 @@ class PDFBookletPreviewViewController: UIViewController {
     }
 
     @objc func regeneratePDF() {
+        // Debug: Print all lyric titles and audio file names before matching
+        print("--- Lyric Entries in SharedLibraryManager.shared.allReadings ---")
+        for lyric in SharedLibraryManager.shared.allReadings {
+            print("Lyric: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? "nil")]")
+        }
+        // Debug: Print which items have customText set
+        print("--- Service Items Before PDF Generation ---")
+        for item in ServiceOrderManager.shared.items {
+            print("Item: \(item.title), type: \(item.type), fileName: [\(item.fileName ?? "nil")], customText: \(item.customText != nil ? "SET" : "nil")")
+        }
+    // Ensure lyrics are set for songs in the service order before generating the booklet
+    ServiceOrderManager.shared.addLyricsToSongsInServiceOrder(SharedLibraryManager.shared.allReadings)
         let info = BookletInfo.load() ?? BookletInfo(
             userName: "", userEmail: "",
             deceasedName: "", dateOfBirth: Date(), dateOfPassing: Date(), photo: nil,

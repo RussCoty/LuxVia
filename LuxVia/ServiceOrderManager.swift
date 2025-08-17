@@ -90,10 +90,16 @@ class ServiceOrderManager {
     func addLyricsToSongsInServiceOrder(_ lyrics: [Lyric]) {
         for (index, item) in items.enumerated() {
             guard item.type == .song else { continue }
-            // Match lyric by audioFileName if available, else by title
+            // Helper to strip file extension
+            func stripExtension(_ name: String) -> String {
+                return (name as NSString).deletingPathExtension
+            }
+            // Match lyric by audioFileName (ignoring extension) if available, else by title
             let lyric = lyrics.first(where: {
                 if let fileName = item.fileName, let lyricFile = $0.audioFileName {
-                    return fileName.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare(lyricFile.trimmingCharacters(in: .whitespacesAndNewlines)) == .orderedSame
+                    let fileNameStripped = stripExtension(fileName.trimmingCharacters(in: .whitespacesAndNewlines))
+                    let lyricFileStripped = stripExtension(lyricFile.trimmingCharacters(in: .whitespacesAndNewlines))
+                    return fileNameStripped.caseInsensitiveCompare(lyricFileStripped) == .orderedSame
                 }
                 return item.title.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare($0.title.trimmingCharacters(in: .whitespacesAndNewlines)) == .orderedSame
             })
