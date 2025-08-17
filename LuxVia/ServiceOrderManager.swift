@@ -85,4 +85,29 @@ class ServiceOrderManager {
             NotificationCenter.default.post(name: .serviceItemsUpdated, object: nil)
         }
     }
+
+    /// Updates existing song items in the service order to include their lyrics for booklet inclusion
+    func addLyricsToSongsInServiceOrder(_ lyrics: [Lyric]) {
+        for (index, item) in items.enumerated() {
+            guard item.type == .song else { continue }
+            // Match lyric by audioFileName if available, else by title
+            let lyric = lyrics.first(where: {
+                if let fileName = item.fileName, let lyricFile = $0.audioFileName {
+                    return fileName.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare(lyricFile.trimmingCharacters(in: .whitespacesAndNewlines)) == .orderedSame
+                }
+                return item.title.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare($0.title.trimmingCharacters(in: .whitespacesAndNewlines)) == .orderedSame
+            })
+            if let lyric = lyric {
+                // Update the ServiceItem with the lyric body
+                items[index] = ServiceItem(
+                    type: item.type,
+                    title: item.title,
+                    subtitle: item.subtitle,
+                    fileName: item.fileName,
+                    customText: lyric.body
+                )
+            }
+        }
+        save()
+    }
 }
