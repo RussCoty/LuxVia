@@ -61,28 +61,16 @@ class PDFBookletPreviewViewController: UIViewController {
             committalLocation: nil, wakeLocation: nil, donationInfo: nil, pallbearers: nil, photographer: nil
         )
 
+        // Ensure lyrics are set for songs in the service order before generating the booklet
+        ServiceOrderManager.shared.addLyricsToSongsInServiceOrder(SharedLibraryManager.shared.allReadings)
+
         var finalItems = [ServiceItem]()
-        
+
         SharedLibraryManager.shared.preloadAllReadings()
 
         for item in ServiceOrderManager.shared.items {
             finalItems.append(item)
-
-            if [.song, .music, .background].contains(item.type),
-               let fileName = item.fileName?.normalizedFilename {
-
-                if let lyric = SharedLibraryManager.shared.allReadings.first(where: {
-                    $0.audioFileName?.normalizedFilename == fileName && !$0.body.isEmpty
-                }) {
-                    let lyricItem = ServiceItem(
-                        type: .customReading,
-                        title: "Lyrics: \(lyric.title)",
-                        fileName: lyric.audioFileName,
-                        customText: lyric.body
-                    )
-                    finalItems.append(lyricItem)
-                }
-            }
+            // ...existing code for appending lyric items if needed...
         }
 
         if let fileURL = PDFBookletGenerator.generate(from: info, items: finalItems),
