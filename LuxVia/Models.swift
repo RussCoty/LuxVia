@@ -16,6 +16,7 @@ struct Lyric: Codable {
     let body: String
     let type: LyricType
     let audioFileName: String?
+    let category: String?
 }
 
 struct SongEntry: Codable, Equatable {

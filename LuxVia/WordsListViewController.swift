@@ -16,6 +16,7 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
     private var readings: [Lyric] = []
     private var lyricOnly: [Lyric] = []
     private var filteredLyrics: [Lyric] = []
+    private var readingsByCategory: [(category: String, readings: [Lyric])] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,7 +37,11 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
 
         lyrics = allLyrics
         readings = allLyrics.filter { $0.type == LyricType.reading }
-        lyricOnly = allLyrics.filter { $0.type == LyricType.lyric }
+        // Group readings by category
+        let grouped = Dictionary(grouping: readings) { $0.category ?? "Other" }
+        readingsByCategory = grouped.keys.sorted().map { (category) in
+            (category, grouped[category] ?? [])
+        }
         filteredLyrics = readings // Default to "Readings" tab
 
         setupNavigationBar()
@@ -119,20 +124,45 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
 
     // MARK: - UITableViewDataSource
 
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return segmentedControl.selectedSegmentIndex == 0 ? readingsByCategory.count : 1
+    }
+
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        filteredLyrics.count
+        if segmentedControl.selectedSegmentIndex == 0 {
+            return readingsByCategory[section].readings.count
+        } else {
+            return filteredLyrics.count
+        }
+    }
+
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if segmentedControl.selectedSegmentIndex == 0 {
+            return readingsByCategory[section].category
+        }
+        return nil
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let entry = filteredLyrics[indexPath.row]
         let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        let entry: Lyric
+        if segmentedControl.selectedSegmentIndex == 0 {
+            entry = readingsByCategory[indexPath.section].readings[indexPath.row]
+        } else {
+            entry = filteredLyrics[indexPath.row]
+        }
         cell.textLabel?.text = entry.title
         cell.accessoryType = .disclosureIndicator
         return cell
     }
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let entry = filteredLyrics[indexPath.row]
+        let entry: Lyric
+        if segmentedControl.selectedSegmentIndex == 0 {
+            entry = readingsByCategory[indexPath.section].readings[indexPath.row]
+        } else {
+            entry = filteredLyrics[indexPath.row]
+        }
         let detailVC = LyricsDetailViewController(entry: entry)
         navigationController?.pushViewController(detailVC, animated: true)
     }

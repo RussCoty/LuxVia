@@ -1,4 +1,4 @@
-title,content,type,audio_file_name
+title,content,type,audio_file_name,category
 1 Corinthians 15:51-5,"<p>Behold! I tell you a mystery.<br/>
 We shall not all sleep,<br/>
 but we shall all be changed,<br/>
@@ -13,9 +13,9 @@ then shall come to pass the saying that is written: “Death is swallowed up in 
 O death, where is your sting?”<br/>
 The sting of death is sin,<br/>
 and the power of sin is the law.<br/>
-But thanks be to God, who gives us the victory through our Lord Jesus Christ.</p>",reading,
+But thanks be to God, who gives us the victory through our Lord Jesus Christ.</p>",reading,,New Testament
 1 Thessalonians,"<p>4:13-18</p>
-<p>But we do not want you to be uninformed, brothers, about those who are asleep, that you may not grieve as others do who have no hope.For since we believe that Jesus died and rose again, even so, through Jesus, God will bring with him those who have fallen asleep.</p>",reading,
+<p>But we do not want you to be uninformed, brothers, about those who are asleep, that you may not grieve as others do who have no hope.For since we believe that Jesus died and rose again, even so, through Jesus, God will bring with him those who have fallen asleep.</p>",reading,,New Testament
 1st Letter St. Paul Corinthians 15-20-28,"<p>15: 20-28<br/>
 Brothers and Sisters:<br/>
 Christ has been raised from the dead,<br/>
@@ -41,7 +41,7 @@ When everything is subjected to him,<br/>
 then the Son himself will also be subjected<br/>
 to the one who subjected everything to him,<br/>
 so that God may be all in all.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,New Testament
 "2nd Letter St. Paul to Timothy 4-1-2,6-8","<p>2nd Letter St. Paul to Timothy 4- 1-2,6-8</p>
 <p>4: 1-2,6-8</p>
 <p>I charge you in the presence of God and of Christ Jesus,<br/>
@@ -60,7 +60,7 @@ From now on the crown of righteousness awaits me,<br/>
 which the Lord, the just judge,<br/>
 will award to me on that day, and not only to me,<br/>
 but to all who have longed for his appearance.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,New Testament
 Abide with Me,"<p>; fast falls the eventide;<br/>
 The darkness deepens; Lord with me abide.<br/>
 When other helpers fail and comforts flee,<br/>
@@ -80,8 +80,8 @@ I triumph still, if Thou .</p>
 <p>Hold Thou Thy cross before my closing eyes;<br/>
 Shine through the gloom and point me to the skies.<br/>
 Heaven&#x27;s morning breaks, and earth&#x27;s vain shadows flee;<br/>
-In life, in death, O Lord, .</p>",reading,
-Abide with Me,<p>Lyrics not available.</p>,lyric,01 Abide With Me
+In life, in death, O Lord, .</p>",reading,,Hymns
+Abide with Me,<p>Lyrics not available.</p>,lyric,01 Abide With Me,,
 Acts 10-34-43,"<p>Acts 10- 34-43 10: 34-43<br/>
 Then Peter proceeded to speak and said,<br/>
 &quot;In truth, I see that God shows no partiality.<br/>
@@ -111,7 +111,7 @@ as judge of the living and the dead.<br/>
 To him all the prophets bear witness,<br/>
 that everyone who believes in him will receive<br/>
 forgiveness of sins through his name.&quot;</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,New Testament
 All Things Bright and Beautiful,"<p>All creatures great and small,<br/>
 All things wise and wonderful:<br/>
 The Lord God made them all.</p>
@@ -130,7 +130,7 @@ He made them every one.</p>
 <p>He gave us eyes to see them,<br/>
 And lips that we might tell<br/>
 How great is God Almighty,<br/>
-Who has made all things well.</p>",lyric,02 All Things Bright And Beautiful
+Who has made all things well.</p>",lyric,02 All Things Bright And Beautiful,,
 Amazing Grace,"<p>how sweet the sound<br/>
 That saved a wretch like me<br/>
 I once was lost, but now I’m found,<br/>
@@ -152,7 +152,7 @@ Bright shining as the sun,<br/>
 We’ve no less days to sing God’s praise<br/>
 Than we’d first begun.</p>
 <p>Tis grace hath brought me safe thus far,<br/>
-And grace will lead me home.</p>",lyric,03 Amazing Grace
+And grace will lead me home.</p>",lyric,03 Amazing Grace,,
 Ave Maria (Gounod),"<p>Grauverhüllt in Lumpen,<br/>
 sitzt ein Bettler auf der Strasse,<br/>
 an der Ecke in Rio de Janeiro.<br/>
@@ -172,7 +172,7 @@ niemals wird deine Liebe enden,<br/>
 Ave Maria<br/>
 Ave Maria, die imer Gute,<br/>
 hat ihn gesehen und still gegeben.<br/>
-Ave Maria - Ave Maria...</p>",lyric,04 Ave Maria (Gounod)
+Ave Maria - Ave Maria...</p>",lyric,04 Ave Maria (Gounod),,
 Ave Maria (Gounod),"<p>Ave Maria<br/>
 gratia plena<br/>
 Dominus tecum<br/>
@@ -186,7 +186,7 @@ Ora pro nobis<br/>
 Nobis peccatoribus<br/>
 Nunc et in hora<br/>
 In hora mortis nostrae<br/>
-Amen, Amen.</p>",lyric,04 Ave Maria (Gounod)
+Amen, Amen.</p>",lyric,04 Ave Maria (Gounod),,
 Ave Maria (Schubert),"<p>Ave Maria ( Schubert )</p>
 <p>Ave Maria, gratia plena,<br/>
 Maria, gratia plena,<br/>
@@ -205,7 +205,7 @@ Nunc et in hora mortis,<br/>
 In hora mortis nostrae.<br/>
 In hora, hora mortis nostrae,<br/>
 In hora mortis nostrae.<br/>
-Ave Maria!</p>",lyric,05 Ave Maria (Schubert)
+Ave Maria!</p>",lyric,05 Ave Maria (Schubert),,
 Because I could not stop for death (Khalil Gibran),"<p>By Khal?l Gibran</p>
 <p>Because I could not stop for Death -<br/>
 He kindly stopped for me -<br/>
@@ -230,7 +230,7 @@ The Cornice - in the Ground -</p>
 <p>Since then - &#x27;tis Centuries - and yet<br/>
 Feels shorter than the Day<br/>
 I first surmised the Horses&#x27; Heads<br/>
-Were toward Eternity -</p>",reading,
+Were toward Eternity -</p>",reading,,Poems
 Christ Be Beside Me,"<p>Christ be before me,<br/>
 Christ be behind me,<br/>
 King of my heart;<br/>
@@ -253,7 +253,7 @@ Telling of me;<br/>
 Christ be the vision,<br/>
 In eyes that see me,<br/>
 In ears that hear me<br/>
-Christ ever be.</p>",lyric,06 Christ Be Beside Me
+Christ ever be.</p>",lyric,06 Christ Be Beside Me,,
 Crossing The Bar (Alfred Lord Tennyson),"<p>Sunset and evening star,<br/>
 And one clear call for me!<br/>
 And may there be no moaning of the bar,<br/>
@@ -269,8 +269,8 @@ When I embark;</p>
 <p>For tho&#x27; from out our bourne of Time and Place<br/>
 The flood may bear me far,<br/>
 I hope to see my Pilot face to face<br/>
-When I have crost the bar.</p>",lyric,
-Daniel 12:1-3,"<p>Daniel12:1-3At that time shall arise Michael, the great prince who has charge of your people.And there shall be a time of trouble, such as never has been since there was a nation till that time.But at that time your people shall be delivered,everyone whose name shall be found written in the book.And many of those who sleep in the dust of the earth shall awake,some to everlasting life, and some to shame and everlasting contempt.And those who are wise shall shine like the brightness of the sky above;and those who turn many to righteousness, like the stars forever and ever.</p>",reading,
+When I have crost the bar.</p>",lyric,,
+Daniel 12:1-3,"<p>Daniel12:1-3At that time shall arise Michael, the great prince who has charge of your people.And there shall be a time of trouble, such as never has been since there was a nation till that time.But at that time your people shall be delivered,everyone whose name shall be found written in the book.And many of those who sleep in the dust of the earth shall awake,some to everlasting life, and some to shame and everlasting contempt.And those who are wise shall shine like the brightness of the sky above;and those who turn many to righteousness, like the stars forever and ever.</p>",reading,,Old Testament
 Do Not Be Afraid,"<p>For I have redeemed you.<br/>
 I have called you by your name;<br/>
 You are mine.</p>
@@ -313,7 +313,7 @@ And I love you with a perfect love.</p>
 Do not be afraid,<br/>
 For I have redeemed you.<br/>
 I have called you by your name;<br/>
-You are mine.</p>",lyric,07 Do Not Be Afraid
+You are mine.</p>",lyric,07 Do Not Be Afraid,,
 Do not stand at my grave and weep (Clare Harner),"<p>By Clare Harner</p>
 <p>Do not stand<br/>
 By my grave, and weep.<br/>
@@ -330,15 +330,15 @@ I am the day transcending soft night.<br/>
 Do not stand<br/>
 By my grave, and cry-<br/>
 I am not there.<br/>
-I did not die.</p>",reading,
-Ecclesiastes 3:1-8,"<p>Ecclesiastes3:1-8For everything there is a season, and a time for every matter under heaven:a time to be born, and a time to die; a time to plant, and a time to pluck up what is planted;a time to kill, and a time to heal; a time to break down, and a time to build up;a time to weep, and a time to laugh; a time to mourn, and a time to dance;a time to cast away stones, and a time to gather stones together; a time to embrace, and a time to refrain from embracing;a time to seek, and a time to lose; a time to keep, and a time to cast away;a time to tear, and a time to sew; a time to keep silence, and a time to speak;a time to love, and a time to hate; a time for war, and a time for peace.</p>",reading,
+I did not die.</p>",reading,,Poems
+Ecclesiastes 3:1-8,"<p>Ecclesiastes3:1-8For everything there is a season, and a time for every matter under heaven:a time to be born, and a time to die; a time to plant, and a time to pluck up what is planted;a time to kill, and a time to heal; a time to break down, and a time to build up;a time to weep, and a time to laugh; a time to mourn, and a time to dance;a time to cast away stones, and a time to gather stones together; a time to embrace, and a time to refrain from embracing;a time to seek, and a time to lose; a time to keep, and a time to cast away;a time to tear, and a time to sew; a time to keep silence, and a time to speak;a time to love, and a time to hate; a time for war, and a time for peace.</p>",reading,,Old Testament
 Eternal rest prayer,"<p>Eternal rest grant unto them, O Lord.<br/>
 And let the perpetual light shine upon them.<br/>
 May they rest in peace.</p>
 <p>And may the souls of all the faithful departed,<br/>
 through the mercy of God,<br/>
 rest in peace.</p>
-<p>Amen.</p>",reading,
+<p>Amen.</p>",reading,,Prayers
 Fear (Khalil Gibran),"<p>Fear ( Khalil Gibran)</p>
 <p>By Khalil Gibran</p>
 <p>It is said that before entering the sea<br/>
@@ -356,8 +356,8 @@ The river needs to take the risk of entering the ocean<br/>
 because only then will fear disappear,<br/>
 because that&#x27;s where the river will know<br/>
 it&#x27;s not about disappearing into the ocean,<br/>
-but of becoming the ocean.</p>",reading,
-Going Home,<p>Lyrics not available.</p>,lyric,08 Going Home
+but of becoming the ocean.</p>",reading,,Poems
+Going Home,<p>Lyrics not available.</p>,lyric,08 Going Home,,
 Gone Home,"<p>Going Home</p>
 <p>Goin&#x27; home. goin&#x27; home. I&#x27;m just goin&#x27; home.<br/>
 Quiet-like slip away, I’ll be goin&#x27; home.<br/>
@@ -370,7 +370,7 @@ Shadows gone, break of day, life has just begun.<br/>
 Every tear wiped away, pain and sickness gone;<br/>
 Wide awake, there with Him, peace goes on and on.<br/>
 Goin’ home. G oin’ home, I’ll be goin’ home.<br/>
-See the Light, see the sun, I’m just goin’ home.</p>",reading,
+See the Light, see the sun, I’m just goin’ home.</p>",reading,,New Testament
 "Gospel Luke 24-13-16,28-35","<p>Gospel Luke 24- 13-16,28-35<br/>
 A Reading From The Holy Gospel According To Luke</p>
 <p>24: 13-16,28-35</p>
@@ -404,7 +404,7 @@ and has appeared to Simon!”<br/>
 Then the two recounted what had taken place<br/>
 on the way and how he was made known to them<br/>
 in the breaking of the bread.</p>
-<p>The Gospel of the Lord</p>",reading,
+<p>The Gospel of the Lord</p>",reading,,New Testament
 Here I Am Lord,"<p>I, the Lord of sea and sky,<br/>
 I have heard My people cry.<br/>
 All who dwell in dark and sin My hand will save.<br/>
@@ -434,7 +434,7 @@ I will give My life to them - whom shall I send?</p>
 <p>Here I am, Lord. Is it I, Lord<br/>
 I have heard You calling in the night.<br/>
 I will go, Lord, if You lead me;<br/>
-I will hold Your people in my heart.</p>",lyric,09 Here I Am Lord
+I will hold Your people in my heart.</p>",lyric,09 Here I Am Lord,,
 How Great Thou Art,"<p>O Lord my God! When I in awesome wonder<br/>
 Consider all the works Thy hand hath made.<br/>
 I see the stars, I hear the rolling thunder,<br/>
@@ -471,7 +471,7 @@ Then sings my soul, my Saviour God, to Thee:<br/>
 How great Thou art, how great Thou art!<br/>
 Then sings my soul, my Saviour God, to Thee:<br/>
 How great Thou art, how great Thou art!<br/>
-How great Thou art!</p>",lyric,10 How Great Thou Art
+How great Thou art!</p>",lyric,10 How Great Thou Art,,
 I Watch the Sunrise,"<p>lighting the sky,<br/>
 Casting its shadows near.<br/>
 And on this morning, bright thought it be,<br/>
@@ -509,7 +509,7 @@ Following all my ways.<br/>
 May I be always close to you,<br/>
 Following all your ways, Lord.<br/>
 But you are always, close to me,<br/>
-Following all my ways.</p>",reading,
+Following all my ways.</p>",reading,,Hymns
 I Will Be with You,"<p>wherever you go.<br/>
 Go now throughout the world!<br/>
 in all that you say.<br/>
@@ -537,7 +537,7 @@ Then feed my lambs and feed my sheep.</p>
 <p>wherever you go.<br/>
 Go now throughout the world!<br/>
 in all that you say.<br/>
-Go now and spread my word!</p>",lyric,12 I Will Be With You
+Go now and spread my word!</p>",lyric,12 I Will Be With You,,
 I'll Walk with God,"<p>From this day on<br/>
 His helping hand I&#x27;ll lean upon<br/>
 This is my prayer my humble plea<br/>
@@ -556,7 +556,7 @@ Each day to him<br/>
 And he&#x27;ll hear the words that I say<br/>
 His hand will guide my throne and rod<br/>
 And I&#x27;ll never walk alone<br/>
-While I walk with god</p>",lyric,13 I'll Walk With God
+While I walk with god</p>",lyric,13 I'll Walk With God,,
 In the Arms of the Angels,"<p>In the Arms of the Angel</p>
 <p>Spend all your time waiting<br/>
 For that second chance<br/>
@@ -595,14 +595,14 @@ You are pulled from the wreckage<br/>
 Of your silent reverie<br/>
 You&#x27;re in the arms of the angel<br/>
 May you find some comfort hereYou&#x27;re in the arms of the angel<br/>
-May you find some comfort here</p>",reading,
+May you find some comfort here</p>",reading,,New Age
 Isaiah 25:6-9,"<p>Isaiah &amp;nbsp;</p>
 <p>25:6-9</p>
 <p>On this mountain the Lord of hosts will make for all peoplesa feast of rich food, a feast of well-aged wine,of rich food full of marrow, of aged wine well refined.</p>
 <p>And he will swallow up on this mountainthe covering that is cast over all peoples,the veil that is spread over all nations.</p>
 <p>He will swallow up death forever;and the Lord God will wipe away tears from all faces,and the reproach of his people he will take away from all the earth,for the Lord has spoken.</p>
-<p>It will be said on that day,“Behold, this is our God; we have waited for him, that he might save us.This is the Lord; we have waited for him;let us be glad and rejoice in his salvation.”</p>",reading,
-Jerusalem,<p>Lyrics not available.</p>,lyric,14 Jerusalem
+<p>It will be said on that day,“Behold, this is our God; we have waited for him, that he might save us.This is the Lord; we have waited for him;let us be glad and rejoice in his salvation.”</p>",reading,,Old Testament
+Jerusalem,<p>Lyrics not available.</p>,lyric,14 Jerusalem,,
 Jerusalem (Blake),"<p>And did those feet in ancient time<br/>
 walk upon England&#x27;s mountains green?<br/>
 And was the holy Lamb of God<br/>
@@ -618,8 +618,8 @@ Bring me my chariot of fire!<br/>
 I will not cease from mental fight,<br/>
 nor shall my sword sleep in my hand,<br/>
 till we have built Jerusalem<br/>
-in England&#x27;s green and pleasant land.</p>",lyric,
-Job 19:23-27,"<p>Job19:23-27Oh that my words were written!Oh that they were inscribed in a book!Oh that with an iron pen and leadthey were engraved in the rock forever!For I know that my Redeemer lives,and at the last he will stand upon the earth.And after my skin has been thus destroyed,yet in my flesh I shall see God,whom I shall see for myself,and my eyes shall behold, and not another.My heart faints within me!</p>",reading,
+in England&#x27;s green and pleasant land.</p>",lyric,,
+Job 19:23-27,"<p>Job19:23-27Oh that my words were written!Oh that they were inscribed in a book!Oh that with an iron pen and leadthey were engraved in the rock forever!For I know that my Redeemer lives,and at the last he will stand upon the earth.And after my skin has been thus destroyed,yet in my flesh I shall see God,whom I shall see for myself,and my eyes shall behold, and not another.My heart faints within me!</p>",reading,,Old Testament
 John 11-32-45,"<p>Gospel John 11- 32-45<br/>
 A Reading From The Holy Gospel According To John</p>
 <p>11: 32-45</p>
@@ -659,9 +659,9 @@ and his face was wrapped in a cloth.<br/>
 So Jesus said to them, “Untie him and let him go.”<br/>
 Now many of the Jews who had come to Mary<br/>
 and seen what he had done began to believe in him.</p>
-<p>The Gospel of the Lord</p>",reading,
-John 11:17-27,"<p>John11:17-27Now when Jesus came, he found that Lazarus had already been in the tomb four days. Bethany was near Jerusalem, about two miles off, and many of the Jews had come to Martha and Mary to console them concerning their brother. So when Martha heard that Jesus was coming, she went and met him, but Mary remained seated in the house. Martha said to Jesus “Lord, if you had been here, my brother would not have died. But even now I know that whatever you ask from God, God will give you.”Jesus said to her, “Your brother will rise again.”  Martha said to him, “I know that he will rise again in the resurrection on the last day.” Jesus said to her, “I am the resurrection and the life. Whoever believes in me, though he die, yet shall he live, and whoever believes in me shall never die. Do you believe this?” She said to him, “Yes Lord; I believe that you are the Christ, the Son of God who is coming into the world.”</p>",reading,
-John 14:1-6,"<p>John14:1-6My soul is bereft of peace;I have forgotten what happiness is;so I say, “My endurance has perished;so has my hope from the Lord.”Remember my affliction and my wanderings,the wormwood and the gall!My soul continually remembers itand is bowed down within me.But this I call to mind,and therefore I have hope:The steadfast love of the Lord never ceases;his mercies never come to an end;they are new every morning;great is your faithfulness.“The Lord is my portion,” says my soul,“therefore I will hope in him.”The Lord is good to those who wait for him,to the soul who seeks him.It is good that one should wait quietlyfor the salvation of the Lord.</p>",reading,
+<p>The Gospel of the Lord</p>",reading,,New Testament
+John 11:17-27,"<p>John11:17-27Now when Jesus came, he found that Lazarus had already been in the tomb four days. Bethany was near Jerusalem, about two miles off, and many of the Jews had come to Martha and Mary to console them concerning their brother. So when Martha heard that Jesus was coming, she went and met him, but Mary remained seated in the house. Martha said to Jesus “Lord, if you had been here, my brother would not have died. But even now I know that whatever you ask from God, God will give you.”Jesus said to her, “Your brother will rise again.”  Martha said to him, “I know that he will rise again in the resurrection on the last day.” Jesus said to her, “I am the resurrection and the life. Whoever believes in me, though he die, yet shall he live, and whoever believes in me shall never die. Do you believe this?” She said to him, “Yes Lord; I believe that you are the Christ, the Son of God who is coming into the world.”</p>",reading,,New Testament
+John 14:1-6,"<p>John14:1-6My soul is bereft of peace;I have forgotten what happiness is;so I say, “My endurance has perished;so has my hope from the Lord.”Remember my affliction and my wanderings,the wormwood and the gall!My soul continually remembers itand is bowed down within me.But this I call to mind,and therefore I have hope:The steadfast love of the Lord never ceases;his mercies never come to an end;they are new every morning;great is your faithfulness.“The Lord is my portion,” says my soul,“therefore I will hope in him.”The Lord is good to those who wait for him,to the soul who seeks him.It is good that one should wait quietlyfor the salvation of the Lord.</p>",reading,,New Testament
 John 6-37-40,"<p>Gospel John 6- 37-40</p>
 <p>6: 37-40<br/>
 Jesus said to the crowds:<br/>
@@ -677,7 +677,7 @@ For this is the will of my Father,<br/>
 that everyone who sees the Son<br/>
 and believes in him may have eternal life,<br/>
 and I shall raise him on the last day.&quot;</p>
-<p>The Gospel of the Lord</p>",reading,
+<p>The Gospel of the Lord</p>",reading,,New Testament
 John 6-51-58,"<p>Gospel John 6- 51-58<br/>
 A Reading From The Holy Gospel According To John</p>
 <p>6: 51-58</p>
@@ -702,7 +702,7 @@ because of me.<br/>
 This is the bread that came down from heaven.<br/>
 Unlike your ancestors who ate and still died,<br/>
 whoever eats this bread will live forever.”</p>
-<p>The Gospel of the Lord</p>",reading,
+<p>The Gospel of the Lord</p>",reading,,New Testament
 Lamentations  3:17-26,"<p>Lamentations</p>
 <p>3:17-26</p>
 <p>My soul is bereft of peace;&amp;nbsp;I have forgotten what happiness is;so I say, &quot;My endurance has perished;&amp;nbsp;so has my hope from the Lord.&quot;</p>
@@ -712,8 +712,8 @@ Lamentations  3:17-26,"<p>Lamentations</p>
 <p>The steadfast love of the Lord never ceases;&amp;nbsp;his mercies never come to an end;</p>
 <p>they are new every morning;great is your faithfulness.&quot;The Lord is my portion,&quot; says my soul,&quot;therefore I will hope in him.&quot;</p>
 <p>The Lord is good to those who wait for him,&amp;nbsp;to the soul who seeks him.</p>
-<p>It is good that one should wait quietly&amp;nbsp;for the salvation of the Lord.</p>",reading,
-Let Me Go,,reading,
+<p>It is good that one should wait quietly&amp;nbsp;for the salvation of the Lord.</p>",reading,,Old Testament
+Let Me Go,,reading,,Poems
 "Letter St. Paul To Romans 14-7-9,10b-12","<p>Letter St. Paul To Romans 14- 7-9, 10b-12</p>
 <p>14: 7-9, 10b-12</p>
 <p>Brothers and Sisters:<br/>
@@ -729,7 +729,7 @@ every knee shall bend before me,<br/>
 and every tongue shall give praise to God.&quot;<br/>
 So then each of us shall give an account of himself<br/>
 to God.</p>
-<p>The Word of the</p>",reading,
+<p>The Word of the</p>",reading,,New Testament
 Letter St. Paul To Romans 6-3-9,"<p>Letter St. Paul To Romans 6- 3-9</p>
 <p>6: 3-9</p>
 <p>Brothers and Sisters:<br/>
@@ -753,7 +753,7 @@ we believe that we shall also live with him.<br/>
 We know that Christ,<br/>
 raised from the dead, dies no more;<br/>
 death no longer has power over him.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,New Testament
 "Letter St. Paul To Romans 8-31-35,37-39","<p>Letter St. Paul To Romans 8- 31-35, 37-39</p>
 <p>8: 31-35, 37-39<br/>
 Brothers and Sisters:<br/>
@@ -779,12 +779,12 @@ nor future things, nor powers, nor height,<br/>
 nor depth, nor any other creature<br/>
 will be able to separate us<br/>
 from the love of God in Christ Jesus our Lord.</p>
-<p>The Word of the Lord</p>",reading,
-Luke 24: 1-12,"<p>But on the first day of the week, at early dawn, they went to the tomb, taking the spices they had prepared.And they found the stone rolled away from the tomb, but when they went in they did not find the body of the Lord Jesus. While they were perplexed about this, behold, two men stood by them in dazzling apparel. And as they were frightened and bowed their faces to the ground, the men said to them, “Why do you seek the living among the dead? He is not here, but has risen. Remember how he told you, while he was still in Galilee, that the Son of Man must be delivered into the hands of sinful men and be crucified and on the third day rise.” And they remembered his words, and returning from the tomb they told all these things to the eleven and to all the rest.Now it was Mary Magdalene and Joanna and Mary the mother of James and the other women with them who told these things to the apostles; but these words seemed to them an idle tale, and they did not believe them. But Peter rose and ran to the tomb; stooping and looking in, he saw the linen cloths by themselves; and he went home marvelling at what had happened.</p>",reading,
+<p>The Word of the Lord</p>",reading,,New Testament
+Luke 24: 1-12,"<p>But on the first day of the week, at early dawn, they went to the tomb, taking the spices they had prepared.And they found the stone rolled away from the tomb, but when they went in they did not find the body of the Lord Jesus. While they were perplexed about this, behold, two men stood by them in dazzling apparel. And as they were frightened and bowed their faces to the ground, the men said to them, “Why do you seek the living among the dead? He is not here, but has risen. Remember how he told you, while he was still in Galilee, that the Son of Man must be delivered into the hands of sinful men and be crucified and on the third day rise.” And they remembered his words, and returning from the tomb they told all these things to the eleven and to all the rest.Now it was Mary Magdalene and Joanna and Mary the mother of James and the other women with them who told these things to the apostles; but these words seemed to them an idle tale, and they did not believe them. But Peter rose and ran to the tomb; stooping and looking in, he saw the linen cloths by themselves; and he went home marvelling at what had happened.</p>",reading,,New Testament
 Luke 24: 13-27,"<p>Luke 24:13-27</p>
-<p>That very day two of them were going to a village named Emmaus, about seven miles from Jerusalem, and they were talking with each other about all these things that had happened.While they were talking and discussing together, Jesus himself drew near and went with them. But their eyes were kept from recognising him. And he said to them, “What is this conversation that you are holding with each other as you walk?” And they stood still, looking sad. Then one of them, named Cleopas, answered him, “Are you the only visitor to Jerusalem who does not know the things that have happened there in these days?” And he said to them, “What things?” And they said to him, “Concerning Jesus of Nazareth, a man who was a prophet mighty in deed and word before God and all the people, and how our chief priests and rulers delivered him up to be condemned to death, and crucified him. But we had hoped that he was the one to redeem Israel. Yes, and besides all this, it is now the third day since these things happened. Moreover, some women of our company amazed us. They were at the tomb early in the morning, and when they did not find his body, they came back saying that they had even seen a vision of angels, who said that he was alive. Some of those who were with us went to the tomb and found it just as the women had said, but him they did not see.” And he said to them, “O foolish ones, and slow of heart to believe all that the prophets have spoken! Was it not necessary that the Christ should suffer these things and enter into his glory?” And beginning with Moses and all the Prophets, he interpreted to them in all the Scriptures the things concerning himself.</p>",reading,
-Luke 24: 28-35,"<p>So they drew near to the village to which they were going. He acted as if he were going farther, but they urged him strongly, saying, “Stay with us, for it is toward evening and the day is now far spent.” So he went in to stay with them. When he was at table with them, he took the bread and blessed and broke it and gave it to them. And their eyes were opened, and they recognised him. And he vanished from their sight. They said to each other, “Did not our hearts burn within us while he talked to us on the road, while he opened to us the Scriptures?” And they rose that same hour and returned to Jerusalem. And they found the eleven and those who were with them gathered together, saying, “The Lord has risen indeed, and has appeared to Simon!” Then they told what had happened on the road, and how he was known to them in the breaking of the bread.</p>",reading,
-Luke 24: 36-48,"<p>As they were talking about these things, Jesus himself stood among them, and said to them, “Peace to you!” But they were startled and frightened and thought they saw a spirit. And he said to them, “Why are you troubled, and why do doubts arise in your hearts? See my hands and my feet, that it is I myself. Touch me, and see. For a spirit does not have flesh and bones as you see that I have.” And when he had said this, he showed them his hands and his feet. And while they still disbelieved for joy and were marvelling, he said to them, “Have you anything here to eat?” They gave him a piece of broiled fish, and he took it and ate before them.Then he said to them, “These are my words that I spoke to you while I was still with you, that everything written about me in the Law of Moses and the Prophets and the Psalms must be fulfilled.” Then he opened their minds to understand the Scriptures, and said to them, “Thus it is written, that the Christ should suffer and on the third day rise from the dead, and that repentance and forgiveness of sins should be proclaimed in his name to all nations, beginning from Jerusalem. You are witnesses of these things.</p>",reading,
+<p>That very day two of them were going to a village named Emmaus, about seven miles from Jerusalem, and they were talking with each other about all these things that had happened.While they were talking and discussing together, Jesus himself drew near and went with them. But their eyes were kept from recognising him. And he said to them, “What is this conversation that you are holding with each other as you walk?” And they stood still, looking sad. Then one of them, named Cleopas, answered him, “Are you the only visitor to Jerusalem who does not know the things that have happened there in these days?” And he said to them, “What things?” And they said to him, “Concerning Jesus of Nazareth, a man who was a prophet mighty in deed and word before God and all the people, and how our chief priests and rulers delivered him up to be condemned to death, and crucified him. But we had hoped that he was the one to redeem Israel. Yes, and besides all this, it is now the third day since these things happened. Moreover, some women of our company amazed us. They were at the tomb early in the morning, and when they did not find his body, they came back saying that they had even seen a vision of angels, who said that he was alive. Some of those who were with us went to the tomb and found it just as the women had said, but him they did not see.” And he said to them, “O foolish ones, and slow of heart to believe all that the prophets have spoken! Was it not necessary that the Christ should suffer these things and enter into his glory?” And beginning with Moses and all the Prophets, he interpreted to them in all the Scriptures the things concerning himself.</p>",reading,,New Testament
+Luke 24: 28-35,"<p>So they drew near to the village to which they were going. He acted as if he were going farther, but they urged him strongly, saying, “Stay with us, for it is toward evening and the day is now far spent.” So he went in to stay with them. When he was at table with them, he took the bread and blessed and broke it and gave it to them. And their eyes were opened, and they recognised him. And he vanished from their sight. They said to each other, “Did not our hearts burn within us while he talked to us on the road, while he opened to us the Scriptures?” And they rose that same hour and returned to Jerusalem. And they found the eleven and those who were with them gathered together, saying, “The Lord has risen indeed, and has appeared to Simon!” Then they told what had happened on the road, and how he was known to them in the breaking of the bread.</p>",reading,,New Testament
+Luke 24: 36-48,"<p>As they were talking about these things, Jesus himself stood among them, and said to them, “Peace to you!” But they were startled and frightened and thought they saw a spirit. And he said to them, “Why are you troubled, and why do doubts arise in your hearts? See my hands and my feet, that it is I myself. Touch me, and see. For a spirit does not have flesh and bones as you see that I have.” And when he had said this, he showed them his hands and his feet. And while they still disbelieved for joy and were marvelling, he said to them, “Have you anything here to eat?” They gave him a piece of broiled fish, and he took it and ate before them.Then he said to them, “These are my words that I spoke to you while I was still with you, that everything written about me in the Law of Moses and the Prophets and the Psalms must be fulfilled.” Then he opened their minds to understand the Scriptures, and said to them, “Thus it is written, that the Christ should suffer and on the third day rise from the dead, and that repentance and forgiveness of sins should be proclaimed in his name to all nations, beginning from Jerusalem. You are witnesses of these things.</p>",reading,,New Testament
 Make Me A Channel Of Your Peace,"<p>Where there is hatred, let me bring your love;<br/>
 where there is injury, your pardon Lord,<br/>
 and where there&#x27;s doubt, true faith in you.</p>
@@ -809,8 +809,8 @@ to be loved as to love with all my soul.</p>
 <p>Make me a channel of your peace:<br/>
 Where there despair in life, let me bring hope;<br/>
 Where there is darkness, only light,<br/>
-and where there&#x27;s sadness, ever joy.</p>",lyric,15 Make Me A Channel Of Your Peace
-Miss Me,<p>missmebutletmego</p>,reading,
+and where there&#x27;s sadness, ever joy.</p>",lyric,15 Make Me A Channel Of Your Peace,,
+Miss Me,<p>missmebutletmego</p>,reading,,Poems
 "Miss Me, But Let Me Go","<p>When I come to the end of the road,<br/>
 And the sun has set for me,<br/>
 I want no rites in a gloom-filled room,<br/>
@@ -818,7 +818,7 @@ Why cry for a soul set free?</p>
 <p>Miss me a little, but not for long,<br/>
 And not with your head bowed low,<br/>
 Remember the love that we once shared,<br/>
-Miss me, but let me go.</p>",reading,
+Miss me, but let me go.</p>",reading,,Poems
 Morning Has Broken,"<p>like the first morning,<br/>
 blackbird has spoken like the first bird.<br/>
 Praise for the singing Praise for the morning<br/>
@@ -834,7 +834,7 @@ God&#x27;s re-creation of the new day!</p>
 <p>Morning has broken like the first morning,<br/>
 blackbird has spoken like the first bird.<br/>
 Praise for the singing Praise for the morning<br/>
-Praise for them springing fresh from the Word.</p>",lyric,16 Morning Has Broken
+Praise for them springing fresh from the Word.</p>",lyric,16 Morning Has Broken,,
 My Way (Female),"<p>Lyrics<br/>
 And now, the end is near<br/>
 And so I face the final curtain<br/>
@@ -872,7 +872,7 @@ To say the things he truly feels<br/>
 And not the words of one who kneels<br/>
 The record shows I took the blows<br/>
 And did it my way</p>
-<p>Yes, it was my way&quot;,True</p>",lyric,17 My Way (Female)
+<p>Yes, it was my way&quot;,True</p>",lyric,17 My Way (Female),,
 My Way (Male),"<p>My Way (Female),mywayfemale,&quot;My Way (Female)<br/>
 Lyrics<br/>
 And now, the end is near<br/>
@@ -911,7 +911,7 @@ To say the things he truly feels<br/>
 And not the words of one who kneels<br/>
 The record shows I took the blows<br/>
 And did it my way</p>
-<p>Yes, it was my way&quot;,True</p>",lyric,18 My Way (Male)
+<p>Yes, it was my way&quot;,True</p>",lyric,18 My Way (Male),,
 New Angel In Heaven,"<p>Father hold me close, and raise me up above the pain.<br/>
 Gently wipe away the tears that fall like summer rain.<br/>
 Give me faith and grace to know my child is not alone,<br/>
@@ -939,7 +939,7 @@ Bring me to, my little one.</p>
 <p>Father hold me close, and raise me up above the pain.<br/>
 Gently wipe away the tears that fall like summer rain.<br/>
 Give me faith and grace to know my child is not alone,<br/>
-And that my angel waits for me until you call me home.</p>",lyric,19 New Angel In Heaven
+And that my angel waits for me until you call me home.</p>",lyric,19 New Angel In Heaven,,
 OT Ecclesiastes 3.1-8,"<p>OT Ecclesiastes 3. 1-8<br/>
 (3: 1-8)</p>
 <p>There is an appointed time for everything,<br/>
@@ -959,7 +959,7 @@ A time to rend, and a time to sew;<br/>
 a time to be silent, and a time to speak.<br/>
 A time to love, and a time to hate;<br/>
 a time of war, and a time of peace.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,Old Testament
 OT Ezekiel 37 12-14 ,"<p>OT Ezekiel 37; 12-14</p>
 <p>37: 12-14</p>
 <p>Therefore, prophesy and say to them:<br/>
@@ -973,7 +973,7 @@ I will put my spirit in you that you may come to life,<br/>
 and I will settle you in your land.<br/>
 Then you shall know that I am the LORD.<br/>
 I have spoken; I will do it.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,Old Testament
 OT Isaiah 35-1-10,"<p>OT Isaiah 35- 1-10</p>
 <p>35: 1-10</p>
 <p>The wilderness and the parched land will exult;<br/>
@@ -1015,7 +1015,7 @@ and enter Zion singing,<br/>
 crowned with everlasting joy;<br/>
 they meet with joy and gladness,<br/>
 sorrow and mourning flee away.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,Old Testament
 OT Wisdom 3 1-6.9,"<p>OT Wisdom 3; 1-6.9</p>
 <p>The souls of the righteous are in the hand of God,<br/>
 and no torment shall touch them.<br/>
@@ -1034,7 +1034,7 @@ Those who trust in him shall understand truth,<br/>
 and the faithful shall abide with him in love:<br/>
 because grace and mercy are with his holy ones,<br/>
 and his care is with the elect.</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,Old Testament
 Over the Rainbow,"<p>Somewhere<br/>
 Way up high<br/>
 There&#x27;s a land that I heard of<br/>
@@ -1059,7 +1059,7 @@ Why then, oh, why can&#x27;t I?<br/>
 If happy little bluebirds fly<br/>
 Beyond the rainbow<br/>
 Why, oh why can&#x27;t I?</p>
-<p>….I’ll fly</p>",lyric,20 Over The Rainbow
+<p>….I’ll fly</p>",lyric,20 Over The Rainbow,,
 Panis Angelicus,"<p>Fit panis hominum,<br/>
 Dat panis coelicus,<br/>
 Figuris terminum.</p>
@@ -1072,7 +1072,7 @@ Sic nos tu visita,<br/>
 Sicut te colimus.</p>
 <p>Per tuas semitas<br/>
 Duc nos quo tendimus,<br/>
-Ad lucem quam inhabitas. Amen.</p>",lyric,21 Panis Angelicus
+Ad lucem quam inhabitas. Amen.</p>",lyric,21 Panis Angelicus,,
 Psalm 102,"<p>strong&gt;Response: The Lord is compassion and love.</p>
 <p>The Lord is compassion and love,<br/>
 slow to anger and rich in mercy.<br/>
@@ -1089,8 +1089,8 @@ and his place never sees him again. R.</p>
 <p>But the love of the Lord is everlasting<br/>
 upon those who hold him in fear;<br/>
 his justice reaches out to children’s children<br/>
-when they keep his covenant in truth. R.</p>",reading,
-Psalm 103:8-18,"<p>Psalm103:8-18The Lord is merciful and gracious, slow to anger and abounding in steadfast love.He will not always chide, nor will he keep his anger forever.He does not deal with us according to our sins,nor repay us according to our iniquities.For as high as the heavens are above the earth,so great is his steadfast love toward those who fear him;as far as the east is from the west,so far does he remove our transgressions from us.As a father shows compassion to his children,so the Lord shows compassion to those who fear him.For he knows our frame; he remembers that we are dust</p>",reading,
+when they keep his covenant in truth. R.</p>",reading,,Psalms
+Psalm 103:8-18,"<p>Psalm103:8-18The Lord is merciful and gracious, slow to anger and abounding in steadfast love.He will not always chide, nor will he keep his anger forever.He does not deal with us according to our sins,nor repay us according to our iniquities.For as high as the heavens are above the earth,so great is his steadfast love toward those who fear him;as far as the east is from the west,so far does he remove our transgressions from us.As a father shows compassion to his children,so the Lord shows compassion to those who fear him.For he knows our frame; he remembers that we are dust</p>",reading,,Psalms
 Psalm 22,"<p>strong&gt;Response: The Lord is my shepherd; there is nothing I shall want.</p>
 <p>The Lord is my shepherd;<br/>
 There is nothing I shall want.<br/>
@@ -1107,8 +1107,8 @@ My head you have anointed with oil;<br/>
 my cup is overflowing. R.Surely goodness and kindness shall follow me<br/>
 all the days of my life.<br/>
 In the Lord’s own house shall I dwell<br/>
-for ever and ever. R.</p>",reading,
-Psalm 23,"<p>The Lord is my shepherd; I shall not want.He makes me lie down in green pastures.He leads me beside still waters.He restores my soul.He leads me in paths of righteousness for his name&#x27;s sake.Even though I walk through the valley of the shadow of death,I will fear no evil, for you are with me;your rod and your staff, they comfort me.You prepare a table before me in the presence of my enemies;you anoint my head with oil; my cup overflows.Surely goodness and mercy shall follow me all the days of my life,and I shall dwell in the house of the Lord forever.</p>",reading,
+for ever and ever. R.</p>",reading,,Psalms
+Psalm 23,"<p>The Lord is my shepherd; I shall not want.He makes me lie down in green pastures.He leads me beside still waters.He restores my soul.He leads me in paths of righteousness for his name&#x27;s sake.Even though I walk through the valley of the shadow of death,I will fear no evil, for you are with me;your rod and your staff, they comfort me.You prepare a table before me in the presence of my enemies;you anoint my head with oil; my cup overflows.Surely goodness and mercy shall follow me all the days of my life,and I shall dwell in the house of the Lord forever.</p>",reading,,Psalms
 Psalm 24,"<p>strong&gt;Response: To you, O Lord, I lift up my soul.</p>
 <p>Remember your mercy, Lord,<br/>
 and the love you have shown from of old.<br/>
@@ -1119,7 +1119,7 @@ See my affliction and my toil<br/>
 and take all my sins away. R.Preserve my life and rescue me.<br/>
 Do not disappoint me, you are my refuge.<br/>
 May innocence and uprightness protect me:<br/>
-for my hope is in you, O Lord. R.</p>",reading,
+for my hope is in you, O Lord. R.</p>",reading,,Psalms
 Psalm 26,"<p>strong&gt;Response: The Lord is my light and my help.</p>
 <p>The Lord is my light and my help;<br/>
 whom shall I fear?<br/>
@@ -1133,7 +1133,7 @@ It is your face,<br/>
 O Lord, that I seek; hide not your face. R.I am sure I shall see the Lord’s goodness<br/>
 in the land of the living.<br/>
 Hope in him, hold firm and take heart.<br/>
-Hope in the Lord! R.</p>",reading,
+Hope in the Lord! R.</p>",reading,,Psalms
 Remember Me,"<p>Speak of me as you have always done.<br/>
 Remember the good times, laughter, and fun.<br/>
 Share the happy memories we’ve made.<br/>
@@ -1147,7 +1147,7 @@ But remember me when I was at my best.Although things may not be the same,<br/>
 Don’t be afraid to use my name.<br/>
 Let your sorrow last for just a while.<br/>
 Comfort each other and try to smile.I’ve lived a life filled with joy and fun.<br/>
-Live on now, make me proud of what you’ll become.— Anthony Dowson</p>",reading,
+Live on now, make me proud of what you’ll become.— Anthony Dowson</p>",reading,,Poems
 Revelation 14-13,"<p>Revelation 14- 13</p>
 <p>14: 13</p>
 <p>I, John, heard a voice from heaven say,<br/>
@@ -1156,7 +1156,7 @@ who die in the Lord from now on.&quot;<br/>
 &quot;Yes,&quot; said the Spirit,<br/>
 &quot;let them find rest from their labors,<br/>
 for their works accompany them.&quot;</p>
-<p>The Word of the Lord</p>",reading,
+<p>The Word of the Lord</p>",reading,,New Testament
 "Revelation 21-1-5a,6b-7","<p>Revelation 21- 1-5a, 6b-7<br/>
 21: 1-5a, 6b-7</p>
 <p>Then I saw a new heaven and a new earth.<br/>
@@ -1178,12 +1178,12 @@ And he said to me &quot;it is done!<br/>
 I am the Alpha and the Omega, the beginning and the end.<br/>
 To the thirsty I will give from the spring of the water of life without payment.<br/>
 The one who conquers will have this heritage,<br/>
-and I will be his God, and he will be my son.</p>",reading,
-Revelation 21:1-7,"<p>Revelation21:1-7Then I saw a new heaven and a new earth, for the first heaven and the first earth had passed away, and the sea was no more.And I saw the holy city, new Jerusalem, coming down out of heaven from God,prepared as a bride adorned for her husband.And I heard a loud voice from the throne saying,“Behold, the dwelling place of God is with man. He will dwell with them, and they will be his people, and God himself will be with them as their God.He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning, nor crying, nor pain anymore, for the former things have passed away.”And he who was seated on the throne said,“Behold, I am making all things new.”Also he said, “Write this down, for these words are trustworthy and true.”And he said to me, “It is done! I am the Alpha and the Omega, the beginning and the end.To the thirsty I will give from the spring of the water of life without payment.The one who conquers will have this heritage, and I will be his God and he will be my son.”</p>",reading,
-Romans 5: 5-11,"<p>And hope does not put us to shame, because God’s love has been poured into our hearts through the Holy Spirit who has been given to us.For while we were still weak, at the right time Christ died for the ungodly.For one will scarcely die for a righteous person—though perhaps for a good person one would dare even to die—but God shows his love for us in that while we were still sinners, Christ died for us.Since, therefore, we have now been justified by his blood, much more shall we be saved by him from the wrath of God.For if while we were enemies we were reconciled to God by the death of his Son, much more, now that we are reconciled, shall we be saved by his life.</p>",reading,
-Romans 6: 1-11,"<p>Romans 6: 1-11What shall we say then? Are we to continue in sin that grace may abound? By no means! How can we who died to sin still live in it? Do you not know that all of us who have been baptised into Christ Jesus were baptised into his death?We were buried therefore with him by baptism into death, in order that, just as Christ was raised from the dead by the glory of the Father, we too might walk in the newness of life.For if we have been united in a death like his, we shall certainly be united with him in a resurrection like his. We know that our old self was crucified with him in order that the body of sin might be brought to nothing, so that we would no longer be enslaved to sin. For one who has died has been set free from sin.  Now if we have died with Christ, we believe that we will also live with him. We know that Christ, being raised from the dead, will never die again; death no longer has dominion over him. For the death he died he died to sin, once for all, but the life he lives he lives to God. So you must consider yourselves dead to sin and alive to God in Christ Jesus.</p>",reading,
-Romans 6: 3-9,"<p>Do you not know that all of us who have been baptised into Christ Jesus were baptised into his death?We were buried therefore with him by baptism into death, in order that, just as Christ was raised from the dead by the glory of the Father,we too might walk in newness of life.For if we have been united with him in a death like his, we shall certainly be united with him in a resurrection like his.We know that our old self was crucified with him in order that the body of sin might be brought to nothing, so that we would no longer be enslaved to sin.For one who has died has been set free from sin.</p>",reading,
-Romans 8: 31-19,"<p>Romans 8: 31-39What then shall we say to these things? If God is for us, who can be against us? He who did not spare his own Son but gave him up for us all, how will he not also with him graciously give us all things? Who shall bring any charges against God’s elect? It is God who justifies. Who is to condemn?Christ Jesus is the one who died – more than that, who was raised -  who is at the right hand of God, who indeed is interceding for us. Who shall separate us from the love of Christ? Shall tribulation , or distress, or persecution, or famine, or nakedness, or danger , or sword?As it is written, “For your sake we are being killed all the day long; we are regarded as sheep to be slaughtered.”No, in all these things we are more than conquerors through him who loved us. For I am sure that neither death nor life, nor angels nor rulers, nor things present nor things to come, nor powers, nor height nor depth, nor anything else in creation, will be able to separate us from the love of God in Christ Jesus our Lord.</p>",reading,
+and I will be his God, and he will be my son.</p>",reading,,New Testament
+Revelation 21:1-7,"<p>Revelation21:1-7Then I saw a new heaven and a new earth, for the first heaven and the first earth had passed away, and the sea was no more.And I saw the holy city, new Jerusalem, coming down out of heaven from God,prepared as a bride adorned for her husband.And I heard a loud voice from the throne saying,“Behold, the dwelling place of God is with man. He will dwell with them, and they will be his people, and God himself will be with them as their God.He will wipe away every tear from their eyes, and death shall be no more, neither shall there be mourning, nor crying, nor pain anymore, for the former things have passed away.”And he who was seated on the throne said,“Behold, I am making all things new.”Also he said, “Write this down, for these words are trustworthy and true.”And he said to me, “It is done! I am the Alpha and the Omega, the beginning and the end.To the thirsty I will give from the spring of the water of life without payment.The one who conquers will have this heritage, and I will be his God and he will be my son.”</p>",reading,,New Testament
+Romans 5: 5-11,"<p>And hope does not put us to shame, because God’s love has been poured into our hearts through the Holy Spirit who has been given to us.For while we were still weak, at the right time Christ died for the ungodly.For one will scarcely die for a righteous person—though perhaps for a good person one would dare even to die—but God shows his love for us in that while we were still sinners, Christ died for us.Since, therefore, we have now been justified by his blood, much more shall we be saved by him from the wrath of God.For if while we were enemies we were reconciled to God by the death of his Son, much more, now that we are reconciled, shall we be saved by his life.</p>",reading,,New Testament
+Romans 6: 1-11,"<p>Romans 6: 1-11What shall we say then? Are we to continue in sin that grace may abound? By no means! How can we who died to sin still live in it? Do you not know that all of us who have been baptised into Christ Jesus were baptised into his death?We were buried therefore with him by baptism into death, in order that, just as Christ was raised from the dead by the glory of the Father, we too might walk in the newness of life.For if we have been united in a death like his, we shall certainly be united with him in a resurrection like his. We know that our old self was crucified with him in order that the body of sin might be brought to nothing, so that we would no longer be enslaved to sin. For one who has died has been set free from sin.  Now if we have died with Christ, we believe that we will also live with him. We know that Christ, being raised from the dead, will never die again; death no longer has dominion over him. For the death he died he died to sin, once for all, but the life he lives he lives to God. So you must consider yourselves dead to sin and alive to God in Christ Jesus.</p>",reading,,New Testament
+Romans 6: 3-9,"<p>Do you not know that all of us who have been baptised into Christ Jesus were baptised into his death?We were buried therefore with him by baptism into death, in order that, just as Christ was raised from the dead by the glory of the Father,we too might walk in newness of life.For if we have been united with him in a death like his, we shall certainly be united with him in a resurrection like his.We know that our old self was crucified with him in order that the body of sin might be brought to nothing, so that we would no longer be enslaved to sin.For one who has died has been set free from sin.</p>",reading,,New Testament
+Romans 8: 31-19,"<p>Romans 8: 31-39What then shall we say to these things? If God is for us, who can be against us? He who did not spare his own Son but gave him up for us all, how will he not also with him graciously give us all things? Who shall bring any charges against God’s elect? It is God who justifies. Who is to condemn?Christ Jesus is the one who died – more than that, who was raised -  who is at the right hand of God, who indeed is interceding for us. Who shall separate us from the love of Christ? Shall tribulation , or distress, or persecution, or famine, or nakedness, or danger , or sword?As it is written, “For your sake we are being killed all the day long; we are regarded as sheep to be slaughtered.”No, in all these things we are more than conquerors through him who loved us. For I am sure that neither death nor life, nor angels nor rulers, nor things present nor things to come, nor powers, nor height nor depth, nor anything else in creation, will be able to separate us from the love of God in Christ Jesus our Lord.</p>",reading,,New Testament
 She Is Gone (He Is Gone),"<p>He Is Gone</p>
 <p>You can shed tears that he is gone<br/>
 Or you can smile because he has livedYou can close your eyes and pray that he will come back<br/>
@@ -1191,7 +1191,7 @@ Or you can open your eyes and see all that he has leftYour heart can be empty be
 Or you can be full of the love that you sharedYou can turn your back on tomorrow and live yesterday<br/>
 Or you can be happy for tomorrow because of yesterdayYou can remember him and only that he is gone<br/>
 Or you can cherish his memory and let it live onYou can cry and close your mind, be empty and turn your back<br/>
-Or you can do what he would want: smile, open your eyes, love and go on.</p>",reading,
+Or you can do what he would want: smile, open your eyes, love and go on.</p>",reading,,Poems
 Smile,"<p>even though it&#x27;s breaking<br/>
 When there are clouds in the sky, you&#x27;ll get by<br/>
 If you  through your fear and sorrow<br/>
@@ -1211,7 +1211,7 @@ Although a tear may be ever so near<br/>
 That&#x27;s the time you must keep on trying<br/>
 , what&#x27;s the use of crying?<br/>
 You&#x27;ll find that life is still worthwhile<br/>
-If you just</p>",lyric,22 Smile
+If you just</p>",lyric,22 Smile,,
 Song of Farewell,"<p>May the choir of angels,<br/>
 Come to greet you.<br/>
 May they speed you to paradise.<br/>
@@ -1258,7 +1258,7 @@ May they speed you to paradise.<br/>
 May the Lord enfold you<br/>
 In His mercy.<br/>
 May you find eternal life</p>
-<p>AMEN</p>",lyric,23 Song Of Farewell
+<p>AMEN</p>",lyric,23 Song Of Farewell,,
 The Broken Chain,"<p>We little knew the day<br/>
 God was going to call your name.<br/>
 In life we loved you dearly.<br/>
@@ -1275,7 +1275,7 @@ Our family chain is broken<br/>
 and nothing seems the same,<br/>
 but as God calls us one by one<br/>
 the chain will link again.<br/>
-Ron Tranme</p>",reading,
+Ron Tranme</p>",reading,,Poems
 The Dash,"<p>I read of a man who stood to speak<br/>
 At the funeral of a friendHe referred to the dates on the tombstone<br/>
 From the beginning… to the endHe noted that first came the date of birth<br/>
@@ -1302,7 +1302,7 @@ Remembering this special dash<br/>
 Might only last a little whileSo, when your eulogy is being read<br/>
 With your life’s actions to rehash…<br/>
 Would you be proud of the things they say<br/>
-About how you spent YOUR dash?</p>",reading,
+About how you spent YOUR dash?</p>",reading,,Poems
 The Lords prayer,"<p>The Lord&#x27;s Prayer</p>
 <p>Our Father, Who art in heaven,<br/>
 Hallowed be Thy Name.<br/>
@@ -1315,7 +1315,7 @@ as we forgive those who trespass against us.<br/>
 And lead us not into temptation,<br/>
 but deliver us from evil.<br/>
 ( For thine is the kingdom, the power and the glory, forever and ever)</p>
-<p>AMEN</p>",lyric,
+<p>AMEN</p>",lyric,,
 The Lord’s My Shepherd,"<p>I’ll not want,<br/>
 He makes me down to lie, in pastures green;<br/>
 He leadeth me the quiet waters by.</p>
@@ -1334,7 +1334,7 @@ And my cup overflows.</p>
 <p>Goodness and mercy all my life<br/>
 Shall surely follow me;<br/>
 And in God’s house for evermore<br/>
-My dwelling-place shall be.</p>",lyric,24 The lord's My Shepherd
+My dwelling-place shall be.</p>",lyric,24 The lord's My Shepherd,,
 The Old Rugged Cross,"<p>On a hill far away<br/>
 stood an old rugged cross,<br/>
 the emblem of suff ’ring and shame;<br/>
@@ -1374,7 +1374,7 @@ where his glory forever I’ll share.</p>
 <p>So I’ll cherish the old rugged cross,<br/>
 till my trophies at last I lay down;<br/>
 I will cling to the old rugged cross,<br/>
-and exchange it some day for a crown.</p>",lyric,25 The Old Rugged Cross
+and exchange it some day for a crown.</p>",lyric,25 The Old Rugged Cross,,
 The Ship of Life,"<p>Along the shore I spy a ship As she set out to sea;<br/>
 She spreads her sails and sniffs the breeze<br/>
 And slips away from me.<br/>
@@ -1390,8 +1390,8 @@ They’re shouting, Here she comes!<br/>
 We’re built to cruise for but a while<br/>
 Upon the trackless sea<br/>
 Until one day we sail away into infinity.<br/>
-John T. Bake</p>",reading,
-The Wind Beneath My Wings,<p>Lyrics not available.</p>,lyric,26 The Wind Beneath My Wings
+John T. Bake</p>",reading,,Poems
+The Wind Beneath My Wings,<p>Lyrics not available.</p>,lyric,26 The Wind Beneath My Wings,,
 Time to Say Goodbye,"<p>When I am alone I sit and dream<br/>
 And when I dream the words are missing<br/>
 Yes, I know that in a room so full of light<br/>
@@ -1427,7 +1427,7 @@ I will go, horizons are never far<br/>
 Would I have to find them alone?<br/>
 Without true light<br/>
 INSTRUMENTAL<br/>
-I love you.</p>",lyric,27 Time To Say Goodbye
+I love you.</p>",lyric,27 Time To Say Goodbye,,
 To Those Whom I Love and Those Who Love Me,"<p>When I am gone, release me, let me go,<br/>
 I have so many things to see and do.<br/>
 You mustn’t tie yourself to me with tears,<br/>
@@ -1446,8 +1446,8 @@ Though you can’t see or touch me, I’ll be near,<br/>
 And if you listen with your heart, you’ll hear.</p>
 <p>All of my love around you soft and clear.<br/>
 And then, when you must come this way alone,<br/>
-I’ll greet you with a smile and “Welcome Home.”</p>",reading,
-Watch The Sunrise,<p>Lyrics not available.</p>,lyric,11 Watch The Sunrise
+I’ll greet you with a smile and “Welcome Home.”</p>",reading,,Poems
+Watch The Sunrise,<p>Lyrics not available.</p>,lyric,11 Watch The Sunrise,,
 Watch The Sunset,"<p>I Watch The Sunrise</p>
 <p>I watch the sunrise lighting the sky,<br/>
 Casting its shadows near.<br/>
@@ -1486,7 +1486,7 @@ Following all my ways.<br/>
 May I be always close to you,<br/>
 Following all your ways, Lord.<br/>
 But you are always, close to me,<br/>
-Following all my ways.</p>",reading,
+Following all my ways.</p>",reading,,Hymns
 We Remember Them,"<p>At the opening of the buds and in the rebirth of spring<br/>
 .<br/>
 At the blueness of the skies and in the warmth of summer<br/>
@@ -1510,8 +1510,8 @@ When we have achievements that are based on theirs<br/>
 .<br/>
 As long as we live, they too will live;<br/>
 for they are now a part of us<br/>
-as .</p>",reading,
-What A Wonderful World,<p>Lyrics not available.</p>,lyric,28 What A Wonderful World
+as .</p>",reading,,Poems
+What A Wonderful World,<p>Lyrics not available.</p>,lyric,28 What A Wonderful World,,
 When I Must Leave You,"<p>for a little while,<br/>
 Please do not grieve and shed wild tears<br/>
 And hug your sorrow to you through the years,<br/>
@@ -1524,7 +1524,7 @@ Reach out your hand in comfort and cheer<br/>
 And I in turn will comfort you and hold you near;<br/>
 And never, never be afraid to die,<br/>
 For I am waiting for you in the sky!<br/>
-By Helen Steiner Rice</p>",reading,
+By Helen Steiner Rice</p>",reading,,Poems
 Wind Beneath My Wings,"<p>The</p>
 <p>It must have been cold there in my shadow<br/>
 To never have sunlight on your face.<br/>
@@ -1554,10 +1554,10 @@ For you are the wind beneath my wings</p>
 So high, I almost touch the sky.<br/>
 Thank you, Thank you,<br/>
 Thank god for you,<br/>
-Thank God for you the wind beneath my wings.</p>",lyric,
+Thank God for you the wind beneath my wings.</p>",lyric,,
 Wisdom 3: 1-9,"<p>Wisdom</p>
 <p>3: 1-9</p>
-<p>But the souls of the righteous are in the hand of God,and no torment will ever touch them.In the eyes of the foolish they seemed to have died,and their departure was thought to be an affliction,and their going from us to be their destruction;but they are at peace.For though in the sight of men they were punished,their hope is full of immortality.Having been disciplined a little, they will receive great good,because God tested them and found them worthy of himself;like gold in the furnace he tried them,and like a sacrificial burnt offering he accepted them.In the time of their visitation they will shine forth,and will run like sparks through the stubble.They will govern nations and rule over peoples,and the Lord will reign over them for ever.Those who trust in him will understand truth,and the faithful will abide with him in love,because grace and mercy are upon his elect.</p>",reading,
+<p>But the souls of the righteous are in the hand of God,and no torment will ever touch them.In the eyes of the foolish they seemed to have died,and their departure was thought to be an affliction,and their going from us to be their destruction;but they are at peace.For though in the sight of men they were punished,their hope is full of immortality.Having been disciplined a little, they will receive great good,because God tested them and found them worthy of himself;like gold in the furnace he tried them,and like a sacrificial burnt offering he accepted them.In the time of their visitation they will shine forth,and will run like sparks through the stubble.They will govern nations and rule over peoples,and the Lord will reign over them for ever.Those who trust in him will understand truth,and the faithful will abide with him in love,because grace and mercy are upon his elect.</p>",reading,,Old Testament
 Wonderful World,"<p>I see skies of blue<br/>
 And clouds of white<br/>
 The bright blessed day<br/>
@@ -1581,7 +1581,7 @@ What a<br/>
 Yes, I think to myself<br/>
 What a .</p>
 <p>Yes, I think to myself<br/>
-What a .</p>",reading,
+What a .</p>",reading,,New Age
 You'll Never Walk Alone,"<p>When you walk through a storm<br/>
 Hold your head up high<br/>
 And don&#x27;t be afraid of the dark.<br/>
@@ -1598,4 +1598,4 @@ You&#x27;ll never walk alone.</p>
 <p>Walk on, walk on<br/>
 With hope in your heart<br/>
 And you&#x27;ll never walk alone<br/>
-You&#x27;ll never walk alone</p>",lyric,29 You'll Never Walk Alone
+You&#x27;ll never walk alone</p>",lyric,29 You'll Never Walk Alone,,

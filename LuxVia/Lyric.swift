@@ -7,8 +7,6 @@
 
 import Foundation
 
-
-
 //extension Lyric {
 //    init?(csvLine: String) {
 //        let parts = csvLine.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -33,5 +31,18 @@ import Foundation
 extension Array {
     subscript(safe index: Int) -> Element? {
         indices.contains(index) ? self[index] : nil
+    }
+}
+
+extension Lyric {
+    static func fromCSV(parts: [String]) -> Lyric? {
+        guard parts.count >= 4 else { return nil }
+        let title = parts[0]
+        let body = parts[1]
+        let typeString = parts[2].lowercased()
+        let audioFileName = parts[3].isEmpty ? nil : parts[3]
+        let category = parts.count > 4 ? parts[4] : nil
+        guard let type = LyricType(rawValue: typeString) else { return nil }
+        return Lyric(title: title, body: body, type: type, audioFileName: audioFileName, category: category)
     }
 }
