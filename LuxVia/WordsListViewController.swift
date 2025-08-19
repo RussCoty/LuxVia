@@ -1,13 +1,14 @@
 import UIKit
 
 class WordsListViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
+    // No collapsible logic needed
     deinit {
         // If you ever reintroduce observers
         NotificationCenter.default.removeObserver(self)
     }
 
     private let segmentedControl = UISegmentedControl(items: ["Readings", "Lyrics", "Custom"])
-    private let tableView = UITableView()
+    private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private var customVC: CustomReadingsViewController?
 
     //private var lyrics: [Lyric] = []
@@ -35,9 +36,10 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
 
             .sorted { $0.title.localizedCaseInsensitiveCompare($1.title) == .orderedAscending }
 
-        lyrics = allLyrics
-        readings = allLyrics.filter { $0.type == LyricType.reading }
-        // Group readings by category
+    lyrics = allLyrics
+    readings = allLyrics.filter { $0.type == LyricType.reading }
+    lyricOnly = allLyrics.filter { $0.type == LyricType.lyric }
+    // Group readings by category
         let grouped = Dictionary(grouping: readings) { $0.category ?? "Other" }
         readingsByCategory = grouped.keys.sorted().map { (category) in
             (category, grouped[category] ?? [])
@@ -75,8 +77,12 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         tableView.dataSource = self
         tableView.delegate = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        tableView.backgroundColor = .clear
+    tableView.backgroundColor = .systemGray6
         tableView.contentInset = UIEdgeInsets(top: 0, left: 0, bottom: 16, right: 0)
+        tableView.separatorStyle = .singleLine
+        tableView.sectionHeaderHeight = 44
+        tableView.rowHeight = 44
+    // style is set at initialization
         view.addSubview(tableView)
 
         NSLayoutConstraint.activate([
@@ -166,7 +172,6 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         let detailVC = LyricsDetailViewController(entry: entry)
         navigationController?.pushViewController(detailVC, animated: true)
     }
-    
 
 
 
