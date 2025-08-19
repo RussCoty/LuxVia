@@ -105,7 +105,8 @@ final class LyricsSyncManager {
                         title: title,
                         body: content,
                         type: .lyric,
-                        audioFileName: (musicTag?.isEmpty == true ? nil : musicTag)
+                        audioFileName: (musicTag?.isEmpty == true ? nil : musicTag),
+                        category: nil
                     )
 
                     entries.append(lyric)

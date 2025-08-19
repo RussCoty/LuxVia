@@ -39,7 +39,8 @@ final class CSVLyricsLoader {
                     body: row.content,
                     type: type,
                     audioFileName: row.audio_file_name.isEmpty ? nil : row.audio_file_name
-                )
+                        , category: row.category.isEmpty ? nil : row.category
+                    )
             }
 
             print("✅ Loaded \(entries.count) lyrics from CSV")
@@ -63,4 +64,5 @@ struct RawLyricRow: Codable {
     let content: String
     let type: String
     let audio_file_name: String
+        let category: String
 }
