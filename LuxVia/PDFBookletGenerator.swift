@@ -213,8 +213,18 @@ final class PDFBookletGenerator {
 
     // MARK: - Readings preparation & pagination
     private static func prepareReadingAttributedStrings(from items: [ServiceItem]) -> [NSAttributedString] {
-        var result: [NSAttributedString] = []
+        var result: [(title: NSAttributedString, content: NSAttributedString)] = []
         for item in items {
+            let title = item.title.trimmingCharacters(in: .whitespacesAndNewlines)
+            var titleString: NSAttributedString? = nil
+            if !title.isEmpty {
+                let titleAttrs: [NSAttributedString.Key: Any] = [
+                    .font: UIFont.boldSystemFont(ofSize: 13),
+                    .paragraphStyle: centeredParagraphStyle()
+                ]
+                titleString = NSAttributedString(string: title + "\n", attributes: titleAttrs)
+            }
+
             guard let htmlText = item.customText else { continue }
             let fixed = htmlText
                 .replacingOccurrences(of: "â€™", with: "’")
@@ -233,10 +243,20 @@ final class PDFBookletGenerator {
                 let style = NSMutableParagraphStyle(); style.alignment = .center
                 let mutable = NSMutableAttributedString(attributedString: attr)
                 mutable.addAttribute(.paragraphStyle, value: style, range: NSRange(location: 0, length: mutable.length))
-                result.append(mutable)
+                if let titleString = titleString {
+                    result.append((title: titleString, content: mutable))
+                } else {
+                    result.append((title: NSAttributedString(string: ""), content: mutable))
+                }
             }
         }
-        return result
+        // Flatten to array of NSAttributedString, each pair is (title, content)
+        var flat: [NSAttributedString] = []
+        for pair in result {
+            flat.append(pair.title)
+            flat.append(pair.content)
+        }
+        return flat
     }
 
     private static func paginate(readings: [NSAttributedString], pageWidth: CGFloat, pageHeight: CGFloat, borderInsetX: CGFloat, borderInsetY: CGFloat) -> (pages: [[NSAttributedString]], heights: [CGFloat]) {
@@ -247,15 +267,40 @@ final class PDFBookletGenerator {
         let contentWidth = pageWidth - 2 * borderInsetX
         let maxContentHeight = pageHeight - 2 * borderInsetY - 20
 
-        for attr in readings {
-            let framesetter = CTFramesetterCreateWithAttributedString(attr as CFAttributedString)
-            let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0, length: attr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
-            let itemHeight = size.height + 20
-            if currentHeight + itemHeight > maxContentHeight && currentHeight > 0 {
-                pages.append(current); heights.append(currentHeight)
-                current = []; currentHeight = 0
+        var i = 0
+        while i < readings.count {
+            // Always treat (title, content) as a pair
+            if i + 1 < readings.count {
+                let titleAttr = readings[i]
+                let contentAttr = readings[i+1]
+                let titleFramesetter = CTFramesetterCreateWithAttributedString(titleAttr as CFAttributedString)
+                let titleSize = CTFramesetterSuggestFrameSizeWithConstraints(titleFramesetter, CFRange(location: 0, length: titleAttr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
+                let titleHeight = titleSize.height + 10
+                let contentFramesetter = CTFramesetterCreateWithAttributedString(contentAttr as CFAttributedString)
+                let contentSize = CTFramesetterSuggestFrameSizeWithConstraints(contentFramesetter, CFRange(location: 0, length: contentAttr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
+                let contentHeight = contentSize.height + 20
+                let blockHeight = titleHeight + contentHeight
+                if currentHeight + blockHeight > maxContentHeight && currentHeight > 0 {
+                    pages.append(current); heights.append(currentHeight)
+                    current = []; currentHeight = 0
+                }
+                current.append(titleAttr)
+                current.append(contentAttr)
+                currentHeight += blockHeight
+                i += 2
+            } else {
+                // If odd, just add the last one
+                let attr = readings[i]
+                let framesetter = CTFramesetterCreateWithAttributedString(attr as CFAttributedString)
+                let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0, length: attr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
+                let itemHeight = size.height + 20
+                if currentHeight + itemHeight > maxContentHeight && currentHeight > 0 {
+                    pages.append(current); heights.append(currentHeight)
+                    current = []; currentHeight = 0
+                }
+                current.append(attr); currentHeight += itemHeight
+                i += 1
             }
-            current.append(attr); currentHeight += itemHeight
         }
         if !current.isEmpty { pages.append(current); heights.append(currentHeight) }
         return (pages, heights)
