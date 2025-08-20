@@ -43,6 +43,6 @@ extension Lyric {
         let audioFileName = parts[3].isEmpty ? nil : parts[3]
         let category = parts.count > 4 ? parts[4] : nil
         guard let type = LyricType(rawValue: typeString) else { return nil }
-        return Lyric(title: title, body: body, type: type, audioFileName: audioFileName, category: category)
+    return Lyric(uid: nil, title: title, body: body, type: type, audioFileName: audioFileName, category: category)
     }
 }

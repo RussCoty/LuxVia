@@ -107,7 +107,6 @@ class ServiceOrderManager {
             if let lyric = lyric {
                 // Update ServiceItem with matched lyric body
                 items[index] = ServiceItem(
-                    id: item.id,
                     type: item.type,
                     title: item.title,
                     subtitle: item.subtitle,
