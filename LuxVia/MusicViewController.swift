@@ -318,7 +318,7 @@ class MusicViewController: BaseViewController,
 
     private func addMusicEntry(_ entry: SongEntry, type: ServiceItemType) {
         // Find matching lyric by title or fileName
-        let lyric = SharedLibraryManager.shared.allLyrics.first {
+        let lyric = SharedLibraryManager.shared.allReadings.first {
             ($0.title == entry.title) || ($0.audioFileName == entry.fileName)
         }
         let serviceItem = ServiceItem(
