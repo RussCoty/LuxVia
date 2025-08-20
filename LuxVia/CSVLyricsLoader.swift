@@ -61,9 +61,10 @@ final class CSVLyricsLoader {
 
 // Matches CSV header
 struct RawLyricRow: Codable {
+    let uid: String      // CSV unique ID column
     let title: String
     let content: String
     let type: String
     let audio_file_name: String
-        let category: String
+    let category: String
 }
