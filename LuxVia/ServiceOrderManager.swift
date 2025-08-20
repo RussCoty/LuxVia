@@ -88,23 +88,27 @@ class ServiceOrderManager {
 
     /// Updates existing song items in the service order to include their lyrics for booklet inclusion
     func addLyricsToSongsInServiceOrder(_ lyrics: [Lyric]) {
+        func normalize(_ str: String) -> String {
+            let charset = CharacterSet.punctuationCharacters.union(.symbols)
+            let noPunct = str.components(separatedBy: charset).joined()
+            return noPunct.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        func stripExtension(_ name: String) -> String {
+            return (name as NSString).deletingPathExtension
+        }
         for (index, item) in items.enumerated() {
             guard item.type == .song else { continue }
-            // Helper to strip file extension
-            func stripExtension(_ name: String) -> String {
-                return (name as NSString).deletingPathExtension
-            }
-            // Match lyric by audioFileName (ignoring extension) if available, else by title
+            let itemTitleNorm = normalize(item.title)
+            let itemFileNorm = item.fileName != nil ? normalize(stripExtension(item.fileName!)) : nil
             let lyric = lyrics.first(where: {
-                if let fileName = item.fileName, let lyricFile = $0.audioFileName {
-                    let fileNameStripped = stripExtension(fileName.trimmingCharacters(in: .whitespacesAndNewlines))
-                    let lyricFileStripped = stripExtension(lyricFile.trimmingCharacters(in: .whitespacesAndNewlines))
-                    return fileNameStripped.caseInsensitiveCompare(lyricFileStripped) == .orderedSame
+                let lyricTitleNorm = normalize($0.title)
+                let lyricFileNorm = $0.audioFileName != nil ? normalize(stripExtension($0.audioFileName!)) : nil
+                if let itemFileNorm = itemFileNorm, let lyricFileNorm = lyricFileNorm {
+                    return itemFileNorm == lyricFileNorm
                 }
-                return item.title.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare($0.title.trimmingCharacters(in: .whitespacesAndNewlines)) == .orderedSame
+                return itemTitleNorm == lyricTitleNorm
             })
             if let lyric = lyric {
-                // Update the ServiceItem with the lyric body
                 items[index] = ServiceItem(
                     type: item.type,
                     title: item.title,
