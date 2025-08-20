@@ -154,12 +154,17 @@ class LyricsDetailViewController: UIViewController {
         if let filename = entry.audioFileName {
             let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
             if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
+                // Find matching lyric by title or fileName
+                let lyric = SharedLibraryManager.shared.allLyrics.first {
+                    ($0.title == song.title) || ($0.audioFileName == song.fileName)
+                }
                 let serviceItem = ServiceItem(
                     type: .song,
                     title: song.title,
                     subtitle: nil,
                     fileName: song.fileName,
-                    customText: nil
+                    customText: nil,
+                    uid: lyric?.uid // Set uid if found
                 )
 
                 if ServiceOrderManager.shared.items.contains(where: { $0.fileName == song.fileName && $0.type == .music }) {

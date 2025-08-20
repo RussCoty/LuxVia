@@ -317,12 +317,17 @@ class MusicViewController: BaseViewController,
     }
 
     private func addMusicEntry(_ entry: SongEntry, type: ServiceItemType) {
+        // Find matching lyric by title or fileName
+        let lyric = SharedLibraryManager.shared.allLyrics.first {
+            ($0.title == entry.title) || ($0.audioFileName == entry.fileName)
+        }
         let serviceItem = ServiceItem(
             type: type,
             title: entry.title,
             subtitle: nil,
             fileName: entry.fileName,
-            customText: nil
+            customText: nil,
+            uid: lyric?.uid // Set uid if found, else nil
         )
 
         if ServiceOrderManager.shared.items.contains(where: { $0.fileName == entry.fileName && $0.type == type }) {
