@@ -97,24 +97,18 @@ class ServiceOrderManager {
             return (name as NSString).deletingPathExtension
         }
         for (index, item) in items.enumerated() {
-            guard item.type == .song else { continue }
-            let itemTitleNorm = normalize(item.title)
-            let itemFileNorm = item.fileName != nil ? normalize(stripExtension(item.fileName!)) : nil
-            let lyric = lyrics.first(where: {
-                let lyricTitleNorm = normalize($0.title)
-                let lyricFileNorm = $0.audioFileName != nil ? normalize(stripExtension($0.audioFileName!)) : nil
-                if let itemFileNorm = itemFileNorm, let lyricFileNorm = lyricFileNorm {
-                    return itemFileNorm == lyricFileNorm
-                }
-                return itemTitleNorm == lyricTitleNorm
-            })
+            guard item.type == .song || item.type == .music else { continue }
+            guard let itemUid = item.uid else { continue }
+            let lyric = lyrics.first(where: { $0.type == .lyric && $0.uid == itemUid })
             if let lyric = lyric {
                 items[index] = ServiceItem(
+                    id: item.id,
                     type: item.type,
                     title: item.title,
                     subtitle: item.subtitle,
                     fileName: item.fileName,
-                    customText: lyric.body
+                    customText: lyric.body,
+                    uid: item.uid
                 )
             }
         }
