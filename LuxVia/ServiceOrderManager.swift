@@ -88,29 +88,27 @@ class ServiceOrderManager {
 
     /// Updates existing song items in the service order to include their lyrics for booklet inclusion
     func addLyricsToSongsInServiceOrder(_ lyrics: [Lyric]) {
+        func normalize(_ str: String) -> String {
+            let charset = CharacterSet.punctuationCharacters.union(.symbols)
+            let noPunct = str.components(separatedBy: charset).joined()
+            return noPunct.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
+        }
+        func stripExtension(_ name: String) -> String {
+            return (name as NSString).deletingPathExtension
+        }
         for (index, item) in items.enumerated() {
-            guard item.type == .song else { continue }
-            // Helper to strip file extension
-            func stripExtension(_ name: String) -> String {
-                return (name as NSString).deletingPathExtension
-            }
-            // Match lyric by audioFileName (ignoring extension) if available, else by title
-            let lyric = lyrics.first(where: {
-                if let fileName = item.fileName, let lyricFile = $0.audioFileName {
-                    let fileNameStripped = stripExtension(fileName.trimmingCharacters(in: .whitespacesAndNewlines))
-                    let lyricFileStripped = stripExtension(lyricFile.trimmingCharacters(in: .whitespacesAndNewlines))
-                    return fileNameStripped.caseInsensitiveCompare(lyricFileStripped) == .orderedSame
-                }
-                return item.title.trimmingCharacters(in: .whitespacesAndNewlines).caseInsensitiveCompare($0.title.trimmingCharacters(in: .whitespacesAndNewlines)) == .orderedSame
-            })
+            guard item.type == .song || item.type == .music else { continue }
+            guard let itemUid = item.uid else { continue }
+            let lyric = lyrics.first(where: { $0.type == .lyric && $0.uid == itemUid })
             if let lyric = lyric {
-                // Update the ServiceItem with the lyric body
                 items[index] = ServiceItem(
+                    id: item.id,
                     type: item.type,
                     title: item.title,
                     subtitle: item.subtitle,
                     fileName: item.fileName,
-                    customText: lyric.body
+                    customText: lyric.body,
+                    uid: item.uid
                 )
             }
         }

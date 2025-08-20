@@ -17,13 +17,15 @@ struct ServiceItem: Codable, Identifiable {
     var subtitle: String?
     var fileName: String?      // For music only
     var customText: String?    // For readings or messages
+    var uid: Int?              // Unique ID for lyrics/readings, nil for custom
 
-    init(type: ServiceItemType, title: String, subtitle: String? = nil, fileName: String? = nil, customText: String? = nil) {
+    init(type: ServiceItemType, title: String, subtitle: String? = nil, fileName: String? = nil, customText: String? = nil, uid: Int? = nil) {
         self.id = UUID()
         self.type = type
         self.title = title
         self.subtitle = subtitle
         self.fileName = fileName
         self.customText = customText
+        self.uid = uid
     }
 }

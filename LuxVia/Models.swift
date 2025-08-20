@@ -12,6 +12,7 @@ enum LyricType: String, Codable {
     case lyric
 }
 struct Lyric: Codable {
+    let uid: Int?
     let title: String
     let body: String
     let type: LyricType
