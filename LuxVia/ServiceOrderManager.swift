@@ -87,6 +87,7 @@ class ServiceOrderManager {
     }
 
     /// Updates existing song items in the service order to include their lyrics for booklet inclusion
+    /// Now matches lyrics by unique uid for perfect accuracy. Custom items (uid == nil) are ignored.
     func addLyricsToSongsInServiceOrder(_ lyrics: [Lyric]) {
         func normalize(_ str: String) -> String {
             let charset = CharacterSet.punctuationCharacters.union(.symbols)
@@ -97,10 +98,13 @@ class ServiceOrderManager {
             return (name as NSString).deletingPathExtension
         }
         for (index, item) in items.enumerated() {
+            // Only update songs/music with a valid uid (from CSV)
             guard item.type == .song || item.type == .music else { continue }
             guard let itemUid = item.uid else { continue }
+            // Find lyric with matching uid
             let lyric = lyrics.first(where: { $0.type == .lyric && $0.uid == itemUid })
             if let lyric = lyric {
+                // Update ServiceItem with matched lyric body
                 items[index] = ServiceItem(
                     id: item.id,
                     type: item.type,
