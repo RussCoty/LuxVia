@@ -101,10 +101,14 @@ class ServiceOrderManager {
         for (index, item) in items.enumerated() {
             // Only update songs/music with a valid uid (from CSV)
             guard item.type == .song || item.type == .music else { continue }
-            guard let itemUid = item.uid else { continue }
+            guard let itemUid = item.uid else { 
+                print("[DEBUG] ServiceItem '", item.title, "' has no uid, skipping lyric match.")
+                continue 
+            }
             // Find lyric with matching uid
             let lyric = lyrics.first(where: { $0.type == .lyric && $0.uid == itemUid })
             if let lyric = lyric {
+                print("[DEBUG] Matched lyric for ServiceItem '", item.title, "' (uid: \(itemUid)): '", lyric.title, "'")
                 // Update ServiceItem with matched lyric body
                 items[index] = ServiceItem(
                     type: item.type,
@@ -114,6 +118,8 @@ class ServiceOrderManager {
                     customText: lyric.body,
                     uid: item.uid
                 )
+            } else {
+                print("[DEBUG] No lyric found for ServiceItem '", item.title, "' (uid: \(itemUid))")
             }
         }
         save()
