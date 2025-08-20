@@ -317,9 +317,16 @@ class MusicViewController: BaseViewController,
     }
 
     private func addMusicEntry(_ entry: SongEntry, type: ServiceItemType) {
-        // Find matching lyric by title or fileName
-        let lyric = SharedLibraryManager.shared.allReadings.first {
-            ($0.title == entry.title) || ($0.audioFileName == entry.fileName)
+        // For songs, match lyric strictly by audioFileName and type == .lyric; for others, match by title
+        let lyric: Lyric?
+        if type == .song {
+            lyric = SharedLibraryManager.shared.allReadings.first {
+                $0.type == .lyric && $0.audioFileName == entry.fileName
+            }
+        } else {
+            lyric = SharedLibraryManager.shared.allReadings.first {
+                $0.title == entry.title
+            }
         }
         let serviceItem = ServiceItem(
             type: type,
@@ -329,6 +336,15 @@ class MusicViewController: BaseViewController,
             customText: nil,
             uid: lyric?.uid // Set uid if found, else nil
         )
+
+        print("[DEBUG] Created ServiceItem:")
+        print("  id: \(serviceItem.id)")
+        print("  type: \(serviceItem.type)")
+        print("  title: \(serviceItem.title)")
+        print("  subtitle: \(serviceItem.subtitle ?? "nil")")
+        print("  fileName: \(serviceItem.fileName ?? "nil")")
+        print("  customText: \(serviceItem.customText != nil ? "SET" : "nil")")
+        print("  uid: \(serviceItem.uid != nil ? String(serviceItem.uid!) : "nil")")
 
         if ServiceOrderManager.shared.items.contains(where: { $0.fileName == entry.fileName && $0.type == type }) {
             showToast("Already in Order: \(entry.title)")
