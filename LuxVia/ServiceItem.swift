@@ -17,8 +17,9 @@ struct ServiceItem: Codable, Identifiable {
     var subtitle: String?
     var fileName: String?      // For music only
     var customText: String?    // For readings or messages
-    var uid: Int?              // Unique ID for lyrics/readings, nil for custom
+    var uid: Int?              // Unique ID for lyrics/readings from CSV; nil for custom items
 
+    /// uid is used for exact matching to lyrics/readings in the CSV. If nil, this is a custom item.
     init(type: ServiceItemType, title: String, subtitle: String? = nil, fileName: String? = nil, customText: String? = nil, uid: Int? = nil) {
         self.id = UUID()
         self.type = type

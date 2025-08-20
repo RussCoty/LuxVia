@@ -12,7 +12,7 @@ enum LyricType: String, Codable {
     case lyric
 }
 struct Lyric: Codable {
-    let uid: Int?
+    let uid: Int?              // Unique ID from CSV for matching to ServiceItem
     let title: String
     let body: String
     let type: LyricType
