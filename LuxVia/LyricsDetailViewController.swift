@@ -155,7 +155,7 @@ class LyricsDetailViewController: UIViewController {
             let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
             if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
                 // Find matching lyric by title or fileName
-                let lyric = SharedLibraryManager.shared.allLyrics.first {
+                let lyric = SharedLibraryManager.shared.allReadings.first {
                     ($0.title == song.title) || ($0.audioFileName == song.fileName)
                 }
                 let serviceItem = ServiceItem(
