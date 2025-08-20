@@ -102,6 +102,7 @@ final class LyricsSyncManager {
                     let musicTag = try? doc.select("meta[name=music-filename]").attr("content")
 
                     let lyric = Lyric(
+                        uid: nil,
                         title: title,
                         body: content,
                         type: .lyric,
