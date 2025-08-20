@@ -101,11 +101,16 @@ class MusicViewController: BaseViewController,
         let fileManager = FileManager.default
         var tempGroups: [String: [SongEntry]] = [:]
 
+        // Only add tracks that have a corresponding lyric entry in the CSV with a UID
+        let allLyrics = CSVLyricsLoader.shared.loadLyrics()
         func appendTrack(folder: String, fileURL: URL) {
             let title = fileURL.deletingPathExtension().lastPathComponent
             let fileName = fileURL.lastPathComponent // includes extension
-            let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
-            tempGroups[folder, default: []].append(entry)
+            // Find lyric with type == .lyric and audioFileName == fileName and has a UID
+            if let lyric = allLyrics.first(where: { $0.type == .lyric && $0.audioFileName == fileName && $0.uid != nil }) {
+                let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
+                tempGroups[folder, default: []].append(entry)
+            }
         }
 
         // Bundle assets
