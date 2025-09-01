@@ -101,43 +101,63 @@ class MusicViewController: BaseViewController,
         let fileManager = FileManager.default
         var tempGroups: [String: [SongEntry]] = [:]
 
-        // Only add tracks that have a corresponding lyric entry in the CSV with a UID
+        // Only add tracks that have a corresponding lyric entry in the CSV with a matching audioFileName
         let allLyrics = CSVLyricsLoader.shared.loadLyrics()
         print("[DEBUG] loadGroupedTrackList: loaded \(allLyrics.count) lyrics from CSV")
+        let lyricAudioNames = allLyrics.compactMap { $0.audioFileName }
+        print("[DEBUG] lyric audioFileNames from CSV: \(lyricAudioNames)")
         func appendTrack(folder: String, fileURL: URL) {
             let title = fileURL.deletingPathExtension().lastPathComponent
             let fileName = fileURL.lastPathComponent // includes extension
-            // Find lyric with type == .lyric and audioFileName == fileName and has a UID
-            if let lyric = allLyrics.first(where: { $0.type == .lyric && $0.audioFileName == fileName && $0.uid != nil }) {
+            print("[DEBUG] Checking file: \(fileName) against lyric audioFileNames")
+            // Find lyric with type == .lyric and audioFileName == fileName
+            if let lyric = allLyrics.first(where: { $0.type == .lyric && $0.audioFileName == fileName }) {
+                print("[DEBUG] MATCH: \(fileName) == \(lyric.audioFileName ?? "nil") (title: \(lyric.title))")
                 let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
                 tempGroups[folder, default: []].append(entry)
-                print("[DEBUG] Appended track: \(title) in folder: \(folder) with fileName: \(fileName)")
             } else {
-                print("[DEBUG] Skipped file: \(fileName) (no matching lyric with UID)")
+                // Try case-insensitive and trimmed match
+                let fileNameTrimmed = fileName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                if let lyric = allLyrics.first(where: { $0.type == .lyric && ($0.audioFileName?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == fileNameTrimmed) }) {
+                    print("[DEBUG] CASE/TRIM MATCH: \(fileName) == \(lyric.audioFileName ?? "nil") (title: \(lyric.title))")
+                    let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
+                    tempGroups[folder, default: []].append(entry)
+                } else {
+                    print("[DEBUG] NO MATCH for file: \(fileName)")
+                    // If imported, add anyway as generic track
+                    if folder == "Imported" {
+                        let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
+                        tempGroups[folder, default: []].append(entry)
+                        print("[DEBUG] Imported file added without lyric: \(fileName)")
+                    }
+                }
             }
         }
 
         // Bundle assets
         if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio"),
            let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
+            print("[DEBUG] Bundle audio path: \(bundleAudioURL.path)")
             for case let fileURL as URL in enumerator {
                 let ext = fileURL.pathExtension.lowercased()
                 if ext == "mp3" || ext == "wav" {
+                    print("[DEBUG] Found audio file in bundle: \(fileURL.lastPathComponent)")
                     let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
                     let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
                     appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
                 }
             }
         }
-
         // Imported assets live under Documents/audio (optionally /imported/... for legacy)
         if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {
             let audioRoot = docsURL.appendingPathComponent("audio")
             if fileManager.fileExists(atPath: audioRoot.path),
                let enumerator = fileManager.enumerator(at: audioRoot, includingPropertiesForKeys: nil) {
+                print("[DEBUG] Imported audio path: \(audioRoot.path)")
                 for case let fileURL as URL in enumerator {
                     let ext = fileURL.pathExtension.lowercased()
                     if ext == "mp3" || ext == "wav" {
+                        print("[DEBUG] Found imported audio file: \(fileURL.lastPathComponent)")
                         let relPath = fileURL.path.replacingOccurrences(of: audioRoot.path + "/", with: "")
                         let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
                         appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
