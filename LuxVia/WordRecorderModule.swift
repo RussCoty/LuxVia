@@ -379,11 +379,17 @@ private struct RecordButton: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
-            Image(systemName: isRecording ? "stop.circle.fill" : "record.circle")
-                .font(.system(size: 36))
-        }
-    .modifier(TintModifier(isRecording: isRecording))
+            Button(action: action) {
+                HStack {
+                    Image(systemName: isRecording ? "stop.circle.fill" : "record.circle")
+                        .font(.system(size: 36))
+                        .foregroundColor(isRecording ? .red : .accentColor)
+                    Text(isRecording ? "Stop Recording" : "Record")
+                        .font(.headline)
+                        .foregroundColor(isRecording ? .red : .accentColor)
+                }
+            }
+            .modifier(TintModifier(isRecording: isRecording))
     }
 }
 
