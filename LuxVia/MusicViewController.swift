@@ -157,10 +157,9 @@ class MusicViewController: BaseViewController,
                 for case let fileURL as URL in enumerator {
                     let ext = fileURL.pathExtension.lowercased()
                     if ext == "mp3" || ext == "wav" {
-                        print("[DEBUG] Found imported audio file: \(fileURL.lastPathComponent)")
-                        let relPath = fileURL.path.replacingOccurrences(of: audioRoot.path + "/", with: "")
-                        let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                        appendTrack(folder: folder.isEmpty ? "Imported" : folder, fileURL: fileURL)
+                        let debugFolder = "Imported"
+                        print("[DEBUG] Found imported audio file: \(fileURL.lastPathComponent) | Assigned folder: \(debugFolder) | Full path: \(fileURL.path)")
+                        appendTrack(folder: debugFolder, fileURL: fileURL)
                     }
                 }
             }
