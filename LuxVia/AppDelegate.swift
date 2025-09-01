@@ -17,18 +17,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
 
+    var window: UIWindow?
+
     func application(_ application: UIApplication,
                      didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
-        
+        window = UIWindow(frame: UIScreen.main.bounds)
+        let hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
+        if !hasSeenTutorial {
+            let tutorialVC = FirstLaunchTutorialViewController()
+            window?.rootViewController = tutorialVC
+            NotificationCenter.default.addObserver(self, selector: #selector(showMainUI), name: .didFinishFirstLaunchTutorial, object: nil)
+        } else {
+            // Existing main UI setup
+            AuthManager.shared.login() //debugging here
+            print("🧭 updateLoginButton CALLED — logged in =", AuthManager.shared.isLoggedIn)
+            // ✅ Load lyrics CSV into memory
+            LyricsLibraryManager.shared.loadLyricsFromCSV()
+            let ivoryColor = UIColor(named: "IvoryBackground") ?? UIColor(red: 1.0, green: 0.996, blue: 0.949, alpha: 1.0) // Fallback if asset missing
+            window?.rootViewController = MainTabBarController() // Replace with your main entry point
+        }
+        window?.makeKeyAndVisible()
+        return true
+    }
+
+    @objc private func showMainUI() {
+        UserDefaults.standard.set(true, forKey: "hasSeenTutorial")
+        // Existing main UI setup
         AuthManager.shared.login() //debugging here
         print("🧭 updateLoginButton CALLED — logged in =", AuthManager.shared.isLoggedIn)
-        
-        // ✅ Load lyrics CSV into memory
         LyricsLibraryManager.shared.loadLyricsFromCSV()
-        
-        let ivoryColor = UIColor(named: "IvoryBackground") ?? UIColor(red: 1.0, green: 0.996, blue: 0.949, alpha: 1.0) // Fallback if asset missing
-
-        return true
+        let ivoryColor = UIColor(named: "IvoryBackground") ?? UIColor(red: 1.0, green: 0.996, blue: 0.949, alpha: 1.0)
+        window?.rootViewController = MainTabBarController() // Replace with your main entry point
     }
 
 
