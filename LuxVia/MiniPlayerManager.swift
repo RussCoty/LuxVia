@@ -243,10 +243,12 @@ final class MiniPlayerManager {
             self.playerView?.updatePlayButton(isPlaying: true)
             self.playerView?.setFadeButtonTitle("Fade Out")
             self.playerView?.updateFadeIcon(isFadingOut: false)
-            
+            // Fade in over 7 seconds
+            let totalSteps = Int(7.0 / 0.01)
+            let increment = audio.volume / Float(totalSteps)
             Timer.scheduledTimer(withTimeInterval: 0.01, repeats: true) { timer in
-                if player.volume < audio.volume - 0.01 {
-                    player.volume += 0.01
+                if player.volume < audio.volume - increment {
+                    player.volume += increment
                 } else {
                     player.volume = audio.volume
                     timer.invalidate()
@@ -311,3 +313,5 @@ final class MiniPlayerManager {
     }
 
 }
+//end
+
