@@ -78,6 +78,7 @@
 		10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */; };
 		10824D832DF3989300CDF11B /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D822DF3989300CDF11B /* Models.swift */; };
 		10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */; };
+		1083AD072E65ED3E006227E5 /* WordRecorderModule.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1083AD062E65ED3E006227E5 /* WordRecorderModule.swift */; };
 		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
 		1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA52DC8EC06009398EB /* SceneDelegate.swift */; };
 		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
@@ -184,6 +185,7 @@
 		10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsDetailViewController.swift; sourceTree = "<group>"; };
 		10824D822DF3989300CDF11B /* Models.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
 		10824D842DF39A5500CDF11B /* LyricsSyncManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LyricsSyncManager.swift; sourceTree = "<group>"; };
+		1083AD062E65ED3E006227E5 /* WordRecorderModule.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WordRecorderModule.swift; sourceTree = "<group>"; };
 		1084FAA02DC8EC06009398EB /* LuxVia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuxVia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1084FAA32DC8EC06009398EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1084FAA52DC8EC06009398EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -383,6 +385,7 @@
 		1084FAA22DC8EC06009398EB /* LuxVia */ = {
 			isa = PBXGroup;
 			children = (
+				1083AD062E65ED3E006227E5 /* WordRecorderModule.swift */,
 				10AD60972E48A62D009809F1 /* Audio */,
 				10AB97E12E417C650015E379 /* lyrics.csv */,
 				1084FAB12DC8EC09009398EB /* Info.plist */,
@@ -613,6 +616,7 @@
 				10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */,
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
 				10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */,
+				1083AD072E65ED3E006227E5 /* WordRecorderModule.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */,
 				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,
