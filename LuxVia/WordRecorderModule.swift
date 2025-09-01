@@ -153,7 +153,11 @@ struct WordRecordingsStore {
 // MARK: - Audio Recorder
 
 final class WordAudioRecorder: NSObject, ObservableObject {
-    @Published private(set) var isRecording: Bool = false
+    @Published private(set) var isRecording: Bool = false {
+        didSet {
+            print("DEBUG: isRecording changed to", isRecording)
+        }
+    }
     @Published private(set) var currentWord: String? = nil
     @Published var lastError: RecordingError? = nil
 
@@ -162,6 +166,7 @@ final class WordAudioRecorder: NSObject, ObservableObject {
 
     override init() {
         super.init()
+        print("DEBUG: WordAudioRecorder initialized")
     }
 
     func requestPermission() async throws {
@@ -196,6 +201,7 @@ final class WordAudioRecorder: NSObject, ObservableObject {
             guard recorder?.record() == true else { throw RecordingError.cannotStartRecording(nil) }
             currentWord = word
             isRecording = true
+            print("DEBUG: startRecording called, isRecording set to true")
             lastError = nil
             return url
         } catch {
@@ -207,7 +213,8 @@ final class WordAudioRecorder: NSObject, ObservableObject {
     func stopRecording() throws -> URL {
         guard let recorder = recorder, isRecording else { throw RecordingError.noActiveRecorder }
         recorder.stop()
-        isRecording = false
+    isRecording = false
+    print("DEBUG: stopRecording called, isRecording set to false")
         let url = recorder.url
         self.recorder = nil
         return url
@@ -271,7 +278,7 @@ final class WordRecorderViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
 
-    @Published var recorder = WordAudioRecorder()
+    let recorder = WordAudioRecorder()
     let player = WordAudioPlayer()
     private let store = WordRecordingsStore()
 
@@ -296,6 +303,7 @@ final class WordRecorderViewModel: ObservableObject {
             do {
                 _ = try recorder.startRecording(for: inputWord.isEmpty ? "word" : inputWord)
             } catch {
+                print("DEBUG: startRecording error:", error)
                 alertMessage = (error as? RecordingError)?.localizedDescription ?? error.localizedDescription
                 showAlert = true
             }
@@ -308,6 +316,7 @@ final class WordRecorderViewModel: ObservableObject {
                 _ = try recorder.stopRecording()
                 refresh()
             } catch {
+                print("DEBUG: stopRecording error:", error)
                 alertMessage = (error as? RecordingError)?.localizedDescription ?? error.localizedDescription
                 showAlert = true
             }
@@ -327,22 +336,28 @@ final class WordRecorderViewModel: ObservableObject {
 
 public struct WordRecorderView: View {
     @StateObject private var model = WordRecorderViewModel()
+    @ObservedObject private var recorder: WordAudioRecorder
 
-    public init() {}
+    public init() {
+        let vm = WordRecorderViewModel()
+        _model = StateObject(wrappedValue: vm)
+        recorder = vm.recorder
+    }
 
     public var body: some View {
         NavigationView {
             VStack(spacing: 16) {
                 HStack {
-                    TextField("Enter word…", text: $model.inputWord)
+                    TextField("Enter name", text: $model.inputWord)
                         .textFieldStyle(.roundedBorder)
                         .disableAutocorrection(true)
                         .autocapitalization(.none)
-                    RecordButton(isRecording: model.recorder.isRecording) {
-                        if model.recorder.isRecording { model.stopRecording() }
+                    RecordButton(isRecording: recorder.isRecording) {
+                        print("DEBUG: RecordButton tapped, isRecording:", recorder.isRecording)
+                        if recorder.isRecording { model.stopRecording() }
                         else { model.startRecording() }
                     }
-                    .accessibilityLabel(model.recorder.isRecording ? "Stop recording" : "Start recording")
+                    .accessibilityLabel(recorder.isRecording ? "Stop recording" : "Start recording")
                 }
                 .padding(.horizontal)
 
@@ -367,7 +382,7 @@ public struct WordRecorderView: View {
                 }
                 .listStyle(.insetGrouped)
             }
-            .navigationTitle("Custom Words")
+            .navigationTitle("Record Audio")
             .modifier(TaskModifier { await model.begin() })
             .modifier(AlertModifier(showAlert: $model.showAlert, alertMessage: model.alertMessage))
         }
