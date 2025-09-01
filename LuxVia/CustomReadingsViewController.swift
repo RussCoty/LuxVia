@@ -1,10 +1,12 @@
 import UIKit
+import SwiftUI
 
 class CustomReadingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     private var customReadings: [CustomReading] = []
     private let tableView = UITableView()
     private let addButton = UIButton(type: .system)
+        private let recordButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -12,6 +14,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         customReadings = CustomReadingStore.shared.load()
         
         setupAddButton()
+            setupRecordButton()
         setupTableView()
     }
     
@@ -30,6 +33,19 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         ])
     }
     
+        private func setupRecordButton() {
+            recordButton.setTitle("🎤 Record Custom Reading", for: .normal)
+            recordButton.setTitleColor(.systemBlue, for: .normal)
+            recordButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            recordButton.addTarget(self, action: #selector(recordCustomReading), for: .touchUpInside)
+            recordButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(recordButton)
+            NSLayoutConstraint.activate([
+                recordButton.topAnchor.constraint(equalTo: addButton.bottomAnchor, constant: 12),
+                recordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
+        }
+    
     private func setupTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
@@ -38,13 +54,17 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: addButton.bottomAnchor, constant: 12),
+                tableView.topAnchor.constraint(equalTo: recordButton.bottomAnchor, constant: 12),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
     }
     
+        @objc private func recordCustomReading() {
+            let recorderVC = UIHostingController(rootView: WordRecorderView())
+            navigationController?.pushViewController(recorderVC, animated: true)
+        }
     @objc private func addReading() {
         let editorVC = CustomReadingEditorViewController()
         
