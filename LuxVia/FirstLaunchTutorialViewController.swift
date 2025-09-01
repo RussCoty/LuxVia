@@ -91,6 +91,4 @@ class FirstLaunchTutorialViewController: UIViewController {
     }
 }
 
-extension Notification.Name {
-    static let didFinishFirstLaunchTutorial = Notification.Name("didFinishFirstLaunchTutorial")
-}
+
