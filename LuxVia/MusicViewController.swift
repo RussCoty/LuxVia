@@ -103,6 +103,7 @@ class MusicViewController: BaseViewController,
 
         // Only add tracks that have a corresponding lyric entry in the CSV with a UID
         let allLyrics = CSVLyricsLoader.shared.loadLyrics()
+        print("[DEBUG] loadGroupedTrackList: loaded \(allLyrics.count) lyrics from CSV")
         func appendTrack(folder: String, fileURL: URL) {
             let title = fileURL.deletingPathExtension().lastPathComponent
             let fileName = fileURL.lastPathComponent // includes extension
@@ -110,6 +111,9 @@ class MusicViewController: BaseViewController,
             if let lyric = allLyrics.first(where: { $0.type == .lyric && $0.audioFileName == fileName && $0.uid != nil }) {
                 let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
                 tempGroups[folder, default: []].append(entry)
+                print("[DEBUG] Appended track: \(title) in folder: \(folder) with fileName: \(fileName)")
+            } else {
+                print("[DEBUG] Skipped file: \(fileName) (no matching lyric with UID)")
             }
         }
 
@@ -150,7 +154,9 @@ class MusicViewController: BaseViewController,
         sortedFolders = tempGroups.keys.sorted { $0.localizedStandardCompare($1) == .orderedAscending }
 
         SharedLibraryManager.shared.allSongs = tempGroups.values.flatMap { $0 }
+        print("[DEBUG] groupedTracks count: \(groupedTracks.count), sortedFolders: \(sortedFolders)")
         tableView.reloadData()
+        print("[DEBUG] tableView reloaded with \(SharedLibraryManager.shared.allSongs.count) songs")
     }
 
     func setupUI() {
@@ -162,6 +168,8 @@ class MusicViewController: BaseViewController,
         tableView.allowsMultipleSelectionDuringEditing = false
 
         view.addSubview(tableView)
+        print("[DEBUG] Added tableView to view hierarchy: tableView.superview = \(String(describing: tableView.superview))")
+        print("[DEBUG] tableView frame after add: \(tableView.frame)")
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
@@ -169,6 +177,7 @@ class MusicViewController: BaseViewController,
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor)
         ])
+        print("[DEBUG] tableView constraints activated")
     }
 
     func scrollToTrack(named fileName: String) {
