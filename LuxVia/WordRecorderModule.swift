@@ -271,7 +271,7 @@ final class WordRecorderViewModel: ObservableObject {
     @Published var showAlert: Bool = false
     @Published var alertMessage: String = ""
 
-    let recorder = WordAudioRecorder()
+    @Published var recorder = WordAudioRecorder()
     let player = WordAudioPlayer()
     private let store = WordRecordingsStore()
 
