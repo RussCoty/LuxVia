@@ -26,6 +26,45 @@ import SwiftUI
 import AVFoundation
 import Combine
 
+// MARK: - Compatibility Modifiers
+
+
+// MARK: - Compatibility Modifiers
+
+struct TintModifier: ViewModifier {
+    let isRecording: Bool
+    func body(content: Content) -> some View {
+        if #available(iOS 16, *) {
+            content.tint(isRecording ? .red : .accentColor)
+        } else {
+            content.accentColor(isRecording ? .red : .accentColor)
+        }
+    }
+}
+
+struct TaskModifier: ViewModifier {
+    let action: () async -> Void
+    func body(content: Content) -> some View {
+        if #available(iOS 15, *) {
+            content.task { await action() }
+        } else {
+            content
+        }
+    }
+}
+
+struct AlertModifier: ViewModifier {
+    @Binding var showAlert: Bool
+    var alertMessage: String
+    func body(content: Content) -> some View {
+        if #available(iOS 15, *) {
+            content.alert("Recording", isPresented: $showAlert, actions: { Button("OK", role: .cancel) {} }, message: { Text(alertMessage) })
+        } else {
+            content
+        }
+    }
+}
+
 // MARK: - Domain Model
 
 public struct WordRecording: Identifiable, Hashable, Codable {
@@ -309,7 +348,14 @@ public struct WordRecorderView: View {
 
                 List {
                     if model.recordings.isEmpty {
-                        VStack(alignment: .leading, spacing: 4) { Text("No recordings yet").font(.headline); Text("Type a word, tap Record, then Stop.").font(.caption).foregroundStyle(.secondary) })
+                        VStack(alignment: .leading, spacing: 4) {
+                            Text("No recordings yet").font(.headline)
+                            if #available(iOS 17, *) {
+                                Text("Type a word, tap Record, then Stop.").font(.caption).foregroundStyle(.secondary)
+                            } else {
+                                Text("Type a word, tap Record, then Stop.").font(.caption).foregroundColor(.secondary)
+                            }
+                        }
                     }
                     ForEach(model.recordings) { rec in
                         RecordingRow(recording: rec, isPlaying: model.player.currentURL == rec.url && model.player.isPlaying) {
@@ -322,8 +368,8 @@ public struct WordRecorderView: View {
                 .listStyle(.insetGrouped)
             }
             .navigationTitle("Custom Words")
-            .task { await model.begin() }
-            .alert("Recording", isPresented: $model.showAlert, actions: { Button("OK", role: .cancel) {} }, message: { Text(model.alertMessage) })
+            .modifier(TaskModifier { await model.begin() })
+            .modifier(AlertModifier(showAlert: $model.showAlert, alertMessage: model.alertMessage))
         }
     }
 }
@@ -337,7 +383,7 @@ private struct RecordButton: View {
             Image(systemName: isRecording ? "stop.circle.fill" : "record.circle")
                 .font(.system(size: 36))
         }
-        .tint(isRecording ? .red : .accentColor)
+    .modifier(TintModifier(isRecording: isRecording))
     }
 }
 
@@ -351,9 +397,15 @@ private struct RecordingRow: View {
         HStack {
             VStack(alignment: .leading, spacing: 4) {
                 Text(recording.word).font(.headline)
-                Text("\(Self.format(recording.duration))  ·  \(recording.createdAt, style: .date) \(recording.createdAt, style: .time)")
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
+                if #available(iOS 17, *) {
+                    Text("\(Self.format(recording.duration))  ·  \(recording.createdAt, style: .date) \(recording.createdAt, style: .time)")
+                        .font(.caption)
+                        .foregroundStyle(.secondary)
+                } else {
+                    Text("\(Self.format(recording.duration))  ·  \(recording.createdAt, style: .date) \(recording.createdAt, style: .time)")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
             }
             Spacer()
             Button(action: playAction) {
@@ -361,10 +413,14 @@ private struct RecordingRow: View {
                     .font(.title2)
             }
             .buttonStyle(.borderless)
-            Button(role: .destructive, action: deleteAction) {
-                Image(systemName: "trash")
+            if #available(iOS 15.0, *) {
+                Button(role: .destructive, action: deleteAction) {
+                    Image(systemName: "trash")
+                }
+                .buttonStyle(.borderless)
+            } else {
+                // Fallback on earlier versions
             }
-            .buttonStyle(.borderless)
         }
     }
 
