@@ -157,8 +157,8 @@ class LyricsDetailViewController: UIViewController {
                 let songFile = song.fileName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                 let songTitle = song.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
-                // Search both allReadings and allLyrics for a matching lyric with non-empty body
-                let allLyricsSources = SharedLibraryManager.shared.allReadings + (SharedLibraryManager.shared.allLyrics ?? [])
+                // Search allLyrics for a matching lyric with non-empty body
+                let allLyricsSources = SharedLibraryManager.shared.allLyrics
                 let lyricByAudio = allLyricsSources.first {
                     let lyricAudio = $0.audioFileName?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     return lyricAudio == songFile && !$0.body.isEmpty
