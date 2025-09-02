@@ -34,14 +34,23 @@ final class CSVLyricsLoader {
                     return nil
                 }
 
-                return Lyric(
-                    uid: Int(row.uid), // assuming row.uid is a string from CSV
-                    title: row.title,
-                    body: row.content,
-                    type: type,
-                    audioFileName: row.audio_file_name.isEmpty ? nil : row.audio_file_name,
-                    category: row.category.isEmpty ? nil : row.category
-                )
+                    let lyricUID: Int? = {
+                        if let intUID = Int(row.uid) {
+                            return intUID
+                        } else {
+                            print("⚠️ Could not convert uid '\(row.uid)' to Int for lyric titled '\(row.title)'")
+                            return nil
+                        }
+                    }()
+
+                    return Lyric(
+                        uid: lyricUID,
+                        title: row.title,
+                        body: row.content,
+                        type: type,
+                        audioFileName: row.audio_file_name.isEmpty ? nil : row.audio_file_name,
+                        category: row.category.isEmpty ? nil : row.category
+                    )
             }
 
             print("✅ Loaded \(entries.count) lyrics from CSV")
