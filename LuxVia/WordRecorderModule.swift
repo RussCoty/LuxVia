@@ -104,7 +104,7 @@ struct WordRecordingsStore {
 
     init(fileManager: FileManager = .default) {
         let docs = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first!
-        baseDirectory = docs.appendingPathComponent("Recordings/Words", isDirectory: true)
+        baseDirectory = docs.appendingPathComponent("audio/recordings", isDirectory: true)
     }
 
     func ensureDirectoryExists() throws {

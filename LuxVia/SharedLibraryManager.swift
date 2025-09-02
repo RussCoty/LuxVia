@@ -12,10 +12,10 @@ class SharedLibraryManager {
 
 
     func urlForTrack(named name: String) -> URL? {
-        print("[DEBUG] urlForTrack called with name: \(name)")
-        print("[DEBUG] Extension: \(ext), BaseName: \(baseName)")
-        let ext = (name as NSString).pathExtension.lowercased()
-        let baseName = (name as NSString).deletingPathExtension
+    let ext = (name as NSString).pathExtension.lowercased()
+    let baseName = (name as NSString).deletingPathExtension
+    print("[DEBUG] urlForTrack called with name: \(name)")
+    print("[DEBUG] Extension: \(ext), BaseName: \(baseName)")
 
         // 1. Check bundle path
         if let path = Bundle.main.path(forResource: baseName, ofType: ext, inDirectory: "Audio") {
