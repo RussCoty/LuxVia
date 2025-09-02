@@ -404,8 +404,9 @@ public struct WordRecorderView: View {
             type: .customReading,
             title: rec.word,
             subtitle: nil,
+            fileName: rec.url.lastPathComponent,
             customText: nil,
-            audioFileURL: rec.url
+            uid: nil
         )
         ServiceOrderManager.shared.add(serviceItem)
     }
