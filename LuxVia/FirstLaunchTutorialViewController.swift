@@ -1,5 +1,6 @@
 import UIKit
-//hopefully this will sync in the repo now 
+//hopefully this will sync in the repo now with the root veriosn of this file deletd 
+
 
 class FirstLaunchTutorialViewController: UIViewController {
 	private let steps = [
