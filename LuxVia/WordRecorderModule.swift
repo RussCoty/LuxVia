@@ -110,8 +110,15 @@ struct WordRecordingsStore {
     func ensureDirectoryExists() throws {
         let fm = FileManager.default
         if !fm.fileExists(atPath: baseDirectory.path) {
-            do { try fm.createDirectory(at: baseDirectory, withIntermediateDirectories: true) }
-            catch { throw RecordingError.cannotCreateDirectory(error) }
+            do {
+                try fm.createDirectory(at: baseDirectory, withIntermediateDirectories: true)
+                print("[WORD RECORDER] Created recordings directory: \(baseDirectory.path)")
+            } catch {
+                print("[WORD RECORDER] ERROR: Failed to create recordings directory: \(baseDirectory.path), error: \(error)")
+                throw RecordingError.cannotCreateDirectory(error)
+            }
+        } else {
+            print("[WORD RECORDER] Recordings directory exists: \(baseDirectory.path)")
         }
     }
 
@@ -198,13 +205,17 @@ final class WordAudioRecorder: NSObject, ObservableObject {
             recorder = try AVAudioRecorder(url: url, settings: settings)
             recorder?.delegate = self
             recorder?.isMeteringEnabled = true
-            guard recorder?.record() == true else { throw RecordingError.cannotStartRecording(nil) }
+            guard recorder?.record() == true else {
+                print("[WORD RECORDER] ERROR: Could not start recording for \(word) at \(url.path)")
+                throw RecordingError.cannotStartRecording(nil)
+            }
             currentWord = word
             isRecording = true
-            print("DEBUG: startRecording called, isRecording set to true")
+            print("[WORD RECORDER] Started recording for word '", word, "' at \(url.path)")
             lastError = nil
             return url
         } catch {
+            print("[WORD RECORDER] ERROR: Failed to start recording for \(word) at \(url.path), error: \(error)")
             throw RecordingError.cannotStartRecording(error)
         }
     }
@@ -213,10 +224,16 @@ final class WordAudioRecorder: NSObject, ObservableObject {
     func stopRecording() throws -> URL {
         guard let recorder = recorder, isRecording else { throw RecordingError.noActiveRecorder }
         recorder.stop()
-    isRecording = false
-    print("DEBUG: stopRecording called, isRecording set to false")
+        isRecording = false
+        print("[WORD RECORDER] Stopped recording. File should be at: \(recorder.url.path)")
         let url = recorder.url
         self.recorder = nil
+        let fileExists = FileManager.default.fileExists(atPath: url.path)
+        if fileExists {
+            print("[WORD RECORDER] Recording file saved successfully: \(url.path)")
+        } else {
+            print("[WORD RECORDER] ERROR: Recording file missing after stop: \(url.path)")
+        }
         return url
     }
 
@@ -224,7 +241,13 @@ final class WordAudioRecorder: NSObject, ObservableObject {
         guard let recorder = recorder else { return }
         isRecording = false
         recorder.stop()
-        try? FileManager.default.removeItem(at: recorder.url)
+        let url = recorder.url
+        do {
+            try FileManager.default.removeItem(at: url)
+            print("[WORD RECORDER] Cancelled and deleted recording: \(url.path)")
+        } catch {
+            print("[WORD RECORDER] ERROR: Failed to delete cancelled recording: \(url.path), error: \(error)")
+        }
         self.recorder = nil
     }
 }
