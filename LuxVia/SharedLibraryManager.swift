@@ -44,6 +44,18 @@ class SharedLibraryManager {
                 } else {
                     print("[DEBUG] Not found imported: \(importedURL.path)")
                 }
+
+                // 3. Check custom recordings in Documents/audio/recordings/
+                let recordingsURL = docsURL
+                    .appendingPathComponent("audio/recordings")
+                    .appendingPathComponent(fileName)
+                print("[DEBUG] Checking recordings: \(recordingsURL.path)")
+                if FileManager.default.fileExists(atPath: recordingsURL.path) {
+                    print("[DEBUG] Found recording: \(recordingsURL.path)")
+                    return recordingsURL
+                } else {
+                    print("[DEBUG] Not found recording: \(recordingsURL.path)")
+                }
             }
         } else {
             print("[DEBUG] No song found for: \(name)")

@@ -264,16 +264,54 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         lastTappedIndexPath = indexPath
         guard let item = item(for: indexPath) else { return }
 
-        if item.type == .reading || item.type == .customReading,
-           let text = item.customText {
-            logMiniPlayer("didSelectRowAt (reading)", visible: false)
-            if !UIApplication.isServiceTabActive() {
-                MiniPlayerManager.shared.setVisible(false)
+        if item.type == .reading || item.type == .customReading {
+            // If customReading has audio, play it; otherwise show text preview
+            if let fileName = item.fileName, !fileName.isEmpty {
+                // Try to find the custom recording in the shared library
+                if let customRecording = SharedLibraryManager.shared.allSongs.first(where: { $0.fileName == fileName }) {
+                    AudioPlayerManager.shared.cueTrack(customRecording, source: .library)
+                    MiniPlayerManager.shared.updateCuedTrackText(customRecording.title)
+                    highlightedFlashIndex = indexPath
+                    tableView.reloadData()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        if self.highlightedFlashIndex == indexPath {
+                            self.highlightedFlashIndex = nil
+                            tableView.reloadRows(at: [indexPath], with: .fade)
+                        }
+                    }
+                    return
+                } else {
+                    // Fallback: create a custom SongEntry for the recording and cue it
+                    let customTrack = SongEntry(
+                        title: item.title,
+                        fileName: fileName,
+                        artist: nil,
+                        duration: nil
+                    )
+                    AudioPlayerManager.shared.cueTrack(customTrack, source: .library)
+                    MiniPlayerManager.shared.updateCuedTrackText(item.title)
+                    highlightedFlashIndex = indexPath
+                    tableView.reloadData()
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                        if self.highlightedFlashIndex == indexPath {
+                            self.highlightedFlashIndex = nil
+                            tableView.reloadRows(at: [indexPath], with: .fade)
+                        }
+                    }
+                    return
+                }
             }
-            let preview = ReadingPreviewViewController(title: item.title, text: text)
-            navigationController?.pushViewController(preview, animated: true)
-            tableView.reloadData()
-            return
+            // Fallback: show text preview
+            if let text = item.customText {
+                logMiniPlayer("didSelectRowAt (reading)", visible: false)
+                if !UIApplication.isServiceTabActive() {
+                    MiniPlayerManager.shared.setVisible(false)
+                }
+                let preview = ReadingPreviewViewController(title: item.title, text: text)
+                navigationController?.pushViewController(preview, animated: true)
+                tableView.reloadData()
+                return
+            }
         }
 
         if [.song, .background, .music].contains(item.type),
