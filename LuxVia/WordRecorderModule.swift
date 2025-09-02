@@ -372,28 +372,15 @@ public struct WordRecorderView: View {
                             }
                         }
                     }
-                    ForEach(model.recordings) { rec in
-                        let isPlaying = model.player.currentURL == rec.url && model.player.isPlaying
-                        let playAction = { model.player.play(url: rec.url) }
-                        let deleteAction = { model.delete(rec) }
-                        let addToServiceAction = {
-                            let serviceItem = ServiceItem(
-                                type: .customReading,
-                                title: rec.word,
-                                subtitle: nil,
-                                customText: nil,
-                                audioFileURL: rec.url
+                        ForEach(model.recordings) { rec in
+                            RecordingRow(
+                                recording: rec,
+                                isPlaying: isPlaying(for: rec),
+                                playAction: { play(rec) },
+                                deleteAction: { delete(rec) },
+                                addToServiceAction: { addToService(rec) }
                             )
-                            ServiceOrderManager.shared.add(serviceItem)
                         }
-                        RecordingRow(
-                            recording: rec,
-                            isPlaying: isPlaying,
-                            playAction: playAction,
-                            deleteAction: deleteAction,
-                            addToServiceAction: addToServiceAction
-                        )
-                    }
                 }
                 .listStyle(.insetGrouped)
             }
@@ -401,6 +388,26 @@ public struct WordRecorderView: View {
             .modifier(TaskModifier { await model.begin() })
             .modifier(AlertModifier(showAlert: $model.showAlert, alertMessage: model.alertMessage))
         }
+    }
+    // Helper functions to break up complex expressions
+    private func isPlaying(for rec: WordRecording) -> Bool {
+        model.player.currentURL == rec.url && model.player.isPlaying
+    }
+    private func play(_ rec: WordRecording) {
+        model.player.play(url: rec.url)
+    }
+    private func delete(_ rec: WordRecording) {
+        model.delete(rec)
+    }
+    private func addToService(_ rec: WordRecording) {
+        let serviceItem = ServiceItem(
+            type: .customReading,
+            title: rec.word,
+            subtitle: nil,
+            customText: nil,
+            audioFileURL: rec.url
+        )
+        ServiceOrderManager.shared.add(serviceItem)
     }
 }
 
