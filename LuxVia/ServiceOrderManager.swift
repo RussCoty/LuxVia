@@ -99,17 +99,17 @@ class ServiceOrderManager {
             return (name as NSString).deletingPathExtension
         }
         for (index, item) in items.enumerated() {
-            // Only update songs/music with a valid uid (from CSV)
-            guard item.type == .song || item.type == .music else { continue }
-            guard let itemUid = item.uid else { 
+            // Only update songs/music/readings with a valid uid (from CSV)
+            guard item.type == .song || item.type == .music || item.type == .reading else { continue }
+            guard let itemUid = item.uid else {
                 print("[DEBUG] ServiceItem '", item.title, "' has no uid, skipping lyric match.")
-                continue 
+                continue
             }
-            // Find lyric with matching uid
-            let lyric = lyrics.first(where: { $0.type == .lyric && $0.uid == itemUid })
+            // Find lyric with matching uid and type
+            let lyric = lyrics.first(where: { ($0.type == .lyric || $0.type == .reading) && $0.uid == itemUid })
             if let lyric = lyric {
-                print("[DEBUG] Matched lyric for ServiceItem '", item.title, "' (uid: \(itemUid)): '", lyric.title, "'")
-                // Update ServiceItem with matched lyric body
+                print("[DEBUG] Matched lyric/reading for ServiceItem '", item.title, "' (uid: \(itemUid)): '", lyric.title, "'")
+                // Update ServiceItem with matched lyric/reading body
                 items[index] = ServiceItem(
                     type: item.type,
                     title: item.title,
@@ -119,7 +119,7 @@ class ServiceOrderManager {
                     uid: item.uid
                 )
             } else {
-                print("[DEBUG] No lyric found for ServiceItem '", item.title, "' (uid: \(itemUid))")
+                print("[DEBUG] No lyric/reading found for ServiceItem '", item.title, "' (uid: \(itemUid))")
             }
         }
         save()
