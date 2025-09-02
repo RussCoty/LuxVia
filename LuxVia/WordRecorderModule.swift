@@ -373,11 +373,23 @@ public struct WordRecorderView: View {
                         }
                     }
                     ForEach(model.recordings) { rec in
-                        RecordingRow(recording: rec, isPlaying: model.player.currentURL == rec.url && model.player.isPlaying) {
-                            model.player.play(url: rec.url)
-                        } deleteAction: {
-                            model.delete(rec)
-                        }
+                        RecordingRow(
+                            recording: rec,
+                            isPlaying: model.player.currentURL == rec.url && model.player.isPlaying,
+                            playAction: { model.player.play(url: rec.url) },
+                            deleteAction: { model.delete(rec) },
+                            addToServiceAction: {
+                                // Add to Service logic
+                                let serviceItem = ServiceItem(
+                                    type: .customReading, // Or .audioRecording if available
+                                    title: rec.word,
+                                    subtitle: nil,
+                                    customText: nil,
+                                    audioFileURL: rec.url // If ServiceItem supports audioFileURL
+                                )
+                                ServiceOrderManager.shared.add(serviceItem)
+                            }
+                        )
                     }
                 }
                 .listStyle(.insetGrouped)
@@ -413,6 +425,7 @@ private struct RecordingRow: View {
     let isPlaying: Bool
     let playAction: () -> Void
     let deleteAction: () -> Void
+    let addToServiceAction: () -> Void
 
     var body: some View {
         HStack {
@@ -432,6 +445,12 @@ private struct RecordingRow: View {
             Button(action: playAction) {
                 Image(systemName: isPlaying ? "pause.circle" : "play.circle")
                     .font(.title2)
+            }
+            .buttonStyle(.borderless)
+            Button(action: addToServiceAction) {
+                Image(systemName: "plus.circle")
+                Text("Add to Service")
+                    .font(.caption)
             }
             .buttonStyle(.borderless)
             if #available(iOS 15.0, *) {
