@@ -373,22 +373,25 @@ public struct WordRecorderView: View {
                         }
                     }
                     ForEach(model.recordings) { rec in
+                        let isPlaying = model.player.currentURL == rec.url && model.player.isPlaying
+                        let playAction = { model.player.play(url: rec.url) }
+                        let deleteAction = { model.delete(rec) }
+                        let addToServiceAction = {
+                            let serviceItem = ServiceItem(
+                                type: .customReading,
+                                title: rec.word,
+                                subtitle: nil,
+                                customText: nil,
+                                audioFileURL: rec.url
+                            )
+                            ServiceOrderManager.shared.add(serviceItem)
+                        }
                         RecordingRow(
                             recording: rec,
-                            isPlaying: model.player.currentURL == rec.url && model.player.isPlaying,
-                            playAction: { model.player.play(url: rec.url) },
-                            deleteAction: { model.delete(rec) },
-                            addToServiceAction: {
-                                // Add to Service logic
-                                let serviceItem = ServiceItem(
-                                    type: .customReading, // Or .audioRecording if available
-                                    title: rec.word,
-                                    subtitle: nil,
-                                    customText: nil,
-                                    audioFileURL: rec.url // If ServiceItem supports audioFileURL
-                                )
-                                ServiceOrderManager.shared.add(serviceItem)
-                            }
+                            isPlaying: isPlaying,
+                            playAction: playAction,
+                            deleteAction: deleteAction,
+                            addToServiceAction: addToServiceAction
                         )
                     }
                 }

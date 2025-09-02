@@ -73,10 +73,11 @@ class FirstLaunchTutorialViewController: UIViewController {
 		} else {
 			NotificationCenter.default.post(name: .didFinishFirstLaunchTutorial, object: nil)
 			dismiss(animated: true, completion: nil)
+		}
+	}
+}
+
 // Notification extension for tutorial completion
 extension Notification.Name {
 	static let didFinishFirstLaunchTutorial = Notification.Name("didFinishFirstLaunchTutorial")
-}
-		}
-	}
 }
