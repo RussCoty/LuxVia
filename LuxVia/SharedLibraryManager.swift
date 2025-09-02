@@ -12,6 +12,7 @@ class SharedLibraryManager {
 
 
     func urlForTrack(named name: String) -> URL? {
+        print("[DEBUG] urlForTrack called with name: \(name)")
         // Match by title or filename, ignoring case
         if let song = allSongs.first(where: {
             $0.title.lowercased() == name.lowercased() ||
@@ -55,6 +56,22 @@ class SharedLibraryManager {
                     return recordingsURL
                 } else {
                     print("[DEBUG] Not found recording: \(recordingsURL.path)")
+                }
+
+                // 4. Fallback: check all files in Documents/audio/ for a matching filename
+                let audioDirURL = docsURL.appendingPathComponent("audio")
+                if let audioFiles = try? FileManager.default.contentsOfDirectory(atPath: audioDirURL.path) {
+                    print("[DEBUG] Fallback: checking audio dir for \(fileName)")
+                    for file in audioFiles {
+                        print("[DEBUG] Found file in audio dir: \(file)")
+                        if file == fileName {
+                            let foundURL = audioDirURL.appendingPathComponent(file)
+                            print("[DEBUG] Fallback found: \(foundURL.path)")
+                            return foundURL
+                        }
+                    }
+                } else {
+                    print("[DEBUG] Could not list audio dir: \(audioDirURL.path)")
                 }
             }
         } else {
