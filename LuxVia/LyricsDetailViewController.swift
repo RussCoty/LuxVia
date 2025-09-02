@@ -177,14 +177,28 @@ class LyricsDetailViewController: UIViewController {
                 if lyric == nil {
                     print("[DEBUG] No lyric match found for song: title=[\(song.title)], fileName=[\(song.fileName)]")
                 }
-                let serviceItem = ServiceItem(
-                    type: .song,
-                    title: song.title,
-                    subtitle: nil,
-                    fileName: song.fileName,
-                    customText: lyric?.body, // Set lyrics text if available
-                    uid: lyric?.uid // Set uid if found
-                )
+                let serviceItem: ServiceItem
+                if let lyric = lyric {
+                    print("[DEBUG] Creating ServiceItem for song with lyric match: title=[\(lyric.title)], uid=[\(lyric.uid ?? -1)]")
+                    serviceItem = ServiceItem(
+                        type: .song,
+                        title: song.title,
+                        subtitle: nil,
+                        fileName: song.fileName,
+                        customText: lyric.body, // Set lyrics text if available
+                        uid: lyric.uid // Set uid from matched lyric
+                    )
+                } else {
+                    print("[DEBUG] Creating ServiceItem for song with NO lyric match: title=[\(song.title)]")
+                    serviceItem = ServiceItem(
+                        type: .song,
+                        title: song.title,
+                        subtitle: nil,
+                        fileName: song.fileName,
+                        customText: nil,
+                        uid: nil
+                    )
+                }
 
                 if ServiceOrderManager.shared.items.contains(where: { $0.fileName == song.fileName && $0.type == .music }) {
                     showToast("Already in Order: \(song.title)")
