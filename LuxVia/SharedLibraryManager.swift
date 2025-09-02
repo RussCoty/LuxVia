@@ -7,11 +7,11 @@ class SharedLibraryManager {
     var allSongs: [SongEntry] = []
     
     var allReadings: [Lyric] {
-        return LyricsSyncManager.shared.loadCachedLyrics().filter { $0.type == .reading }
+        return CSVLyricsLoader.shared.loadLyrics().filter { $0.type == .reading }
     }
 
     var allLyrics: [Lyric] {
-        return LyricsSyncManager.shared.loadCachedLyrics().filter { $0.type == .lyric }
+        return CSVLyricsLoader.shared.loadLyrics().filter { $0.type == .lyric }
     }
 
 
