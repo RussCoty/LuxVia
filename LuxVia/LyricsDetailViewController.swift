@@ -161,6 +161,7 @@ class LyricsDetailViewController: UIViewController {
 
                 // Search allLyrics for a matching lyric with non-empty body
                 let allLyricsSources = SharedLibraryManager.shared.allLyrics
+                var serviceItem: ServiceItem
                 if let lyric = allLyricsSources.first(where: {
                     let lyricAudio = $0.audioFileName?.replacingOccurrences(of: ".mp3", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     let lyricTitle = $0.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
