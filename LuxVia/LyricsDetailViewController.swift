@@ -170,7 +170,7 @@ class LyricsDetailViewController: UIViewController {
                     let titleMatch = lyricTitle == songTitle || lyricTitle == entry.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     return (audioMatch || titleMatch) && !$0.body.isEmpty
                 }) {
-                    print("[DEBUG] Lyric matched robustly: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? \"nil\")], uid=[\(lyric.uid ?? -1)], body.isEmpty=[\(lyric.body.isEmpty)]")
+                    print("[DEBUG] Lyric matched robustly: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? 'nil')], uid=[\(lyric.uid ?? -1)], body.isEmpty=[\(lyric.body.isEmpty)]")
                     serviceItem = ServiceItem(
                         type: .song,
                         title: song.title,
