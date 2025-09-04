@@ -350,38 +350,53 @@ class MusicViewController: BaseViewController,
     }
 
     private func addMusicEntry(_ entry: SongEntry, type: ServiceItemType) {
-        // For songs, match lyric strictly by audioFileName and type == .lyric; for others, match by title
-        let lyric: Lyric?
+        // Robust lyric matching logic from LyricsDetailViewController
+        let allLyricsSources = SharedLibraryManager.shared.allLyrics
+        let fileNameTrimmed = entry.fileName.replacingOccurrences(of: ".mp3", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let songFile = entry.fileName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+        let songTitle = entry.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+
+        var serviceItem: ServiceItem
         if type == .song {
-            lyric = SharedLibraryManager.shared.allReadings.first {
-                $0.type == .lyric && $0.audioFileName == entry.fileName
+            if let lyric = allLyricsSources.first(where: {
+                let lyricAudio = $0.audioFileName?.replacingOccurrences(of: ".mp3", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                let lyricTitle = $0.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                let audioMatch = lyricAudio == songFile || lyricAudio == fileNameTrimmed
+                let titleMatch = lyricTitle == songTitle || lyricTitle == entry.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                return (audioMatch || titleMatch) && !$0.body.isEmpty
+            }) {
+                serviceItem = ServiceItem(
+                    type: .song,
+                    title: entry.title,
+                    subtitle: nil,
+                    fileName: entry.fileName,
+                    customText: lyric.body, // Set lyrics text if available
+                    uid: lyric.uid // Set uid from matched lyric
+                )
+            } else {
+                serviceItem = ServiceItem(
+                    type: .song,
+                    title: entry.title,
+                    subtitle: nil,
+                    fileName: entry.fileName,
+                    customText: nil,
+                    uid: nil
+                )
+            }
+            // Prevent duplicate music items
+            if ServiceOrderManager.shared.items.contains(where: { $0.fileName == entry.fileName && $0.type == .music }) {
+                showToast("Already in Order: \(entry.title)")
+                return
             }
         } else {
-            lyric = SharedLibraryManager.shared.allReadings.first {
-                $0.title == entry.title
-            }
-        }
-        let serviceItem = ServiceItem(
-            type: type,
-            title: entry.title,
-            subtitle: nil,
-            fileName: entry.fileName,
-            customText: nil,
-            uid: lyric?.uid // Set uid if found, else nil
-        )
-
-        print("[DEBUG] Created ServiceItem:")
-        print("  id: \(serviceItem.id)")
-        print("  type: \(serviceItem.type)")
-        print("  title: \(serviceItem.title)")
-        print("  subtitle: \(serviceItem.subtitle ?? "nil")")
-        print("  fileName: \(serviceItem.fileName ?? "nil")")
-        print("  customText: \(serviceItem.customText != nil ? "SET" : "nil")")
-        print("  uid: \(serviceItem.uid != nil ? String(serviceItem.uid!) : "nil")")
-
-        if ServiceOrderManager.shared.items.contains(where: { $0.fileName == entry.fileName && $0.type == type }) {
-            showToast("Already in Order: \(entry.title)")
-            return
+            serviceItem = ServiceItem(
+                type: type,
+                title: entry.title,
+                subtitle: nil,
+                fileName: entry.fileName,
+                customText: nil,
+                uid: nil
+            )
         }
 
         ServiceOrderManager.shared.add(serviceItem)
