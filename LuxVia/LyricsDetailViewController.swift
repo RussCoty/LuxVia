@@ -152,34 +152,27 @@ class LyricsDetailViewController: UIViewController {
 
     @objc private func addToService() {
         if let filename = entry.audioFileName {
-            let trimmed = filename.replacingOccurrences(of: ".mp3", with: "")
+            let trimmed = filename.replacingOccurrences(of: ".mp3", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
             if let song = SharedLibraryManager.shared.songForTrack(named: trimmed) {
                 let songFile = song.fileName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                 let songTitle = song.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
 
                 // Search allLyrics for a matching lyric with non-empty body
                 let allLyricsSources = SharedLibraryManager.shared.allLyrics
-                let lyricByAudio = allLyricsSources.first {
-                    let lyricAudio = $0.audioFileName?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                    return lyricAudio == songFile && !$0.body.isEmpty
-                }
-                if let lyricByAudio = lyricByAudio {
-                    print("[DEBUG] Lyric matched by audioFileName: title=[\(lyricByAudio.title)], audioFileName=[\(lyricByAudio.audioFileName ?? "nil")], body.isEmpty=[\(lyricByAudio.body.isEmpty)]")
-                }
-                let lyricByTitle = allLyricsSources.first {
+                let lyric = allLyricsSources.first {
+                    let lyricAudio = $0.audioFileName?.replacingOccurrences(of: ".mp3", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     let lyricTitle = $0.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
-                    return lyricTitle == songTitle && !$0.body.isEmpty
+                    let audioMatch = lyricAudio == songFile || lyricAudio == trimmed
+                    let titleMatch = lyricTitle == songTitle || lyricTitle == entry.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
+                    return (audioMatch || titleMatch) && !$0.body.isEmpty
                 }
-                if lyricByAudio == nil, let lyricByTitle = lyricByTitle {
-                    print("[DEBUG] Lyric matched by title: title=[\(lyricByTitle.title)], audioFileName=[\(lyricByTitle.audioFileName ?? "nil")], body.isEmpty=[\(lyricByTitle.body.isEmpty)]")
-                }
-                let lyric = lyricByAudio ?? lyricByTitle
-                if lyric == nil {
+                if let lyric = lyric {
+                    print("[DEBUG] Lyric matched robustly: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? \"nil\")], uid=[\(lyric.uid ?? -1)], body.isEmpty=[\(lyric.body.isEmpty)]")
+                } else {
                     print("[DEBUG] No lyric match found for song: title=[\(song.title)], fileName=[\(song.fileName)]")
                 }
                 let serviceItem: ServiceItem
                 if let lyric = lyric {
-                    print("[DEBUG] Creating ServiceItem for song with lyric match: title=[\(lyric.title)], uid=[\(lyric.uid ?? -1)]")
                     serviceItem = ServiceItem(
                         type: .song,
                         title: song.title,
@@ -189,7 +182,6 @@ class LyricsDetailViewController: UIViewController {
                         uid: lyric.uid // Set uid from matched lyric
                     )
                 } else {
-                    print("[DEBUG] Creating ServiceItem for song with NO lyric match: title=[\(song.title)]")
                     serviceItem = ServiceItem(
                         type: .song,
                         title: song.title,
