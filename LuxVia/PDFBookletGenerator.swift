@@ -260,15 +260,16 @@ final class PDFBookletGenerator {
     }
 
     private static func paginate(readings: [NSAttributedString], pageWidth: CGFloat, pageHeight: CGFloat, borderInsetX: CGFloat, borderInsetY: CGFloat) -> (pages: [[NSAttributedString]], heights: [CGFloat]) {
-        var pages: [[NSAttributedString]] = []
-        var heights: [CGFloat] = []
-        var current: [NSAttributedString] = []
-        var currentHeight: CGFloat = 0
-        let contentWidth = pageWidth - 2 * borderInsetX
-        let maxContentHeight = pageHeight - 2 * borderInsetY - 20
+    var readings = readings
+    var pages: [[NSAttributedString]] = []
+    var heights: [CGFloat] = []
+    var current: [NSAttributedString] = []
+    var currentHeight: CGFloat = 0
+    let contentWidth = pageWidth - 2 * borderInsetX
+    let maxContentHeight = pageHeight - 2 * borderInsetY - 20
 
-        var i = 0
-        while i < readings.count {
+    var i = 0
+    while i < readings.count {
             // Always treat (title, content) as a pair
             if i + 1 < readings.count {
                 let titleAttr = readings[i]
@@ -280,14 +281,54 @@ final class PDFBookletGenerator {
                 let contentSize = CTFramesetterSuggestFrameSizeWithConstraints(contentFramesetter, CFRange(location: 0, length: contentAttr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
                 let contentHeight = contentSize.height + 20
                 let blockHeight = titleHeight + contentHeight
-                if currentHeight + blockHeight > maxContentHeight && currentHeight > 0 {
-                    pages.append(current); heights.append(currentHeight)
-                    current = []; currentHeight = 0
+                if currentHeight + blockHeight <= maxContentHeight {
+                    current.append(titleAttr)
+                    current.append(contentAttr)
+                    currentHeight += blockHeight
+                    i += 2
+                } else {
+                    // If the content is too large, split it
+                    let availableHeight = maxContentHeight - currentHeight - titleHeight
+                    if availableHeight > 40 { // Only split if there's reasonable space left
+                        // Find a split point in the content
+                        let fullString = contentAttr.string as NSString
+                        var splitIndex = 0
+                        var measuredHeight: CGFloat = 0
+                        let words = fullString.components(separatedBy: .newlines)
+                        var partialString = ""
+                        for word in words {
+                            let testString = partialString.isEmpty ? word : partialString + "\n" + word
+                            let testAttr = NSAttributedString(string: testString, attributes: contentAttr.attributes(at: 0, effectiveRange: nil))
+                            let testFramesetter = CTFramesetterCreateWithAttributedString(testAttr as CFAttributedString)
+                            let testSize = CTFramesetterSuggestFrameSizeWithConstraints(testFramesetter, CFRange(location: 0, length: testAttr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
+                            measuredHeight = testSize.height + 20
+                            if measuredHeight > availableHeight { break }
+                            partialString = testString
+                            splitIndex += 1
+                        }
+                        if !partialString.isEmpty {
+                            let firstPart = NSAttributedString(string: partialString, attributes: contentAttr.attributes(at: 0, effectiveRange: nil))
+                            current.append(titleAttr)
+                            current.append(firstPart)
+                            currentHeight += titleHeight + measuredHeight
+                            pages.append(current); heights.append(currentHeight)
+                            current = []; currentHeight = 0
+                            // Remainder
+                            let remainingWords = words.dropFirst(splitIndex)
+                            let remainderString = remainingWords.joined(separator: "\n")
+                            let remainderAttr = NSAttributedString(string: remainderString, attributes: contentAttr.attributes(at: 0, effectiveRange: nil))
+                            readings[i+1] = remainderAttr
+                        } else {
+                            // Not enough space, start new page
+                            pages.append(current); heights.append(currentHeight)
+                            current = []; currentHeight = 0
+                        }
+                    } else {
+                        // Not enough space, start new page
+                        pages.append(current); heights.append(currentHeight)
+                        current = []; currentHeight = 0
+                    }
                 }
-                current.append(titleAttr)
-                current.append(contentAttr)
-                currentHeight += blockHeight
-                i += 2
             } else {
                 // If odd, just add the last one
                 let attr = readings[i]
