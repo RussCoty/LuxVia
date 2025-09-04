@@ -325,7 +325,7 @@ final class PDFBookletGenerator {
                 ctx.cgContext.stroke(borderRect)
             }
             let totalH = heights[i]
-            var y = borderInsetY + 10 + (maxContentHeight - totalH) / 2
+            var y = max(borderInsetY + 20, borderInsetY + 10 + (maxContentHeight - totalH) / 2)
             for attr in page {
                 let framesetter = CTFramesetterCreateWithAttributedString(attr as CFAttributedString)
                 let size = CTFramesetterSuggestFrameSizeWithConstraints(framesetter, CFRange(location: 0, length: attr.length), nil, CGSize(width: contentWidth - 20, height: .greatestFiniteMagnitude), nil)
