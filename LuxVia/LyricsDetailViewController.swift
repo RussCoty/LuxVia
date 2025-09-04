@@ -1,5 +1,6 @@
 import UIKit
 
+
 class LyricsDetailViewController: UIViewController {
 
     private let entry: Lyric
