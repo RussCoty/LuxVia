@@ -161,17 +161,32 @@ class LyricsDetailViewController: UIViewController {
 
                 // Search allLyrics for a matching lyric with non-empty body
                 let allLyricsSources = SharedLibraryManager.shared.allLyrics
-                let lyric = allLyricsSources.first {
+                if let lyric = allLyricsSources.first(where: {
                     let lyricAudio = $0.audioFileName?.replacingOccurrences(of: ".mp3", with: "").trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     let lyricTitle = $0.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     let audioMatch = lyricAudio == songFile || lyricAudio == trimmed
                     let titleMatch = lyricTitle == songTitle || lyricTitle == entry.title.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                     return (audioMatch || titleMatch) && !$0.body.isEmpty
-                }
-                if let lyric = lyric {
+                }) {
                     print("[DEBUG] Lyric matched robustly: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? \"nil\")], uid=[\(lyric.uid ?? -1)], body.isEmpty=[\(lyric.body.isEmpty)]")
+                    serviceItem = ServiceItem(
+                        type: .song,
+                        title: song.title,
+                        subtitle: nil,
+                        fileName: song.fileName,
+                        customText: lyric.body, // Set lyrics text if available
+                        uid: lyric.uid // Set uid from matched lyric
+                    )
                 } else {
                     print("[DEBUG] No lyric match found for song: title=[\(song.title)], fileName=[\(song.fileName)]")
+                    serviceItem = ServiceItem(
+                        type: .song,
+                        title: song.title,
+                        subtitle: nil,
+                        fileName: song.fileName,
+                        customText: nil,
+                        uid: nil
+                    )
                 }
                 let serviceItem: ServiceItem
                 if let lyric = lyric {
