@@ -167,7 +167,7 @@ class LyricsDetailViewController: UIViewController {
                     return (audioMatch || titleMatch) && !$0.body.isEmpty
                 }
                 if let lyric = lyric {
-                    print("[DEBUG] Lyric matched robustly: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? \"nil\")], uid=[\(lyric.uid ?? -1)], body.isEmpty=[\(lyric.body.isEmpty)]")
+                    print("[DEBUG] Lyric matched robustly: title=[\(lyric.title)], audioFileName=[\(lyric.audioFileName ?? 'nil')], uid=[\(lyric.uid ?? -1)], body.isEmpty=[\(lyric.body.isEmpty)]")
                 } else {
                     print("[DEBUG] No lyric match found for song: title=[\(song.title)], fileName=[\(song.fileName)]")
                 }
