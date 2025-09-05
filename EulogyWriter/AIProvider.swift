@@ -1,5 +1,6 @@
 // LuxVia – AI Eulogy Writer (POC using OpenAI, swappable to local LLM)
 // File: AIProvider.swift
+// is this correct?
 
 import Foundation
 
