@@ -1,6 +1,5 @@
 // LuxVia – AI Eulogy Writer (POC using OpenAI, swappable to local LLM)
 // File: AIProvider.swift
-// is this correct?
 
 import Foundation
 
@@ -93,7 +92,7 @@ final class OpenAIChatProvider: AIProvider {
             "temperature": temperature
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        let (data, _) = try await session.data(for: request) // <-- PATCHED
+        let (data, _) = try await session.data(for: request) // PATCHED: added 'try'
         cancelToken.checkCancelled()
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         let choices = json?["choices"] as? [[String: Any]]
@@ -176,7 +175,7 @@ struct EulogyWriterView: View {
     
     var body: some View {
         Form {
-            Section("Eulogy Details") { // <-- PATCHED
+            Section("Eulogy Details") { // PATCHED: correct Section usage
                 TextField("Name", text: $viewModel.input.name)
                 TextField("Age", value: $viewModel.input.age, formatter: NumberFormatter())
                 TextField("Relationship", text: $viewModel.input.relationship)
