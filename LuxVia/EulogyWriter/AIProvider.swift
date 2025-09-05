@@ -180,7 +180,7 @@ struct EulogyWriterView: View {
                 TextField("Name", text: $viewModel.input.name)
                 TextField("Age", value: $viewModel.input.age, formatter: NumberFormatter())
                 TextField("Relationship", text: $viewModel.input.relationship)
-                TextField("Pronouns", text: Binding($viewModel.input.pronouns, ""))
+                TextField("Pronouns", text: $viewModel.input.pronouns.toNonOptional())
                 TextField("Traits (comma separated)", text: Binding(
                     get: { viewModel.input.traits.joined(separator: ", ") },
                     set: { viewModel.input.traits = $0.components(separatedBy: ", ").map { $0.trimmingCharacters(in: .whitespaces) } }
@@ -258,7 +258,10 @@ struct EulogyEntryPoint: View {
 
 // MARK: - Helpers
 extension Binding where Value == String? {
-    init(_ source: Binding<String?>, _ defaultValue: String) {
-        self.init(get: { source.wrappedValue ?? defaultValue }, set: { source.wrappedValue = $0 })
+    func toNonOptional(default defaultValue: String = "") -> Binding<String> {
+        Binding<String>(
+            get: { self.wrappedValue ?? defaultValue },
+            set: { self.wrappedValue = $0 }
+        )
     }
 }

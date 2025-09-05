@@ -1,6 +1,8 @@
 import UIKit
 import SwiftUI
-import EulogyIntroView
+import MarkdownUI
+// Add this import to bring EulogyIntroView into scope
+// If EulogyIntroView is in another file, make sure that file is part of your target
 
 class CustomReadingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
