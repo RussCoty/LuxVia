@@ -1,5 +1,6 @@
 import UIKit
 import SwiftUI
+import EulogyIntroView
 
 class CustomReadingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
