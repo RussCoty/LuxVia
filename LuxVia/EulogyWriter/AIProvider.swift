@@ -6,19 +6,19 @@ import Foundation
 
 // MARK: - EulogyInput
 struct EulogyInput {
-    let name: String
-    let age: Int?
-    let relationship: String
-    let pronouns: String?
-    let traits: [String]
-    let anecdotes: [String]
-    let achievements: [String]
-    let religiousNotes: String?
-    let audience: String?
-    let tone: String
-    let length: String
-    let includeQuotes: Bool
-    let readingPersona: String?
+    var name: String
+    var age: Int?
+    var relationship: String
+    var pronouns: String?
+    var traits: [String]
+    var anecdotes: [String]
+    var achievements: [String]
+    var religiousNotes: String?
+    var audience: String?
+    var tone: String
+    var length: String
+    var includeQuotes: Bool
+    var readingPersona: String?
 }
 
 // MARK: - AIProvider Abstraction
@@ -136,7 +136,7 @@ final class EulogyViewModel: ObservableObject {
     @Published var outputMarkdown: String = ""
     @Published var isLoading = false
     @Published var error: String?
-    private var provider: AIProvider
+    private(set) var provider: AIProvider
     private var cancelToken: CancellationToken?
     
     init(provider: AIProvider) {
@@ -144,26 +144,26 @@ final class EulogyViewModel: ObservableObject {
     }
     
     func generate() {
-        isLoading = true
-        error = nil
-        outputMarkdown = ""
+        self.isLoading = true
+        self.error = nil
+        self.outputMarkdown = ""
         let token = CancellationToken()
-        cancelToken = token
+        self.cancelToken = token
         Task {
             do {
-                let result = try await provider.generateEulogy(input: input, cancelToken: token)
-                outputMarkdown = result
+                let result = try await self.provider.generateEulogy(input: self.input, cancelToken: token)
+                self.outputMarkdown = result
             } catch is CancellationError {
-                error = "Cancelled."
+                self.error = "Cancelled."
             } catch {
-                error = error.localizedDescription
+                self.error = error.localizedDescription
             }
-            isLoading = false
+            self.isLoading = false
         }
     }
     
     func cancel() {
-        cancelToken?.cancel()
+        self.cancelToken?.cancel()
     }
 }
 
