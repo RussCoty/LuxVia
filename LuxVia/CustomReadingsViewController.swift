@@ -6,6 +6,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
     private var customReadings: [CustomReading] = []
     private let tableView = UITableView()
     private let addButton = UIButton(type: .system)
+        private let aiEulogyButton = UIButton(type: .system)
         private let recordButton = UIButton(type: .system)
     
     override func viewDidLoad() {
@@ -14,6 +15,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         customReadings = CustomReadingStore.shared.load()
         
         setupAddButton()
+            setupAIEulogyButton()
             setupRecordButton()
         setupTableView()
     }
@@ -32,6 +34,19 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
             addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
+
+        private func setupAIEulogyButton() {
+            aiEulogyButton.setTitle("🧠 Write Eulogy with AI", for: .normal)
+            aiEulogyButton.setTitleColor(.systemPurple, for: .normal)
+            aiEulogyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            aiEulogyButton.addTarget(self, action: #selector(openAIEulogyWriter), for: .touchUpInside)
+            aiEulogyButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(aiEulogyButton)
+            NSLayoutConstraint.activate([
+                aiEulogyButton.topAnchor.constraint(equalTo: addButton.bottomAnchor, constant: 12),
+                aiEulogyButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
+        }
     
         private func setupRecordButton() {
             recordButton.setTitle("🎤 Record Custom Reading", for: .normal)
@@ -41,11 +56,15 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
             recordButton.translatesAutoresizingMaskIntoConstraints = false
             view.addSubview(recordButton)
             NSLayoutConstraint.activate([
-                recordButton.topAnchor.constraint(equalTo: addButton.bottomAnchor, constant: 12),
+                recordButton.topAnchor.constraint(equalTo: aiEulogyButton.bottomAnchor, constant: 12),
                 recordButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
             ])
         }
     
+        @objc private func openAIEulogyWriter() {
+            let introVC = UIHostingController(rootView: EulogyIntroView())
+            navigationController?.pushViewController(introVC, animated: true)
+        }
     private func setupTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
