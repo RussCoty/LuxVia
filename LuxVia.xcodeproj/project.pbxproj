@@ -100,6 +100,8 @@
 		1099F2F32E0E9BC0008E9D77 /* BookletInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */; };
 		10A389522E0ABB7B00323290 /* ReadingPreviewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */; };
 		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
+		10A804672E6B319A00F4978D /* EulogyIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A804652E6B319A00F4978D /* EulogyIntroView.swift */; };
+		10A804682E6B319A00F4978D /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A804642E6B319A00F4978D /* AIProvider.swift */; };
 		10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DA2E41799F0015E379 /* Lyric.swift */; };
 		10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */; };
 		10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */; };
@@ -210,6 +212,8 @@
 		1099F2F22E0E9BC0008E9D77 /* BookletInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookletInfo.swift; sourceTree = "<group>"; };
 		10A389512E0ABB7B00323290 /* ReadingPreviewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadingPreviewController.swift; sourceTree = "<group>"; };
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
+		10A804642E6B319A00F4978D /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProvider.swift; sourceTree = "<group>"; };
+		10A804652E6B319A00F4978D /* EulogyIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyIntroView.swift; sourceTree = "<group>"; };
 		10AB97DA2E41799F0015E379 /* Lyric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
 		10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
 		10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
@@ -387,6 +391,7 @@
 		1084FAA22DC8EC06009398EB /* LuxVia */ = {
 			isa = PBXGroup;
 			children = (
+				10A804662E6B319A00F4978D /* EulogyWriter */,
 				10B10FCB2E67001500092B04 /* FirstLaunchTutorialViewController.swift */,
 				1083AD062E65ED3E006227E5 /* WordRecorderModule.swift */,
 				10AD60972E48A62D009809F1 /* Audio */,
@@ -449,6 +454,15 @@
 				10066B4C2E1FD73100442DB2 /* Shared */,
 			);
 			path = LuxVia;
+			sourceTree = "<group>";
+		};
+		10A804662E6B319A00F4978D /* EulogyWriter */ = {
+			isa = PBXGroup;
+			children = (
+				10A804642E6B319A00F4978D /* AIProvider.swift */,
+				10A804652E6B319A00F4978D /* EulogyIntroView.swift */,
+			);
+			path = EulogyWriter;
 			sourceTree = "<group>";
 		};
 		10AB97DE2E417AB30015E379 /* Libraries */ = {
@@ -629,6 +643,8 @@
 				103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */,
 				10964F772DDA3174000BAF5A /* AudioImportManager.swift in Sources */,
 				10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */,
+				10A804672E6B319A00F4978D /* EulogyIntroView.swift in Sources */,
+				10A804682E6B319A00F4978D /* AIProvider.swift in Sources */,
 				10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */,
 				10B10FCC2E67001800092B04 /* FirstLaunchTutorialViewController.swift in Sources */,
 				1099B6262DD79ED100CA3194 /* NativeLoginViewController.swift in Sources */,
