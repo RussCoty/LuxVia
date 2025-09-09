@@ -93,7 +93,7 @@ final class OpenAIChatProvider: AIProvider {
         ]
         request.httpBody = try JSONSerialization.data(withJSONObject: body)
         let (data, _) = try await session.data(for: request) // PATCHED
-        cancelToken.checkCancelled()
+        try cancelToken.checkCancelled()
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         let choices = json?["choices"] as? [[String: Any]]
         let content = choices?.first?["message"] as? [String: Any]
@@ -175,7 +175,7 @@ struct EulogyWriterView: View {
     
     var body: some View {
         Form {
-            Section("Eulogy Details") { // PATCHED
+            Section("Eulogy Details") {
                 TextField("Name", text: $viewModel.input.name)
                 TextField("Age", value: $viewModel.input.age, formatter: NumberFormatter())
                 TextField("Relationship", text: $viewModel.input.relationship)
@@ -199,7 +199,7 @@ struct EulogyWriterView: View {
                 Toggle("Include Quotes", isOn: $viewModel.input.includeQuotes)
                 TextField("Reading Persona", text: Binding($viewModel.input.readingPersona, ""))
             }
-            Section(header: Text("Provider (POC)")) {
+            Section(header: Text("Provider (POC)")) { // PATCHED for Swift 5 compatibility
                 TextField("OpenAI API Key", text: $apiKey)
                 Button("Save API Key") {
                     UserDefaults.standard.set(apiKey, forKey: "OPENAI_API_KEY")

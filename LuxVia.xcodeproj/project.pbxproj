@@ -106,7 +106,6 @@
 		10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */; };
 		10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */; };
 		10AB97E22E417C650015E379 /* lyrics.csv in Resources */ = {isa = PBXBuildFile; fileRef = 10AB97E12E417C650015E379 /* lyrics.csv */; };
-		10AD60B62E48AA4C009809F1 /* Audio in Resources */ = {isa = PBXBuildFile; fileRef = 10AD60B52E48AA4C009809F1 /* Audio */; };
 		10B10FCC2E67001800092B04 /* FirstLaunchTutorialViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10B10FCB2E67001500092B04 /* FirstLaunchTutorialViewController.swift */; };
 		10B87C022E42050100D8D66C /* CodableCSV in Frameworks */ = {isa = PBXBuildFile; productRef = 10B87C012E42050100D8D66C /* CodableCSV */; };
 		10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */; };
@@ -218,7 +217,6 @@
 		10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
 		10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
 		10AB97E12E417C650015E379 /* lyrics.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = lyrics.csv; sourceTree = "<group>"; };
-		10AD60B52E48AA4C009809F1 /* Audio */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Audio; path = LuxVia/Audio; sourceTree = "<group>"; };
 		10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LuxVia.xcodeproj; sourceTree = SOURCE_ROOT; };
 		10B10FCB2E67001500092B04 /* FirstLaunchTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchTutorialViewController.swift; sourceTree = "<group>"; };
 		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
@@ -372,7 +370,6 @@
 		1084FA972DC8EC06009398EB = {
 			isa = PBXGroup;
 			children = (
-				10AD60B52E48AA4C009809F1 /* Audio */,
 				10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */,
 				1084FAA22DC8EC06009398EB /* LuxVia */,
 				1084FAA12DC8EC06009398EB /* Products */,
@@ -548,7 +545,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				10AD60B62E48AA4C009809F1 /* Audio in Resources */,
 				103D02C42E409CD10014C812 /* Icon-29@2x.png in Resources */,
 				103D02C32E409CD10014C812 /* Icon-83.5@2x.png in Resources */,
 				103D02CD2E409CD10014C812 /* Icon-40.png in Resources */,
