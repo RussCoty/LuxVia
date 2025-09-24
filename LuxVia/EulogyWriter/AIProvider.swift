@@ -167,7 +167,7 @@ final class EulogyViewModel: ObservableObject {
 }
 
 // MARK: - EulogyWriterView (SwiftUI)
-import MarkdownUI
+//import MarkdownUI
 
 struct EulogyWriterView: View {
     @StateObject var viewModel: EulogyViewModel
@@ -175,7 +175,7 @@ struct EulogyWriterView: View {
     
     var body: some View {
         Form {
-            Section("Eulogy Details") {
+            Section(content: Text("Eulogy Details")) {
                 TextField("Name", text: $viewModel.input.name)
                 TextField("Age", value: $viewModel.input.age, formatter: NumberFormatter())
                 TextField("Relationship", text: $viewModel.input.relationship)
@@ -199,10 +199,14 @@ struct EulogyWriterView: View {
                 Toggle("Include Quotes", isOn: $viewModel.input.includeQuotes)
                 TextField("Reading Persona", text: Binding($viewModel.input.readingPersona, ""))
             }
-            Section(header: Text("Provider (POC)")) { // PATCHED for Swift 5 compatibility
-                TextField("OpenAI API Key", text: $apiKey)
-                Button("Save API Key") {
-                    UserDefaults.standard.set(apiKey, forKey: "OPENAI_API_KEY")
+            Section(header: Text("Provider (POC)")) {
+                if viewModel.isLoading {
+                    ProgressView()
+                } else {
+                    TextField("OpenAI API Key", text: $apiKey)
+                    Button("Save API Key") {
+                        UserDefaults.standard.set(apiKey, forKey: "OPENAI_API_KEY")
+                    }
                 }
             }
             Section {
