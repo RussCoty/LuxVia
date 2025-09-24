@@ -234,7 +234,11 @@ struct EulogyWriterView: View {
                 Text(error).foregroundColor(.red)
             }
             if !viewModel.outputMarkdown.isEmpty {
-                Markdown(viewModel.outputMarkdown)
+                    ScrollView {
+                        Text(viewModel.outputMarkdown)
+                            .font(.body)
+                            .padding()
+                    }
                 Button("Copy") {
                     UIPasteboard.general.string = viewModel.outputMarkdown
                 }
