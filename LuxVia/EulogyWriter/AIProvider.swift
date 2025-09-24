@@ -167,7 +167,7 @@ final class EulogyViewModel: ObservableObject {
 }
 
 // MARK: - EulogyWriterView (SwiftUI)
-import MarkdownUI
+
 
 struct EulogyWriterView: View {
     @StateObject var viewModel: EulogyViewModel
@@ -230,7 +230,11 @@ struct EulogyWriterView: View {
                 Text(error).foregroundColor(.red)
             }
             if !viewModel.outputMarkdown.isEmpty {
-                Markdown(viewModel.outputMarkdown)
+                    ScrollView {
+                        Text(viewModel.outputMarkdown)
+                            .font(.body)
+                            .padding()
+                    }
                 Button("Copy") {
                     UIPasteboard.general.string = viewModel.outputMarkdown
                 }
