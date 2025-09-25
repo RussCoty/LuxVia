@@ -192,12 +192,12 @@ struct EulogyWriterView: View {
                     get: { viewModel.input.achievements.joined(separator: ", ") },
                     set: { viewModel.input.achievements = $0.components(separatedBy: ", ").map { $0.trimmingCharacters(in: .whitespaces) } }
                 ))
-                TextField("Religious Notes", text: Binding($viewModel.input.religiousNotes, ""))
-                TextField("Audience", text: Binding($viewModel.input.audience, ""))
+                TextField("Religious Notes", text: $viewModel.input.religiousNotes.toNonOptional())
+                TextField("Audience", text: $viewModel.input.audience.toNonOptional())
                 TextField("Tone", text: $viewModel.input.tone)
                 TextField("Length", text: $viewModel.input.length)
                 Toggle("Include Quotes", isOn: $viewModel.input.includeQuotes)
-                TextField("Reading Persona", text: Binding($viewModel.input.readingPersona, ""))
+                TextField("Reading Persona", text: $viewModel.input.readingPersona.toNonOptional())
             }
             Section(header: Text("Provider (POC)")) { // PATCHED for Swift 5 compatibility
                 TextField("OpenAI API Key", text: $apiKey)
