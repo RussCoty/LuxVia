@@ -1,6 +1,6 @@
 import UIKit
 import SwiftUI
-import MarkdownUI
+//import MarkdownUI
 // 
 
 class CustomReadingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {

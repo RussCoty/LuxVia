@@ -1,274 +1,100 @@
-// LuxVia – AI Eulogy Writer (POC using OpenAI, swappable to local LLM)
-// File: AIProvider.swift
+// ==============================
+// File: LuxVia/EulogyWriter/AIProvider.swift
+// Purpose: Minimal chat plumbing + OpenAI provider + secrets helper
+// iOS 16+, Swift 5.9
+// ==============================
 
 import Foundation
 
-// MARK: - EulogyInput
-struct EulogyInput {
-    var name: String
-    var age: Int?
-    var relationship: String
-    var pronouns: String?
-    var traits: [String]
-    var anecdotes: [String]
-    var achievements: [String]
-    var religiousNotes: String?
-    var audience: String?
-    var tone: String
-    var length: String
-    var includeQuotes: Bool
-    var readingPersona: String?
+// MARK: - Minimal chat model
+struct ChatMessage: Identifiable, Equatable {
+    enum Role: String { case system, user, assistant }
+    let id: UUID = UUID()
+    let role: Role
+    let content: String
 }
 
-// MARK: - AIProvider Abstraction
-protocol AIProvider {
-    func generateEulogy(input: EulogyInput, cancelToken: CancellationToken) async throws -> String
+// MARK: - Provider protocol
+protocol ChatProvider {
+    /// Returns assistant reply text for the given conversation.
+    func complete(messages: [ChatMessage], cancelToken: CancellationToken) async throws -> String
 }
 
-// MARK: - CancellationToken
+// MARK: - Cancellation
 final class CancellationToken {
     private var isCancelled = false
     func cancel() { isCancelled = true }
-    func checkCancelled() throws {
-        if isCancelled { throw CancellationError() }
-    }
+    func check() throws { if isCancelled { throw CancellationError() } }
 }
-
 struct CancellationError: Error {}
 
-// MARK: - Prompt Builder
-struct EulogyPromptBuilder {
-    static func buildMessages(input: EulogyInput) -> [[String: String]] {
-        let system = "You are an expert eulogy writer. Strictly follow the provided structure, tone, and facts. Do not invent details. Output in Markdown."
-        var user = "Write a eulogy for \(input.name)"
-        if let age = input.age { user += ", age \(age)" }
-        user += ". Relationship: \(input.relationship)."
-        if let pronouns = input.pronouns { user += " Pronouns: \(pronouns)." }
-        if !input.traits.isEmpty { user += " Traits: \(input.traits.joined(separator: ", "))." }
-        if !input.anecdotes.isEmpty { user += " Anecdotes: \(input.anecdotes.joined(separator: ", "))." }
-        if !input.achievements.isEmpty { user += " Achievements: \(input.achievements.joined(separator: ", "))." }
-        if let notes = input.religiousNotes { user += " Religious notes: \(notes)." }
-        if let audience = input.audience { user += " Audience: \(audience)." }
-        user += " Tone: \(input.tone). Length: \(input.length)."
-        user += input.includeQuotes ? " Include quotes." : ""
-        if let persona = input.readingPersona { user += " Reading persona: \(persona)." }
-        user += "\nStrict guidance: Do not invent details. Use only provided facts. Output in Markdown."
-        return [
-            ["role": "system", "content": system],
-            ["role": "user", "content": user]
-        ]
-    }
-}
+// MARK: - OpenAI provider (non-streaming)
+final class OpenAIChatProvider: ChatProvider {
+    private let apiKey: String
+    private let session: URLSession
+    var model: String = "gpt-4o-mini"
+    var temperature: Double = 0.6
+    private let endpoint = URL(string: "https://api.openai.com/v1/chat/completions")!
 
-// MARK: - OpenAIChatProvider (POC)
-final class OpenAIChatProvider: AIProvider {
-    var baseURL: URL
-    var model: String
-    var temperature: Double
-    var apiKey: String
-    private var session: URLSession
-    
-    init(baseURL: URL = URL(string: "https://api.openai.com/v1")!,
-         model: String = "gpt-4o-mini",
-         temperature: Double = 0.7,
-         apiKey: String) {
-        self.baseURL = baseURL
-        self.model = model
-        self.temperature = temperature
+    init(apiKey: String, session: URLSession = .shared) {
         self.apiKey = apiKey
-        self.session = URLSession(configuration: .default)
+        self.session = session
     }
-    
-    func generateEulogy(input: EulogyInput, cancelToken: CancellationToken) async throws -> String {
-        let messages = EulogyPromptBuilder.buildMessages(input: input)
-        let url = baseURL.appendingPathComponent("chat/completions")
-        var request = URLRequest(url: url)
-        request.httpMethod = "POST"
-        request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
-        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+
+    func complete(messages: [ChatMessage], cancelToken: CancellationToken) async throws -> String {
+        try cancelToken.check()
+
+        // Wire format expected by OpenAI
+        let payloadMessages = messages.map { ["role": $0.role.rawValue, "content": $0.content] }
         let body: [String: Any] = [
             "model": model,
-            "messages": messages,
+            "messages": payloadMessages,
             "temperature": temperature
         ]
-        request.httpBody = try JSONSerialization.data(withJSONObject: body)
-        let (data, _) = try await session.data(for: request) // PATCHED
-        try cancelToken.checkCancelled()
+
+        var req = URLRequest(url: endpoint)
+        req.httpMethod = "POST"
+        req.setValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
+        req.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        req.httpBody = try JSONSerialization.data(withJSONObject: body, options: [])
+
+        let (data, resp) = try await session.data(for: req)
+        try cancelToken.check()
+
+        guard let http = resp as? HTTPURLResponse else {
+            throw URLError(.badServerResponse)
+        }
+
+        guard (200...299).contains(http.statusCode) else {
+            // Prefer model-supplied error for clarity
+            if let dict = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
+               let err = dict["error"] as? [String: Any],
+               let msg = err["message"] as? String {
+                throw NSError(domain: "OpenAI", code: http.statusCode, userInfo: [NSLocalizedDescriptionKey: msg])
+            }
+            throw URLError(.init(rawValue: http.statusCode))
+        }
+
+        // Minimal extraction of first choice content
         let json = try JSONSerialization.jsonObject(with: data) as? [String: Any]
         let choices = json?["choices"] as? [[String: Any]]
-        let content = choices?.first?["message"] as? [String: Any]
-        return content?["content"] as? String ?? ""
+        let content = (choices?.first?["message"] as? [String: Any])?["content"] as? String
+
+        guard let text = content, !text.isEmpty else {
+            throw NSError(domain: "OpenAI", code: -2, userInfo: [NSLocalizedDescriptionKey: "Empty response."])
+        }
+        return text
     }
 }
 
 // MARK: - Secrets (dev only)
-struct Secrets {
+enum Secrets {
+    /// Reads from UserDefaults first (OPENAI_API_KEY), then environment.
     static func openAIAPIKey() -> String? {
-        if let key = UserDefaults.standard.string(forKey: "OPENAI_API_KEY") {
+        if let key = UserDefaults.standard.string(forKey: "OPENAI_API_KEY"), !key.isEmpty {
             return key
         }
         return ProcessInfo.processInfo.environment["OPENAI_API_KEY"]
     }
 }
 
-// MARK: - EulogyViewModel
-import Combine
-import SwiftUI
-
-@MainActor
-final class EulogyViewModel: ObservableObject {
-    @Published var input = EulogyInput(
-        name: "",
-        age: nil,
-        relationship: "",
-        pronouns: nil,
-        traits: [],
-        anecdotes: [],
-        achievements: [],
-        religiousNotes: nil,
-        audience: nil,
-        tone: "Respectful",
-        length: "Medium",
-        includeQuotes: false,
-        readingPersona: nil
-    )
-    @Published var outputMarkdown: String = ""
-    @Published var isLoading = false
-    @Published var error: String?
-    private(set) var provider: AIProvider
-    private var cancelToken: CancellationToken?
-    
-    init(provider: AIProvider) {
-        self.provider = provider
-    }
-    
-    func generate() {
-        self.isLoading = true
-        self.error = nil
-        self.outputMarkdown = ""
-        let token = CancellationToken()
-        self.cancelToken = token
-        Task {
-            do {
-                let result = try await self.provider.generateEulogy(input: self.input, cancelToken: token)
-                self.outputMarkdown = result
-            } catch is CancellationError {
-                self.error = "Cancelled."
-            } catch {
-                self.error = error.localizedDescription
-            }
-            self.isLoading = false
-        }
-    }
-    
-    func cancel() {
-        self.cancelToken?.cancel()
-    }
-}
-
-// MARK: - EulogyWriterView (SwiftUI)
-//import MarkdownUI
-
-struct EulogyWriterView: View {
-    @StateObject var viewModel: EulogyViewModel
-    @State private var apiKey: String = Secrets.openAIAPIKey() ?? ""
-    
-    var body: some View {
-        Form {
-            Section(content: Text("Eulogy Details")) {
-                TextField("Name", text: $viewModel.input.name)
-                TextField("Age", value: $viewModel.input.age, formatter: NumberFormatter())
-                TextField("Relationship", text: $viewModel.input.relationship)
-                TextField("Pronouns", text: $viewModel.input.pronouns.toNonOptional())
-                TextField("Traits (comma separated)", text: Binding(
-                    get: { viewModel.input.traits.joined(separator: ", ") },
-                    set: { viewModel.input.traits = $0.components(separatedBy: ", ").map { $0.trimmingCharacters(in: .whitespaces) } }
-                ))
-                TextField("Anecdotes (comma separated)", text: Binding(
-                    get: { viewModel.input.anecdotes.joined(separator: ", ") },
-                    set: { viewModel.input.anecdotes = $0.components(separatedBy: ", ").map { $0.trimmingCharacters(in: .whitespaces) } }
-                ))
-                TextField("Achievements (comma separated)", text: Binding(
-                    get: { viewModel.input.achievements.joined(separator: ", ") },
-                    set: { viewModel.input.achievements = $0.components(separatedBy: ", ").map { $0.trimmingCharacters(in: .whitespaces) } }
-                ))
-                TextField("Religious Notes", text: Binding($viewModel.input.religiousNotes, ""))
-                TextField("Audience", text: Binding($viewModel.input.audience, ""))
-                TextField("Tone", text: $viewModel.input.tone)
-                TextField("Length", text: $viewModel.input.length)
-                Toggle("Include Quotes", isOn: $viewModel.input.includeQuotes)
-                TextField("Reading Persona", text: Binding($viewModel.input.readingPersona, ""))
-            }
-            Section(header: Text("Provider (POC)")) {
-                if viewModel.isLoading {
-                    ProgressView()
-                } else {
-                    TextField("OpenAI API Key", text: $apiKey)
-                    Button("Save API Key") {
-                        UserDefaults.standard.set(apiKey, forKey: "OPENAI_API_KEY")
-                    }
-                }
-            }
-            Section {
-                Button(viewModel.isLoading ? "Generating..." : "Generate") {
-                    if !apiKey.isEmpty {
-                        viewModel.cancel()
-                        viewModel.outputMarkdown = ""
-                        viewModel.error = nil
-                        viewModel.isLoading = true
-                        let provider = OpenAIChatProvider(apiKey: apiKey)
-                        viewModel.input = viewModel.input // force update
-                        viewModel.outputMarkdown = ""
-                        viewModel.error = nil
-                        viewModel.isLoading = true
-                        viewModel.cancelToken = nil
-                        viewModel.provider = provider
-                        viewModel.generate()
-                    }
-                }.disabled(viewModel.isLoading || apiKey.isEmpty)
-                if viewModel.isLoading {
-                    Button("Cancel") { viewModel.cancel() }
-                }
-            }
-            if let error = viewModel.error {
-                Text(error).foregroundColor(.red)
-            }
-            if !viewModel.outputMarkdown.isEmpty {
-                    ScrollView {
-                        Text(viewModel.outputMarkdown)
-                            .font(.body)
-                            .padding()
-                    }
-                Button("Copy") {
-                    UIPasteboard.general.string = viewModel.outputMarkdown
-                }
-                .buttonStyle(.bordered)
-                Button("Share") {
-                    let activityVC = UIActivityViewController(activityItems: [viewModel.outputMarkdown], applicationActivities: nil)
-                    UIApplication.shared.windows.first?.rootViewController?.present(activityVC, animated: true)
-                }
-                .buttonStyle(.bordered)
-            }
-        }
-        .navigationTitle("AI Eulogy Writer")
-    }
-}
-
-// MARK: - Entry Point
-struct EulogyEntryPoint: View {
-    var body: some View {
-        NavigationView {
-            EulogyWriterView(viewModel: EulogyViewModel(provider: OpenAIChatProvider(apiKey: Secrets.openAIAPIKey() ?? "")))
-        }
-    }
-}
-
-// MARK: - Helpers
-extension Binding where Value == String? {
-    func toNonOptional(default defaultValue: String = "") -> Binding<String> {
-        Binding<String>(
-            get: { self.wrappedValue ?? defaultValue },
-            set: { self.wrappedValue = $0 }
-        )
-    }
-}

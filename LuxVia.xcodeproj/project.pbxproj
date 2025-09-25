@@ -102,6 +102,7 @@
 		10A556462DD8724D0089968D /* UIDocumentPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */; };
 		10A804672E6B319A00F4978D /* EulogyIntroView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A804652E6B319A00F4978D /* EulogyIntroView.swift */; };
 		10A804682E6B319A00F4978D /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10A804642E6B319A00F4978D /* AIProvider.swift */; };
+		10AAE82D2E853CE800B72B9B /* EulogyWriterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AAE82C2E853CDF00B72B9B /* EulogyWriterView.swift */; };
 		10AB97DB2E4179A40015E379 /* Lyric.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DA2E41799F0015E379 /* Lyric.swift */; };
 		10AB97DD2E4179CA0015E379 /* CSVLyricsLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */; };
 		10AB97E02E417AC90015E379 /* LyricsLibraryManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */; };
@@ -213,6 +214,7 @@
 		10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIDocumentPickerViewController.swift; sourceTree = "<group>"; };
 		10A804642E6B319A00F4978D /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProvider.swift; sourceTree = "<group>"; };
 		10A804652E6B319A00F4978D /* EulogyIntroView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyIntroView.swift; sourceTree = "<group>"; };
+		10AAE82C2E853CDF00B72B9B /* EulogyWriterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyWriterView.swift; sourceTree = "<group>"; };
 		10AB97DA2E41799F0015E379 /* Lyric.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Lyric.swift; sourceTree = "<group>"; };
 		10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
 		10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
@@ -456,6 +458,7 @@
 		10A804662E6B319A00F4978D /* EulogyWriter */ = {
 			isa = PBXGroup;
 			children = (
+				10AAE82C2E853CDF00B72B9B /* EulogyWriterView.swift */,
 				10A804642E6B319A00F4978D /* AIProvider.swift */,
 				10A804652E6B319A00F4978D /* EulogyIntroView.swift */,
 			);
@@ -657,6 +660,7 @@
 				10066B4B2E1FD57000442DB2 /* Notifications+Extensions.swift in Sources */,
 				108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */,
 				1099B6242DD793E600CA3194 /* KeychainHelper.swift in Sources */,
+				10AAE82D2E853CE800B72B9B /* EulogyWriterView.swift in Sources */,
 				10824D852DF39A5500CDF11B /* LyricsSyncManager.swift in Sources */,
 				1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */,
 				10824D832DF3989300CDF11B /* Models.swift in Sources */,
