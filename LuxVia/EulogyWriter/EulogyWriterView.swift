@@ -1,7 +1,9 @@
-// =======================================================
+// ==============================================
 // File: LuxVia/EulogyWriter/EulogyWriterView.swift
-// Chat-only “AI Eulogy” option (no forms). Present via URL.
-// =======================================================
+// Chat-only “AI Eulogy” option. iOS 15+ safe.
+// Requires AIProvider.swift (ChatMessage, ChatProvider, CancellationToken, OpenAIChatProvider, Secrets).
+// ==============================================
+
 import SwiftUI
 import UIKit
 
@@ -9,23 +11,25 @@ struct EulogyWriterView: View {
     @StateObject private var vm = EulogyChatViewModel()
     @State private var apiKey: String = Secrets.openAIAPIKey() ?? ""
     @State private var showShare = false
+    @State private var inputDraft: String = "" // used on iOS 15 for TextEditor
 
     static func make() -> some View { EulogyWriterView() }
 
     var body: some View {
         VStack(spacing: 0) {
-            // API key row (feature-local)
+            // Top controls
             HStack(spacing: 8) {
                 SecureField("OpenAI API Key", text: $apiKey)
                     .textContentType(.password)
                     .font(.callout)
                 Button("Use Key") {
-                    UserDefaults.standard.set(apiKey, forKey: "OPENAI_API_KEY")
-                    vm.configure(apiKey: apiKey)
+                    UserDefaults.standard.set(self.apiKey, forKey: "OPENAI_API_KEY")
+                    self.vm.configure(apiKey: self.apiKey)
                 }
                 .disabled(apiKey.isEmpty)
                 .buttonStyle(.bordered)
-                Button("Restart") { vm.start() }.buttonStyle(.bordered)
+                Button("Restart") { self.vm.start() }
+                    .buttonStyle(.bordered)
             }
             .padding(.horizontal)
             .padding(.vertical, 8)
@@ -36,60 +40,89 @@ struct EulogyWriterView: View {
             ScrollViewReader { proxy in
                 ScrollView {
                     LazyVStack(alignment: .leading, spacing: 12) {
-                        ForEach(vm.messages) { msg in
+                        ForEach(self.vm.messages) { msg in
                             ChatBubble(message: msg).id(msg.id)
                         }
-                        if vm.isLoading { ProgressView().padding(.horizontal) }
+                        if self.vm.isLoading { ProgressView().padding(.horizontal) }
                     }
                     .padding(.vertical, 10)
                 }
-                .onChange(of: vm.messages.count) { _ in
-                    if let last = vm.messages.last { proxy.scrollTo(last.id, anchor: .bottom) }
+                .onChange(of: self.vm.messages.count) { _ in
+                    if let last = self.vm.messages.last {
+                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                    }
                 }
             }
 
             Divider()
 
-            // Input bar
-            HStack(alignment: .bottom, spacing: 8) {
-                TextField("Type your message…", text: $vm.inputText, axis: .vertical)
-                    .textFieldStyle(.roundedBorder)
-                    .lineLimit(1...4)
-                Button(vm.isLoading ? "Sending…" : "Send") { vm.send() }
-                    .disabled(vm.isLoading || apiKey.isEmpty)
-                    .buttonStyle(.borderedProminent)
-                if vm.isLoading {
-                    Button("Cancel") { vm.cancel() }.buttonStyle(.bordered)
+            // Input bar (iOS 16 uses multiline TextField; iOS 15 uses TextEditor)
+            if #available(iOS 16.0, *) {
+                HStack(alignment: .bottom, spacing: 8) {
+                    TextField("Type your message…", text: $vm.inputText, axis: .vertical)
+                        .textFieldStyle(.roundedBorder)
+                        .lineLimit(1...4)
+                    Button(self.vm.isLoading ? "Sending…" : "Send") { self.vm.send() }
+                        .disabled(self.vm.isLoading || self.apiKey.isEmpty)
+                        .buttonStyle(.borderedProminent)
+                    if self.vm.isLoading {
+                        Button("Cancel") { self.vm.cancel() }
+                            .buttonStyle(.bordered)
+                    }
+                }
+                .padding()
+            } else {
+                VStack(spacing: 8) {
+                    TextEditor(text: $inputDraft)
+                        .frame(minHeight: 40, maxHeight: 120)
+                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.3)))
+                        .padding(.horizontal)
+                    HStack {
+                        Button(self.vm.isLoading ? "Sending…" : "Send") {
+                            // mirror to vm.inputText for consistency
+                            self.vm.inputText = self.inputDraft
+                            self.inputDraft = ""
+                            self.vm.send()
+                        }
+                        .disabled(self.vm.isLoading || self.apiKey.isEmpty)
+                        .buttonStyle(.borderedProminent)
+
+                        if self.vm.isLoading {
+                            Button("Cancel") { self.vm.cancel() }
+                                .buttonStyle(.bordered)
+                        }
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 8)
                 }
             }
-            .padding()
 
             // Tools
             HStack {
-                Button("Copy Transcript") { UIPasteboard.general.string = vm.transcript() }
+                Button("Copy Transcript") { UIPasteboard.general.string = self.vm.transcript() }
                     .buttonStyle(.bordered)
                 if #available(iOS 16.0, *) {
-                    ShareLink("Share", item: vm.transcript()).buttonStyle(.bordered)
+                    ShareLink("Share", item: self.vm.transcript()).buttonStyle(.bordered)
                 } else {
-                    Button("Share") { showShare = true }.buttonStyle(.bordered)
+                    Button("Share") { self.showShare = true }.buttonStyle(.bordered)
                 }
             }
             .padding(.bottom, 8)
-            .sheet(isPresented: $showShare) { ActivityView(activityItems: [vm.transcript()]) }
+            .sheet(isPresented: $showShare) { ActivityView(activityItems: [self.vm.transcript()]) }
 
-            if let error = vm.error {
-                Text(error).foregroundColor(.red).padding(.bottom, 6)
+            if let err = self.vm.error {
+                Text(err).foregroundColor(.red).padding(.bottom, 6)
             }
         }
         .navigationTitle("AI Eulogy (beta)")
         .onAppear {
-            if !apiKey.isEmpty { vm.configure(apiKey: apiKey) }
-            if vm.messages.isEmpty { vm.start() }
+            if !self.apiKey.isEmpty { self.vm.configure(apiKey: self.apiKey) }
+            if self.vm.messages.isEmpty { self.vm.start() }
         }
     }
 }
 
-// VM
+// MARK: - ViewModel
 @MainActor
 final class EulogyChatViewModel: ObservableObject {
     @Published var messages: [ChatMessage] = []
@@ -110,57 +143,58 @@ final class EulogyChatViewModel: ObservableObject {
     """
 
     func configure(apiKey: String) {
-        provider = OpenAIChatProvider(apiKey: apiKey)
-        if messages.isEmpty { start() }
+        self.provider = OpenAIChatProvider(apiKey: apiKey)
+        if self.messages.isEmpty { self.start() }
     }
 
     func start() {
-        messages = [
-            .init(role: .system, content: systemPrompt),
+        self.messages = [
+            .init(role: .system, content: self.systemPrompt),
             .init(role: .assistant, content: "I’m so sorry for your loss. Could you share their name and how you’re connected? Is there one memory you’d like everyone to remember?")
         ]
-        error = nil
+        self.error = nil
     }
 
     func send() {
-        guard let provider else { error = "Set API key first."; return }
-        let text = inputText.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard let provider = self.provider else { self.error = "Set API key first."; return }
+        let text = self.inputText.trimmingCharacters(in: .whitespacesAndNewlines)
         guard !text.isEmpty else { return }
 
-        messages.append(.init(role: .user, content: text))
-        inputText = ""
-        isLoading = true
-        error = nil
+        self.messages.append(.init(role: .user, content: text))
+        self.inputText = ""
+        self.isLoading = true
+        self.error = nil
+
         let token = CancellationToken()
-        cancelToken = token
+        self.cancelToken = token
 
         Task {
-            defer { isLoading = false }
+            defer { self.isLoading = false }
             do {
-                let reply = try await provider.complete(messages: messages, cancelToken: token)
-                messages.append(.init(role: .assistant, content: reply))
+                let reply = try await provider.complete(messages: self.messages, cancelToken: token)
+                self.messages.append(.init(role: .assistant, content: reply))
             } catch is CancellationError {
-                error = "Cancelled."
-            } catch {
-                error = error.localizedDescription
+                self.error = "Cancelled."
+            } catch let err {
+                self.error = err.localizedDescription
             }
         }
     }
 
     func cancel() {
-        cancelToken?.cancel()
-        cancelToken = nil
+        self.cancelToken?.cancel()
+        self.cancelToken = nil
     }
 
     func transcript() -> String {
-        messages
+        self.messages
             .filter { $0.role != .system }
             .map { ($0.role == .user ? "You" : "AI") + ": " + $0.content }
             .joined(separator: "\n\n")
     }
 }
 
-// Chat bubble + Share helper
+// MARK: - UI bits
 private struct ChatBubble: View {
     let message: ChatMessage
     var isUser: Bool { message.role == .user }
@@ -190,3 +224,4 @@ private struct ActivityView: UIViewControllerRepresentable {
     }
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
+

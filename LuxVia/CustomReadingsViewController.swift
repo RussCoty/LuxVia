@@ -63,10 +63,10 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
             ])
         }
     
-        @objc private func openAIEulogyWriter() {
-            let introVC = UIHostingController(rootView: EulogyIntroView())
-            navigationController?.pushViewController(introVC, animated: true)
-        }
+    @objc private func openAIEulogyWriter() {
+        let vc = UIHostingController(rootView: EulogyWriterView.make())
+        navigationController?.pushViewController(vc, animated: true)
+    }
     private func setupTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.dataSource = self
