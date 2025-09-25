@@ -12,6 +12,9 @@
 		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
 		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
 		10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10334E4D2DF70CEC005B9682 /* ServiceItem.swift */; };
+		103599B72E853FBB00565A95 /* AIProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599B62E853FA800565A95 /* AIProvider.swift */; };
+		103599B92E853FFC00565A95 /* EulogyWriterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599B82E853FE600565A95 /* EulogyWriterView.swift */; };
+		103599BB2E85403F00565A95 /* EulogyLinkHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599BA2E85402900565A95 /* EulogyLinkHandler.swift */; };
 		103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D32DF700AF005D90DF /* ServiceOrderManager.swift */; };
 		103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D42DF700AF005D90DF /* ServiceItem.swift */; };
 		103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D52DF700AF005D90DF /* ServiceViewController.swift */; };
@@ -120,6 +123,9 @@
 		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
 		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
 		10334E4D2DF70CEC005B9682 /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
+		103599B62E853FA800565A95 /* AIProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AIProvider.swift; sourceTree = "<group>"; };
+		103599B82E853FE600565A95 /* EulogyWriterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyWriterView.swift; sourceTree = "<group>"; };
+		103599BA2E85402900565A95 /* EulogyLinkHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyLinkHandler.swift; sourceTree = "<group>"; };
 		103984D32DF700AF005D90DF /* ServiceOrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
 		103984D42DF700AF005D90DF /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
 		103984D52DF700AF005D90DF /* ServiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceViewController.swift; sourceTree = "<group>"; };
@@ -452,6 +458,9 @@
 		10A804662E6B319A00F4978D /* EulogyWriter */ = {
 			isa = PBXGroup;
 			children = (
+				103599BA2E85402900565A95 /* EulogyLinkHandler.swift */,
+				103599B82E853FE600565A95 /* EulogyWriterView.swift */,
+				103599B62E853FA800565A95 /* AIProvider.swift */,
 			);
 			path = EulogyWriter;
 			sourceTree = "<group>";
@@ -602,6 +611,7 @@
 			files = (
 				101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */,
 				103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */,
+				103599B72E853FBB00565A95 /* AIProvider.swift in Sources */,
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */,
 				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
@@ -617,6 +627,7 @@
 				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
 				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
 				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
+				103599B92E853FFC00565A95 /* EulogyWriterView.swift in Sources */,
 				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
 				105BBAD02DF9A08D004B7F7A /* CustomReadingsViewController.swift in Sources */,
 				105679AA2DD3BF79008AF276 /* MainViewController.swift in Sources */,
@@ -624,6 +635,7 @@
 				1098512F2DD8CCCF007C685B /* PaddedLabel.swift in Sources */,
 				10DE9D242E0D369300B8FAB3 /* MiniPlayerManager.swift in Sources */,
 				1083AD072E65ED3E006227E5 /* WordRecorderModule.swift in Sources */,
+				103599BB2E85403F00565A95 /* EulogyLinkHandler.swift in Sources */,
 				109366792DD22611007127CC /* SharedPlaylistManager.swift in Sources */,
 				105BBACC2DF9A01C004B7F7A /* CustomReading.swift in Sources */,
 				103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */,
