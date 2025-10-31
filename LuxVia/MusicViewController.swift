@@ -152,18 +152,32 @@ class MusicViewController: BaseViewController,
         }
 
         // Bundle assets
-        if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio"),
-           let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
+        print("[DEBUG] Checking Bundle.main.resourceURL: \(Bundle.main.resourceURL?.path ?? "nil")")
+        if let bundleAudioURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
             print("[DEBUG] Bundle audio path: \(bundleAudioURL.path)")
-            for case let fileURL as URL in enumerator {
-                let ext = fileURL.pathExtension.lowercased()
-                if ext == "mp3" || ext == "wav" {
-                    print("[DEBUG] Found audio file in bundle: \(fileURL.lastPathComponent)")
-                    let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
-                    let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
-                    appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
+            print("[DEBUG] Audio folder exists: \(fileManager.fileExists(atPath: bundleAudioURL.path))")
+            
+            if let enumerator = fileManager.enumerator(at: bundleAudioURL, includingPropertiesForKeys: nil) {
+                var foundCount = 0
+                for case let fileURL as URL in enumerator {
+                    foundCount += 1
+                    print("[DEBUG] Enumerating file: \(fileURL.lastPathComponent)")
+                    let ext = fileURL.pathExtension.lowercased()
+                    if ext == "mp3" || ext == "wav" {
+                        print("[DEBUG] ✅ Found audio file in bundle: \(fileURL.lastPathComponent)")
+                        let relPath = fileURL.path.replacingOccurrences(of: bundleAudioURL.path + "/", with: "")
+                        let folder = relPath.components(separatedBy: "/").dropLast().joined(separator: "/").capitalized
+                        appendTrack(folder: folder.isEmpty ? "Music" : folder, fileURL: fileURL)
+                    } else {
+                        print("[DEBUG] ❌ Skipped non-audio file: \(fileURL.lastPathComponent)")
+                    }
                 }
+                print("[DEBUG] Total files enumerated in Audio folder: \(foundCount)")
+            } else {
+                print("[DEBUG] ❌ Could not enumerate Audio folder - it may not exist or be accessible")
             }
+        } else {
+            print("[DEBUG] ❌ Bundle.main.resourceURL is nil or Audio path not found")
         }
         // Imported assets live under Documents/audio (optionally /imported/... for legacy)
         if let docsURL = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first {

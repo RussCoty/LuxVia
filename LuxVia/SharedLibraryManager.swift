@@ -22,11 +22,36 @@ class SharedLibraryManager {
     print("[DEBUG] Extension: \(ext), BaseName: \(baseName)")
 
         // 1. Check bundle path
+        print("[DEBUG] [BUNDLE] Looking for resource: '\(baseName)' type: '\(ext)' in directory: 'Audio'")
         if let path = Bundle.main.path(forResource: baseName, ofType: ext, inDirectory: "Audio") {
-            print("[DEBUG] [BUNDLE] Found in bundle: \(path)")
+            print("[DEBUG] [BUNDLE] ✅ Found in bundle: \(path)")
             return URL(fileURLWithPath: path)
         } else {
-            print("[DEBUG] [BUNDLE] Not found in bundle: \(baseName).\(ext)")
+            print("[DEBUG] [BUNDLE] ❌ Not found in bundle: \(baseName).\(ext)")
+            
+            // Fallback: Check if Audio directory exists and list its contents
+            if let bundleURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
+                let fileManager = FileManager.default
+                print("[DEBUG] [BUNDLE] Audio folder exists: \(fileManager.fileExists(atPath: bundleURL.path))")
+                if fileManager.fileExists(atPath: bundleURL.path) {
+                    do {
+                        let contents = try fileManager.contentsOfDirectory(atPath: bundleURL.path)
+                        print("[DEBUG] [BUNDLE] Audio folder contents: \(contents)")
+                        
+                        // Try case-insensitive match
+                        let targetFileName = name.lowercased()
+                        for file in contents {
+                            if file.lowercased() == targetFileName {
+                                let fullPath = bundleURL.appendingPathComponent(file).path
+                                print("[DEBUG] [BUNDLE] ✅ Found case-insensitive match: \(fullPath)")
+                                return URL(fileURLWithPath: fullPath)
+                            }
+                        }
+                    } catch {
+                        print("[DEBUG] [BUNDLE] Error reading Audio folder: \(error)")
+                    }
+                }
+            }
         }
 
         // 2. Check imported files in Documents/audio/imported/
