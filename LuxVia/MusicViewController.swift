@@ -101,9 +101,20 @@ class MusicViewController: BaseViewController,
         let fileManager = FileManager.default
         var tempGroups: [String: [SongEntry]] = [:]
 
-        // Only add tracks that have a corresponding lyric entry in the CSV with a matching audioFileName
+        // Load all lyrics and show them even if audio files don't exist
         let allLyrics = CSVLyricsLoader.shared.loadLyrics()
         print("[DEBUG] loadGroupedTrackList: loaded \(allLyrics.count) lyrics from CSV")
+        
+        // First, add all lyrics with audio file names to the "Music" category
+        let lyricsWithAudio = allLyrics.filter { $0.type == .lyric && $0.audioFileName != nil }
+        for lyric in lyricsWithAudio {
+            guard let audioFileName = lyric.audioFileName else { continue }
+            let title = lyric.title.isEmpty ? audioFileName : lyric.title
+            let entry = SongEntry(title: title, fileName: audioFileName, artist: nil, duration: nil)
+            tempGroups["Music", default: []].append(entry)
+            print("[DEBUG] Added lyric entry: \(title) -> \(audioFileName)")
+        }
+        
         let lyricAudioNames = allLyrics.compactMap { $0.audioFileName }
         print("[DEBUG] lyric audioFileNames from CSV: \(lyricAudioNames)")
         func appendTrack(folder: String, fileURL: URL) {
@@ -113,15 +124,21 @@ class MusicViewController: BaseViewController,
             // Find lyric with type == .lyric and audioFileName == fileName
             if let lyric = allLyrics.first(where: { $0.type == .lyric && $0.audioFileName == fileName }) {
                 print("[DEBUG] MATCH: \(fileName) == \(lyric.audioFileName ?? "nil") (title: \(lyric.title))")
-                let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
-                tempGroups[folder, default: []].append(entry)
+                // Don't add duplicates if already added from lyrics
+                if !tempGroups[folder, default: []].contains(where: { $0.fileName == fileName }) {
+                    let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
+                    tempGroups[folder, default: []].append(entry)
+                }
             } else {
                 // Try case-insensitive and trimmed match
                 let fileNameTrimmed = fileName.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
                 if let lyric = allLyrics.first(where: { $0.type == .lyric && ($0.audioFileName?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased() == fileNameTrimmed) }) {
                     print("[DEBUG] CASE/TRIM MATCH: \(fileName) == \(lyric.audioFileName ?? "nil") (title: \(lyric.title))")
-                    let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
-                    tempGroups[folder, default: []].append(entry)
+                    // Don't add duplicates if already added from lyrics
+                    if !tempGroups[folder, default: []].contains(where: { $0.fileName == fileName }) {
+                        let entry = SongEntry(title: title, fileName: fileName, artist: nil, duration: nil)
+                        tempGroups[folder, default: []].append(entry)
+                    }
                 } else {
                     print("[DEBUG] NO MATCH for file: \(fileName)")
                     // If imported, add anyway as generic track
@@ -239,6 +256,16 @@ class MusicViewController: BaseViewController,
         let cell = UITableViewCell(style: .value1, reuseIdentifier: "TrackCell")
         if let track = track {
             cell.textLabel?.text = track.title.replacingOccurrences(of: "_", with: " ").capitalized
+            
+            // Check if audio file actually exists
+            if SharedLibraryManager.shared.urlForTrack(named: track.fileName) == nil {
+                cell.detailTextLabel?.text = "Audio Missing"
+                cell.detailTextLabel?.textColor = .systemOrange
+                cell.textLabel?.textColor = .secondaryLabel
+            } else {
+                cell.detailTextLabel?.text = nil
+                cell.textLabel?.textColor = .label
+            }
         }
 
         // Show + only when NOT editing
