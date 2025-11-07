@@ -70,7 +70,8 @@ class PDFBookletPreviewViewController: UIViewController {
             userName: "", userEmail: "",
             deceasedName: "", dateOfBirth: Date(), dateOfPassing: Date(), photo: nil,
             location: "", dateOfService: Date(), timeHour: 0, timeMinute: 0, celebrantName: "",
-            committalLocation: nil, wakeLocation: nil, donationInfo: nil, pallbearers: nil, photographer: nil
+            committalLocation: nil, wakeLocation: nil, donationInfo: nil, pallbearers: nil, photographer: nil,
+            announcementText: nil
         )
 
         // Ensure lyrics are set for songs in the service order before generating the booklet

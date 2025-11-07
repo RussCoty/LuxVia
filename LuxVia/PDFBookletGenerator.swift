@@ -477,4 +477,61 @@ final class PDFBookletGenerator {
         )
         return ceil(rect.height)
     }
+
+    // MARK: - Single-page Announcement PDF
+    static func generateAnnouncementPDF(info: BookletInfo, announcement: String) -> URL? {
+        let pdfMetaData: [String: Any] = [
+            kCGPDFContextCreator as String: "Funeral Service App",
+            kCGPDFContextAuthor as String: info.userName
+        ]
+        let format = UIGraphicsPDFRendererFormat(); format.documentInfo = pdfMetaData
+
+        let pageWidth: CGFloat = 420     // A5
+        let pageHeight: CGFloat = 595
+        let borderInsetX = pageWidth * 0.10
+        let borderInsetY = pageHeight * 0.10
+
+        let rendererBounds = CGRect(x: 0, y: 0, width: pageWidth, height: pageHeight)
+        let renderer = UIGraphicsPDFRenderer(bounds: rendererBounds, format: format)
+
+        let fileName = "Announcement_\(UUID().uuidString.prefix(8)).pdf"
+        let outputURL = FileManager.default.temporaryDirectory.appendingPathComponent(fileName)
+
+        do {
+            try renderer.writePDF(to: outputURL, withActions: { ctx in
+                ctx.beginPage()
+
+                // draw border
+                let borderRect = CGRect(x: borderInsetX, y: borderInsetY, width: pageWidth - 2 * borderInsetX, height: pageHeight - 2 * borderInsetY)
+                ctx.cgContext.setStrokeColor(UIColor.gray.cgColor)
+                ctx.cgContext.setLineWidth(1)
+                ctx.cgContext.stroke(borderRect)
+
+                // Title: Name and dates
+                let titleAttrs: [NSAttributedString.Key: Any] = [.font: UIFont.boldSystemFont(ofSize: 20), .paragraphStyle: centeredParagraphStyle()]
+                let bodyAttrs: [NSAttributedString.Key: Any] = [.font: UIFont.systemFont(ofSize: 14), .paragraphStyle: centeredParagraphStyle()]
+                let dateFmt = DateFormatter(); dateFmt.dateStyle = .medium
+                let dob = dateFmt.string(from: info.dateOfBirth)
+                let dop = dateFmt.string(from: info.dateOfPassing)
+                let title = "\(info.deceasedName) — \(dob) — \(dop)"
+
+                let contentWidth = borderRect.width - 20
+                let titleH = measuredHeight(for: title, attrs: titleAttrs, width: contentWidth)
+                let annH = measuredHeight(for: announcement, attrs: bodyAttrs, width: contentWidth)
+
+                // place top center
+                var y = borderRect.origin.y + 20
+                let titleRect = CGRect(x: borderRect.origin.x + 10, y: y, width: contentWidth, height: titleH)
+                (title as NSString).draw(in: titleRect, withAttributes: titleAttrs)
+                y += titleH + 16
+
+                let annRect = CGRect(x: borderRect.origin.x + 10, y: y, width: contentWidth, height: annH)
+                (announcement as NSString).draw(in: annRect, withAttributes: bodyAttrs)
+            })
+            return outputURL
+        } catch {
+            print("❌ Failed to generate announcement PDF: \(error)")
+            return nil
+        }
+    }
 }

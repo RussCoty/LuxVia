@@ -27,7 +27,12 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         donationInfo: nil,
         pallbearers: nil,
         photographer: nil
+        , announcementText: nil
     )
+
+    // Announcement UI
+    private var announcementContainer: UIView?
+    private var announcementTextView: UITextView?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -127,6 +132,7 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         addTextField(placeholder: "Pallbearers", text: bookletInfo.pallbearers)
 
         addSaveButton()
+        addAnnouncementContainer() // create but keep hidden until save
     }
 
     private func addSectionTitle(_ title: String) {
@@ -154,6 +160,55 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         textView.layer.borderColor = UIColor.systemGray4.cgColor
         textView.layer.borderWidth = 1
         stackView.addArrangedSubview(textView)
+    }
+
+    private func addAnnouncementContainer() {
+        let container = UIView()
+        container.translatesAutoresizingMaskIntoConstraints = false
+
+        let title = UILabel()
+        title.text = "Announcement"
+        title.font = .boldSystemFont(ofSize: 18)
+
+        let textView = UITextView()
+        textView.font = .systemFont(ofSize: 16)
+        textView.layer.cornerRadius = 8
+        textView.layer.borderWidth = 1
+        textView.layer.borderColor = UIColor.systemGray4.cgColor
+        textView.heightAnchor.constraint(equalToConstant: 140).isActive = true
+        textView.textColor = .label
+
+        let copyButton = UIButton(type: .system)
+        copyButton.setTitle("Copy Text", for: .normal)
+        copyButton.addTarget(self, action: #selector(handleCopyAnnouncement), for: .touchUpInside)
+
+        let exportButton = UIButton(type: .system)
+        exportButton.setTitle("Export PDF", for: .normal)
+        exportButton.addTarget(self, action: #selector(handleExportAnnouncement), for: .touchUpInside)
+
+        let buttonStack = UIStackView(arrangedSubviews: [copyButton, exportButton])
+        buttonStack.axis = .horizontal
+        buttonStack.spacing = 12
+        buttonStack.distribution = .fillEqually
+
+        let vstack = UIStackView(arrangedSubviews: [title, textView, buttonStack])
+        vstack.axis = .vertical
+        vstack.spacing = 8
+
+        container.addSubview(vstack)
+        vstack.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            vstack.topAnchor.constraint(equalTo: container.topAnchor),
+            vstack.leadingAnchor.constraint(equalTo: container.leadingAnchor),
+            vstack.trailingAnchor.constraint(equalTo: container.trailingAnchor),
+            vstack.bottomAnchor.constraint(equalTo: container.bottomAnchor)
+        ])
+
+        container.isHidden = true
+        stackView.addArrangedSubview(container)
+
+        self.announcementContainer = container
+        self.announcementTextView = textView
     }
 
     private func addDatePicker(title: String, date: Date) {
@@ -294,6 +349,74 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
         print("✅ Booklet info saved.")
         showToast("Booklet info saved")
 
+        // Ensure announcement box appears after save
+        DispatchQueue.main.async {
+            self.presentAnnouncementIfNeeded()
+        }
+
+    }
+
+    private func presentAnnouncementIfNeeded() {
+        // Create suggested announcement if there isn't one
+        if (bookletInfo.announcementText ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            bookletInfo.announcementText = generateAnnouncementText(from: bookletInfo)
+            bookletInfo.save()
+        }
+
+        if let container = announcementContainer, let tv = announcementTextView {
+            tv.text = bookletInfo.announcementText
+            container.isHidden = false
+        }
+    }
+
+    private func generateAnnouncementText(from info: BookletInfo) -> String {
+        let dateFmt = DateFormatter(); dateFmt.dateStyle = .long
+        let dob = dateFmt.string(from: info.dateOfBirth)
+        let dop = dateFmt.string(from: info.dateOfPassing)
+        var comps = DateComponents(); comps.hour = info.timeHour; comps.minute = info.timeMinute
+        let timeFmt = DateFormatter(); timeFmt.timeStyle = .short
+        let timeDate = Calendar.current.date(from: comps) ?? info.dateOfService
+
+        var lines: [String] = []
+        lines.append("It is with great sadness that we announce the passing of \(info.deceasedName).")
+        lines.append("Born: \(dob). Passed away: \(dop).")
+        lines.append("A service will be held at \(info.location) on \(dateFmt.string(from: info.dateOfService)) at \(timeFmt.string(from: timeDate)).")
+        if !info.celebrantName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+            lines.append("Officiant: \(info.celebrantName).")
+        }
+        if let comm = info.committalLocation, !comm.isEmpty {
+            lines.append("Committal: \(comm).")
+        }
+        return lines.joined(separator: "\n\n")
+    }
+
+    @objc private func handleCopyAnnouncement() {
+        guard let text = announcementTextView?.text, !text.isEmpty else { return }
+        UIPasteboard.general.string = text
+        showToast("Announcement copied")
+        // persist the edited announcement
+        bookletInfo.announcementText = text
+        bookletInfo.save()
+    }
+
+    @objc private func handleExportAnnouncement() {
+        guard let text = announcementTextView?.text, !text.isEmpty else { return }
+        bookletInfo.announcementText = text
+        bookletInfo.save()
+
+        DispatchQueue.global(qos: .userInitiated).async {
+            if let url = PDFBookletGenerator.generateAnnouncementPDF(info: self.bookletInfo, announcement: text) {
+                DispatchQueue.main.async {
+                    let av = UIActivityViewController(activityItems: [url], applicationActivities: nil)
+                    av.popoverPresentationController?.sourceView = self.view
+                    self.present(av, animated: true)
+                }
+            } else {
+                DispatchQueue.main.async {
+                    self.showToast("Failed to create PDF")
+                }
+            }
+        }
     }
     
     override func viewWillAppear(_ animated: Bool) {

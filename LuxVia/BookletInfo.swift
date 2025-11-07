@@ -26,6 +26,8 @@ struct BookletInfo: Codable {
     var donationInfo: String?
     var pallbearers: String?
     var photographer: String?
+    // Generated or custom announcement text for notifying others of the passing
+    var announcementText: String?
 
     // Persistence
     private static let storageKey = "savedBookletInfo"
