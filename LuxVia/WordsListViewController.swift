@@ -69,6 +69,15 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         segmentedControl.addTarget(self, action: #selector(segmentChanged(_:)), for: .valueChanged)
         navigationItem.titleView = segmentedControl
 
+        // Add help button
+        let helpButton = UIBarButtonItem(
+            image: UIImage(systemName: "questionmark.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(helpTapped)
+        )
+        navigationItem.rightBarButtonItem = helpButton
+
         // Let BaseViewController handle login/logout button
     }
 
@@ -125,6 +134,71 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         default:
             break
         }
+    }
+    
+    @objc private func helpTapped() {
+        let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "App Tour", style: .default) { _ in
+            self.presentAppTour()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Words & Readings Help", style: .default) { _ in
+            self.showWordsHelp()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Custom Readings Guide", style: .default) { _ in
+            self.showCustomReadingsGuide()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // For iPad
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func showWordsHelp() {
+        let helpVC = UIAlertController(
+            title: "Words & Readings Help",
+            message: """
+            • Browse funeral readings and song lyrics
+            • Readings: Traditional funeral texts and prayers
+            • Lyrics: Words to funeral songs and hymns
+            • Custom: Create and manage your own readings
+            
+            Tap any item to view the full text and add it to your service.
+            """,
+            preferredStyle: .alert
+        )
+        
+        helpVC.addAction(UIAlertAction(title: "Got it", style: .default))
+        present(helpVC, animated: true)
+    }
+    
+    private func showCustomReadingsGuide() {
+        let customVC = UIAlertController(
+            title: "Custom Readings Guide",
+            message: """
+            1. Switch to the Custom tab
+            2. Tap '+' to create a new reading
+            3. Give your reading a title
+            4. Write or paste your content
+            5. Save to add it to your collection
+            
+            Custom readings can be personal messages, poems, or special texts.
+            """,
+            preferredStyle: .alert
+        )
+        
+        customVC.addAction(UIAlertAction(title: "Show App Tour", style: .default) { _ in
+            self.presentAppTour()
+        })
+        customVC.addAction(UIAlertAction(title: "Close", style: .cancel))
+        present(customVC, animated: true)
     }
 
 

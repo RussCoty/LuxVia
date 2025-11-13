@@ -47,13 +47,162 @@ class MusicViewController: BaseViewController,
         view.backgroundColor = .white
         title = "Music"
 
-        if navigationItem.rightBarButtonItem == nil { // keep existing button if already set elsewhere
-            navigationItem.rightBarButtonItem = editButtonItem
-        }
-
+        setupNavigationBar()
         setupSearch()
         loadGroupedTrackList()
         setupUI()
+    }
+    
+    private func setupNavigationBar() {
+        // Create help button
+        let helpButton = UIBarButtonItem(
+            image: UIImage(systemName: "questionmark.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(helpTapped)
+        )
+        
+        if navigationItem.rightBarButtonItem == nil { // keep existing button if already set elsewhere
+            navigationItem.rightBarButtonItems = [editButtonItem, helpButton]
+        } else {
+            navigationItem.rightBarButtonItems = [navigationItem.rightBarButtonItem!, helpButton]
+        }
+    }
+    
+    @objc private func helpTapped() {
+        let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "App Tour", style: .default) { _ in
+            self.presentAppTour()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Interactive Music Tour", style: .default) { _ in
+            self.startMusicContextualTour()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Music Help", style: .default) { _ in
+            self.showMusicHelp()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Import Guide", style: .default) { _ in
+            self.showImportGuide()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // For iPad
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItems?.last
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func startMusicContextualTour() {
+        // Wait a moment for alert to dismiss
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let tourSteps = self.createMusicTourSteps()
+            self.startContextualTour(steps: tourSteps) {
+                // Tour completed
+                let completion = UIAlertController(
+                    title: "Tour Complete! 🎵",
+                    message: "You're now ready to explore your music library. Start importing your favorite tracks!",
+                    preferredStyle: .alert
+                )
+                completion.addAction(UIAlertAction(title: "Great!", style: .default))
+                self.present(completion, animated: true)
+            }
+        }
+    }
+    
+    func createMusicTourSteps() -> [ContextualTourStep] {
+        var steps: [ContextualTourStep] = []
+        
+        // Search bar
+        if let searchBar = navigationItem.searchController?.searchBar {
+            steps.append(ContextualTourStep(
+                title: "Search Your Music",
+                description: "Use the search bar to quickly find specific tracks in your library.",
+                targetView: searchBar,
+                position: .bottom,
+                imageName: "magnifyingglass"
+            ))
+        }
+        
+        // Edit button
+        if let editButton = navigationItem.rightBarButtonItems?.first {
+            steps.append(ContextualTourStep(
+                title: "Manage Your Library",
+                description: "Tap Edit to delete imported tracks or add new music to your library.",
+                targetView: editButton.value(forKey: "view") as? UIView,
+                position: .bottom,
+                imageName: "pencil"
+            ))
+        }
+        
+        // Table view (first visible cell if available)
+        if tableView.numberOfRows(inSection: 0) > 0,
+           let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) {
+            steps.append(ContextualTourStep(
+                title: "Browse Your Tracks",
+                description: "Tap any track to start playing it. Your music is organized by folders for easy browsing.",
+                targetView: cell,
+                position: .bottom,
+                imageName: "music.note"
+            ))
+        }
+        
+        // Mini player area (bottom of screen)
+        steps.append(ContextualTourStep(
+            title: "Mini Player Controls",
+            description: "When music is playing, controls appear at the bottom. Use fade in/out and cue features for seamless transitions.",
+            targetView: nil,
+            position: .center,
+            imageName: "play.circle.fill"
+        ))
+        
+        return steps
+    }
+    
+    private func showMusicHelp() {
+        let helpVC = UIAlertController(
+            title: "Music Library Help",
+            message: """
+            • Browse your music collection organized by folders
+            • Search for tracks using the search bar
+            • Tap any track to play it in the mini player
+            • Use Edit mode to delete imported tracks
+            • Import new music using the Import button
+            
+            The Music tab shows both built-in funeral music and your imported tracks.
+            """,
+            preferredStyle: .alert
+        )
+        
+        helpVC.addAction(UIAlertAction(title: "Got it", style: .default))
+        present(helpVC, animated: true)
+    }
+    
+    private func showImportGuide() {
+        let importVC = UIAlertController(
+            title: "Import Music Guide",
+            message: """
+            1. Tap 'Edit' then 'Import' to add music files
+            2. Select files from your device storage
+            3. Supported formats: MP3, WAV, M4A, and more
+            4. Imported files appear in the 'Imported' folder
+            5. Use the mini player to control playback
+            
+            Tip: Organize your music before importing for easier browsing!
+            """,
+            preferredStyle: .alert
+        )
+        
+        importVC.addAction(UIAlertAction(title: "Show App Tour", style: .default) { _ in
+            self.presentAppTour()
+        })
+        importVC.addAction(UIAlertAction(title: "Close", style: .cancel))
+        present(importVC, animated: true)
     }
 
     /// Propagate edit/done to the table and our flag.

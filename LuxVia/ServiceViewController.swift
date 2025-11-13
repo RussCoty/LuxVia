@@ -99,6 +99,16 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             target: self,
             action: #selector(editButtonTapped)
         )
+        
+        // Add help button
+        let helpButton = UIBarButtonItem(
+            image: UIImage(systemName: "questionmark.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(helpTapped)
+        )
+        navigationItem.rightBarButtonItem = helpButton
+        )
     }
 
     private func setupContainerView() {
@@ -195,6 +205,157 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         } else {
             startPlaybackProgressTimer()
         }
+    }
+    
+    @objc private func helpTapped() {
+        let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
+        
+        alert.addAction(UIAlertAction(title: "App Tour", style: .default) { _ in
+            self.presentAppTour()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Interactive Service Tour", style: .default) { _ in
+            self.startServiceContextualTour()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Service Planning Help", style: .default) { _ in
+            self.showServiceHelp()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Booklet Guide", style: .default) { _ in
+            self.showBookletGuide()
+        })
+        
+        alert.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        
+        // For iPad
+        if let popover = alert.popoverPresentationController {
+            popover.barButtonItem = navigationItem.rightBarButtonItem
+        }
+        
+        present(alert, animated: true)
+    }
+    
+    private func startServiceContextualTour() {
+        // Wait a moment for alert to dismiss
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            let tourSteps = self.createServiceTourSteps()
+            self.startContextualTour(steps: tourSteps) {
+                // Tour completed
+                let completion = UIAlertController(
+                    title: "Service Planning Mastered! 📋",
+                    message: "You now know how to plan services and create beautiful booklets. Start building your service order!",
+                    preferredStyle: .alert
+                )
+                completion.addAction(UIAlertAction(title: "Perfect!", style: .default))
+                self.present(completion, animated: true)
+            }
+        }
+    }
+    
+    func createServiceTourSteps() -> [ContextualTourStep] {
+        var steps: [ContextualTourStep] = []
+        
+        // Segmented control
+        steps.append(ContextualTourStep(
+            title: "Service Sections",
+            description: "Switch between Service order, Details form, and Booklet preview using these tabs.",
+            targetView: segmentedControl,
+            position: .bottom,
+            imageName: "list.bullet"
+        ))
+        
+        // Edit button
+        if let editButton = navigationItem.leftBarButtonItem {
+            steps.append(ContextualTourStep(
+                title: "Edit Your Service",
+                description: "Use Edit mode to reorder service items, add new music and readings, or remove items.",
+                targetView: editButton.value(forKey: "view") as? UIView,
+                position: .bottom,
+                imageName: "pencil"
+            ))
+        }
+        
+        // Table view (if has content)
+        if tableView.numberOfRows(inSection: 0) > 0,
+           let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) {
+            steps.append(ContextualTourStep(
+                title: "Service Order",
+                description: "Your service items appear here in order. Drag to reorder during edit mode, or tap to play audio items.",
+                targetView: cell,
+                position: .bottom,
+                imageName: "list.number"
+            ))
+        } else {
+            steps.append(ContextualTourStep(
+                title: "Build Your Service",
+                description: "Add music tracks and readings to create your service order. Items will appear here in sequence.",
+                targetView: tableView,
+                position: .center,
+                imageName: "plus.circle"
+            ))
+        }
+        
+        // Details tab tour
+        steps.append(ContextualTourStep(
+            title: "Service Details",
+            description: "Switch to Details tab to enter service information: photos, dates, location, and celebrant details.",
+            targetView: nil,
+            position: .center,
+            imageName: "info.circle"
+        ))
+        
+        // Booklet tab tour
+        steps.append(ContextualTourStep(
+            title: "Generate Booklets",
+            description: "The Booklet tab creates professional PDF booklets with all service details and readings for printing.",
+            targetView: nil,
+            position: .center,
+            imageName: "doc.text"
+        ))
+        
+        return steps
+    }
+    
+    private func showServiceHelp() {
+        let helpVC = UIAlertController(
+            title: "Service Planning Help",
+            message: """
+            • Use the Service tab to organize your funeral order
+            • Add music and readings to create your service flow
+            • Edit mode allows you to reorder items by dragging
+            • The Details tab lets you enter service information
+            • Generate professional booklets in the Booklet tab
+            
+            Tip: Plan your service order carefully for a smooth ceremony.
+            """,
+            preferredStyle: .alert
+        )
+        
+        helpVC.addAction(UIAlertAction(title: "Got it", style: .default))
+        present(helpVC, animated: true)
+    }
+    
+    private func showBookletGuide() {
+        let bookletVC = UIAlertController(
+            title: "Booklet Creation Guide",
+            message: """
+            1. Fill in service details in the Details tab
+            2. Add a photo of the deceased (optional)
+            3. Include service information: location, date, time
+            4. Add celebrant and other service details
+            5. Generate PDF booklet for printing
+            
+            Your booklet will include all service items and readings for attendees.
+            """,
+            preferredStyle: .alert
+        )
+        
+        bookletVC.addAction(UIAlertAction(title: "Show App Tour", style: .default) { _ in
+            self.presentAppTour()
+        })
+        bookletVC.addAction(UIAlertAction(title: "Close", style: .cancel))
+        present(bookletVC, animated: true)
     }
 
     @objc private func handleTrackChange() {
