@@ -76,6 +76,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
             let loginVC = NativeLoginViewController()
             window.rootViewController = UINavigationController(rootViewController: loginVC)
             window.makeKeyAndVisible()
+            // Observe tutorial completion and present tutorial if needed
+            NotificationCenter.default.addObserver(self, selector: #selector(tutorialFinished), name: .didFinishFirstLaunchTutorial, object: nil)
+            presentFirstLaunchTutorialIfNeeded()
         }
     }
 
@@ -100,7 +103,30 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.rootViewController = tabBarController
         window?.makeKeyAndVisible()
 
+        // Observe tutorial completion and present tutorial if needed
+        NotificationCenter.default.addObserver(self, selector: #selector(tutorialFinished), name: .didFinishFirstLaunchTutorial, object: nil)
+        presentFirstLaunchTutorialIfNeeded()
+
         showGDPRNoticeIfNeeded()
+    }
+
+    // MARK: - First-launch tutorial
+
+    @objc func tutorialFinished() {
+        UserDefaults.standard.set(true, forKey: "hasSeenAppTour")
+        NotificationCenter.default.removeObserver(self, name: .didFinishFirstLaunchTutorial, object: nil)
+    }
+
+    func presentFirstLaunchTutorialIfNeeded() {
+        let hasSeen = UserDefaults.standard.bool(forKey: "hasSeenAppTour")
+        guard !hasSeen else { return }
+
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) { [weak self] in
+            guard let self = self, let root = self.window?.rootViewController else { return }
+            let tutorial = FirstLaunchTutorialViewController()
+            tutorial.modalPresentationStyle = .overFullScreen
+            root.present(tutorial, animated: true, completion: nil)
+        }
     }
 
     func showGDPRNoticeIfNeeded() {
