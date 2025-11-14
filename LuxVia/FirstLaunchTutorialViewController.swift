@@ -334,7 +334,18 @@ class FirstLaunchTutorialViewController: UIViewController {
                             topVC = presented
                         }
                         
-                                                if !UserDefaults.standard.bool(forKey: \"hasSeenQuickStart\") {\n                            // Show a simple completion message instead of QuickStartGuide\n                            let quickTip = UIAlertController(\n                                title: \"Welcome to LuxVia! \\u{1f389}\",\n                                message: \"You're ready to start! Remember: shake your device anywhere in the app to access help and tutorials.\",\n                                preferredStyle: .alert\n                            )\n                            quickTip.addAction(UIAlertAction(title: \"Got it!\", style: .default) { _ in\n                                UserDefaults.standard.set(true, forKey: \"hasSeenQuickStart\")\n                            })\n                            topVC.present(quickTip, animated: true)\n                        }
+                        if !UserDefaults.standard.bool(forKey: "hasSeenQuickStart") {
+                            // Show a simple completion message instead of QuickStartGuide
+                            let quickTip = UIAlertController(
+                                title: "Welcome to LuxVia! 🎉",
+                                message: "You're ready to start! Remember: shake your device anywhere in the app to access help and tutorials.",
+                                preferredStyle: .alert
+                            )
+                            quickTip.addAction(UIAlertAction(title: "Got it!", style: .default) { _ in
+                                UserDefaults.standard.set(true, forKey: "hasSeenQuickStart")
+                            })
+                            topVC.present(quickTip, animated: true)
+                        }
                     }
                 }
             }

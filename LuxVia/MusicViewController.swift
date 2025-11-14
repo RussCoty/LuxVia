@@ -122,8 +122,6 @@ Tip: Import your own music files for a personalized experience!""",
         present(tourAlert, animated: true)
     }
     
-    private func showImportGuide() {
-    
     private func showMusicHelp() {
         let helpVC = UIAlertController(
             title: "Music Library Help",

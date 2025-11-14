@@ -112,8 +112,6 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         )
         navigationItem.rightBarButtonItem = helpButton
     }
-        )
-    }
 
     private func setupContainerView() {
         containerView.translatesAutoresizingMaskIntoConstraints = false
