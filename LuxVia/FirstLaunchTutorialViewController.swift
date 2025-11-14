@@ -344,7 +344,6 @@ class FirstLaunchTutorialViewController: UIViewController {
                             quickTip.addAction(UIAlertAction(title: "Got it!", style: .default) { _ in
                                 UserDefaults.standard.set(true, forKey: "hasSeenQuickStart")
                             })
-                            })
                             topVC.present(quickTip, animated: true)
                         }
                     }
