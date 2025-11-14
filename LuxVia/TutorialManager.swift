@@ -42,18 +42,6 @@ class TutorialManager {
             self.presentAppTour(from: viewController)
         })
         
-        if let musicVC = findViewController(ofType: MusicViewController.self, in: viewController) {
-            alert.addAction(UIAlertAction(title: "🎼 Music Library Tour", style: .default) { _ in
-                musicVC.startContextualTour(steps: musicVC.createMusicTourSteps())
-            })
-        }
-        
-        if let serviceVC = findViewController(ofType: ServiceViewController.self, in: viewController) {
-            alert.addAction(UIAlertAction(title: "📋 Service Planning Tour", style: .default) { _ in
-                serviceVC.startContextualTour(steps: serviceVC.createServiceTourSteps())
-            })
-        }
-        
         alert.addAction(UIAlertAction(title: "🔄 Reset All Tutorials", style: .destructive) { _ in
             self.resetTutorial()
             let resetAlert = UIAlertController(
@@ -105,39 +93,6 @@ class TutorialManager {
         }
         
         showTutorialMenu(from: topVC)
-    }
-    
-    private func findViewController<T: UIViewController>(ofType type: T.Type, in viewController: UIViewController) -> T? {
-        if let target = viewController as? T {
-            return target
-        }
-        
-        // Check in tab bar controller
-        if let tabBarController = viewController as? UITabBarController {
-            for childVC in tabBarController.viewControllers ?? [] {
-                if let found = findViewController(ofType: type, in: childVC) {
-                    return found
-                }
-            }
-        }
-        
-        // Check in navigation controller
-        if let navController = viewController as? UINavigationController {
-            for childVC in navController.viewControllers {
-                if let found = findViewController(ofType: type, in: childVC) {
-                    return found
-                }
-            }
-        }
-        
-        // Check child view controllers
-        for childVC in viewController.children {
-            if let found = findViewController(ofType: type, in: childVC) {
-                return found
-            }
-        }
-        
-        return nil
     }
 }
 
