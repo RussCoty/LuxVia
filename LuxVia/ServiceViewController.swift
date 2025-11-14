@@ -3,6 +3,9 @@ import UIKit
 import Foundation
 import WebKit
 
+// Import tutorial system components
+// Note: ContextualTourManager and TutorialManager are defined in separate files
+
 fileprivate func logMiniPlayer(_ context: String, visible: Bool) {
     print("🎛️ MiniPlayer visibility set to \(visible ? "VISIBLE" : "HIDDEN") — from \(context)")
 }
@@ -108,6 +111,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             action: #selector(helpTapped)
         )
         navigationItem.rightBarButtonItem = helpButton
+    }
         )
     }
 
@@ -211,11 +215,11 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "App Tour", style: .default) { _ in
-            self.presentAppTour()
+            TutorialManager.shared.presentAppTour(from: self)
         })
         
         alert.addAction(UIAlertAction(title: "Interactive Service Tour", style: .default) { _ in
-            self.startServiceContextualTour()
+            self.showServiceInteractiveTour()
         })
         
         alert.addAction(UIAlertAction(title: "Service Planning Help", style: .default) { _ in
@@ -236,85 +240,26 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         present(alert, animated: true)
     }
     
-    private func startServiceContextualTour() {
-        // Wait a moment for alert to dismiss
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let tourSteps = self.createServiceTourSteps()
-            self.startContextualTour(steps: tourSteps) {
-                // Tour completed
-                let completion = UIAlertController(
-                    title: "Service Planning Mastered! 📋",
-                    message: "You now know how to plan services and create beautiful booklets. Start building your service order!",
-                    preferredStyle: .alert
-                )
-                completion.addAction(UIAlertAction(title: "Perfect!", style: .default))
-                self.present(completion, animated: true)
-            }
-        }
-    }
-    
-    func createServiceTourSteps() -> [ContextualTourStep] {
-        var steps: [ContextualTourStep] = []
+    private func showServiceInteractiveTour() {
+        let tourAlert = UIAlertController(
+            title: "📋 Service Planning Interactive Guide",
+            message: """Master service planning with these features:
+
+📝 Sections: Use the tabs to switch between Service, Details, and Booklet
+✏️ Edit Mode: Reorder items by dragging in edit mode
+🎵 Service Order: Add music and readings to build your service
+📷 Details: Enter service information and photos
+📄 Booklet: Generate professional PDF booklets
+
+Tip: Plan your service order carefully for a smooth ceremony!""",
+            preferredStyle: .alert
+        )
         
-        // Segmented control
-        steps.append(ContextualTourStep(
-            title: "Service Sections",
-            description: "Switch between Service order, Details form, and Booklet preview using these tabs.",
-            targetView: segmentedControl,
-            position: .bottom,
-            imageName: "list.bullet"
-        ))
-        
-        // Edit button
-        if let editButton = navigationItem.leftBarButtonItem {
-            steps.append(ContextualTourStep(
-                title: "Edit Your Service",
-                description: "Use Edit mode to reorder service items, add new music and readings, or remove items.",
-                targetView: editButton.value(forKey: "view") as? UIView,
-                position: .bottom,
-                imageName: "pencil"
-            ))
-        }
-        
-        // Table view (if has content)
-        if tableView.numberOfRows(inSection: 0) > 0,
-           let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) {
-            steps.append(ContextualTourStep(
-                title: "Service Order",
-                description: "Your service items appear here in order. Drag to reorder during edit mode, or tap to play audio items.",
-                targetView: cell,
-                position: .bottom,
-                imageName: "list.number"
-            ))
-        } else {
-            steps.append(ContextualTourStep(
-                title: "Build Your Service",
-                description: "Add music tracks and readings to create your service order. Items will appear here in sequence.",
-                targetView: tableView,
-                position: .center,
-                imageName: "plus.circle"
-            ))
-        }
-        
-        // Details tab tour
-        steps.append(ContextualTourStep(
-            title: "Service Details",
-            description: "Switch to Details tab to enter service information: photos, dates, location, and celebrant details.",
-            targetView: nil,
-            position: .center,
-            imageName: "info.circle"
-        ))
-        
-        // Booklet tab tour
-        steps.append(ContextualTourStep(
-            title: "Generate Booklets",
-            description: "The Booklet tab creates professional PDF booklets with all service details and readings for printing.",
-            targetView: nil,
-            position: .center,
-            imageName: "doc.text"
-        ))
-        
-        return steps
+        tourAlert.addAction(UIAlertAction(title: "Try Booklet Guide", style: .default) { _ in
+            self.showBookletGuide()
+        })
+        tourAlert.addAction(UIAlertAction(title: "Perfect!", style: .cancel))
+        present(tourAlert, animated: true)
     }
     
     private func showServiceHelp() {
@@ -352,7 +297,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         )
         
         bookletVC.addAction(UIAlertAction(title: "Show App Tour", style: .default) { _ in
-            self.presentAppTour()
+            TutorialManager.shared.presentAppTour(from: self)
         })
         bookletVC.addAction(UIAlertAction(title: "Close", style: .cancel))
         present(bookletVC, animated: true)

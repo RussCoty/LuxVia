@@ -8,6 +8,9 @@
 import UIKit
 import UniformTypeIdentifiers
 
+// Import tutorial system components
+// Note: ContextualTourManager and TutorialManager are defined in separate files
+
 class MusicViewController: BaseViewController,
                            UITableViewDataSource,
                            UITableViewDelegate,
@@ -73,11 +76,11 @@ class MusicViewController: BaseViewController,
         let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "App Tour", style: .default) { _ in
-            self.presentAppTour()
+            TutorialManager.shared.presentAppTour(from: self)
         })
         
         alert.addAction(UIAlertAction(title: "Interactive Music Tour", style: .default) { _ in
-            self.startMusicContextualTour()
+            self.showMusicInteractiveTour()
         })
         
         alert.addAction(UIAlertAction(title: "Music Help", style: .default) { _ in
@@ -98,71 +101,28 @@ class MusicViewController: BaseViewController,
         present(alert, animated: true)
     }
     
-    private func startMusicContextualTour() {
-        // Wait a moment for alert to dismiss
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            let tourSteps = self.createMusicTourSteps()
-            self.startContextualTour(steps: tourSteps) {
-                // Tour completed
-                let completion = UIAlertController(
-                    title: "Tour Complete! 🎵",
-                    message: "You're now ready to explore your music library. Start importing your favorite tracks!",
-                    preferredStyle: .alert
-                )
-                completion.addAction(UIAlertAction(title: "Great!", style: .default))
-                self.present(completion, animated: true)
-            }
-        }
+    private func showMusicInteractiveTour() {
+        let tourAlert = UIAlertController(
+            title: "🎵 Music Library Interactive Guide",
+            message: """Here's how to make the most of your music library:
+
+🔍 Search: Use the search bar to find tracks quickly
+✏️ Edit: Tap Edit to manage your library and delete imported tracks
+🎵 Browse: Tap any track to start playing
+🎛️ Controls: Use the mini player for smooth transitions
+
+Tip: Import your own music files for a personalized experience!""",
+            preferredStyle: .alert
+        )
+        
+        tourAlert.addAction(UIAlertAction(title: "Try Import Guide", style: .default) { _ in
+            self.showImportGuide()
+        })
+        tourAlert.addAction(UIAlertAction(title: "Got it!", style: .cancel))
+        present(tourAlert, animated: true)
     }
     
-    func createMusicTourSteps() -> [ContextualTourStep] {
-        var steps: [ContextualTourStep] = []
-        
-        // Search bar
-        if let searchBar = navigationItem.searchController?.searchBar {
-            steps.append(ContextualTourStep(
-                title: "Search Your Music",
-                description: "Use the search bar to quickly find specific tracks in your library.",
-                targetView: searchBar,
-                position: .bottom,
-                imageName: "magnifyingglass"
-            ))
-        }
-        
-        // Edit button
-        if let editButton = navigationItem.rightBarButtonItems?.first {
-            steps.append(ContextualTourStep(
-                title: "Manage Your Library",
-                description: "Tap Edit to delete imported tracks or add new music to your library.",
-                targetView: editButton.value(forKey: "view") as? UIView,
-                position: .bottom,
-                imageName: "pencil"
-            ))
-        }
-        
-        // Table view (first visible cell if available)
-        if tableView.numberOfRows(inSection: 0) > 0,
-           let cell = tableView.cellForRow(at: IndexPath(row: 0, section: 0)) {
-            steps.append(ContextualTourStep(
-                title: "Browse Your Tracks",
-                description: "Tap any track to start playing it. Your music is organized by folders for easy browsing.",
-                targetView: cell,
-                position: .bottom,
-                imageName: "music.note"
-            ))
-        }
-        
-        // Mini player area (bottom of screen)
-        steps.append(ContextualTourStep(
-            title: "Mini Player Controls",
-            description: "When music is playing, controls appear at the bottom. Use fade in/out and cue features for seamless transitions.",
-            targetView: nil,
-            position: .center,
-            imageName: "play.circle.fill"
-        ))
-        
-        return steps
-    }
+    private func showImportGuide() {
     
     private func showMusicHelp() {
         let helpVC = UIAlertController(
@@ -199,7 +159,7 @@ class MusicViewController: BaseViewController,
         )
         
         importVC.addAction(UIAlertAction(title: "Show App Tour", style: .default) { _ in
-            self.presentAppTour()
+            TutorialManager.shared.presentAppTour(from: self)
         })
         importVC.addAction(UIAlertAction(title: "Close", style: .cancel))
         present(importVC, animated: true)

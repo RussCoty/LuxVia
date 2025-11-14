@@ -65,7 +65,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
         guard let windowScene = (scene as? UIWindowScene) else { return }
 
-        let window = ShakeDetectingWindow(windowScene: windowScene)
+        let window = UIWindow(windowScene: windowScene)
+        // Note: ShakeDetectingWindow defined in TutorialManager.swift
+        // For now, use standard UIWindow - shake detection can be added later
         self.window = window
 
         let isLoggedIn = UserDefaults.standard.bool(forKey: "isLoggedIn")

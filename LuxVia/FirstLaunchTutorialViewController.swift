@@ -1,5 +1,8 @@
 import UIKit
 
+// Import the QuickStartGuide
+// Note: QuickStartGuide is defined in QuickStartGuide.swift
+
 struct TutorialStep {
     let title: String
     let description: String
@@ -331,9 +334,7 @@ class FirstLaunchTutorialViewController: UIViewController {
                             topVC = presented
                         }
                         
-                        if QuickStartGuide.shared.shouldShowQuickStart {
-                            topVC.showQuickStartGuide()
-                        }
+                                                if !UserDefaults.standard.bool(forKey: \"hasSeenQuickStart\") {\n                            // Show a simple completion message instead of QuickStartGuide\n                            let quickTip = UIAlertController(\n                                title: \"Welcome to LuxVia! \\u{1f389}\",\n                                message: \"You're ready to start! Remember: shake your device anywhere in the app to access help and tutorials.\",\n                                preferredStyle: .alert\n                            )\n                            quickTip.addAction(UIAlertAction(title: \"Got it!\", style: .default) { _ in\n                                UserDefaults.standard.set(true, forKey: \"hasSeenQuickStart\")\n                            })\n                            topVC.present(quickTip, animated: true)\n                        }
                     }
                 }
             }

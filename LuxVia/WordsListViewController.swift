@@ -1,5 +1,8 @@
 import UIKit
 
+// Import tutorial system components
+// Note: TutorialManager is defined in TutorialManager.swift
+
 class WordsListViewController: BaseViewController, UITableViewDataSource, UITableViewDelegate {
     // No collapsible logic needed
     deinit {
@@ -79,6 +82,15 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         navigationItem.rightBarButtonItem = helpButton
 
         // Let BaseViewController handle login/logout button
+        
+        // Add help button
+        let helpButton = UIBarButtonItem(
+            image: UIImage(systemName: "questionmark.circle"),
+            style: .plain,
+            target: self,
+            action: #selector(helpTapped)
+        )
+        navigationItem.rightBarButtonItem = helpButton
     }
 
     private func setupTableView() {
@@ -140,7 +152,7 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
         
         alert.addAction(UIAlertAction(title: "App Tour", style: .default) { _ in
-            self.presentAppTour()
+            TutorialManager.shared.presentAppTour(from: self)
         })
         
         alert.addAction(UIAlertAction(title: "Words & Readings Help", style: .default) { _ in
@@ -195,7 +207,7 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
         )
         
         customVC.addAction(UIAlertAction(title: "Show App Tour", style: .default) { _ in
-            self.presentAppTour()
+            TutorialManager.shared.presentAppTour(from: self)
         })
         customVC.addAction(UIAlertAction(title: "Close", style: .cancel))
         present(customVC, animated: true)
