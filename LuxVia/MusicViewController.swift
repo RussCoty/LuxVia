@@ -104,14 +104,16 @@ class MusicViewController: BaseViewController,
     private func showMusicInteractiveTour() {
         let tourAlert = UIAlertController(
             title: "🎵 Music Library Interactive Guide",
-            message: """Here's how to make the most of your music library:
-
-🔍 Search: Use the search bar to find tracks quickly
-✏️ Edit: Tap Edit to manage your library and delete imported tracks
-🎵 Browse: Tap any track to start playing
-🎛️ Controls: Use the mini player for smooth transitions
-
-Tip: Import your own music files for a personalized experience!""",
+            message: """
+            Here's how to make the most of your music library:
+            
+            🔍 Search: Use the search bar to find tracks quickly
+            ✏️ Edit: Tap Edit to manage your library and delete imported tracks
+            🎵 Browse: Tap any track to start playing
+            🎛️ Controls: Use the mini player for smooth transitions
+            
+            Tip: Import your own music files for a personalized experience!
+            """,
             preferredStyle: .alert
         )
         

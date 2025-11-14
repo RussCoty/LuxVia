@@ -241,15 +241,17 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
     private func showServiceInteractiveTour() {
         let tourAlert = UIAlertController(
             title: "📋 Service Planning Interactive Guide",
-            message: """Master service planning with these features:
-
-📝 Sections: Use the tabs to switch between Service, Details, and Booklet
-✏️ Edit Mode: Reorder items by dragging in edit mode
-🎵 Service Order: Add music and readings to build your service
-📷 Details: Enter service information and photos
-📄 Booklet: Generate professional PDF booklets
-
-Tip: Plan your service order carefully for a smooth ceremony!""",
+            message: """
+            Master service planning with these features:
+            
+            📝 Sections: Use the tabs to switch between Service, Details, and Booklet
+            ✏️ Edit Mode: Reorder items by dragging in edit mode
+            🎵 Service Order: Add music and readings to build your service
+            📷 Details: Enter service information and photos
+            📄 Booklet: Generate professional PDF booklets
+            
+            Tip: Plan your service order carefully for a smooth ceremony!
+            """,
             preferredStyle: .alert
         )
         

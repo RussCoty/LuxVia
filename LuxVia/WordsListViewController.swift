@@ -80,17 +80,6 @@ class WordsListViewController: BaseViewController, UITableViewDataSource, UITabl
             action: #selector(helpTapped)
         )
         navigationItem.rightBarButtonItem = helpButton
-
-        // Let BaseViewController handle login/logout button
-        
-        // Add help button
-        let helpButton = UIBarButtonItem(
-            image: UIImage(systemName: "questionmark.circle"),
-            style: .plain,
-            target: self,
-            action: #selector(helpTapped)
-        )
-        navigationItem.rightBarButtonItem = helpButton
     }
 
     private func setupTableView() {
