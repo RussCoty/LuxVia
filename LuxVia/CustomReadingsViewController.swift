@@ -10,6 +10,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
     private let addButton = UIButton(type: .system)
         private let aiEulogyButton = UIButton(type: .system)
         private let recordButton = UIButton(type: .system)
+        private let imageManagerButton = UIButton(type: .system)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -19,6 +20,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         setupAddButton()
             setupAIEulogyButton()
             setupRecordButton()
+            setupImageManagerButton()
         setupTableView()
     }
     
@@ -63,9 +65,27 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
             ])
         }
     
+        private func setupImageManagerButton() {
+            imageManagerButton.setTitle("🖼️ Manage Slideshow Images", for: .normal)
+            imageManagerButton.setTitleColor(.systemOrange, for: .normal)
+            imageManagerButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+            imageManagerButton.addTarget(self, action: #selector(openImageManager), for: .touchUpInside)
+            imageManagerButton.translatesAutoresizingMaskIntoConstraints = false
+            view.addSubview(imageManagerButton)
+            NSLayoutConstraint.activate([
+                imageManagerButton.topAnchor.constraint(equalTo: recordButton.bottomAnchor, constant: 12),
+                imageManagerButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
+            ])
+        }
+    
     @objc private func openAIEulogyWriter() {
         let vc = UIHostingController(rootView: EulogyWriterView.make())
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    @objc private func openImageManager() {
+        let imageManagerVC = ImageManagerViewController()
+        navigationController?.pushViewController(imageManagerVC, animated: true)
     }
     private func setupTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
@@ -75,7 +95,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         view.addSubview(tableView)
         
         NSLayoutConstraint.activate([
-                tableView.topAnchor.constraint(equalTo: recordButton.bottomAnchor, constant: 12),
+                tableView.topAnchor.constraint(equalTo: imageManagerButton.bottomAnchor, constant: 12),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)

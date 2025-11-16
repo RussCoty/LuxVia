@@ -90,6 +90,8 @@
 		10SS0003111111111111111 /* SlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0008111111111111111 /* SlideshowViewController.swift */; };
 		10SS0004111111111111111 /* AirPlaySlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */; };
 		10SS0005111111111111111 /* SlideshowSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0010111111111111111 /* SlideshowSettingsViewController.swift */; };
+		10IM0001111111111111111 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10IM0003111111111111111 /* ImageManager.swift */; };
+		10IM0002111111111111111 /* ImageManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10IM0004111111111111111 /* ImageManagerViewController.swift */; };
 		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
 		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
@@ -206,6 +208,8 @@
 		10SS0008111111111111111 /* SlideshowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowViewController.swift; sourceTree = "<group>"; };
 		10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlaySlideshowViewController.swift; sourceTree = "<group>"; };
 		10SS0010111111111111111 /* SlideshowSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowSettingsViewController.swift; sourceTree = "<group>"; };
+		10IM0003111111111111111 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
+		10IM0004111111111111111 /* ImageManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManagerViewController.swift; sourceTree = "<group>"; };
 		1084FAA72DC8EC06009398EB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1084FAAC2DC8EC09009398EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1084FAAF2DC8EC09009398EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -423,8 +427,10 @@
 				105BBACD2DF9A067004B7F7A /* CustomReadingManager.swift */,
 				105BBAD52DF9F8E9004B7F7A /* CustomReadingStore.swift */,
 				105BBACF2DF9A08D004B7F7A /* CustomReadingsViewController.swift */,
-				10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */,
-				1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
+			10DE9D252E0D83C500B8FAB3 /* IconLabelButtonView.swift */,
+			10IM0003111111111111111 /* ImageManager.swift */,
+			10IM0004111111111111111 /* ImageManagerViewController.swift */,
+			1099B6232DD793E600CA3194 /* KeychainHelper.swift */,
 				101293E62DC9FD7C0012B3DE /* LoginViewController.swift */,
 				10AB97DA2E41799F0015E379 /* Lyric.swift */,
 				10824D7E2DF33FBD00CDF11B /* LyricsDetailViewController.swift */,
@@ -646,6 +652,8 @@
 				10SS0003111111111111111 /* SlideshowViewController.swift in Sources */,
 				10SS0004111111111111111 /* AirPlaySlideshowViewController.swift in Sources */,
 				10SS0005111111111111111 /* SlideshowSettingsViewController.swift in Sources */,
+				10IM0001111111111111111 /* ImageManager.swift in Sources */,
+				10IM0002111111111111111 /* ImageManagerViewController.swift in Sources */,
 				10903B262E0324E700397384 /* MiniPlayerContainerViewController.swift in Sources */,
 				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
 				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
