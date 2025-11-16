@@ -63,7 +63,11 @@
 	<array>
 		<string>audio</string>
 	</array>
-		<key>NSMicrophoneUsageDescription</key>
-		<string>This app requires access to the microphone to record audio for music and readings.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>This app requires access to the microphone to record audio for music and readings.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>This app needs access to your photo library to select images and videos for the slideshow.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>This app needs access to save slideshow media to your photo library.</string>
 </dict>
 </plist>

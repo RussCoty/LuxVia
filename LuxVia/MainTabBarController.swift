@@ -40,7 +40,10 @@ class MainTabBarController: UITabBarController, UITabBarControllerDelegate {
         let serviceVC = UINavigationController(rootViewController: ServiceViewController())
         serviceVC.tabBarItem = UITabBarItem(title: "Service", image: UIImage(systemName: "music.note"), tag: 2)
 
-        viewControllers = [wordsVC, musicVC, serviceVC]
+        let slideshowVC = UINavigationController(rootViewController: SlideshowViewController())
+        slideshowVC.tabBarItem = UITabBarItem(title: "Slideshow", image: UIImage(systemName: "photo.on.rectangle.angled"), tag: 3)
+
+        viewControllers = [wordsVC, musicVC, serviceVC, slideshowVC]
         selectedIndex = 1
     }
 
