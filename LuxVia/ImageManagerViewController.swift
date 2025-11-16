@@ -8,6 +8,7 @@
 import UIKit
 import PhotosUI
 import AVFoundation
+import AVKit
 
 class ImageManagerViewController: BaseViewController {
     
