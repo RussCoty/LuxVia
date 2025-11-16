@@ -85,6 +85,11 @@
 		1084FAA42DC8EC06009398EB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA32DC8EC06009398EB /* AppDelegate.swift */; };
 		1084FAA62DC8EC06009398EB /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA52DC8EC06009398EB /* SceneDelegate.swift */; };
 		1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1084FAA72DC8EC06009398EB /* ViewController.swift */; };
+		10SS0001111111111111111 /* SlideshowModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0006111111111111111 /* SlideshowModels.swift */; };
+		10SS0002111111111111111 /* SlideshowManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0007111111111111111 /* SlideshowManager.swift */; };
+		10SS0003111111111111111 /* SlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0008111111111111111 /* SlideshowViewController.swift */; };
+		10SS0004111111111111111 /* AirPlaySlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */; };
+		10SS0005111111111111111 /* SlideshowSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0010111111111111111 /* SlideshowSettingsViewController.swift */; };
 		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
 		1084FAB02DC8EC09009398EB /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAE2DC8EC09009398EB /* LaunchScreen.storyboard */; };
 		108D26BE2DD206880049806F /* MusicTabViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 108D26BD2DD206880049806F /* MusicTabViewController.swift */; };
@@ -196,6 +201,11 @@
 		1084FAA02DC8EC06009398EB /* LuxVia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LuxVia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		1084FAA32DC8EC06009398EB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1084FAA52DC8EC06009398EB /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		10SS0006111111111111111 /* SlideshowModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowModels.swift; sourceTree = "<group>"; };
+		10SS0007111111111111111 /* SlideshowManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowManager.swift; sourceTree = "<group>"; };
+		10SS0008111111111111111 /* SlideshowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowViewController.swift; sourceTree = "<group>"; };
+		10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlaySlideshowViewController.swift; sourceTree = "<group>"; };
+		10SS0010111111111111111 /* SlideshowSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowSettingsViewController.swift; sourceTree = "<group>"; };
 		1084FAA72DC8EC06009398EB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		1084FAAC2DC8EC09009398EB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1084FAAF2DC8EC09009398EB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -440,11 +450,16 @@
 				103984D32DF700AF005D90DF /* ServiceOrderManager.swift */,
 				103984D52DF700AF005D90DF /* ServiceViewController.swift */,
 				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
-				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
-				107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */,
-				105FC7322DD9048A00C93490 /* TopBarView.swift */,
-				108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */,
-				10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
+			109366782DD22611007127CC /* SharedPlaylistManager.swift */,
+			10SS0006111111111111111 /* SlideshowModels.swift */,
+			10SS0007111111111111111 /* SlideshowManager.swift */,
+			10SS0008111111111111111 /* SlideshowViewController.swift */,
+			10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */,
+			10SS0010111111111111111 /* SlideshowSettingsViewController.swift */,
+			107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */,
+			105FC7322DD9048A00C93490 /* TopBarView.swift */,
+			108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */,
+			10A556452DD8724D0089968D /* UIDocumentPickerViewController.swift */,
 				10E265D72E3299E500D9D2AD /* Untitled.swift */,
 				1084FAA72DC8EC06009398EB /* ViewController.swift */,
 				10824D7C2DF33F9300CDF11B /* WordsListViewController.swift */,
@@ -626,6 +641,11 @@
 				108DB36C2DF8DE6F00DEB58C /* TopHeaderView.swift in Sources */,
 				10D6870C2DD22CDF00155B1C /* PlayerControlsView.swift in Sources */,
 				1084FAA82DC8EC06009398EB /* ViewController.swift in Sources */,
+				10SS0001111111111111111 /* SlideshowModels.swift in Sources */,
+				10SS0002111111111111111 /* SlideshowManager.swift in Sources */,
+				10SS0003111111111111111 /* SlideshowViewController.swift in Sources */,
+				10SS0004111111111111111 /* AirPlaySlideshowViewController.swift in Sources */,
+				10SS0005111111111111111 /* SlideshowSettingsViewController.swift in Sources */,
 				10903B262E0324E700397384 /* MiniPlayerContainerViewController.swift in Sources */,
 				105FC7332DD9048A00C93490 /* TopBarView.swift in Sources */,
 				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
