@@ -79,7 +79,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         }
     
     @objc private func openAIEulogyWriter() {
-        let vc = UIHostingController(rootView: EulogyWriterView.make())
+        let vc = UIHostingController(rootView: EulogyRootView())
         navigationController?.pushViewController(vc, animated: true)
     }
     

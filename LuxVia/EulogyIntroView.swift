@@ -1,17 +1,17 @@
 import SwiftUI
-import MarkdownUI
 
 struct EulogyIntroView: View {
     var body: some View {
         VStack(spacing: 24) {
-            Markdown("""
-# AI Eulogy Writer
-
-Hello, I'm LuxVia's AI Eulogy Writer. I can help you craft a thoughtful, personalized eulogy. Just answer a few questions and I'll generate a Markdown draft you can edit, copy, or share.
-
-Your privacy matters: only what you enter is used. For sensitive details, you can use a local AI provider.
-""")
-            NavigationLink("Start Writing", destination: EulogyEntryPoint())
+            Text("AI Eulogy Writer")
+                .font(.largeTitle)
+                .fontWeight(.bold)
+            
+            Text("I'm here to help you compose a respectful, personal eulogy.\n\nAnswer a few questions and I'll generate a thoughtful draft you can edit, copy, or share.\n\nYour privacy matters: only what you enter is used.")
+                .multilineTextAlignment(.center)
+                .padding()
+            
+            NavigationLink("Start Writing", destination: EulogyRootView())
                 .buttonStyle(.borderedProminent)
         }
         .padding()
