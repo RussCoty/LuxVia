@@ -9,6 +9,7 @@ import UIKit
 import PhotosUI
 import AVFoundation
 import AVKit
+import MediaPlayer
 
 class ImageManagerViewController: BaseViewController {
     
@@ -20,10 +21,12 @@ class ImageManagerViewController: BaseViewController {
     
     // AirPlay controls
     private let airplayControlsContainer = UIView()
+    private let airplayButton = UIButton(type: .system)
     private let playButton = UIButton(type: .system)
     private let stopButton = UIButton(type: .system)
     private let statusLabel = UILabel()
     private var selectedPlaylistForAirPlay: SlideshowPlaylist?
+    private var volumeView: MPVolumeView?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -91,24 +94,32 @@ class ImageManagerViewController: BaseViewController {
         airplayControlsContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(airplayControlsContainer)
         
+        // AirPlay connection button
+        airplayButton.setTitle("📡 Connect to AirPlay", for: .normal)
+        airplayButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        airplayButton.setTitleColor(.systemBlue, for: .normal)
+        airplayButton.addTarget(self, action: #selector(showAirPlayPicker), for: .touchUpInside)
+        airplayButton.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(airplayButton)
+        
         // Status label
-        statusLabel.text = "Select a playlist to display on AirPlay"
+        statusLabel.text = "Connect to AirPlay device, then select playlist"
         statusLabel.textAlignment = .center
-        statusLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        statusLabel.font = .systemFont(ofSize: 13, weight: .medium)
         statusLabel.numberOfLines = 2
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(statusLabel)
         
         // Play button
-        playButton.setTitle("📺 Start AirPlay Slideshow", for: .normal)
-        playButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        playButton.setTitle("▶️ Start Slideshow", for: .normal)
+        playButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
         playButton.addTarget(self, action: #selector(playAirPlayTapped), for: .touchUpInside)
         playButton.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(playButton)
         
         // Stop button
-        stopButton.setTitle("⏹ Stop Slideshow", for: .normal)
-        stopButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        stopButton.setTitle("⏹ Stop", for: .normal)
+        stopButton.titleLabel?.font = .systemFont(ofSize: 15, weight: .semibold)
         stopButton.setTitleColor(.systemRed, for: .normal)
         stopButton.addTarget(self, action: #selector(stopAirPlayTapped), for: .touchUpInside)
         stopButton.translatesAutoresizingMaskIntoConstraints = false
@@ -118,16 +129,19 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 100),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 110),
             
-            statusLabel.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
+            airplayButton.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
+            airplayButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            
+            statusLabel.topAnchor.constraint(equalTo: airplayButton.bottomAnchor, constant: 4),
             statusLabel.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
             statusLabel.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16),
             
-            playButton.centerYAnchor.constraint(equalTo: airplayControlsContainer.centerYAnchor, constant: 15),
+            playButton.bottomAnchor.constraint(equalTo: airplayControlsContainer.bottomAnchor, constant: -12),
             playButton.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
             
-            stopButton.centerYAnchor.constraint(equalTo: airplayControlsContainer.centerYAnchor, constant: 15),
+            stopButton.bottomAnchor.constraint(equalTo: airplayControlsContainer.bottomAnchor, constant: -12),
             stopButton.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16)
         ])
         
@@ -228,6 +242,24 @@ class ImageManagerViewController: BaseViewController {
         present(alert, animated: true)
     }
     
+    @objc private func showAirPlayPicker() {
+        let volumeView = MPVolumeView(frame: CGRect(x: -1000, y: -1000, width: 1, height: 1))
+        view.addSubview(volumeView)
+        
+        // Find the AirPlay button
+        for view in volumeView.subviews {
+            if let button = view as? UIButton {
+                button.sendActions(for: .touchUpInside)
+                break
+            }
+        }
+        
+        // Clean up after a delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            volumeView.removeFromSuperview()
+        }
+    }
+    
     @objc private func playAirPlayTapped() {
         guard let playlist = selectedPlaylistForAirPlay else {
             let alert = UIAlertController(
@@ -290,18 +322,20 @@ class ImageManagerViewController: BaseViewController {
         if isPlaying {
             if let currentPlaylist = SlideshowManager.shared.getCurrentPlaylist() {
                 let currentIndex = SlideshowManager.shared.getCurrentSlideIndex()
-                statusLabel.text = "Playing: \(currentPlaylist.name) - Slide \(currentIndex + 1) of \(currentPlaylist.slides.count)"
+                statusLabel.text = "▶️ \(currentPlaylist.name) - Slide \(currentIndex + 1)/\(currentPlaylist.slides.count)"
             } else {
-                statusLabel.text = "Slideshow playing on AirPlay"
+                statusLabel.text = "▶️ Slideshow playing on AirPlay"
             }
+            airplayButton.isEnabled = false
             playButton.isEnabled = false
             stopButton.isEnabled = true
         } else {
             if let selected = selectedPlaylistForAirPlay {
-                statusLabel.text = "Ready: \(selected.name) (\(selected.slides.count) items)"
+                statusLabel.text = "✓ Ready: \(selected.name) (\(selected.slides.count) items)"
             } else {
-                statusLabel.text = "Tap a playlist header to select for AirPlay"
+                statusLabel.text = "Connect to AirPlay, then select a playlist below"
             }
+            airplayButton.isEnabled = true
             playButton.isEnabled = selectedPlaylistForAirPlay != nil
             stopButton.isEnabled = false
         }
