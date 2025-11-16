@@ -18,6 +18,13 @@ class ImageManagerViewController: BaseViewController {
     private var playlists: [SlideshowPlaylist] = []
     private var allMedia: [SlideItem] = []
     
+    // AirPlay controls
+    private let airplayControlsContainer = UIView()
+    private let playButton = UIButton(type: .system)
+    private let stopButton = UIButton(type: .system)
+    private let statusLabel = UILabel()
+    private var selectedPlaylistForAirPlay: SlideshowPlaylist?
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,13 +34,20 @@ class ImageManagerViewController: BaseViewController {
         
         setupNavigationBar()
         setupSegmentedControl()
+        setupAirPlayControls()
         setupTableView()
         loadData()
+        setupNotifications()
     }
     
     override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
         loadData()
+        updateAirPlayControls()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Setup
@@ -71,6 +85,78 @@ class ImageManagerViewController: BaseViewController {
         ])
     }
     
+    private func setupAirPlayControls() {
+        airplayControlsContainer.backgroundColor = .secondarySystemBackground
+        airplayControlsContainer.layer.cornerRadius = 12
+        airplayControlsContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(airplayControlsContainer)
+        
+        // Status label
+        statusLabel.text = "Select a playlist to display on AirPlay"
+        statusLabel.textAlignment = .center
+        statusLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        statusLabel.numberOfLines = 2
+        statusLabel.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(statusLabel)
+        
+        // Play button
+        playButton.setTitle("📺 Start AirPlay Slideshow", for: .normal)
+        playButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        playButton.addTarget(self, action: #selector(playAirPlayTapped), for: .touchUpInside)
+        playButton.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(playButton)
+        
+        // Stop button
+        stopButton.setTitle("⏹ Stop Slideshow", for: .normal)
+        stopButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        stopButton.setTitleColor(.systemRed, for: .normal)
+        stopButton.addTarget(self, action: #selector(stopAirPlayTapped), for: .touchUpInside)
+        stopButton.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(stopButton)
+        
+        NSLayoutConstraint.activate([
+            airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 100),
+            
+            statusLabel.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
+            statusLabel.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
+            statusLabel.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16),
+            
+            playButton.centerYAnchor.constraint(equalTo: airplayControlsContainer.centerYAnchor, constant: 15),
+            playButton.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
+            
+            stopButton.centerYAnchor.constraint(equalTo: airplayControlsContainer.centerYAnchor, constant: 15),
+            stopButton.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16)
+        ])
+        
+        updateAirPlayControls()
+    }
+    
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(slideshowDidUpdate),
+            name: SlideshowManager.slideshowDidUpdateSlide,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(slideshowDidStop),
+            name: SlideshowManager.slideshowDidStop,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(slideshowDidStart),
+            name: SlideshowManager.slideshowDidStart,
+            object: nil
+        )
+    }
+    
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -83,7 +169,7 @@ class ImageManagerViewController: BaseViewController {
             tableView.topAnchor.constraint(equalTo: segmentedControl.bottomAnchor, constant: 8),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: -8)
         ])
     }
     
@@ -131,6 +217,7 @@ class ImageManagerViewController: BaseViewController {
             • Add new images/videos from your library
             • Create and organize playlists
             • Delete media you no longer need
+            • Tap a playlist header to start AirPlay slideshow
             
             Media added here is used in the Slideshow tab for memorial displays.
             """,
@@ -139,6 +226,85 @@ class ImageManagerViewController: BaseViewController {
         
         alert.addAction(UIAlertAction(title: "Got it", style: .default))
         present(alert, animated: true)
+    }
+    
+    @objc private func playAirPlayTapped() {
+        guard let playlist = selectedPlaylistForAirPlay else {
+            let alert = UIAlertController(
+                title: "No Playlist Selected",
+                message: "Please tap on a playlist header to select it for AirPlay display.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+        
+        guard !playlist.slides.isEmpty else {
+            let alert = UIAlertController(
+                title: "Empty Playlist",
+                message: "This playlist has no images or videos. Add some media first.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+        
+        // Enable loop mode for continuous display
+        var loopedPlaylist = playlist
+        loopedPlaylist.settings.loopEnabled = true
+        SlideshowManager.shared.updatePlaylist(loopedPlaylist)
+        
+        // Start the slideshow
+        SlideshowManager.shared.startSlideshow(playlist: loopedPlaylist)
+        updateAirPlayControls()
+    }
+    
+    @objc private func stopAirPlayTapped() {
+        SlideshowManager.shared.stopSlideshow()
+        updateAirPlayControls()
+    }
+    
+    @objc private func slideshowDidStart() {
+        updateAirPlayControls()
+    }
+    
+    @objc private func slideshowDidUpdate(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let index = userInfo["index"] as? Int,
+              let slide = userInfo["slide"] as? SlideItem else { return }
+        
+        if let playlist = SlideshowManager.shared.getCurrentPlaylist() {
+            statusLabel.text = "Playing: \(playlist.name) - Slide \(index + 1) of \(playlist.slides.count)"
+        }
+    }
+    
+    @objc private func slideshowDidStop() {
+        updateAirPlayControls()
+    }
+    
+    private func updateAirPlayControls() {
+        let isPlaying = SlideshowManager.shared.isCurrentlyPlaying()
+        
+        if isPlaying {
+            if let currentPlaylist = SlideshowManager.shared.getCurrentPlaylist() {
+                let currentIndex = SlideshowManager.shared.getCurrentSlideIndex()
+                statusLabel.text = "Playing: \(currentPlaylist.name) - Slide \(currentIndex + 1) of \(currentPlaylist.slides.count)"
+            } else {
+                statusLabel.text = "Slideshow playing on AirPlay"
+            }
+            playButton.isEnabled = false
+            stopButton.isEnabled = true
+        } else {
+            if let selected = selectedPlaylistForAirPlay {
+                statusLabel.text = "Ready: \(selected.name) (\(selected.slides.count) items)"
+            } else {
+                statusLabel.text = "Tap a playlist header to select for AirPlay"
+            }
+            playButton.isEnabled = selectedPlaylistForAirPlay != nil
+            stopButton.isEnabled = false
+        }
     }
     
     private func createNewPlaylist() {
@@ -209,10 +375,63 @@ extension ImageManagerViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
         if segmentedControl.selectedSegmentIndex == 0 {
             let playlist = playlists[section]
-            return "\(playlist.name) (\(playlist.slides.count) items)"
+            let isSelected = selectedPlaylistForAirPlay?.id == playlist.id ? "✓ " : ""
+            return "\(isSelected)\(playlist.name) (\(playlist.slides.count) items)"
         } else {
             return "All Media (\(allMedia.count) items)"
         }
+    }
+    
+    func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+        guard segmentedControl.selectedSegmentIndex == 0 else { return nil }
+        
+        let headerView = UIView()
+        headerView.backgroundColor = .systemBackground
+        
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        let playlist = playlists[section]
+        let isSelected = selectedPlaylistForAirPlay?.id == playlist.id
+        label.text = (isSelected ? "✓ " : "") + "\(playlist.name) (\(playlist.slides.count) items)"
+        label.font = .systemFont(ofSize: 14, weight: .semibold)
+        label.textColor = isSelected ? .systemBlue : .secondaryLabel
+        headerView.addSubview(label)
+        
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle(isSelected ? "Selected for AirPlay" : "Select for AirPlay", for: .normal)
+        button.titleLabel?.font = .systemFont(ofSize: 12, weight: .medium)
+        button.tag = section
+        button.addTarget(self, action: #selector(selectPlaylistForAirPlay(_:)), for: .touchUpInside)
+        headerView.addSubview(button)
+        
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(equalTo: headerView.leadingAnchor, constant: 16),
+            label.centerYAnchor.constraint(equalTo: headerView.centerYAnchor),
+            
+            button.trailingAnchor.constraint(equalTo: headerView.trailingAnchor, constant: -16),
+            button.centerYAnchor.constraint(equalTo: headerView.centerYAnchor)
+        ])
+        
+        return headerView
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return segmentedControl.selectedSegmentIndex == 0 ? 44 : 28
+    }
+    
+    @objc private func selectPlaylistForAirPlay(_ sender: UIButton) {
+        let section = sender.tag
+        let playlist = playlists[section]
+        
+        if selectedPlaylistForAirPlay?.id == playlist.id {
+            selectedPlaylistForAirPlay = nil
+        } else {
+            selectedPlaylistForAirPlay = playlist
+        }
+        
+        tableView.reloadData()
+        updateAirPlayControls()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
