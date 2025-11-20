@@ -42,7 +42,16 @@ class AirPlaySlideshowViewController: UIViewController {
     
     // MARK: - Display Slide
     func displaySlide(_ slide: SlideItem) {
+        print("📺 AirPlaySlideshowViewController: Displaying slide \(slide.fileName)")
         let fileURL = SlideshowManager.shared.getMediaURL(for: slide.fileName)
+        
+        // Verify file exists
+        if !FileManager.default.fileExists(atPath: fileURL.path) {
+            print("❌ File does not exist at: \(fileURL.path)")
+            return
+        }
+        
+        print("✅ File exists, type: \(slide.type)")
         
         switch slide.type {
         case .image:
@@ -53,11 +62,14 @@ class AirPlaySlideshowViewController: UIViewController {
     }
     
     private func displayImage(from url: URL) {
+        print("🖼️ Loading image from: \(url.path)")
+        
         // Stop any playing video
         stopVideo()
         
         // Load and display image
         if let image = UIImage(contentsOfFile: url.path) {
+            print("✅ Image loaded successfully, size: \(image.size)")
             UIView.transition(with: imageView,
                             duration: 0.5,
                             options: .transitionCrossDissolve,
@@ -65,10 +77,14 @@ class AirPlaySlideshowViewController: UIViewController {
                 self.imageView.image = image
                 self.imageView.isHidden = false
             })
+        } else {
+            print("❌ Failed to load image from: \(url.path)")
         }
     }
     
     private func displayVideo(from url: URL) {
+        print("🎬 Loading video from: \(url.path)")
+        
         // Hide image view
         imageView.isHidden = true
         
@@ -95,6 +111,7 @@ class AirPlaySlideshowViewController: UIViewController {
         
         // Play video
         player.play()
+        print("✅ Video player started")
         
         // Observe when video ends to notify manager
         NotificationCenter.default.addObserver(

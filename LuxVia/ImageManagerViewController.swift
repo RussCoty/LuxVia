@@ -21,6 +21,8 @@ class ImageManagerViewController: BaseViewController {
     
     // AirPlay controls
     private let airplayControlsContainer = UIView()
+    private let previewImageView = UIImageView() // Mini monitor
+    private let previewLabel = UILabel()
     private let airplayButton = UIButton(type: .system)
     private let playButton = UIButton(type: .system)
     private let stopButton = UIButton(type: .system)
@@ -94,6 +96,24 @@ class ImageManagerViewController: BaseViewController {
         airplayControlsContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(airplayControlsContainer)
         
+        // Mini preview monitor
+        previewImageView.contentMode = .scaleAspectFit
+        previewImageView.backgroundColor = .black
+        previewImageView.layer.cornerRadius = 8
+        previewImageView.layer.borderWidth = 2
+        previewImageView.layer.borderColor = UIColor.systemGray4.cgColor
+        previewImageView.clipsToBounds = true
+        previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(previewImageView)
+        
+        // Preview label
+        previewLabel.text = "Slideshow Preview"
+        previewLabel.textAlignment = .center
+        previewLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        previewLabel.textColor = .secondaryLabel
+        previewLabel.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(previewLabel)
+        
         // AirPlay connection button
         airplayButton.setTitle("📡 Connect to AirPlay", for: .normal)
         airplayButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
@@ -129,9 +149,17 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 110),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 200),
             
-            airplayButton.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
+            previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
+            previewImageView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            previewImageView.widthAnchor.constraint(equalToConstant: 120),
+            previewImageView.heightAnchor.constraint(equalToConstant: 80),
+            
+            previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
+            previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            
+            airplayButton.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 8),
             airplayButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
             statusLabel.topAnchor.constraint(equalTo: airplayButton.bottomAnchor, constant: 4),
@@ -310,10 +338,43 @@ class ImageManagerViewController: BaseViewController {
         if let playlist = SlideshowManager.shared.getCurrentPlaylist() {
             statusLabel.text = "Playing: \(playlist.name) - Slide \(index + 1) of \(playlist.slides.count)"
         }
+        
+        // Update mini preview monitor
+        updatePreviewMonitor(with: slide)
     }
     
     @objc private func slideshowDidStop() {
         updateAirPlayControls()
+        // Clear preview
+        previewImageView.image = nil
+        previewLabel.text = "Slideshow Preview"
+    }
+    
+    private func updatePreviewMonitor(with slide: SlideItem) {
+        let fileURL = ImageManager.shared.getMediaURL(for: slide.fileName)
+        
+        if slide.type == .image {
+            // Display image in preview
+            if let image = UIImage(contentsOfFile: fileURL.path) {
+                previewImageView.image = image
+                previewLabel.text = "Now Playing: \(slide.fileName.prefix(20))..."
+            }
+        } else {
+            // Generate video thumbnail for preview
+            let asset = AVAsset(url: fileURL)
+            let imageGenerator = AVAssetImageGenerator(asset: asset)
+            imageGenerator.appliesPreferredTrackTransform = true
+            
+            DispatchQueue.global(qos: .userInitiated).async {
+                let time = CMTime(seconds: 1, preferredTimescale: 60)
+                if let cgImage = try? imageGenerator.copyCGImage(at: time, actualTime: nil) {
+                    DispatchQueue.main.async {
+                        self.previewImageView.image = UIImage(cgImage: cgImage)
+                        self.previewLabel.text = "Now Playing: \(slide.fileName.prefix(20))..."
+                    }
+                }
+            }
+        }
     }
     
     private func updateAirPlayControls() {
