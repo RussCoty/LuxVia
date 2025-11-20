@@ -61,10 +61,10 @@ class ImageManagerViewController: BaseViewController {
         print("🖥️ Screen check: \(screenCount) screen(s) available")
         
         if screenCount > 1 {
-            statusLabel.text = "✅ AirPlay Connected! Select a playlist below"
+            statusLabel.text = "✅ AirPlay connected! Select playlist & press play"
             statusLabel.textColor = .systemGreen
         } else {
-            statusLabel.text = "Connect to AirPlay device, then select playlist"
+            statusLabel.text = "Tap AirPlay icon above to connect"
             statusLabel.textColor = .secondaryLabel
         }
     }
@@ -132,32 +132,34 @@ class ImageManagerViewController: BaseViewController {
         previewLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(previewLabel)
         
+        // AirPlay section container
+        let airplaySection = UIView()
+        airplaySection.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(airplaySection)
+        
+        // AirPlay label
+        let airplayLabel = UILabel()
+        airplayLabel.text = "AirPlay"
+        airplayLabel.textAlignment = .center
+        airplayLabel.font = .systemFont(ofSize: 13, weight: .semibold)
+        airplayLabel.textColor = .label
+        airplayLabel.translatesAutoresizingMaskIntoConstraints = false
+        airplaySection.addSubview(airplayLabel)
+        
         // Real AirPlay button (MPVolumeView)
-        let volumeView = MPVolumeView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        let volumeView = MPVolumeView(frame: .zero)
         volumeView.showsVolumeSlider = false
+        volumeView.setRouteButtonImage(nil, for: .normal)
         volumeView.translatesAutoresizingMaskIntoConstraints = false
-        
-        // Style the AirPlay button
-        if let airplayButton = volumeView.subviews.first(where: { $0 is UIButton }) as? UIButton {
-            airplayButton.tintColor = .systemBlue
-        }
-        
         persistentVolumeView = volumeView
-        airplayControlsContainer.addSubview(volumeView)
-        
-        // Custom button as label/instruction
-        airplayButton.setTitle("👆 Tap icon to connect AirPlay", for: .normal)
-        airplayButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
-        airplayButton.setTitleColor(.systemBlue, for: .normal)
-        airplayButton.isUserInteractionEnabled = false // Just a label
-        airplayButton.translatesAutoresizingMaskIntoConstraints = false
-        airplayControlsContainer.addSubview(airplayButton)
+        airplaySection.addSubview(volumeView)
         
         // Status label
-        statusLabel.text = "Connect to AirPlay device, then select playlist"
+        statusLabel.text = "Select a playlist below"
         statusLabel.textAlignment = .center
-        statusLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        statusLabel.font = .systemFont(ofSize: 12, weight: .medium)
         statusLabel.numberOfLines = 2
+        statusLabel.textColor = .secondaryLabel
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(statusLabel)
         
@@ -180,7 +182,7 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 200),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 220),
             
             previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
             previewImageView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
@@ -190,15 +192,19 @@ class ImageManagerViewController: BaseViewController {
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
-            volumeView.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 8),
-            volumeView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
-            volumeView.widthAnchor.constraint(equalToConstant: 40),
-            volumeView.heightAnchor.constraint(equalToConstant: 40),
+            airplaySection.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 12),
+            airplaySection.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            airplaySection.heightAnchor.constraint(equalToConstant: 60),
             
-            airplayButton.topAnchor.constraint(equalTo: volumeView.bottomAnchor, constant: 4),
-            airplayButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            airplayLabel.topAnchor.constraint(equalTo: airplaySection.topAnchor),
+            airplayLabel.centerXAnchor.constraint(equalTo: airplaySection.centerXAnchor),
             
-            statusLabel.topAnchor.constraint(equalTo: airplayButton.bottomAnchor, constant: 4),
+            volumeView.topAnchor.constraint(equalTo: airplayLabel.bottomAnchor, constant: 4),
+            volumeView.centerXAnchor.constraint(equalTo: airplaySection.centerXAnchor),
+            volumeView.widthAnchor.constraint(equalToConstant: 44),
+            volumeView.heightAnchor.constraint(equalToConstant: 44),
+            
+            statusLabel.topAnchor.constraint(equalTo: airplaySection.bottomAnchor, constant: 8),
             statusLabel.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
             statusLabel.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16),
             
