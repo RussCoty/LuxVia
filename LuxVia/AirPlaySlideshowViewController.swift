@@ -23,6 +23,16 @@ class AirPlaySlideshowViewController: UIViewController {
         
         view.backgroundColor = .black
         setupImageView()
+        
+        print("📺 AirPlaySlideshowViewController viewDidLoad")
+        print("   - View bounds: \(view.bounds)")
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+        print("📺 AirPlaySlideshowViewController viewDidAppear")
+        print("   - View frame: \(view.frame)")
+        print("   - ImageView frame: \(imageView.frame)")
     }
     
     // MARK: - Setup

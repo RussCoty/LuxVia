@@ -311,6 +311,21 @@ class ImageManagerViewController: BaseViewController {
             return
         }
         
+        // Check if AirPlay is connected
+        let screenCount = UIScreen.screens.count
+        print("🖥️ Screens available: \(screenCount)")
+        
+        if screenCount == 1 {
+            let alert = UIAlertController(
+                title: "AirPlay Not Connected",
+                message: "Please connect to an AirPlay device first using the '📡 Connect to AirPlay' button above, then try playing the slideshow.",
+                preferredStyle: .alert
+            )
+            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            present(alert, animated: true)
+            return
+        }
+        
         // Enable loop mode for continuous display
         var loopedPlaylist = playlist
         loopedPlaylist.settings.loopEnabled = true
