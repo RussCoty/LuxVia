@@ -16,13 +16,11 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="iTunesArtwork.png" translatesAutoresizingMaskIntoConstraints="NO" id="xHA-Y1-Z1Y">
+                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LuxViaLogo" translatesAutoresizingMaskIntoConstraints="NO" id="xHA-Y1-Z1Y">
                                 <rect key="frame" x="0.0" y="294" width="393" height="265"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="240" id="XH7-kr-WJX"/>
-                                    <constraint firstAttribute="height" constant="128" id="Z2I-cY-txA"/>
-                                    <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="128" id="iKq-Lb-jSl"/>
-                                    <constraint firstAttribute="width" relation="greaterThanOrEqual" constant="240" id="xtR-20-rwH"/>
+                                    <constraint firstAttribute="height" constant="240" id="Z2I-cY-txA"/>
                                 </constraints>
                             </imageView>
                         </subviews>
@@ -41,6 +39,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="iTunesArtwork.png" width="512" height="512"/>
+        <image name="LuxViaLogo" width="512" height="512"/>
     </resources>
 </document>
