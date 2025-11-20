@@ -119,6 +119,21 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
             name: SlideshowManager.slideshowDidStart,
             object: nil
         )
+        
+        // Listen for external display connection
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(externalDisplayChanged),
+            name: UIScreen.didConnectNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(externalDisplayChanged),
+            name: UIScreen.didDisconnectNotification,
+            object: nil
+        )
     }
     
     private func setupAddButton() {
@@ -210,20 +225,43 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         slideshowStatusLabel.text = "No slideshow playing"
     }
     
+    @objc private func externalDisplayChanged() {
+        // Update status when AirPlay connects/disconnects
+        updateSlideshowPreview()
+        
+        let externalScreens = UIScreen.screens.filter { $0 != UIScreen.main }
+        if !externalScreens.isEmpty {
+            print("📺 External display detected in Words tab")
+            slideshowPreviewContainer.layer.borderColor = UIColor.systemGreen.cgColor
+        } else {
+            print("📺 No external display in Words tab")
+            slideshowPreviewContainer.layer.borderColor = UIColor.systemGray4.cgColor
+        }
+    }
+    
     private func updateSlideshowPreview() {
+        let externalScreenConnected = UIScreen.screens.count > 1
+        
         if SlideshowManager.shared.isCurrentlyPlaying() {
             if let slide = SlideshowManager.shared.getCurrentSlide() {
                 updatePreviewImage(with: slide)
                 
                 if let playlist = SlideshowManager.shared.getCurrentPlaylist() {
                     let index = SlideshowManager.shared.getCurrentSlideIndex()
-                    slideshowStatusLabel.text = "Playing: \(playlist.name)\nSlide \(index + 1) of \(playlist.slides.count)"
+                    let airplayStatus = externalScreenConnected ? "📺 On AirPlay" : "⚠️ No Video"
+                    slideshowStatusLabel.text = "\(airplayStatus)\n\(playlist.name)\nSlide \(index + 1)/\(playlist.slides.count)"
                 }
             }
+            slideshowPreviewContainer.layer.borderColor = externalScreenConnected ? UIColor.systemGreen.cgColor : UIColor.systemOrange.cgColor
         } else {
             slideshowPreviewImageView.image = nil
             slideshowPreviewLabel.text = "Slideshow Monitor"
-            slideshowStatusLabel.text = "No slideshow playing"
+            if externalScreenConnected {
+                slideshowStatusLabel.text = "Ready ✓\nAirPlay video connected"
+            } else {
+                slideshowStatusLabel.text = "Not playing\nEnable screen mirroring\non AirPlay device"
+            }
+            slideshowPreviewContainer.layer.borderColor = externalScreenConnected ? UIColor.systemGreen.cgColor : UIColor.systemGray4.cgColor
         }
     }
     

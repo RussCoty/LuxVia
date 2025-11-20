@@ -262,20 +262,27 @@ class SlideshowManager {
     @objc private func externalDisplayDidConnect(notification: Notification) {
         print("🖥️ External display connected notification received")
         if let screen = notification.object as? UIScreen {
-            print("🖥️ Screen details: \(screen.bounds)")
+            print("🖥️ Connected screen details: \(screen.bounds)")
+            print("🖥️ Is main screen: \(screen == UIScreen.main)")
         }
         
-        // Always try to set up or refresh the display when connected
-        if isPlaying {
-            print("🖥️ Slideshow is playing, setting up display...")
-            setupExternalDisplay()
-            
-            // Re-display current slide if we have one
-            if let slide = currentSlide {
-                slideshowViewController?.displaySlide(slide)
+        // Small delay to ensure screen is ready
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            // Always try to set up or refresh the display when connected
+            if self.isPlaying {
+                print("🖥️ Slideshow is playing, setting up display on external screen...")
+                self.setupExternalDisplay()
+                
+                // Re-display current slide after setup completes
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    if let slide = self.currentSlide {
+                        print("🔄 Re-displaying current slide on newly connected display")
+                        self.slideshowViewController?.displaySlide(slide)
+                    }
+                }
+            } else {
+                print("🖥️ Slideshow not playing, display ready for next start")
             }
-        } else {
-            print("🖥️ Slideshow not playing, display ready for next start")
         }
     }
     
@@ -294,18 +301,17 @@ class SlideshowManager {
         }
         
         // Check if there's an external screen available
-        guard let externalScreen = UIScreen.screens.first(where: { $0 != UIScreen.main }) else {
+        if let externalScreen = UIScreen.screens.first(where: { $0 != UIScreen.main }) {
+            print("✅ External display found: \(externalScreen.bounds)")
+            setupDisplayWindow(on: externalScreen)
+        } else {
             print("⚠️ No external display found")
-            print("⚠️ Please connect to AirPlay first, then start the slideshow")
-            print("⚠️ The slideshow will display once AirPlay is connected")
+            print("⚠️ Please connect to AirPlay - slideshow will display once connected")
+            print("⚠️ The slideshow will automatically start when AirPlay is available")
             
-            // Don't set up on main screen - wait for external display
-            // The didConnect notification will trigger setup when AirPlay connects
-            return
+            // Still initialize the view controller so we're ready when AirPlay connects
+            // This ensures smooth transition when external display becomes available
         }
-        
-        print("✅ External display found: \(externalScreen.bounds)")
-        setupDisplayWindow(on: externalScreen)
     }
     
     private func setupDisplayWindow(on screen: UIScreen) {
@@ -319,48 +325,68 @@ class SlideshowManager {
         let window = UIWindow(frame: screen.bounds)
         window.screen = screen
         window.backgroundColor = .black
-        window.windowLevel = UIWindow.Level.normal + 1
+        window.windowLevel = UIWindow.Level.normal
+        window.isOpaque = true
         
         // Create and set the slideshow view controller
         let slideshowVC = AirPlaySlideshowViewController()
         window.rootViewController = slideshowVC
         
-        // Force the view to load
+        // Force the view to load and layout
         slideshowVC.loadViewIfNeeded()
+        slideshowVC.view.setNeedsLayout()
+        slideshowVC.view.layoutIfNeeded()
         
         // Store references BEFORE making visible
         externalWindow = window
         slideshowViewController = slideshowVC
         
-        // Make window key and visible - CRITICAL for external displays
-        window.makeKeyAndVisible()
+        // Make window visible - CRITICAL for external displays
         window.isHidden = false
+        window.makeKeyAndVisible()
         
-        // Additional visibility check
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            window.isHidden = false
-            print("✅ Window visibility re-confirmed")
-        }
+        // Force layout and redraw
+        window.setNeedsLayout()
+        window.layoutIfNeeded()
         
-        print("✅ Window created and made visible")
-        print("✅ Window screen: \(window.screen.bounds)")
-        print("✅ Window frame: \(window.frame)")
-        print("✅ Window isHidden: \(window.isHidden)")
-        print("✅ Window isKeyWindow: \(window.isKeyWindow)")
-        print("✅ View controller loaded: \(slideshowVC.isViewLoaded)")
-        print("✅ View controller view frame: \(slideshowVC.view.frame)")
+        print("✅ Window created and configured")
+        print("   - Screen bounds: \(window.screen.bounds)")
+        print("   - Window frame: \(window.frame)")
+        print("   - Window isHidden: \(window.isHidden)")
+        print("   - Window isKeyWindow: \(window.isKeyWindow)")
+        print("   - Root VC loaded: \(slideshowVC.isViewLoaded)")
+        print("   - View frame: \(slideshowVC.view.frame)")
         
-        // If we have a current slide, display it immediately
+        // Display current slide immediately if available
         if let slide = currentSlide {
             print("🖼️ Displaying current slide: \(slide.fileName)")
-            slideshowVC.displaySlide(slide)
+            DispatchQueue.main.async {
+                slideshowVC.displaySlide(slide)
+            }
         } else {
             print("⚠️ No current slide to display yet")
+        }
+        
+        // Additional visibility and content check after a short delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            if window.isHidden {
+                print("⚠️ Window became hidden, making visible again")
+                window.isHidden = false
+                window.makeKeyAndVisible()
+            }
+            
+            // Re-display slide if needed
+            if let slide = self.currentSlide, slideshowVC.view.window != nil {
+                print("🔄 Re-confirming slide display")
+                slideshowVC.displaySlide(slide)
+            }
         }
     }
     
     private func teardownExternalDisplay() {
+        print("🧹 Tearing down external display")
         externalWindow?.isHidden = true
+        externalWindow?.rootViewController = nil
         externalWindow = nil
         slideshowViewController = nil
     }

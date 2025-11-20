@@ -35,6 +35,30 @@ class AirPlaySlideshowViewController: UIViewController {
         print("   - ImageView frame: \(imageView.frame)")
         print("   - View is in window: \(view.window != nil)")
         print("   - Window bounds: \(view.window?.bounds ?? .zero)")
+        print("   - View background: \(view.backgroundColor?.description ?? "nil")")
+        
+        // Force a full layout and display update
+        view.setNeedsLayout()
+        view.layoutIfNeeded()
+        view.setNeedsDisplay()
+        imageView.setNeedsDisplay()
+        
+        // If there's already an image, make sure it's showing
+        if let image = imageView.image {
+            print("   - ✅ Image present: \(image.size)")
+        } else {
+            print("   - ⚠️ No image currently displayed")
+        }
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        // Ensure imageView maintains correct frame after layout
+        if imageView.frame != view.bounds {
+            print("🔄 Layout mismatch detected, updating imageView frame")
+            print("   - View bounds: \(view.bounds)")
+            print("   - ImageView frame: \(imageView.frame)")
+        }
     }
     
     // MARK: - Setup
@@ -81,11 +105,23 @@ class AirPlaySlideshowViewController: UIViewController {
         
         // Load and display image
         if let image = UIImage(contentsOfFile: url.path) {
-            print("✅ Image loaded successfully, size: \(image.size)")
+            print("✅ Image loaded successfully")
+            print("   - Image size: \(image.size)")
+            print("   - View bounds: \(self.view.bounds)")
+            print("   - ImageView frame before: \(imageView.frame)")
             
             // Make sure imageView is visible and properly sized
             imageView.isHidden = false
             imageView.alpha = 1.0
+            imageView.backgroundColor = .black
+            
+            // Force layout before setting image
+            view.setNeedsLayout()
+            view.layoutIfNeeded()
+            imageView.setNeedsLayout()
+            imageView.layoutIfNeeded()
+            
+            print("   - ImageView frame after layout: \(imageView.frame)")
             
             // Set the image with animation
             UIView.transition(with: imageView,
@@ -93,19 +129,30 @@ class AirPlaySlideshowViewController: UIViewController {
                             options: .transitionCrossDissolve,
                             animations: {
                 self.imageView.image = image
+                // Force another layout in case setting image changes things
+                self.imageView.setNeedsLayout()
+                self.imageView.layoutIfNeeded()
             }, completion: { _ in
                 print("✅ Image display animation complete")
                 print("   - ImageView has image: \(self.imageView.image != nil)")
                 print("   - ImageView frame: \(self.imageView.frame)")
+                print("   - ImageView bounds: \(self.imageView.bounds)")
                 print("   - ImageView is hidden: \(self.imageView.isHidden)")
                 print("   - ImageView alpha: \(self.imageView.alpha)")
+                print("   - ImageView superview: \(self.imageView.superview != nil)")
+                print("   - View window: \(self.view.window != nil)")
                 
-                // Force a layout update
+                // Final layout update
                 self.view.setNeedsLayout()
                 self.view.layoutIfNeeded()
+                
+                // Force display update
+                self.view.setNeedsDisplay()
+                self.imageView.setNeedsDisplay()
             })
         } else {
             print("❌ Failed to load image from: \(url.path)")
+            print("❌ File exists: \(FileManager.default.fileExists(atPath: url.path))")
         }
     }
     
