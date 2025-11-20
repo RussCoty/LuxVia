@@ -24,11 +24,11 @@ class ImageManagerViewController: BaseViewController {
     private let previewImageView = UIImageView() // Mini monitor
     private let previewLabel = UILabel()
     private let airplayButton = UIButton(type: .system)
+    private var persistentVolumeView: MPVolumeView? // Keep reference
     private let playButton = UIButton(type: .system)
     private let stopButton = UIButton(type: .system)
     private let statusLabel = UILabel()
     private var selectedPlaylistForAirPlay: SlideshowPlaylist?
-    private var volumeView: MPVolumeView?
     
     // MARK: - Lifecycle
     override func viewDidLoad() {
@@ -49,6 +49,24 @@ class ImageManagerViewController: BaseViewController {
         super.viewWillAppear(animated)
         loadData()
         updateAirPlayControls()
+        
+        // Check screen count periodically
+        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+            self?.checkAirPlayConnection()
+        }
+    }
+    
+    private func checkAirPlayConnection() {
+        let screenCount = UIScreen.screens.count
+        print("🖥️ Screen check: \(screenCount) screen(s) available")
+        
+        if screenCount > 1 {
+            statusLabel.text = "✅ AirPlay Connected! Select a playlist below"
+            statusLabel.textColor = .systemGreen
+        } else {
+            statusLabel.text = "Connect to AirPlay device, then select playlist"
+            statusLabel.textColor = .secondaryLabel
+        }
     }
     
     deinit {
@@ -114,11 +132,24 @@ class ImageManagerViewController: BaseViewController {
         previewLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(previewLabel)
         
-        // AirPlay connection button
-        airplayButton.setTitle("📡 Connect to AirPlay", for: .normal)
-        airplayButton.titleLabel?.font = .systemFont(ofSize: 16, weight: .semibold)
+        // Real AirPlay button (MPVolumeView)
+        let volumeView = MPVolumeView(frame: CGRect(x: 0, y: 0, width: 40, height: 40))
+        volumeView.showsVolumeSlider = false
+        volumeView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Style the AirPlay button
+        if let airplayButton = volumeView.subviews.first(where: { $0 is UIButton }) as? UIButton {
+            airplayButton.tintColor = .systemBlue
+        }
+        
+        persistentVolumeView = volumeView
+        airplayControlsContainer.addSubview(volumeView)
+        
+        // Custom button as label/instruction
+        airplayButton.setTitle("👆 Tap icon to connect AirPlay", for: .normal)
+        airplayButton.titleLabel?.font = .systemFont(ofSize: 14, weight: .medium)
         airplayButton.setTitleColor(.systemBlue, for: .normal)
-        airplayButton.addTarget(self, action: #selector(showAirPlayPicker), for: .touchUpInside)
+        airplayButton.isUserInteractionEnabled = false // Just a label
         airplayButton.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(airplayButton)
         
@@ -159,7 +190,12 @@ class ImageManagerViewController: BaseViewController {
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
-            airplayButton.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 8),
+            volumeView.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 8),
+            volumeView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            volumeView.widthAnchor.constraint(equalToConstant: 40),
+            volumeView.heightAnchor.constraint(equalToConstant: 40),
+            
+            airplayButton.topAnchor.constraint(equalTo: volumeView.bottomAnchor, constant: 4),
             airplayButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
             statusLabel.topAnchor.constraint(equalTo: airplayButton.bottomAnchor, constant: 4),
@@ -268,24 +304,6 @@ class ImageManagerViewController: BaseViewController {
         
         alert.addAction(UIAlertAction(title: "Got it", style: .default))
         present(alert, animated: true)
-    }
-    
-    @objc private func showAirPlayPicker() {
-        let volumeView = MPVolumeView(frame: CGRect(x: -1000, y: -1000, width: 1, height: 1))
-        view.addSubview(volumeView)
-        
-        // Find the AirPlay button
-        for view in volumeView.subviews {
-            if let button = view as? UIButton {
-                button.sendActions(for: .touchUpInside)
-                break
-            }
-        }
-        
-        // Clean up after a delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            volumeView.removeFromSuperview()
-        }
     }
     
     @objc private func playAirPlayTapped() {
