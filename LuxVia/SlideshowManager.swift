@@ -112,9 +112,23 @@ class SlideshowManager {
     
     // MARK: - Slideshow Playback
     func startSlideshow(playlist: SlideshowPlaylist) {
+        print("\n🎬 ========================================")
+        print("🎬 STARTING SLIDESHOW")
+        print("🎬 ========================================")
+        
         guard !playlist.slides.isEmpty else {
             print("⚠️ Cannot start slideshow: no slides in playlist")
             return
+        }
+        
+        print("✅ Playlist: \(playlist.name)")
+        print("✅ Slides count: \(playlist.slides.count)")
+        
+        // Check screens BEFORE stopping
+        print("\n📺 Screen status BEFORE setup:")
+        print("   - Total screens: \(UIScreen.screens.count)")
+        for (i, screen) in UIScreen.screens.enumerated() {
+            print("   - Screen \(i): \(screen.bounds.size), main: \(screen == UIScreen.main)")
         }
         
         stopSlideshow()
@@ -123,10 +137,14 @@ class SlideshowManager {
         currentSlideIndex = 0
         isPlaying = true
         
+        print("\n🎯 About to setup external display...")
         setupExternalDisplay()
+        
+        print("\n🎯 About to display first slide...")
         displayCurrentSlide()
         
         NotificationCenter.default.post(name: SlideshowManager.slideshowDidStart, object: nil)
+        print("🎬 ========================================\n")
     }
     
     func stopSlideshow() {
@@ -380,6 +398,15 @@ class SlideshowManager {
                 print("🔄 Re-confirming slide display")
                 slideshowVC.displaySlide(slide)
             }
+            
+            // Final summary
+            print("\n📋 DISPLAY SETUP COMPLETE:")
+            print("   - External window exists: \(self.externalWindow != nil ? "✅" : "❌")")
+            print("   - VC exists: \(self.slideshowViewController != nil ? "✅" : "❌")")
+            print("   - Window visible: \(window.isHidden ? "❌ HIDDEN" : "✅ VISIBLE")")
+            print("   - Window screen: \(window.screen == UIScreen.main ? "❌ MAIN" : "✅ EXTERNAL")")
+            print("   - Current slide: \(self.currentSlide?.fileName ?? "none")")
+            print("📋 =========================\n")
         }
     }
     

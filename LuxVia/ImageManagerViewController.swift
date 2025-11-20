@@ -345,6 +345,65 @@ class ImageManagerViewController: BaseViewController {
         }
     }
     
+    // MARK: - Test External Display
+    private var testWindow: UIWindow?
+    
+    private func testExternalDisplay() {
+        guard let externalScreen = UIScreen.screens.first(where: { $0 != UIScreen.main }) else {
+            print("❌ No external screen for test")
+            return
+        }
+        
+        print("\n🧪 TESTING EXTERNAL DISPLAY")
+        print("   - Creating test window on external screen")
+        print("   - External screen bounds: \(externalScreen.bounds)")
+        
+        // Create a simple test window with red background
+        let window = UIWindow(frame: externalScreen.bounds)
+        window.screen = externalScreen
+        window.backgroundColor = .red
+        window.windowLevel = .normal + 1
+        
+        let vc = UIViewController()
+        vc.view.backgroundColor = .red
+        
+        let label = UILabel()
+        label.text = "🧪 TEST DISPLAY\n\nIf you see this,\nAirPlay video is working!"
+        label.textColor = .white
+        label.font = .systemFont(ofSize: 72, weight: .bold)
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        vc.view.addSubview(label)
+        
+        NSLayoutConstraint.activate([
+            label.centerXAnchor.constraint(equalTo: vc.view.centerXAnchor),
+            label.centerYAnchor.constraint(equalTo: vc.view.centerYAnchor),
+            label.leadingAnchor.constraint(equalTo: vc.view.leadingAnchor, constant: 40),
+            label.trailingAnchor.constraint(equalTo: vc.view.trailingAnchor, constant: -40)
+        ])
+        
+        window.rootViewController = vc
+        window.isHidden = false
+        window.makeKeyAndVisible()
+        
+        testWindow = window
+        
+        print("✅ Test window created and displayed")
+        print("   - Window isHidden: \(window.isHidden)")
+        print("   - Window screen: \(window.screen.bounds)")
+        print("   - Window frame: \(window.frame)")
+        print("   - YOU SHOULD SEE RED SCREEN WITH TEXT ON YOUR TV")
+        print("   - This will disappear in 3 seconds...")
+        
+        // Remove after 3 seconds
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) { [weak self] in
+            self?.testWindow?.isHidden = true
+            self?.testWindow = nil
+            print("🧪 Test window removed")
+        }
+    }
+    
     private func setupTableView() {
         tableView.delegate = self
         tableView.dataSource = self
@@ -420,17 +479,51 @@ class ImageManagerViewController: BaseViewController {
         print("🔍 USER REQUESTED CONNECTION DEBUG")
         checkAirPlayConnection()
         
+        // Test external display with a simple colored view if connected
+        if UIScreen.screens.count > 1 {
+            testExternalDisplay()
+        }
+        
         // Show alert with connection info
         let screenCount = UIScreen.screens.count
-        let message = screenCount > 1 ? 
-            "✅ CONNECTED\n\n\(screenCount) screens detected\nExternal display is active\n\nCheck console for detailed info" :
-            "❌ NOT CONNECTED\n\n\(screenCount) screen detected\nNo external display found\n\nTry selecting your device from the AirPlay button"
+        let audioSession = AVAudioSession.sharedInstance()
+        let hasAirPlayAudio = audioSession.currentRoute.outputs.contains { $0.portType == .airPlay }
         
-        let alert = UIAlertController(
-            title: "AirPlay Connection Status",
-            message: message,
-            preferredStyle: .alert
-        )
+        var message: String
+        var title: String
+        
+        if screenCount > 1 {
+            title = "✅ Connected!"
+            message = "\(screenCount) screens detected\nExternal display is active\n\n🧪 Check your TV - you should see a RED test screen for 3 seconds!\n\nYou can now start the slideshow!"
+        } else if hasAirPlayAudio {
+            title = "⚠️ Audio Only"
+            message = """
+            AirPlay is connected for AUDIO only.
+            
+            Your device may not support screen mirroring.
+            
+            To fix:
+            1. Open Control Center
+            2. Long-press Screen Mirroring
+            3. Enable "Use as Separate Display"
+            
+            Or your TV may not support video AirPlay.
+            """
+        } else {
+            title = "❌ Not Connected"
+            message = """
+            No AirPlay connection detected.
+            
+            Steps:
+            1. Tap the AirPlay button above
+            2. Select your TV/device
+            3. Enable Screen Mirroring
+            4. Wait 5-10 seconds
+            5. Try "Check Connection" again
+            """
+        }
+        
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
@@ -464,12 +557,43 @@ class ImageManagerViewController: BaseViewController {
         
         if screenCount == 1 {
             // No external screen detected yet
+            let audioSession = AVAudioSession.sharedInstance()
+            let hasAirPlayAudio = audioSession.currentRoute.outputs.contains { $0.portType == .airPlay }
+            
+            let message: String
+            if hasAirPlayAudio {
+                message = """
+                AirPlay is connected but SCREEN MIRRORING is not enabled.
+                
+                Your TV appears to support audio only, or you need to:
+                
+                1. Open Control Center (swipe down)
+                2. Tap "Screen Mirroring" (not AirPlay)
+                3. Select your TV
+                4. Wait 5-10 seconds
+                5. Return here and tap Play again
+                
+                Note: Some AirPlay devices don't support video/screen mirroring.
+                """
+            } else {
+                message = """
+                No AirPlay connection detected.
+                
+                Steps to connect:
+                1. Tap the AirPlay button above
+                2. Select your TV/display device
+                3. Enable Screen Mirroring
+                4. Wait for connection to establish
+                5. Try playing again
+                """
+            }
+            
             let alert = UIAlertController(
-                title: "AirPlay Connection",
-                message: "Please connect to an AirPlay device first using the AirPlay button above. After connecting, wait a few seconds for the connection to establish, then try again.",
+                title: "Screen Mirroring Required",
+                message: message,
                 preferredStyle: .alert
             )
-            alert.addAction(UIAlertAction(title: "OK", style: .default))
+            alert.addAction(UIAlertAction(title: "Got it", style: .default))
             present(alert, animated: true)
             return
         }
