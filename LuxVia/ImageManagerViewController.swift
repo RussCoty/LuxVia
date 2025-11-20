@@ -50,18 +50,43 @@ class ImageManagerViewController: BaseViewController {
         loadData()
         updateAirPlayControls()
         
-        // Check screen count periodically
-        Timer.scheduledTimer(withTimeInterval: 1.0, repeats: false) { [weak self] _ in
+        // Start periodic checking for AirPlay connection
+        startMonitoringAirPlay()
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        stopMonitoringAirPlay()
+    }
+    
+    private var airplayCheckTimer: Timer?
+    
+    private func startMonitoringAirPlay() {
+        // Check immediately
+        checkAirPlayConnection()
+        
+        // Then check every 2 seconds
+        airplayCheckTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: true) { [weak self] _ in
             self?.checkAirPlayConnection()
         }
+    }
+    
+    private func stopMonitoringAirPlay() {
+        airplayCheckTimer?.invalidate()
+        airplayCheckTimer = nil
     }
     
     private func checkAirPlayConnection() {
         let screenCount = UIScreen.screens.count
         print("🖥️ Screen check: \(screenCount) screen(s) available")
         
+        // Log all screens for debugging
+        for (index, screen) in UIScreen.screens.enumerated() {
+            print("🖥️   Screen \(index): \(screen.bounds.size), isMain: \(screen == UIScreen.main)")
+        }
+        
         if screenCount > 1 {
-            statusLabel.text = "✅ AirPlay connected!"
+            statusLabel.text = "✅ AirPlay connected! Ready to play"
             statusLabel.textColor = .systemGreen
         } else {
             statusLabel.text = "Not connected"
@@ -236,6 +261,35 @@ class ImageManagerViewController: BaseViewController {
             name: SlideshowManager.slideshowDidStart,
             object: nil
         )
+        
+        // Monitor screen connections/disconnections
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(screenDidConnect),
+            name: UIScreen.didConnectNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(screenDidDisconnect),
+            name: UIScreen.didDisconnectNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func screenDidConnect(notification: Notification) {
+        print("📺 Screen connected notification received!")
+        DispatchQueue.main.async {
+            self.checkAirPlayConnection()
+        }
+    }
+    
+    @objc private func screenDidDisconnect(notification: Notification) {
+        print("📺 Screen disconnected notification received!")
+        DispatchQueue.main.async {
+            self.checkAirPlayConnection()
+        }
     }
     
     private func setupTableView() {
@@ -334,18 +388,21 @@ class ImageManagerViewController: BaseViewController {
         
         // Check if AirPlay is connected
         let screenCount = UIScreen.screens.count
-        print("🖥️ Screens available: \(screenCount)")
+        print("🖥️ Screens available at play time: \(screenCount)")
         
         if screenCount == 1 {
+            // No external screen detected yet
             let alert = UIAlertController(
-                title: "AirPlay Not Connected",
-                message: "Please connect to an AirPlay device first using the '📡 Connect to AirPlay' button above, then try playing the slideshow.",
+                title: "AirPlay Connection",
+                message: "Please connect to an AirPlay device first using the AirPlay button above. After connecting, wait a few seconds for the connection to establish, then try again.",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default))
             present(alert, animated: true)
             return
         }
+        
+        print("✅ AirPlay detected! Starting slideshow...")
         
         // Enable loop mode for continuous display
         var loopedPlaylist = playlist
