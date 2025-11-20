@@ -78,20 +78,57 @@ class ImageManagerViewController: BaseViewController {
     
     private func checkAirPlayConnection() {
         let screenCount = UIScreen.screens.count
-        print("🖥️ Screen check: \(screenCount) screen(s) available")
+        print("\n═══════════════════════════════════════")
+        print("🖥️ AIRPLAY CONNECTION CHECK")
+        print("═══════════════════════════════════════")
+        print("🖥️ Total screens: \(screenCount)")
         
         // Log all screens for debugging
         for (index, screen) in UIScreen.screens.enumerated() {
-            print("🖥️   Screen \(index): \(screen.bounds.size), isMain: \(screen == UIScreen.main)")
+            let isMain = screen == UIScreen.main
+            print("🖥️   Screen \(index): \(screen.bounds.size.width)x\(screen.bounds.size.height)")
+            print("      - Main screen: \(isMain)")
+            print("      - Scale: \(screen.scale)")
+            print("      - Mirrored: \(screen.mirroredScreen != nil)")
         }
         
+        // Check audio route for AirPlay
+        let audioSession = AVAudioSession.sharedInstance()
+        let currentRoute = audioSession.currentRoute
+        print("\n🔊 AUDIO ROUTE INFO:")
+        print("   - Route description: \(currentRoute.outputs.map { $0.portName }.joined(separator: ", "))")
+        
+        for output in currentRoute.outputs {
+            print("   - Output: \(output.portName)")
+            print("      Type: \(output.portType.rawValue)")
+            if output.portType == .airPlay {
+                print("      ✅ AirPlay audio detected!")
+            }
+        }
+        
+        // Check for external display using MPVolumeView
+        if let routePicker = routePickerView {
+            print("\n📱 ROUTE PICKER STATUS:")
+            print("   - View exists: true")
+            print("   - Subviews: \(routePicker.subviews.count)")
+            for (index, subview) in routePicker.subviews.enumerated() {
+                print("   - Subview \(index): \(type(of: subview))")
+            }
+        }
+        
+        print("\n🎯 CONNECTION STATUS:")
         if screenCount > 1 {
+            print("✅ EXTERNAL DISPLAY DETECTED")
+            print("✅ AirPlay connection is ACTIVE")
             statusLabel.text = "✅ AirPlay connected! Ready to play"
             statusLabel.textColor = .systemGreen
         } else {
+            print("❌ No external display detected")
+            print("⚠️ AirPlay may not be connected")
             statusLabel.text = "Not connected"
             statusLabel.textColor = .secondaryLabel
         }
+        print("═══════════════════════════════════════\n")
     }
     
     deinit {
@@ -157,6 +194,14 @@ class ImageManagerViewController: BaseViewController {
         previewLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(previewLabel)
         
+        // Debug button for connection status
+        let debugButton = UIButton(type: .system)
+        debugButton.setTitle("🔍 Check Connection", for: .normal)
+        debugButton.titleLabel?.font = .systemFont(ofSize: 11, weight: .medium)
+        debugButton.addTarget(self, action: #selector(debugConnectionTapped), for: .touchUpInside)
+        debugButton.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(debugButton)
+        
         // Official Apple AVRoutePickerView - THE primary AirPlay button
         let routePicker = AVRoutePickerView()
         routePicker.tintColor = .systemBlue
@@ -215,8 +260,11 @@ class ImageManagerViewController: BaseViewController {
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
+            debugButton.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 4),
+            debugButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            
             // Official AirPlay button (AVRoutePickerView) - highly visible
-            routePicker.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 12),
+            routePicker.topAnchor.constraint(equalTo: debugButton.bottomAnchor, constant: 8),
             routePicker.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             routePicker.widthAnchor.constraint(equalToConstant: 50),
             routePicker.heightAnchor.constraint(equalToConstant: 50),
@@ -360,6 +408,25 @@ class ImageManagerViewController: BaseViewController {
         )
         
         alert.addAction(UIAlertAction(title: "Got it", style: .default))
+        present(alert, animated: true)
+    }
+    
+    @objc private func debugConnectionTapped() {
+        print("🔍 USER REQUESTED CONNECTION DEBUG")
+        checkAirPlayConnection()
+        
+        // Show alert with connection info
+        let screenCount = UIScreen.screens.count
+        let message = screenCount > 1 ? 
+            "✅ CONNECTED\n\n\(screenCount) screens detected\nExternal display is active\n\nCheck console for detailed info" :
+            "❌ NOT CONNECTED\n\n\(screenCount) screen detected\nNo external display found\n\nTry selecting your device from the AirPlay button"
+        
+        let alert = UIAlertController(
+            title: "AirPlay Connection Status",
+            message: message,
+            preferredStyle: .alert
+        )
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
         present(alert, animated: true)
     }
     
