@@ -1,227 +1,183 @@
 // ==============================================
 // File: LuxVia/EulogyWriter/EulogyWriterView.swift
-// Chat-only “AI Eulogy” option. iOS 15+ safe.
-// Requires AIProvider.swift (ChatMessage, ChatProvider, CancellationToken, OpenAIChatProvider, Secrets).
+// AI Eulogy Writer using local ML model and template generation
 // ==============================================
 
 import SwiftUI
 import UIKit
 
 struct EulogyWriterView: View {
-    @StateObject private var vm = EulogyChatViewModel()
-    @State private var apiKey: String = Secrets.openAIAPIKey() ?? ""
-    @State private var showShare = false
-    @State private var inputDraft: String = "" // used on iOS 15 for TextEditor
+    @StateObject private var engine = EulogyChatEngine()
+    @State private var input = ""
+    @State private var isSending = false
+    @State private var showShareSheet = false
+    @State private var shareText = ""
 
     static func make() -> some View { EulogyWriterView() }
 
     var body: some View {
         VStack(spacing: 0) {
-            // Top controls
-            HStack(spacing: 8) {
-                SecureField("OpenAI API Key", text: $apiKey)
-                    .textContentType(.password)
-                    .font(.callout)
-                Button("Use Key") {
-                    UserDefaults.standard.set(self.apiKey, forKey: "OPENAI_API_KEY")
-                    self.vm.configure(apiKey: self.apiKey)
-                }
-                .disabled(apiKey.isEmpty)
-                .buttonStyle(.bordered)
-                Button("Restart") { self.vm.start() }
-                    .buttonStyle(.bordered)
-            }
-            .padding(.horizontal)
-            .padding(.vertical, 8)
-
-            Divider()
-
-            // Messages
+            header
+            
             ScrollViewReader { proxy in
                 ScrollView {
-                    LazyVStack(alignment: .leading, spacing: 12) {
-                        ForEach(self.vm.messages) { msg in
-                            ChatBubble(message: msg).id(msg.id)
+                    LazyVStack(spacing: 12) {
+                        ForEach(engine.messages) { msg in
+                            MessageBubble(message: msg)
+                                .id(msg.id)
                         }
-                        if self.vm.isLoading { ProgressView().padding(.horizontal) }
+                        if engine.isThinking {
+                            TypingBubble()
+                        }
                     }
-                    .padding(.vertical, 10)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 16)
                 }
-                .onChange(of: self.vm.messages.count) { _ in
-                    if let last = self.vm.messages.last {
-                        withAnimation { proxy.scrollTo(last.id, anchor: .bottom) }
+                .onChange(of: engine.messages) { _ in
+                    if let last = engine.messages.last { 
+                        withAnimation { 
+                            proxy.scrollTo(last.id, anchor: .bottom) 
+                        } 
                     }
                 }
             }
-
-            Divider()
-
-            // Input bar (iOS 16 uses multiline TextField; iOS 15 uses TextEditor)
-            if #available(iOS 16.0, *) {
-                HStack(alignment: .bottom, spacing: 8) {
-                    TextField("Type your message…", text: $vm.inputText, axis: .vertical)
-                        .textFieldStyle(.roundedBorder)
-                        .lineLimit(1...4)
-                    Button(self.vm.isLoading ? "Sending…" : "Send") { self.vm.send() }
-                        .disabled(self.vm.isLoading || self.apiKey.isEmpty)
-                        .buttonStyle(.borderedProminent)
-                    if self.vm.isLoading {
-                        Button("Cancel") { self.vm.cancel() }
-                            .buttonStyle(.bordered)
-                    }
+            
+            inputBar
+            
+            HStack(spacing: 12) {
+                Button("Restart") { 
+                    engine.start() 
                 }
-                .padding()
-            } else {
-                VStack(spacing: 8) {
-                    TextEditor(text: $inputDraft)
-                        .frame(minHeight: 40, maxHeight: 120)
-                        .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.secondary.opacity(0.3)))
-                        .padding(.horizontal)
-                    HStack {
-                        Button(self.vm.isLoading ? "Sending…" : "Send") {
-                            // mirror to vm.inputText for consistency
-                            self.vm.inputText = self.inputDraft
-                            self.inputDraft = ""
-                            self.vm.send()
-                        }
-                        .disabled(self.vm.isLoading || self.apiKey.isEmpty)
-                        .buttonStyle(.borderedProminent)
-
-                        if self.vm.isLoading {
-                            Button("Cancel") { self.vm.cancel() }
-                                .buttonStyle(.bordered)
-                        }
-                    }
-                    .padding(.horizontal)
-                    .padding(.bottom, 8)
+                .buttonStyle(.bordered)
+                
+                Button("Copy All") { 
+                    copyTranscript() 
                 }
-            }
-
-            // Tools
-            HStack {
-                Button("Copy Transcript") { UIPasteboard.general.string = self.vm.transcript() }
-                    .buttonStyle(.bordered)
+                .buttonStyle(.bordered)
+                
                 if #available(iOS 16.0, *) {
-                    ShareLink("Share", item: self.vm.transcript()).buttonStyle(.bordered)
+                    ShareLink("Share", item: transcript())
+                        .buttonStyle(.bordered)
                 } else {
-                    Button("Share") { self.showShare = true }.buttonStyle(.bordered)
+                    Button("Share") { 
+                        shareText = transcript()
+                        showShareSheet = true 
+                    }
+                    .buttonStyle(.bordered)
                 }
             }
-            .padding(.bottom, 8)
-            .sheet(isPresented: $showShare) { ActivityView(activityItems: [self.vm.transcript()]) }
-
-            if let err = self.vm.error {
-                Text(err).foregroundColor(.red).padding(.bottom, 6)
-            }
+            .padding(.vertical, 8)
+            .padding(.horizontal)
         }
+        .background(Color(.systemGroupedBackground))
         .navigationTitle("AI Eulogy (beta)")
-        .onAppear {
-            if !self.apiKey.isEmpty { self.vm.configure(apiKey: self.apiKey) }
-            if self.vm.messages.isEmpty { self.vm.start() }
+        .sheet(isPresented: $showShareSheet) {
+            ActivityView(activityItems: [shareText])
         }
     }
-}
-
-// MARK: - ViewModel
-@MainActor
-final class EulogyChatViewModel: ObservableObject {
-    @Published var messages: [ChatMessage] = []
-    @Published var inputText: String = ""
-    @Published var isLoading = false
-    @Published var error: String?
-
-    private var provider: ChatProvider?
-    private var cancelToken: CancellationToken?
-
-    private let systemPrompt = """
-    You are an expert eulogy writer guiding a gentle interview.
-    1) Start with 2–3 compassionate, concise questions.
-    2) Ask only what’s needed, one message at a time.
-    3) Never invent details. If unsure, ask.
-    4) When ready, say “I’m ready to write.” Then in the NEXT message, output the full eulogy in Markdown.
-    5) Structure: opening, character, stories, gratitude, farewell. Respect cultural/religious notes. Avoid clichés.
-    """
-
-    func configure(apiKey: String) {
-        self.provider = OpenAIChatProvider(apiKey: apiKey)
-        if self.messages.isEmpty { self.start() }
+    
+    private var header: some View {
+        HStack {
+            Circle().fill(Color.green.opacity(0.85)).frame(width: 8, height: 8)
+            Text("LuxVia • Eulogy Assistant").font(.headline)
+            Spacer()
+        }
+        .padding()
+        .background(.ultraThinMaterial)
     }
-
-    func start() {
-        self.messages = [
-            .init(role: .system, content: self.systemPrompt),
-            .init(role: .assistant, content: "I’m so sorry for your loss. Could you share their name and how you’re connected? Is there one memory you’d like everyone to remember?")
-        ]
-        self.error = nil
-    }
-
-    func send() {
-        guard let provider = self.provider else { self.error = "Set API key first."; return }
-        let text = self.inputText.trimmingCharacters(in: .whitespacesAndNewlines)
-        guard !text.isEmpty else { return }
-
-        self.messages.append(.init(role: .user, content: text))
-        self.inputText = ""
-        self.isLoading = true
-        self.error = nil
-
-        let token = CancellationToken()
-        self.cancelToken = token
-
-        Task {
-            defer { self.isLoading = false }
-            do {
-                let reply = try await provider.complete(messages: self.messages, cancelToken: token)
-                self.messages.append(.init(role: .assistant, content: reply))
-            } catch is CancellationError {
-                self.error = "Cancelled."
-            } catch let err {
-                self.error = err.localizedDescription
+    
+    private var inputBar: some View {
+        HStack(alignment: .bottom, spacing: 8) {
+            ZStack(alignment: .topLeading) {
+                RoundedRectangle(cornerRadius: 12)
+                    .fill(Color(.secondarySystemBackground))
+                TextEditor(text: $input)
+                    .padding(8)
+                    .frame(minHeight: 40, maxHeight: 120)
+                    .scrollContentBackground(.hidden)
+                    .background(Color.clear)
+                    .disableAutocorrection(false)
+                    .textInputAutocapitalization(.sentences)
             }
+            .frame(minHeight: 40, maxHeight: 120)
+
+            Button {
+                send()
+            } label: {
+                Image(systemName: "paperplane.fill")
+                    .font(.system(size: 16, weight: .semibold))
+            }
+            .buttonStyle(.borderedProminent)
+            .disabled(input.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty || isSending)
         }
+        .padding(.all, 12)
+        .background(.thinMaterial)
     }
-
-    func cancel() {
-        self.cancelToken?.cancel()
-        self.cancelToken = nil
+    
+    private func send() {
+        let text = input.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !text.isEmpty else { return }
+        input = ""
+        isSending = true
+        engine.send(text)
+        DispatchQueue.main.async { isSending = false }
     }
-
-    func transcript() -> String {
-        self.messages
-            .filter { $0.role != .system }
-            .map { ($0.role == .user ? "You" : "AI") + ": " + $0.content }
+    
+    private func transcript() -> String {
+        engine.messages
+            .map { ($0.role == .user ? "You" : "Assistant") + ": " + $0.text }
             .joined(separator: "\n\n")
     }
+    
+    private func copyTranscript() {
+        UIPasteboard.general.string = transcript()
+    }
 }
 
-// MARK: - UI bits
-private struct ChatBubble: View {
+// MARK: - Supporting Views
+
+private struct MessageBubble: View {
     let message: ChatMessage
-    var isUser: Bool { message.role == .user }
+    
+    var body: some View {
+        HStack(alignment: .bottom) {
+            if message.role == .user { Spacer() }
+            VStack(alignment: .leading, spacing: 6) {
+                if message.role == .draft {
+                    Text("Draft eulogy").font(.caption).foregroundColor(.secondary)
+                }
+                Text(message.text)
+                    .font(message.role == .draft ? .body : .callout)
+                    .foregroundStyle(message.role == .user ? .white : .primary)
+                    .padding(10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 14)
+                            .fill(message.role == .user ? Color.accentColor : Color(.secondarySystemBackground))
+                    )
+            }
+            if message.role != .user { Spacer() }
+        }
+    }
+}
+
+private struct TypingBubble: View {
     var body: some View {
         HStack {
-            if isUser { Spacer(minLength: 40) }
-            VStack(alignment: .leading, spacing: 6) {
-                if message.role == .assistant, let attr = try? AttributedString(markdown: message.content) {
-                    Text(attr).textSelection(.enabled)
-                } else {
-                    Text(message.content).textSelection(.enabled)
-                }
-            }
-            .padding(10)
-            .background(isUser ? Color.accentColor.opacity(0.15) : Color.secondary.opacity(0.12))
-            .clipShape(RoundedRectangle(cornerRadius: 12))
-            if !isUser { Spacer(minLength: 40) }
+            ProgressView().scaleEffect(0.8)
+            Text("Thinking…").foregroundColor(.secondary)
+            Spacer()
         }
-        .padding(.horizontal)
+        .padding(.horizontal, 8)
     }
 }
 
 private struct ActivityView: UIViewControllerRepresentable {
     let activityItems: [Any]
+    
     func makeUIViewController(context: Context) -> UIActivityViewController {
         UIActivityViewController(activityItems: activityItems, applicationActivities: nil)
     }
+    
     func updateUIViewController(_ uiViewController: UIActivityViewController, context: Context) {}
 }
 
