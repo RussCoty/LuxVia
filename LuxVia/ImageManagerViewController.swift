@@ -24,7 +24,7 @@ class ImageManagerViewController: BaseViewController {
     private let previewImageView = UIImageView() // Mini monitor
     private let previewLabel = UILabel()
     private let airplayButton = UIButton(type: .system)
-    private var persistentVolumeView: MPVolumeView? // Keep reference
+    private var routePickerView: AVRoutePickerView? // AirPlay picker
     private let playButton = UIButton(type: .system)
     private let stopButton = UIButton(type: .system)
     private let statusLabel = UILabel()
@@ -61,10 +61,10 @@ class ImageManagerViewController: BaseViewController {
         print("🖥️ Screen check: \(screenCount) screen(s) available")
         
         if screenCount > 1 {
-            statusLabel.text = "✅ AirPlay connected! Select playlist & press play"
+            statusLabel.text = "✅ AirPlay connected!"
             statusLabel.textColor = .systemGreen
         } else {
-            statusLabel.text = "Tap AirPlay icon above to connect"
+            statusLabel.text = "Not connected"
             statusLabel.textColor = .secondaryLabel
         }
     }
@@ -132,32 +132,29 @@ class ImageManagerViewController: BaseViewController {
         previewLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(previewLabel)
         
-        // AirPlay section container
-        let airplaySection = UIView()
-        airplaySection.translatesAutoresizingMaskIntoConstraints = false
-        airplayControlsContainer.addSubview(airplaySection)
+        // Official Apple AVRoutePickerView - THE primary AirPlay button
+        let routePicker = AVRoutePickerView()
+        routePicker.tintColor = .systemBlue
+        routePicker.activeTintColor = .systemBlue
+        routePicker.prioritizesVideoDevices = true
+        routePicker.backgroundColor = .clear
+        routePicker.translatesAutoresizingMaskIntoConstraints = false
+        routePickerView = routePicker
+        airplayControlsContainer.addSubview(routePicker)
         
-        // AirPlay label
+        // Label below the official button
         let airplayLabel = UILabel()
-        airplayLabel.text = "AirPlay"
+        airplayLabel.text = "Tap to connect AirPlay"
         airplayLabel.textAlignment = .center
-        airplayLabel.font = .systemFont(ofSize: 13, weight: .semibold)
+        airplayLabel.font = .systemFont(ofSize: 13, weight: .medium)
         airplayLabel.textColor = .label
         airplayLabel.translatesAutoresizingMaskIntoConstraints = false
-        airplaySection.addSubview(airplayLabel)
-        
-        // Real AirPlay button (MPVolumeView)
-        let volumeView = MPVolumeView(frame: .zero)
-        volumeView.showsVolumeSlider = false
-        volumeView.setRouteButtonImage(nil, for: .normal)
-        volumeView.translatesAutoresizingMaskIntoConstraints = false
-        persistentVolumeView = volumeView
-        airplaySection.addSubview(volumeView)
+        airplayControlsContainer.addSubview(airplayLabel)
         
         // Status label
-        statusLabel.text = "Select a playlist below"
+        statusLabel.text = "Not connected"
         statusLabel.textAlignment = .center
-        statusLabel.font = .systemFont(ofSize: 12, weight: .medium)
+        statusLabel.font = .systemFont(ofSize: 11, weight: .regular)
         statusLabel.numberOfLines = 2
         statusLabel.textColor = .secondaryLabel
         statusLabel.translatesAutoresizingMaskIntoConstraints = false
@@ -182,8 +179,9 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 220),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 230),
             
+            // Preview at top
             previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
             previewImageView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             previewImageView.widthAnchor.constraint(equalToConstant: 120),
@@ -192,22 +190,21 @@ class ImageManagerViewController: BaseViewController {
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
-            airplaySection.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 12),
-            airplaySection.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
-            airplaySection.heightAnchor.constraint(equalToConstant: 60),
+            // Official AirPlay button (AVRoutePickerView) - highly visible
+            routePicker.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 12),
+            routePicker.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            routePicker.widthAnchor.constraint(equalToConstant: 50),
+            routePicker.heightAnchor.constraint(equalToConstant: 50),
             
-            airplayLabel.topAnchor.constraint(equalTo: airplaySection.topAnchor),
-            airplayLabel.centerXAnchor.constraint(equalTo: airplaySection.centerXAnchor),
+            airplayLabel.topAnchor.constraint(equalTo: routePicker.bottomAnchor, constant: 4),
+            airplayLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
-            volumeView.topAnchor.constraint(equalTo: airplayLabel.bottomAnchor, constant: 4),
-            volumeView.centerXAnchor.constraint(equalTo: airplaySection.centerXAnchor),
-            volumeView.widthAnchor.constraint(equalToConstant: 44),
-            volumeView.heightAnchor.constraint(equalToConstant: 44),
-            
-            statusLabel.topAnchor.constraint(equalTo: airplaySection.bottomAnchor, constant: 8),
+            // Status label
+            statusLabel.topAnchor.constraint(equalTo: airplayLabel.bottomAnchor, constant: 4),
             statusLabel.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
             statusLabel.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16),
             
+            // Control buttons at bottom
             playButton.bottomAnchor.constraint(equalTo: airplayControlsContainer.bottomAnchor, constant: -12),
             playButton.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
             
