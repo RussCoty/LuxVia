@@ -35,13 +35,6 @@ class AirPlaySlideshowViewController: UIViewController {
         print("   - ImageView frame: \(imageView.frame)")
         print("   - View is in window: \(view.window != nil)")
         print("   - Window bounds: \(view.window?.bounds ?? .zero)")
-        
-        // Flash white briefly to confirm the view is rendering
-        view.backgroundColor = .white
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            self.view.backgroundColor = .black
-            print("📺 View background test complete - you should have seen a white flash")
-        }
     }
     
     // MARK: - Setup
