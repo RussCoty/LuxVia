@@ -93,7 +93,7 @@ class ImageManagerViewController: BaseViewController {
                 // mirroredScreen property was removed in iOS 16+
                 print("      - Mirrored: N/A (iOS 16+)")
             } else {
-                print("      - Mirrored: \(screen.mirroredScreen != nil)")
+                print("      - Mirrored: \(screen.mirrored != nil)")
             }
         }
         
