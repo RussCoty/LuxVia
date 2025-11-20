@@ -89,7 +89,12 @@ class ImageManagerViewController: BaseViewController {
             print("🖥️   Screen \(index): \(screen.bounds.size.width)x\(screen.bounds.size.height)")
             print("      - Main screen: \(isMain)")
             print("      - Scale: \(screen.scale)")
-            print("      - Mirrored: \(screen.mirroredScreen != nil)")
+            if #available(iOS 16.0, *) {
+                // mirroredScreen property was removed in iOS 16+
+                print("      - Mirrored: N/A (iOS 16+)")
+            } else {
+                print("      - Mirrored: \(screen.mirroredScreen != nil)")
+            }
         }
         
         // Check audio route for AirPlay
