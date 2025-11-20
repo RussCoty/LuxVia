@@ -310,6 +310,7 @@ class SlideshowManager {
     
     private func setupDisplayWindow(on screen: UIScreen) {
         print("🖥️ Setting up display window on screen: \(screen == UIScreen.main ? "main" : "external")")
+        print("🖥️ Screen bounds: \(screen.bounds)")
         
         // Clean up any existing window
         teardownExternalDisplay()
@@ -318,25 +319,36 @@ class SlideshowManager {
         let window = UIWindow(frame: screen.bounds)
         window.screen = screen
         window.backgroundColor = .black
-        window.windowLevel = .normal
+        window.windowLevel = UIWindow.Level.normal + 1
         
         // Create and set the slideshow view controller
         let slideshowVC = AirPlaySlideshowViewController()
         window.rootViewController = slideshowVC
         
+        // Force the view to load
+        slideshowVC.loadViewIfNeeded()
+        
         // Store references BEFORE making visible
         externalWindow = window
         slideshowViewController = slideshowVC
         
-        // Make window visible
+        // Make window key and visible - CRITICAL for external displays
         window.makeKeyAndVisible()
         window.isHidden = false
+        
+        // Additional visibility check
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            window.isHidden = false
+            print("✅ Window visibility re-confirmed")
+        }
         
         print("✅ Window created and made visible")
         print("✅ Window screen: \(window.screen.bounds)")
         print("✅ Window frame: \(window.frame)")
         print("✅ Window isHidden: \(window.isHidden)")
+        print("✅ Window isKeyWindow: \(window.isKeyWindow)")
         print("✅ View controller loaded: \(slideshowVC.isViewLoaded)")
+        print("✅ View controller view frame: \(slideshowVC.view.frame)")
         
         // If we have a current slide, display it immediately
         if let slide = currentSlide {

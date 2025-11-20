@@ -33,6 +33,15 @@ class AirPlaySlideshowViewController: UIViewController {
         print("📺 AirPlaySlideshowViewController viewDidAppear")
         print("   - View frame: \(view.frame)")
         print("   - ImageView frame: \(imageView.frame)")
+        print("   - View is in window: \(view.window != nil)")
+        print("   - Window bounds: \(view.window?.bounds ?? .zero)")
+        
+        // Flash white briefly to confirm the view is rendering
+        view.backgroundColor = .white
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.view.backgroundColor = .black
+            print("📺 View background test complete - you should have seen a white flash")
+        }
     }
     
     // MARK: - Setup
@@ -80,12 +89,27 @@ class AirPlaySlideshowViewController: UIViewController {
         // Load and display image
         if let image = UIImage(contentsOfFile: url.path) {
             print("✅ Image loaded successfully, size: \(image.size)")
+            
+            // Make sure imageView is visible and properly sized
+            imageView.isHidden = false
+            imageView.alpha = 1.0
+            
+            // Set the image with animation
             UIView.transition(with: imageView,
                             duration: 0.5,
                             options: .transitionCrossDissolve,
                             animations: {
                 self.imageView.image = image
-                self.imageView.isHidden = false
+            }, completion: { _ in
+                print("✅ Image display animation complete")
+                print("   - ImageView has image: \(self.imageView.image != nil)")
+                print("   - ImageView frame: \(self.imageView.frame)")
+                print("   - ImageView is hidden: \(self.imageView.isHidden)")
+                print("   - ImageView alpha: \(self.imageView.alpha)")
+                
+                // Force a layout update
+                self.view.setNeedsLayout()
+                self.view.layoutIfNeeded()
             })
         } else {
             print("❌ Failed to load image from: \(url.path)")
