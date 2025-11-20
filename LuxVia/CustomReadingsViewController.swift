@@ -1,5 +1,6 @@
 import UIKit
 import SwiftUI
+import AVFoundation
 //import MarkdownUI
 // 
 
@@ -12,16 +13,112 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         private let recordButton = UIButton(type: .system)
         private let imageManagerButton = UIButton(type: .system)
     
+    // Slideshow preview components
+    private let slideshowPreviewContainer = UIView()
+    private let slideshowPreviewImageView = UIImageView()
+    private let slideshowPreviewLabel = UILabel()
+    private let slideshowStatusLabel = UILabel()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         customReadings = CustomReadingStore.shared.load()
         
+        setupSlideshowPreview()
         setupAddButton()
             setupAIEulogyButton()
             setupRecordButton()
             setupImageManagerButton()
         setupTableView()
+        setupNotifications()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        updateSlideshowPreview()
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
+    }
+    
+    private func setupSlideshowPreview() {
+        // Container
+        slideshowPreviewContainer.backgroundColor = .secondarySystemBackground
+        slideshowPreviewContainer.layer.cornerRadius = 12
+        slideshowPreviewContainer.layer.borderWidth = 2
+        slideshowPreviewContainer.layer.borderColor = UIColor.systemGray4.cgColor
+        slideshowPreviewContainer.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(slideshowPreviewContainer)
+        
+        // Preview image
+        slideshowPreviewImageView.contentMode = .scaleAspectFit
+        slideshowPreviewImageView.backgroundColor = .black
+        slideshowPreviewImageView.layer.cornerRadius = 8
+        slideshowPreviewImageView.clipsToBounds = true
+        slideshowPreviewImageView.translatesAutoresizingMaskIntoConstraints = false
+        slideshowPreviewContainer.addSubview(slideshowPreviewImageView)
+        
+        // Preview label
+        slideshowPreviewLabel.text = "Slideshow Monitor"
+        slideshowPreviewLabel.textAlignment = .center
+        slideshowPreviewLabel.font = .systemFont(ofSize: 11, weight: .semibold)
+        slideshowPreviewLabel.textColor = .label
+        slideshowPreviewLabel.translatesAutoresizingMaskIntoConstraints = false
+        slideshowPreviewContainer.addSubview(slideshowPreviewLabel)
+        
+        // Status label
+        slideshowStatusLabel.text = "No slideshow playing"
+        slideshowStatusLabel.textAlignment = .center
+        slideshowStatusLabel.font = .systemFont(ofSize: 10, weight: .regular)
+        slideshowStatusLabel.textColor = .secondaryLabel
+        slideshowStatusLabel.numberOfLines = 2
+        slideshowStatusLabel.translatesAutoresizingMaskIntoConstraints = false
+        slideshowPreviewContainer.addSubview(slideshowStatusLabel)
+        
+        NSLayoutConstraint.activate([
+            slideshowPreviewContainer.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 8),
+            slideshowPreviewContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
+            slideshowPreviewContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            slideshowPreviewContainer.heightAnchor.constraint(equalToConstant: 140),
+            
+            slideshowPreviewImageView.topAnchor.constraint(equalTo: slideshowPreviewContainer.topAnchor, constant: 8),
+            slideshowPreviewImageView.centerXAnchor.constraint(equalTo: slideshowPreviewContainer.centerXAnchor),
+            slideshowPreviewImageView.widthAnchor.constraint(equalToConstant: 160),
+            slideshowPreviewImageView.heightAnchor.constraint(equalToConstant: 90),
+            
+            slideshowPreviewLabel.topAnchor.constraint(equalTo: slideshowPreviewImageView.bottomAnchor, constant: 4),
+            slideshowPreviewLabel.leadingAnchor.constraint(equalTo: slideshowPreviewContainer.leadingAnchor, constant: 8),
+            slideshowPreviewLabel.trailingAnchor.constraint(equalTo: slideshowPreviewContainer.trailingAnchor, constant: -8),
+            
+            slideshowStatusLabel.topAnchor.constraint(equalTo: slideshowPreviewLabel.bottomAnchor, constant: 2),
+            slideshowStatusLabel.leadingAnchor.constraint(equalTo: slideshowPreviewContainer.leadingAnchor, constant: 8),
+            slideshowStatusLabel.trailingAnchor.constraint(equalTo: slideshowPreviewContainer.trailingAnchor, constant: -8),
+            slideshowStatusLabel.bottomAnchor.constraint(lessThanOrEqualTo: slideshowPreviewContainer.bottomAnchor, constant: -8)
+        ])
+    }
+    
+    private func setupNotifications() {
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(slideshowDidUpdate),
+            name: SlideshowManager.slideshowDidUpdateSlide,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(slideshowDidStop),
+            name: SlideshowManager.slideshowDidStop,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(slideshowDidStart),
+            name: SlideshowManager.slideshowDidStart,
+            object: nil
+        )
     }
     
     private func setupAddButton() {
@@ -34,7 +131,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         view.addSubview(addButton)
         
         NSLayoutConstraint.activate([
-            addButton.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 12),
+            addButton.topAnchor.constraint(equalTo: slideshowPreviewContainer.bottomAnchor, constant: 12),
             addButton.centerXAnchor.constraint(equalTo: view.centerXAnchor)
         ])
     }
@@ -86,6 +183,74 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
     @objc private func openImageManager() {
         let imageManagerVC = ImageManagerViewController()
         navigationController?.pushViewController(imageManagerVC, animated: true)
+    }
+    
+    // MARK: - Slideshow Preview Methods
+    
+    @objc private func slideshowDidStart() {
+        updateSlideshowPreview()
+    }
+    
+    @objc private func slideshowDidUpdate(notification: Notification) {
+        guard let userInfo = notification.userInfo,
+              let index = userInfo["index"] as? Int,
+              let slide = userInfo["slide"] as? SlideItem else { return }
+        
+        if let playlist = SlideshowManager.shared.getCurrentPlaylist() {
+            slideshowStatusLabel.text = "Playing: \(playlist.name)\nSlide \(index + 1) of \(playlist.slides.count)"
+        }
+        
+        // Update preview image
+        updatePreviewImage(with: slide)
+    }
+    
+    @objc private func slideshowDidStop() {
+        slideshowPreviewImageView.image = nil
+        slideshowPreviewLabel.text = "Slideshow Monitor"
+        slideshowStatusLabel.text = "No slideshow playing"
+    }
+    
+    private func updateSlideshowPreview() {
+        if SlideshowManager.shared.isCurrentlyPlaying() {
+            if let slide = SlideshowManager.shared.getCurrentSlide() {
+                updatePreviewImage(with: slide)
+                
+                if let playlist = SlideshowManager.shared.getCurrentPlaylist() {
+                    let index = SlideshowManager.shared.getCurrentSlideIndex()
+                    slideshowStatusLabel.text = "Playing: \(playlist.name)\nSlide \(index + 1) of \(playlist.slides.count)"
+                }
+            }
+        } else {
+            slideshowPreviewImageView.image = nil
+            slideshowPreviewLabel.text = "Slideshow Monitor"
+            slideshowStatusLabel.text = "No slideshow playing"
+        }
+    }
+    
+    private func updatePreviewImage(with slide: SlideItem) {
+        let fileURL = SlideshowManager.shared.getMediaURL(for: slide.fileName)
+        
+        if slide.type == .image {
+            if let image = UIImage(contentsOfFile: fileURL.path) {
+                slideshowPreviewImageView.image = image
+                slideshowPreviewLabel.text = "Now Playing"
+            }
+        } else {
+            // Generate video thumbnail
+            DispatchQueue.global(qos: .userInitiated).async {
+                let asset = AVAsset(url: fileURL)
+                let imageGenerator = AVAssetImageGenerator(asset: asset)
+                imageGenerator.appliesPreferredTrackTransform = true
+                
+                let time = CMTime(seconds: 1, preferredTimescale: 60)
+                if let cgImage = try? imageGenerator.copyCGImage(at: time, actualTime: nil) {
+                    DispatchQueue.main.async {
+                        self.slideshowPreviewImageView.image = UIImage(cgImage: cgImage)
+                        self.slideshowPreviewLabel.text = "Now Playing (Video)"
+                    }
+                }
+            }
+        }
     }
     private func setupTableView() {
         tableView.translatesAutoresizingMaskIntoConstraints = false
