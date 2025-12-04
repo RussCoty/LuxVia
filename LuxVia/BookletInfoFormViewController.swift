@@ -357,11 +357,10 @@ class BookletInfoFormViewController: UIViewController, UIImagePickerControllerDe
     }
 
     private func presentAnnouncementIfNeeded() {
-        // Create suggested announcement if there isn't one
-        if (bookletInfo.announcementText ?? "").trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
-            bookletInfo.announcementText = generateAnnouncementText(from: bookletInfo)
-            bookletInfo.save()
-        }
+        // Always regenerate announcement to reflect current form data
+        // User can still manually edit it afterwards
+        bookletInfo.announcementText = generateAnnouncementText(from: bookletInfo)
+        bookletInfo.save()
 
         if let container = announcementContainer, let tv = announcementTextView {
             tv.text = bookletInfo.announcementText
