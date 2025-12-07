@@ -20,6 +20,7 @@ class SlideshowManager {
     private var isPlaying: Bool = false
     private var externalWindow: UIWindow?
     private var slideshowViewController: AirPlaySlideshowViewController?
+    private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
     
     // Notifications
     static let slideshowDidStart = Notification.Name("SlideshowDidStart")
@@ -48,6 +49,56 @@ class SlideshowManager {
     init() {
         loadPlaylists()
         setupExternalDisplayObservers()
+        setupBackgroundObservers()
+    }
+    
+    private func setupBackgroundObservers() {
+        // Monitor app lifecycle to keep slideshow running
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appDidEnterBackground),
+            name: UIApplication.didEnterBackgroundNotification,
+            object: nil
+        )
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(appWillEnterForeground),
+            name: UIApplication.willEnterForegroundNotification,
+            object: nil
+        )
+    }
+    
+    @objc private func appDidEnterBackground() {
+        guard isPlaying else { return }
+        
+        print("📱 App entering background - maintaining slideshow on external display")
+        
+        // Request extended background execution time
+        backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask { [weak self] in
+            print("⚠️ Background task expiring")
+            self?.endBackgroundTask()
+        }
+        
+        print("✅ Background task started - slideshow will continue")
+        print("💡 External display (AirPlay) continues independently")
+    }
+    
+    @objc private func appWillEnterForeground() {
+        print("📱 App returning to foreground")
+        endBackgroundTask()
+        
+        if isPlaying {
+            print("✅ Slideshow still active - continuing playback")
+        }
+    }
+    
+    private func endBackgroundTask() {
+        if backgroundTaskIdentifier != .invalid {
+            UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
+            backgroundTaskIdentifier = .invalid
+            print("🛑 Background task ended")
+        }
     }
     
     func loadPlaylists() {
@@ -155,6 +206,9 @@ class SlideshowManager {
         currentSlideIndex = 0
         currentSlide = nil
         
+        // End background task if running
+        endBackgroundTask()
+        
         teardownExternalDisplay()
         
         NotificationCenter.default.post(name: SlideshowManager.slideshowDidStop, object: nil)
@@ -254,9 +308,15 @@ class SlideshowManager {
         // Schedule next slide (for images, videos handle themselves)
         if slide.type == .image {
             displayTimer?.invalidate()
-            displayTimer = Timer.scheduledTimer(withTimeInterval: slide.duration, repeats: false) { [weak self] _ in
+            let timer = Timer.scheduledTimer(withTimeInterval: slide.duration, repeats: false) { [weak self] _ in
                 self?.nextSlide()
             }
+            // Add tolerance for better background execution
+            timer.tolerance = 0.5
+            displayTimer = timer
+            
+            // Ensure timer runs in common modes (includes during scrolling and background)
+            RunLoop.current.add(timer, forMode: .common)
         }
     }
     

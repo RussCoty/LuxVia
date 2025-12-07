@@ -24,7 +24,8 @@ class ImageManagerViewController: BaseViewController {
     private let previewImageView = UIImageView() // Mini monitor
     private let previewLabel = UILabel()
     private let airplayButton = UIButton(type: .system)
-    private var routePickerView: AVRoutePickerView? // AirPlay picker
+    private var routePickerView: AVRoutePickerView? // AirPlay picker for VIDEO
+    private var audioRoutePickerView: AVRoutePickerView? // Separate picker for AUDIO
     private let playButton = UIButton(type: .system)
     private let stopButton = UIButton(type: .system)
     private let statusLabel = UILabel()
@@ -103,12 +104,41 @@ class ImageManagerViewController: BaseViewController {
         print("\n🔊 AUDIO ROUTE INFO:")
         print("   - Route description: \(currentRoute.outputs.map { $0.portName }.joined(separator: ", "))")
         
+        var hasAirPlayAudio = false
+        var airplayDeviceName: String?
+        var audioOutputDevices: [String] = []
+        
         for output in currentRoute.outputs {
             print("   - Output: \(output.portName)")
             print("      Type: \(output.portType.rawValue)")
+            audioOutputDevices.append(output.portName)
+            
             if output.portType == .airPlay {
                 print("      ✅ AirPlay audio detected!")
+                hasAirPlayAudio = true
+                airplayDeviceName = output.portName
+                
+                // Check if it's a known audio-only device
+                let audioOnlyDevices = ["HomePod", "AirPods", "Beats", "Speaker"]
+                let isLikelyAudioOnly = audioOnlyDevices.contains { output.portName.contains($0) }
+                if isLikelyAudioOnly {
+                    print("      ⚠️ WARNING: This appears to be an AUDIO-ONLY device")
+                    print("      ⚠️ Device: \(output.portName)")
+                }
+            } else if output.portType == .bluetoothA2DP || output.portType == .bluetoothLE || output.portType == .bluetoothHFP {
+                print("      🔵 Bluetooth audio detected: \(output.portName)")
+            } else if output.portType == .headphones {
+                print("      🎧 Wired headphones detected")
+            } else if output.portType == .builtInSpeaker {
+                print("      📱 Using built-in speaker")
             }
+        }
+        
+        print("\n🎵 AUDIO OUTPUT SUMMARY:")
+        if audioOutputDevices.isEmpty {
+            print("   - Using default device speaker")
+        } else {
+            print("   - Active outputs: \(audioOutputDevices.joined(separator: ", "))")
         }
         
         // Check for external display using MPVolumeView
@@ -125,12 +155,24 @@ class ImageManagerViewController: BaseViewController {
         if screenCount > 1 {
             print("✅ EXTERNAL DISPLAY DETECTED")
             print("✅ AirPlay connection is ACTIVE")
-            statusLabel.text = "✅ AirPlay connected! Ready to play"
+            let audioInfo = audioOutputDevices.isEmpty ? "" : " | Audio: \(audioOutputDevices[0])"
+            statusLabel.text = "✅ Connected\(audioInfo)"
             statusLabel.textColor = .systemGreen
+        } else if hasAirPlayAudio {
+            print("⚠️ AUDIO-ONLY AirPlay detected")
+            print("⚠️ No video/screen mirroring available")
+            if let deviceName = airplayDeviceName {
+                statusLabel.text = "⚠️ \(deviceName) - Audio Only"
+                print("⚠️ Connected device: \(deviceName)")
+            } else {
+                statusLabel.text = "⚠️ AirPlay Audio Only"
+            }
+            statusLabel.textColor = .systemOrange
         } else {
             print("❌ No external display detected")
             print("⚠️ AirPlay may not be connected")
-            statusLabel.text = "Not connected"
+            let audioInfo = audioOutputDevices.isEmpty ? "Device Speaker" : audioOutputDevices[0]
+            statusLabel.text = "Not connected | Audio: \(audioInfo)"
             statusLabel.textColor = .secondaryLabel
         }
         print("═══════════════════════════════════════\n")
@@ -244,24 +286,43 @@ class ImageManagerViewController: BaseViewController {
         debugButton.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(debugButton)
         
-        // Official Apple AVRoutePickerView - THE primary AirPlay button
+        // Official Apple AVRoutePickerView - THE primary AirPlay button for VIDEO
         let routePicker = AVRoutePickerView()
         routePicker.tintColor = .systemBlue
         routePicker.activeTintColor = .systemBlue
-        routePicker.prioritizesVideoDevices = true
+        routePicker.prioritizesVideoDevices = true // Prefer video-capable devices
         routePicker.backgroundColor = .clear
         routePicker.translatesAutoresizingMaskIntoConstraints = false
         routePickerView = routePicker
         airplayControlsContainer.addSubview(routePicker)
         
-        // Label below the official button
+        // Label below the video picker
         let airplayLabel = UILabel()
-        airplayLabel.text = "Tap to connect AirPlay"
+        airplayLabel.text = "Connect Screen (Video)"
         airplayLabel.textAlignment = .center
-        airplayLabel.font = .systemFont(ofSize: 13, weight: .medium)
+        airplayLabel.font = .systemFont(ofSize: 11, weight: .medium)
         airplayLabel.textColor = .label
         airplayLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(airplayLabel)
+        
+        // SEPARATE Audio Route Picker for Bluetooth/Audio devices
+        let audioRoutePicker = AVRoutePickerView()
+        audioRoutePicker.tintColor = .systemGreen
+        audioRoutePicker.activeTintColor = .systemGreen
+        audioRoutePicker.prioritizesVideoDevices = false // Prefer audio devices
+        audioRoutePicker.backgroundColor = .clear
+        audioRoutePicker.translatesAutoresizingMaskIntoConstraints = false
+        audioRoutePickerView = audioRoutePicker
+        airplayControlsContainer.addSubview(audioRoutePicker)
+        
+        // Label for audio picker
+        let audioLabel = UILabel()
+        audioLabel.text = "Audio Output"
+        audioLabel.textAlignment = .center
+        audioLabel.font = .systemFont(ofSize: 11, weight: .medium)
+        audioLabel.textColor = .label
+        audioLabel.translatesAutoresizingMaskIntoConstraints = false
+        airplayControlsContainer.addSubview(audioLabel)
         
         // Status label
         statusLabel.text = "Not connected"
@@ -291,7 +352,7 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 280),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 320), // Increased height for audio picker
             
             // Preview at top - LARGER for better visibility
             previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
@@ -305,17 +366,28 @@ class ImageManagerViewController: BaseViewController {
             debugButton.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 4),
             debugButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
-            // Official AirPlay button (AVRoutePickerView) - highly visible
+            // Video AirPlay button (left side)
             routePicker.topAnchor.constraint(equalTo: debugButton.bottomAnchor, constant: 8),
-            routePicker.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
-            routePicker.widthAnchor.constraint(equalToConstant: 50),
-            routePicker.heightAnchor.constraint(equalToConstant: 50),
+            routePicker.trailingAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor, constant: -16),
+            routePicker.widthAnchor.constraint(equalToConstant: 44),
+            routePicker.heightAnchor.constraint(equalToConstant: 44),
             
-            airplayLabel.topAnchor.constraint(equalTo: routePicker.bottomAnchor, constant: 4),
-            airplayLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
+            airplayLabel.topAnchor.constraint(equalTo: routePicker.bottomAnchor, constant: 2),
+            airplayLabel.centerXAnchor.constraint(equalTo: routePicker.centerXAnchor),
+            airplayLabel.widthAnchor.constraint(equalToConstant: 120),
+            
+            // Audio Route picker (right side)
+            audioRoutePicker.topAnchor.constraint(equalTo: debugButton.bottomAnchor, constant: 8),
+            audioRoutePicker.leadingAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor, constant: 16),
+            audioRoutePicker.widthAnchor.constraint(equalToConstant: 44),
+            audioRoutePicker.heightAnchor.constraint(equalToConstant: 44),
+            
+            audioLabel.topAnchor.constraint(equalTo: audioRoutePicker.bottomAnchor, constant: 2),
+            audioLabel.centerXAnchor.constraint(equalTo: audioRoutePicker.centerXAnchor),
+            audioLabel.widthAnchor.constraint(equalToConstant: 100),
             
             // Status label
-            statusLabel.topAnchor.constraint(equalTo: airplayLabel.bottomAnchor, constant: 4),
+            statusLabel.topAnchor.constraint(equalTo: airplayLabel.bottomAnchor, constant: 8),
             statusLabel.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 16),
             statusLabel.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -16),
             
@@ -503,6 +575,18 @@ class ImageManagerViewController: BaseViewController {
             • Delete media you no longer need
             • Tap a playlist header to start AirPlay slideshow
             
+            📺 VIDEO OUTPUT:
+            Use the blue button to connect video to TV/display
+            
+            🎵 AUDIO OUTPUT:
+            Use the green button to choose separate audio device
+            (Bluetooth speakers, AirPods, etc.)
+            
+            You can mix & match:
+            • Video to TV + Audio to Bluetooth speaker
+            • Video to projector + Audio to sound system
+            • Both to same AirPlay device
+            
             Media added here is used in the Slideshow tab for memorial displays.
             """,
             preferredStyle: .alert
@@ -524,7 +608,9 @@ class ImageManagerViewController: BaseViewController {
         // Show alert with connection info
         let screenCount = UIScreen.screens.count
         let audioSession = AVAudioSession.sharedInstance()
-        let hasAirPlayAudio = audioSession.currentRoute.outputs.contains { $0.portType == .airPlay }
+        let airPlayOutputs = audioSession.currentRoute.outputs.filter { $0.portType == .airPlay }
+        let hasAirPlayAudio = !airPlayOutputs.isEmpty
+        let deviceName = airPlayOutputs.first?.portName ?? "Unknown Device"
         
         var message: String
         var title: String
@@ -533,19 +619,48 @@ class ImageManagerViewController: BaseViewController {
             title = "✅ Connected!"
             message = "\(screenCount) screens detected\nExternal display is active\n\n🧪 Check your TV - you should see a RED test screen for 3 seconds!\n\nYou can now start the slideshow!"
         } else if hasAirPlayAudio {
-            title = "⚠️ Audio Only"
-            message = """
-            AirPlay is connected for AUDIO only.
+            title = "⚠️ Audio Only Device"
             
-            Your device may not support screen mirroring.
+            // Check if it's a known audio-only device
+            let audioOnlyDevices = ["HomePod", "AirPods", "Beats", "Speaker"]
+            let isKnownAudioOnly = audioOnlyDevices.contains { deviceName.contains($0) }
             
-            To fix:
-            1. Open Control Center
-            2. Long-press Screen Mirroring
-            3. Enable "Use as Separate Display"
-            
-            Or your TV may not support video AirPlay.
-            """
+            if isKnownAudioOnly {
+                message = """
+                Connected to: \(deviceName)
+                
+                ❌ THIS DEVICE DOES NOT SUPPORT VIDEO
+                
+                \(deviceName) is an audio-only device and cannot display slideshows.
+                
+                You need to connect to:
+                • Apple TV
+                • AirPlay 2-enabled Smart TV
+                • Mac with AirPlay Receiver
+                • iPad/iPhone with Sidecar
+                
+                This is a HARDWARE limitation, not a code issue.
+                """
+            } else {
+                message = """
+                Connected to: \(deviceName)
+                
+                AirPlay is connected but NO VIDEO/SCREEN is detected.
+                
+                Possible causes:
+                1. Device doesn't support AirPlay video (audio only)
+                2. Screen Mirroring is not enabled
+                3. Device firmware needs update
+                
+                Try:
+                • Open Control Center
+                • Tap "Screen Mirroring" (not AirPlay icon)
+                • Select \(deviceName)
+                • Wait 10 seconds and check again
+                
+                If still audio-only, the device may not support video.
+                """
+            }
         } else {
             title = "❌ Not Connected"
             message = """

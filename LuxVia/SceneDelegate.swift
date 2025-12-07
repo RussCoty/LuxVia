@@ -158,10 +158,32 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
                 print("❌ Lyrics sync failed: \(error.localizedDescription)")
             }
         }
+        
+        // Resume slideshow if it was playing
+        print("📱 App became active - checking slideshow state")
+        if SlideshowManager.shared.isCurrentlyPlaying() {
+            print("✅ Slideshow is active - ensuring external display is visible")
+        }
     }
-    func sceneWillResignActive(_ scene: UIScene) { }
-    func sceneWillEnterForeground(_ scene: UIScene) { }
-    func sceneDidEnterBackground(_ scene: UIScene) { }
+    
+    func sceneWillResignActive(_ scene: UIScene) {
+        // App is about to go to background or lose focus
+        print("📱 App will resign active - slideshow will continue on external display")
+    }
+    
+    func sceneWillEnterForeground(_ scene: UIScene) {
+        print("📱 App entering foreground")
+    }
+    
+    func sceneDidEnterBackground(_ scene: UIScene) {
+        // App is now in background
+        // External display (AirPlay) will continue running because it's on a separate window
+        print("📱 App entered background")
+        if SlideshowManager.shared.isCurrentlyPlaying() {
+            print("✅ Slideshow continues on external display (AirPlay screen)")
+            print("💡 The slideshow will keep running on your TV/external display")
+        }
+    }
 
     func presentLoginScreen() {
         let loginVC = NativeLoginViewController()
