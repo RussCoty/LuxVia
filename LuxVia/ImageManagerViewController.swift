@@ -189,6 +189,23 @@ class ImageManagerViewController: BaseViewController {
         previewImageView.layer.borderColor = UIColor.systemBlue.cgColor
         previewImageView.clipsToBounds = true
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Add a placeholder/empty state
+        let placeholderLabel = UILabel()
+        placeholderLabel.text = "📺\nAirPlay Display\nMonitor"
+        placeholderLabel.textAlignment = .center
+        placeholderLabel.numberOfLines = 0
+        placeholderLabel.font = .systemFont(ofSize: 14, weight: .medium)
+        placeholderLabel.textColor = .systemGray
+        placeholderLabel.translatesAutoresizingMaskIntoConstraints = false
+        placeholderLabel.tag = 999 // Tag for easy identification
+        previewImageView.addSubview(placeholderLabel)
+        
+        NSLayoutConstraint.activate([
+            placeholderLabel.centerXAnchor.constraint(equalTo: previewImageView.centerXAnchor),
+            placeholderLabel.centerYAnchor.constraint(equalTo: previewImageView.centerYAnchor)
+        ])
+        
         airplayControlsContainer.addSubview(previewImageView)
         
         // Add a "LIVE" indicator overlay
@@ -637,6 +654,11 @@ class ImageManagerViewController: BaseViewController {
     
     @objc private func slideshowDidStart() {
         updateAirPlayControls()
+        
+        // Immediately update preview with first slide if available
+        if let currentSlide = SlideshowManager.shared.getCurrentSlide() {
+            updatePreviewMonitor(with: currentSlide)
+        }
     }
     
     @objc private func slideshowDidUpdate(notification: Notification) {
@@ -654,15 +676,25 @@ class ImageManagerViewController: BaseViewController {
     
     @objc private func slideshowDidStop() {
         updateAirPlayControls()
-        // Clear preview
+        // Clear preview and show placeholder
         previewImageView.image = nil
         previewLabel.text = "Slideshow Preview"
+        
+        // Show placeholder label
+        if let placeholder = previewImageView.viewWithTag(999) {
+            placeholder.isHidden = false
+        }
     }
     
     private func updatePreviewMonitor(with slide: SlideItem) {
         let fileURL = ImageManager.shared.getMediaURL(for: slide.fileName)
         
         print("🖼️ Updating preview monitor with: \(slide.fileName)")
+        
+        // Hide placeholder label when showing content
+        if let placeholder = previewImageView.viewWithTag(999) {
+            placeholder.isHidden = true
+        }
         
         if slide.type == .image {
             // Display image in preview
@@ -695,7 +727,11 @@ class ImageManagerViewController: BaseViewController {
                 if let cgImage = try? imageGenerator.copyCGImage(at: time, actualTime: nil) {
                     DispatchQueue.main.async {
                         self.previewImageView.image = UIImage(cgImage: cgImage)
-                        self.previewLabel.text = "Now Playing: \(slide.fileName.prefix(20))..."
+                        let fileName = slide.fileName.replacingOccurrences(of: ".mp4", with: "")
+                                                       .replacingOccurrences(of: ".mov", with: "")
+                                                       .replacingOccurrences(of: ".m4v", with: "")
+                        self.previewLabel.text = "🎬 \(String(fileName.prefix(20)))\(fileName.count > 20 ? "..." : "")"
+                        print("✅ Preview updated with video thumbnail")
                     }
                 }
             }

@@ -37,20 +37,35 @@ class AirPlaySlideshowViewController: UIViewController {
         print("   - Window bounds: \(view.window?.bounds ?? .zero)")
         print("   - View background: \(view.backgroundColor?.description ?? "nil")")
         
+        // Ensure view is visible FIRST
+        view.isHidden = false
+        view.alpha = 1.0
+        imageView.isHidden = false
+        imageView.alpha = 1.0
+        
         // Force a full layout and display update
         view.setNeedsLayout()
         view.layoutIfNeeded()
         view.setNeedsDisplay()
+        imageView.setNeedsLayout()
+        imageView.layoutIfNeeded()
         imageView.setNeedsDisplay()
         
-        // Ensure view is visible
-        view.isHidden = false
-        view.alpha = 1.0
+        // Force render immediately
+        CATransaction.begin()
+        CATransaction.setDisableActions(true)
+        view.layer.setNeedsDisplay()
+        imageView.layer.setNeedsDisplay()
+        view.layer.displayIfNeeded()
+        imageView.layer.displayIfNeeded()
+        CATransaction.commit()
         
         // If there's already an image, make sure it's showing
         if let image = imageView.image {
             print("   - ✅ Image present: \(image.size)")
-            // Force redisplay of the image
+            // Force immediate redisplay of the image
+            imageView.image = nil
+            imageView.image = image
             imageView.setNeedsDisplay()
             view.setNeedsDisplay()
         } else {
@@ -143,7 +158,16 @@ class AirPlaySlideshowViewController: UIViewController {
             // Set the image directly first (no animation for initial display)
             self.imageView.image = image
             
-            // Force display update immediately
+            // Force IMMEDIATE display update using CATransaction
+            CATransaction.begin()
+            CATransaction.setDisableActions(true)
+            self.imageView.layer.setNeedsDisplay()
+            self.view.layer.setNeedsDisplay()
+            self.imageView.layer.displayIfNeeded()
+            self.view.layer.displayIfNeeded()
+            CATransaction.commit()
+            
+            // Also use standard update methods
             self.imageView.setNeedsDisplay()
             self.view.setNeedsDisplay()
             

@@ -364,16 +364,20 @@ class SlideshowManager {
         externalWindow = window
         slideshowViewController = slideshowVC
         
-        // Make window visible WITHOUT becoming key - CRITICAL for external displays
-        // We don't want to steal focus from the main app
+        // Make window visible - CRITICAL for external displays
+        // For external screens, we MUST call makeKey to ensure content renders
         window.isHidden = false
+        window.makeKey()  // This is essential for external displays to work!
         
-        // Force layout and redraw
+        // Force immediate layout and redraw
         window.setNeedsLayout()
         window.layoutIfNeeded()
+        window.setNeedsDisplay()
         
-        // Explicitly set as visible after layout
-        window.isHidden = false
+        // Ensure view controller view is also updated
+        slideshowVC.view.setNeedsLayout()
+        slideshowVC.view.layoutIfNeeded()
+        slideshowVC.view.setNeedsDisplay()
         
         print("✅ Window created and configured")
         print("   - Screen bounds: \(window.screen.bounds)")
