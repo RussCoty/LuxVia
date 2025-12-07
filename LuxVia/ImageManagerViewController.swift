@@ -181,21 +181,41 @@ class ImageManagerViewController: BaseViewController {
         airplayControlsContainer.translatesAutoresizingMaskIntoConstraints = false
         view.addSubview(airplayControlsContainer)
         
-        // Mini preview monitor
+        // Mini preview monitor - ENHANCED
         previewImageView.contentMode = .scaleAspectFit
         previewImageView.backgroundColor = .black
         previewImageView.layer.cornerRadius = 8
-        previewImageView.layer.borderWidth = 2
-        previewImageView.layer.borderColor = UIColor.systemGray4.cgColor
+        previewImageView.layer.borderWidth = 3
+        previewImageView.layer.borderColor = UIColor.systemBlue.cgColor
         previewImageView.clipsToBounds = true
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(previewImageView)
         
+        // Add a "LIVE" indicator overlay
+        let liveLabel = UILabel()
+        liveLabel.text = "🔴 LIVE"
+        liveLabel.textAlignment = .center
+        liveLabel.font = .systemFont(ofSize: 10, weight: .bold)
+        liveLabel.textColor = .white
+        liveLabel.backgroundColor = UIColor.systemRed.withAlphaComponent(0.8)
+        liveLabel.layer.cornerRadius = 4
+        liveLabel.clipsToBounds = true
+        liveLabel.translatesAutoresizingMaskIntoConstraints = false
+        previewImageView.addSubview(liveLabel)
+        
+        NSLayoutConstraint.activate([
+            liveLabel.topAnchor.constraint(equalTo: previewImageView.topAnchor, constant: 4),
+            liveLabel.leadingAnchor.constraint(equalTo: previewImageView.leadingAnchor, constant: 4),
+            liveLabel.widthAnchor.constraint(equalToConstant: 50),
+            liveLabel.heightAnchor.constraint(equalToConstant: 18)
+        ])
+        
         // Preview label
         previewLabel.text = "Slideshow Preview"
         previewLabel.textAlignment = .center
-        previewLabel.font = .systemFont(ofSize: 11, weight: .medium)
-        previewLabel.textColor = .secondaryLabel
+        previewLabel.font = .systemFont(ofSize: 12, weight: .semibold)
+        previewLabel.textColor = .label
+        previewLabel.numberOfLines = 2
         previewLabel.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(previewLabel)
         
@@ -254,13 +274,13 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 230),
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 280),
             
-            // Preview at top
+            // Preview at top - LARGER for better visibility
             previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
             previewImageView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
-            previewImageView.widthAnchor.constraint(equalToConstant: 120),
-            previewImageView.heightAnchor.constraint(equalToConstant: 80),
+            previewImageView.widthAnchor.constraint(equalToConstant: 160),
+            previewImageView.heightAnchor.constraint(equalToConstant: 120),
             
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
@@ -642,11 +662,27 @@ class ImageManagerViewController: BaseViewController {
     private func updatePreviewMonitor(with slide: SlideItem) {
         let fileURL = ImageManager.shared.getMediaURL(for: slide.fileName)
         
+        print("🖼️ Updating preview monitor with: \(slide.fileName)")
+        
         if slide.type == .image {
             // Display image in preview
             if let image = UIImage(contentsOfFile: fileURL.path) {
-                previewImageView.image = image
-                previewLabel.text = "Now Playing: \(slide.fileName.prefix(20))..."
+                DispatchQueue.main.async {
+                    UIView.transition(with: self.previewImageView,
+                                    duration: 0.3,
+                                    options: .transitionCrossDissolve,
+                                    animations: {
+                        self.previewImageView.image = image
+                    }, completion: nil)
+                    
+                    let fileName = slide.fileName.replacingOccurrences(of: ".jpg", with: "")
+                                                   .replacingOccurrences(of: ".png", with: "")
+                                                   .replacingOccurrences(of: ".jpeg", with: "")
+                    self.previewLabel.text = "▶️ \(String(fileName.prefix(20)))\(fileName.count > 20 ? "..." : "")"
+                    print("✅ Preview updated with image")
+                }
+            } else {
+                print("❌ Failed to load preview image from: \(fileURL.path)")
             }
         } else {
             // Generate video thumbnail for preview
