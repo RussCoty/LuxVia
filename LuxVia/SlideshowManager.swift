@@ -343,7 +343,7 @@ class SlideshowManager {
         let window = UIWindow(frame: screen.bounds)
         window.screen = screen
         window.backgroundColor = .black
-        window.windowLevel = UIWindow.Level.normal
+        window.windowLevel = UIWindow.Level.normal + 1 // Slightly above normal to ensure visibility
         window.isOpaque = true
         
         // Create and set the slideshow view controller
@@ -352,20 +352,28 @@ class SlideshowManager {
         
         // Force the view to load and layout
         slideshowVC.loadViewIfNeeded()
+        slideshowVC.view.frame = window.bounds
         slideshowVC.view.setNeedsLayout()
         slideshowVC.view.layoutIfNeeded()
+        
+        // Ensure visibility
+        slideshowVC.view.isHidden = false
+        slideshowVC.view.alpha = 1.0
         
         // Store references BEFORE making visible
         externalWindow = window
         slideshowViewController = slideshowVC
         
-        // Make window visible - CRITICAL for external displays
+        // Make window visible WITHOUT becoming key - CRITICAL for external displays
+        // We don't want to steal focus from the main app
         window.isHidden = false
-        window.makeKeyAndVisible()
         
         // Force layout and redraw
         window.setNeedsLayout()
         window.layoutIfNeeded()
+        
+        // Explicitly set as visible after layout
+        window.isHidden = false
         
         print("✅ Window created and configured")
         print("   - Screen bounds: \(window.screen.bounds)")
@@ -390,12 +398,17 @@ class SlideshowManager {
             if window.isHidden {
                 print("⚠️ Window became hidden, making visible again")
                 window.isHidden = false
-                window.makeKeyAndVisible()
             }
+            
+            // Ensure window stays visible
+            window.isHidden = false
             
             // Re-display slide if needed
             if let slide = self.currentSlide, slideshowVC.view.window != nil {
                 print("🔄 Re-confirming slide display")
+                slideshowVC.displaySlide(slide)
+            } else if let slide = self.currentSlide {
+                print("⚠️ View not in window yet, forcing display")
                 slideshowVC.displaySlide(slide)
             }
             

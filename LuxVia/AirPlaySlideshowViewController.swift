@@ -43,9 +43,16 @@ class AirPlaySlideshowViewController: UIViewController {
         view.setNeedsDisplay()
         imageView.setNeedsDisplay()
         
+        // Ensure view is visible
+        view.isHidden = false
+        view.alpha = 1.0
+        
         // If there's already an image, make sure it's showing
         if let image = imageView.image {
             print("   - ✅ Image present: \(image.size)")
+            // Force redisplay of the image
+            imageView.setNeedsDisplay()
+            view.setNeedsDisplay()
         } else {
             print("   - ⚠️ No image currently displayed")
         }
@@ -79,6 +86,10 @@ class AirPlaySlideshowViewController: UIViewController {
     // MARK: - Display Slide
     func displaySlide(_ slide: SlideItem) {
         print("📺 AirPlaySlideshowViewController: Displaying slide \(slide.fileName)")
+        print("   - View is in window: \(view.window != nil)")
+        print("   - View is hidden: \(view.isHidden)")
+        print("   - View alpha: \(view.alpha)")
+        
         let fileURL = SlideshowManager.shared.getMediaURL(for: slide.fileName)
         
         // Verify file exists
@@ -88,6 +99,10 @@ class AirPlaySlideshowViewController: UIViewController {
         }
         
         print("✅ File exists, type: \(slide.type)")
+        
+        // Ensure view is visible before displaying content
+        view.isHidden = false
+        view.alpha = 1.0
         
         switch slide.type {
         case .image:
@@ -110,7 +125,9 @@ class AirPlaySlideshowViewController: UIViewController {
             print("   - View bounds: \(self.view.bounds)")
             print("   - ImageView frame before: \(imageView.frame)")
             
-            // Make sure imageView is visible and properly sized
+            // Make sure everything is visible
+            self.view.isHidden = false
+            self.view.alpha = 1.0
             imageView.isHidden = false
             imageView.alpha = 1.0
             imageView.backgroundColor = .black
@@ -123,33 +140,25 @@ class AirPlaySlideshowViewController: UIViewController {
             
             print("   - ImageView frame after layout: \(imageView.frame)")
             
-            // Set the image with animation
-            UIView.transition(with: imageView,
-                            duration: 0.5,
-                            options: .transitionCrossDissolve,
-                            animations: {
-                self.imageView.image = image
-                // Force another layout in case setting image changes things
-                self.imageView.setNeedsLayout()
-                self.imageView.layoutIfNeeded()
-            }, completion: { _ in
-                print("✅ Image display animation complete")
-                print("   - ImageView has image: \(self.imageView.image != nil)")
-                print("   - ImageView frame: \(self.imageView.frame)")
-                print("   - ImageView bounds: \(self.imageView.bounds)")
-                print("   - ImageView is hidden: \(self.imageView.isHidden)")
-                print("   - ImageView alpha: \(self.imageView.alpha)")
-                print("   - ImageView superview: \(self.imageView.superview != nil)")
-                print("   - View window: \(self.view.window != nil)")
-                
-                // Final layout update
-                self.view.setNeedsLayout()
-                self.view.layoutIfNeeded()
-                
-                // Force display update
-                self.view.setNeedsDisplay()
-                self.imageView.setNeedsDisplay()
-            })
+            // Set the image directly first (no animation for initial display)
+            self.imageView.image = image
+            
+            // Force display update immediately
+            self.imageView.setNeedsDisplay()
+            self.view.setNeedsDisplay()
+            
+            print("✅ Image set on imageView")
+            print("   - ImageView has image: \(self.imageView.image != nil)")
+            print("   - ImageView frame: \(self.imageView.frame)")
+            print("   - ImageView bounds: \(self.imageView.bounds)")
+            print("   - ImageView is hidden: \(self.imageView.isHidden)")
+            print("   - ImageView alpha: \(self.imageView.alpha)")
+            print("   - ImageView superview: \(self.imageView.superview != nil)")
+            print("   - View window: \(self.view.window != nil)")
+            
+            // Final layout update
+            self.view.setNeedsLayout()
+            self.view.layoutIfNeeded()
         } else {
             print("❌ Failed to load image from: \(url.path)")
             print("❌ File exists: \(FileManager.default.fileExists(atPath: url.path))")
