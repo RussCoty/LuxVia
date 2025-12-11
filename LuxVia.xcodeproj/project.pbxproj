@@ -92,6 +92,7 @@
 		10SS0003111111111111111 /* SlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0008111111111111111 /* SlideshowViewController.swift */; };
 		10SS0004111111111111111 /* AirPlaySlideshowViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */; };
 		10SS0005111111111111111 /* SlideshowSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10SS0010111111111111111 /* SlideshowSettingsViewController.swift */; };
+		10ED0001111111111111111 /* ExternalDisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10ED0002111111111111111 /* ExternalDisplayManager.swift */; };
 		10IM0001111111111111111 /* ImageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10IM0003111111111111111 /* ImageManager.swift */; };
 		10IM0002111111111111111 /* ImageManagerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10IM0004111111111111111 /* ImageManagerViewController.swift */; };
 		1084FAAD2DC8EC09009398EB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1084FAAC2DC8EC09009398EB /* Assets.xcassets */; };
@@ -212,6 +213,7 @@
 		10SS0008111111111111111 /* SlideshowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowViewController.swift; sourceTree = "<group>"; };
 		10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AirPlaySlideshowViewController.swift; sourceTree = "<group>"; };
 		10SS0010111111111111111 /* SlideshowSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlideshowSettingsViewController.swift; sourceTree = "<group>"; };
+		10ED0002111111111111111 /* ExternalDisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExternalDisplayManager.swift; sourceTree = "<group>"; };
 		10IM0003111111111111111 /* ImageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManager.swift; sourceTree = "<group>"; };
 		10IM0004111111111111111 /* ImageManagerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageManagerViewController.swift; sourceTree = "<group>"; };
 		1084FAA72DC8EC06009398EB /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -466,6 +468,7 @@
 			10SS0008111111111111111 /* SlideshowViewController.swift */,
 			10SS0009111111111111111 /* AirPlaySlideshowViewController.swift */,
 			10SS0010111111111111111 /* SlideshowSettingsViewController.swift */,
+			10ED0002111111111111111 /* ExternalDisplayManager.swift */,
 			107E0D222E44FB3E0061A409 /* TextRenderingUtility.swift */,
 			105FC7322DD9048A00C93490 /* TopBarView.swift */,
 			108DB36B2DF8DE6F00DEB58C /* TopHeaderView.swift */,
@@ -658,6 +661,7 @@
 				10SS0003111111111111111 /* SlideshowViewController.swift in Sources */,
 				10SS0004111111111111111 /* AirPlaySlideshowViewController.swift in Sources */,
 				10SS0005111111111111111 /* SlideshowSettingsViewController.swift in Sources */,
+				10ED0001111111111111111 /* ExternalDisplayManager.swift in Sources */,
 				10IM0001111111111111111 /* ImageManager.swift in Sources */,
 				10IM0002111111111111111 /* ImageManagerViewController.swift in Sources */,
 				10903B262E0324E700397384 /* MiniPlayerContainerViewController.swift in Sources */,
