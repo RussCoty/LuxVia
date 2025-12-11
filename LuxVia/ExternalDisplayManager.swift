@@ -136,7 +136,7 @@ final class ExternalDisplayManager {
             userActivity: nil,
             options: sceneSessionOptions
         ) { error in
-            if let error {
+            if let error = error {
                 print("⚠️ Error activating scene for external display: \(error.localizedDescription)")
             }
         }
