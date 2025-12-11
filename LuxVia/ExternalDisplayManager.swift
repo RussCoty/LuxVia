@@ -77,9 +77,14 @@ final class ExternalDisplayManager {
     @objc private func screenDidConnect(_ notification: Notification) {
         guard let screen = notification.object as? UIScreen else { return }
         
-        print("🖥️ ExternalDisplayManager: Screen connected")
+        // Only handle external screens, not the main screen
+        guard screen != UIScreen.main else {
+            print("🖥️ ExternalDisplayManager: Ignoring main screen connection")
+            return
+        }
+        
+        print("🖥️ ExternalDisplayManager: External screen connected")
         print("   - Screen bounds: \(screen.bounds)")
-        print("   - Is main screen: \(screen == UIScreen.main)")
         
         // Small delay to ensure screen is ready
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.screenReadyDelay) { [weak self] in
@@ -103,7 +108,13 @@ final class ExternalDisplayManager {
     // MARK: - Display Window Management
     
     private func setupDisplayWindow(on screen: UIScreen) {
-        print("🖥️ ExternalDisplayManager: Setting up display window")
+        // Double-check we're not setting up on the main screen
+        guard screen != UIScreen.main else {
+            print("⚠️ ExternalDisplayManager: Attempted to setup on main screen - aborting")
+            return
+        }
+        
+        print("🖥️ ExternalDisplayManager: Setting up display window on external screen")
         print("   - Screen bounds: \(screen.bounds)")
         
         // Clean up any existing window
@@ -134,9 +145,9 @@ final class ExternalDisplayManager {
         externalWindow = window
         slideshowViewController = slideshowVC
         
-        // Make window visible - critical for external displays
+        // Make window visible on external screen
+        // Important: We show the window but DON'T make it key to avoid stealing focus from main window
         window.isHidden = false
-        window.makeKey()
         
         // Force layout and redraw
         window.setNeedsLayout()
