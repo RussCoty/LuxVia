@@ -127,9 +127,45 @@ final class ExternalDisplayManager {
         // Clean up any existing window
         teardownExternalDisplay()
         
-        // Create window for the external display
-        let window = UIWindow(frame: screen.bounds)
-        window.screen = screen
+        // Request a new UIWindowScene for the external display
+        let sceneSessionOptions = UIWindowScene.ActivationRequestOptions()
+        sceneSessionOptions.requestingScene = nil
+        
+        // Create activation configuration for external display
+        let configuration = UIWindowScene.ActivationConfiguration(userActivity: nil)
+        
+        UIApplication.shared.requestSceneSessionActivation(
+            nil,
+            userActivity: nil,
+            options: sceneSessionOptions
+        ) { error in
+            if let error = error {
+                print("⚠️ Error activating scene for external display: \(error.localizedDescription)")
+            }
+        }
+        
+        // Find or wait for the external window scene
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+            self?.setupWindowWithScene(for: screen)
+        }
+    }
+    
+    private func setupWindowWithScene(for screen: UIScreen) {
+        // Find the window scene for the external screen
+        guard let windowScene = UIApplication.shared.connectedScenes
+            .compactMap({ $0 as? UIWindowScene })
+            .first(where: { $0.screen == screen }) else {
+            print("⚠️ ExternalDisplayManager: No window scene found for external screen")
+            // Fallback to old method for compatibility
+            setupWindowLegacy(on: screen)
+            return
+        }
+        
+        print("🖥️ ExternalDisplayManager: Found window scene for external screen")
+        
+        // Create window for the external display using the scene
+        let window = UIWindow(windowScene: windowScene)
+        window.frame = screen.bounds
         window.backgroundColor = .black
         window.windowLevel = UIWindow.Level.normal + 1
         window.isOpaque = true
@@ -161,10 +197,59 @@ final class ExternalDisplayManager {
         window.layoutIfNeeded()
         window.setNeedsDisplay()
         
-        print("✅ ExternalDisplayManager: Window created and configured")
+        print("✅ ExternalDisplayManager: Window created and configured with UIWindowScene")
         print("   - Window frame: \(window.frame)")
         print("   - Window isHidden: \(window.isHidden)")
         print("   - Window isKeyWindow: \(window.isKeyWindow)")
+        
+        // Display current slide if available
+        if let slide = slideshowModel?.getCurrentSlide() {
+            print("🖼️ Displaying current slide on setup: \(slide.fileName)")
+            slideshowVC.displaySlide(slide)
+        } else {
+            print("ℹ️ No current slide available on setup (waiting for slideshow to start)")
+        }
+    }
+    
+    private func setupWindowLegacy(on screen: UIScreen) {
+        print("🖥️ ExternalDisplayManager: Using legacy window setup (pre-iOS 13)")
+        
+        // Create window for the external display using legacy API
+        let window = UIWindow(frame: screen.bounds)
+        window.screen = screen
+        window.backgroundColor = .black
+        window.windowLevel = UIWindow.Level.normal + 1
+        window.isOpaque = true
+        
+        // Create slideshow view controller
+        let slideshowVC = AirPlaySlideshowViewController()
+        window.rootViewController = slideshowVC
+        
+        // Force view to load and layout
+        slideshowVC.loadViewIfNeeded()
+        slideshowVC.view.frame = window.bounds
+        slideshowVC.view.setNeedsLayout()
+        slideshowVC.view.layoutIfNeeded()
+        
+        // Ensure visibility
+        slideshowVC.view.isHidden = false
+        slideshowVC.view.alpha = 1.0
+        
+        // Store references
+        externalWindow = window
+        slideshowViewController = slideshowVC
+        
+        // Make window visible on external screen
+        window.isHidden = false
+        
+        // Force layout and redraw
+        window.setNeedsLayout()
+        window.layoutIfNeeded()
+        window.setNeedsDisplay()
+        
+        print("✅ ExternalDisplayManager: Window created with legacy API")
+        print("   - Window frame: \(window.frame)")
+        print("   - Window isHidden: \(window.isHidden)")
         
         // Display current slide if available
         if let slide = slideshowModel?.getCurrentSlide() {
