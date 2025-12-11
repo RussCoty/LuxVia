@@ -131,15 +131,12 @@ final class ExternalDisplayManager {
         let sceneSessionOptions = UIWindowScene.ActivationRequestOptions()
         sceneSessionOptions.requestingScene = nil
         
-        // Create activation configuration for external display
-        let configuration = UIWindowScene.ActivationConfiguration(userActivity: nil)
-        
         UIApplication.shared.requestSceneSessionActivation(
             nil,
             userActivity: nil,
             options: sceneSessionOptions
         ) { error in
-            if let error = error {
+            if let error {
                 print("⚠️ Error activating scene for external display: \(error.localizedDescription)")
             }
         }
@@ -216,6 +213,11 @@ final class ExternalDisplayManager {
         
         // Create window for the external display using legacy API
         let window = UIWindow(frame: screen.bounds)
+        // Note: window.screen is deprecated in iOS 13+, but we keep it for legacy support
+        if #available(iOS 13.0, *) {
+            // For iOS 13+, this is a fallback when UIWindowScene is not available
+            // The deprecation warning is acceptable here as this is the legacy path
+        }
         window.screen = screen
         window.backgroundColor = .black
         window.windowLevel = UIWindow.Level.normal + 1
