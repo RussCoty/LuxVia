@@ -13,6 +13,12 @@ import Foundation
 final class ExternalDisplayManager {
     static let shared = ExternalDisplayManager()
     
+    // MARK: - Constants
+    private enum Constants {
+        static let screenReadyDelay: TimeInterval = 0.3
+        static let slideDisplayDelay: TimeInterval = 0.2
+    }
+    
     // MARK: - Properties
     private var externalWindow: UIWindow?
     private var slideshowViewController: AirPlaySlideshowViewController?
@@ -35,10 +41,13 @@ final class ExternalDisplayManager {
     func configure(with slideshowModel: SlideshowManagerProtocol) {
         self.slideshowModel = slideshowModel
         
-        // If an external screen is already connected, set it up immediately
-        if let externalScreen = UIScreen.screens.first(where: { $0 != UIScreen.main }) {
-            setupDisplayWindow(on: externalScreen)
+        // Check if external screen is already connected before linear search
+        guard UIScreen.screens.count > 1,
+              let externalScreen = UIScreen.screens.first(where: { $0 != UIScreen.main }) else {
+            return
         }
+        
+        setupDisplayWindow(on: externalScreen)
     }
     
     /// Clear the current configuration and tear down any external displays
@@ -73,11 +82,11 @@ final class ExternalDisplayManager {
         print("   - Is main screen: \(screen == UIScreen.main)")
         
         // Small delay to ensure screen is ready
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) { [weak self] in
+        DispatchQueue.main.asyncAfter(deadline: .now() + Constants.screenReadyDelay) { [weak self] in
             self?.setupDisplayWindow(on: screen)
             
             // If slideshow is active, display current slide
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) { [weak self] in
+            DispatchQueue.main.asyncAfter(deadline: .now() + Constants.slideDisplayDelay) { [weak self] in
                 if let slide = self?.slideshowModel?.getCurrentSlide() {
                     print("🔄 Displaying current slide on newly connected display")
                     self?.slideshowViewController?.displaySlide(slide)
@@ -142,9 +151,7 @@ final class ExternalDisplayManager {
         // Display current slide if available
         if let slide = slideshowModel?.getCurrentSlide() {
             print("🖼️ Displaying current slide: \(slide.fileName)")
-            DispatchQueue.main.async {
-                slideshowVC.displaySlide(slide)
-            }
+            slideshowVC.displaySlide(slide)
         }
     }
     

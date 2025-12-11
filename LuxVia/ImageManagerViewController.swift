@@ -13,6 +13,13 @@ import MediaPlayer
 
 class ImageManagerViewController: BaseViewController {
     
+    // MARK: - Constants
+    private enum LayoutConstants {
+        static let airplayControlsContainerHeight: CGFloat = 360
+        static let previewImageWidth: CGFloat = 160
+        static let previewImageHeight: CGFloat = 120
+    }
+    
     // MARK: - UI Components
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let segmentedControl = UISegmentedControl(items: ["By Playlist", "All Media"])
@@ -231,6 +238,9 @@ class ImageManagerViewController: BaseViewController {
         previewImageView.layer.borderColor = UIColor.systemBlue.cgColor
         previewImageView.clipsToBounds = true
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        previewImageView.isAccessibilityElement = true
+        previewImageView.accessibilityLabel = "Slideshow Preview Monitor"
+        previewImageView.accessibilityHint = "Shows a preview of the current slide being displayed on the external screen"
         
         // Add a placeholder/empty state
         let placeholderLabel = UILabel()
@@ -294,6 +304,8 @@ class ImageManagerViewController: BaseViewController {
         instructionLabel.textColor = .secondaryLabel
         instructionLabel.numberOfLines = 0
         instructionLabel.translatesAutoresizingMaskIntoConstraints = false
+        instructionLabel.accessibilityLabel = "Screen Mirroring Setup Instructions"
+        instructionLabel.accessibilityHint = "Follow these steps to display the slideshow on your TV or projector"
         airplayControlsContainer.addSubview(instructionLabel)
         
         // Official Apple AVRoutePickerView - THE primary AirPlay button for VIDEO
@@ -362,13 +374,13 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 360), // Increased height for instructions
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: LayoutConstants.airplayControlsContainerHeight),
             
             // Preview at top - LARGER for better visibility
             previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
             previewImageView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
-            previewImageView.widthAnchor.constraint(equalToConstant: 160),
-            previewImageView.heightAnchor.constraint(equalToConstant: 120),
+            previewImageView.widthAnchor.constraint(equalToConstant: LayoutConstants.previewImageWidth),
+            previewImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.previewImageHeight),
             
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
