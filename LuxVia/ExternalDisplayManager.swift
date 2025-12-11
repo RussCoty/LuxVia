@@ -75,7 +75,10 @@ final class ExternalDisplayManager {
     }
     
     @objc private func screenDidConnect(_ notification: Notification) {
-        guard let screen = notification.object as? UIScreen else { return }
+        guard let screen = notification.object as? UIScreen else {
+            print("⚠️ ExternalDisplayManager: screenDidConnect called but no screen in notification")
+            return
+        }
         
         // Only handle external screens, not the main screen
         guard screen != UIScreen.main else {
@@ -85,9 +88,11 @@ final class ExternalDisplayManager {
         
         print("🖥️ ExternalDisplayManager: External screen connected")
         print("   - Screen bounds: \(screen.bounds)")
+        print("   - slideshowModel configured: \(slideshowModel != nil)")
         
         // Small delay to ensure screen is ready
         DispatchQueue.main.asyncAfter(deadline: .now() + Constants.screenReadyDelay) { [weak self] in
+            print("🖥️ ExternalDisplayManager: Calling setupDisplayWindow after delay...")
             self?.setupDisplayWindow(on: screen)
             
             // If slideshow is active, display current slide
@@ -95,6 +100,8 @@ final class ExternalDisplayManager {
                 if let slide = self?.slideshowModel?.getCurrentSlide() {
                     print("🔄 Displaying current slide on newly connected display")
                     self?.slideshowViewController?.displaySlide(slide)
+                } else {
+                    print("ℹ️ No current slide to display (slideshow may not be started yet)")
                 }
             }
         }
@@ -161,8 +168,10 @@ final class ExternalDisplayManager {
         
         // Display current slide if available
         if let slide = slideshowModel?.getCurrentSlide() {
-            print("🖼️ Displaying current slide: \(slide.fileName)")
+            print("🖼️ Displaying current slide on setup: \(slide.fileName)")
             slideshowVC.displaySlide(slide)
+        } else {
+            print("ℹ️ No current slide available on setup (waiting for slideshow to start)")
         }
     }
     
