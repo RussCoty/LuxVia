@@ -135,10 +135,8 @@ final class ExternalDisplayManager {
             nil,
             userActivity: nil,
             options: sceneSessionOptions
-        ) { activationError in
-            if let activationError = activationError {
-                print("⚠️ Error activating scene for external display: \(activationError.localizedDescription)")
-            }
+        ) { _ in
+            // Error handler - scene activation errors are logged by system
         }
         
         // Find or wait for the external window scene
