@@ -198,6 +198,20 @@ class AirPlaySlideshowViewController: UIViewController {
         // Stop any existing video
         stopVideo()
         
+        // Configure audio session for video playback to allow independent audio routing
+        // Use .playback category with .mixWithOthers to avoid interfering with separate audio output
+        do {
+            try AVAudioSession.sharedInstance().setCategory(
+                .playback,
+                mode: .moviePlayback,
+                options: [.allowAirPlay, .allowBluetoothA2DP, .mixWithOthers]
+            )
+            try AVAudioSession.sharedInstance().setActive(true)
+            print("✅ Video audio session configured for independent routing")
+        } catch {
+            print("⚠️ Failed to configure video audio session: \(error)")
+        }
+        
         // Create player
         let player = AVPlayer(url: url)
         currentPlayer = player
