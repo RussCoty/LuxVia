@@ -199,7 +199,7 @@ class AirPlaySlideshowViewController: UIViewController {
         stopVideo()
         
         // Configure audio session for video playback to allow independent audio routing
-        // Use .ambient category with .mixWithOthers to avoid interfering with separate audio output
+        // Use .playback category with .mixWithOthers to avoid interfering with separate audio output
         do {
             try AVAudioSession.sharedInstance().setCategory(
                 .playback,

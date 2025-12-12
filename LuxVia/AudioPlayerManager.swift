@@ -67,7 +67,7 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
             player?.volume = volume
             player?.delegate = self
             player?.prepareToPlay()
-            //background play capabilities with independent audio routing
+            //Background play capabilities with independent audio routing.
             try? AVAudioSession.sharedInstance().setCategory(
                 .playback,
                 mode: .default,
