@@ -248,7 +248,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
                 
                 if let playlist = SlideshowManager.shared.getCurrentPlaylist() {
                     let index = SlideshowManager.shared.getCurrentSlideIndex()
-                    let airplayStatus = externalScreenConnected ? "📺 On AirPlay" : "⚠️ No Video"
+                    let airplayStatus = externalScreenConnected ? "📺 On TV" : "⚠️ Phone Only"
                     slideshowStatusLabel.text = "\(airplayStatus)\n\(playlist.name)\nSlide \(index + 1)/\(playlist.slides.count)"
                 }
             }
@@ -257,9 +257,9 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
             slideshowPreviewImageView.image = nil
             slideshowPreviewLabel.text = "Slideshow Monitor"
             if externalScreenConnected {
-                slideshowStatusLabel.text = "Ready ✓\nAirPlay video connected"
+                slideshowStatusLabel.text = "Ready ✓\nScreen Mirroring connected"
             } else {
-                slideshowStatusLabel.text = "Not playing\nEnable screen mirroring\non AirPlay device"
+                slideshowStatusLabel.text = "To show on TV:\nOpen Control Center → Screen Mirroring"
             }
             slideshowPreviewContainer.layer.borderColor = externalScreenConnected ? UIColor.systemGreen.cgColor : UIColor.systemGray4.cgColor
         }

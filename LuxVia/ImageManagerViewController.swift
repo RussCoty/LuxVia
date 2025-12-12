@@ -13,6 +13,13 @@ import MediaPlayer
 
 class ImageManagerViewController: BaseViewController {
     
+    // MARK: - Constants
+    private enum LayoutConstants {
+        static let airplayControlsContainerHeight: CGFloat = 360
+        static let previewImageWidth: CGFloat = 160
+        static let previewImageHeight: CGFloat = 120
+    }
+    
     // MARK: - UI Components
     private let tableView = UITableView(frame: .zero, style: .insetGrouped)
     private let segmentedControl = UISegmentedControl(items: ["By Playlist", "All Media"])
@@ -231,6 +238,9 @@ class ImageManagerViewController: BaseViewController {
         previewImageView.layer.borderColor = UIColor.systemBlue.cgColor
         previewImageView.clipsToBounds = true
         previewImageView.translatesAutoresizingMaskIntoConstraints = false
+        previewImageView.isAccessibilityElement = true
+        previewImageView.accessibilityLabel = "Slideshow Preview Monitor"
+        previewImageView.accessibilityHint = "Shows a preview of the current slide being displayed on the external screen"
         
         // Add a placeholder/empty state
         let placeholderLabel = UILabel()
@@ -286,6 +296,18 @@ class ImageManagerViewController: BaseViewController {
         debugButton.translatesAutoresizingMaskIntoConstraints = false
         airplayControlsContainer.addSubview(debugButton)
         
+        // Screen Mirroring Instructions
+        let instructionLabel = UILabel()
+        instructionLabel.text = "To show slideshow on TV/Projector:\n1. Open Control Center (swipe down)\n2. Tap \"Screen Mirroring\"\n3. Select your AirPlay device\n4. Return here and tap ▶️ Start"
+        instructionLabel.textAlignment = .center
+        instructionLabel.font = .systemFont(ofSize: 12, weight: .medium)
+        instructionLabel.textColor = .secondaryLabel
+        instructionLabel.numberOfLines = 0
+        instructionLabel.translatesAutoresizingMaskIntoConstraints = false
+        instructionLabel.accessibilityLabel = "Screen Mirroring Setup Instructions"
+        instructionLabel.accessibilityHint = "Follow these steps to display the slideshow on your TV or projector"
+        airplayControlsContainer.addSubview(instructionLabel)
+        
         // Official Apple AVRoutePickerView - THE primary AirPlay button for VIDEO
         let routePicker = AVRoutePickerView()
         routePicker.tintColor = .systemBlue
@@ -298,7 +320,7 @@ class ImageManagerViewController: BaseViewController {
         
         // Label below the video picker
         let airplayLabel = UILabel()
-        airplayLabel.text = "Connect Screen (Video)"
+        airplayLabel.text = "Quick AirPlay"
         airplayLabel.textAlignment = .center
         airplayLabel.font = .systemFont(ofSize: 11, weight: .medium)
         airplayLabel.textColor = .label
@@ -352,18 +374,23 @@ class ImageManagerViewController: BaseViewController {
             airplayControlsContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             airplayControlsContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
             airplayControlsContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -16),
-            airplayControlsContainer.heightAnchor.constraint(equalToConstant: 320), // Increased height for audio picker
+            airplayControlsContainer.heightAnchor.constraint(equalToConstant: LayoutConstants.airplayControlsContainerHeight),
             
             // Preview at top - LARGER for better visibility
             previewImageView.topAnchor.constraint(equalTo: airplayControlsContainer.topAnchor, constant: 8),
             previewImageView.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
-            previewImageView.widthAnchor.constraint(equalToConstant: 160),
-            previewImageView.heightAnchor.constraint(equalToConstant: 120),
+            previewImageView.widthAnchor.constraint(equalToConstant: LayoutConstants.previewImageWidth),
+            previewImageView.heightAnchor.constraint(equalToConstant: LayoutConstants.previewImageHeight),
             
             previewLabel.topAnchor.constraint(equalTo: previewImageView.bottomAnchor, constant: 2),
             previewLabel.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
-            debugButton.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 4),
+            // Screen Mirroring Instructions
+            instructionLabel.topAnchor.constraint(equalTo: previewLabel.bottomAnchor, constant: 8),
+            instructionLabel.leadingAnchor.constraint(equalTo: airplayControlsContainer.leadingAnchor, constant: 12),
+            instructionLabel.trailingAnchor.constraint(equalTo: airplayControlsContainer.trailingAnchor, constant: -12),
+            
+            debugButton.topAnchor.constraint(equalTo: instructionLabel.bottomAnchor, constant: 8),
             debugButton.centerXAnchor.constraint(equalTo: airplayControlsContainer.centerXAnchor),
             
             // Video AirPlay button (left side)
@@ -573,10 +600,17 @@ class ImageManagerViewController: BaseViewController {
             • Add new images/videos from your library
             • Create and organize playlists
             • Delete media you no longer need
-            • Tap a playlist header to start AirPlay slideshow
+            • Tap a playlist header to select it for slideshow
             
-            📺 VIDEO OUTPUT:
-            Use the blue button to connect video to TV/display
+            📺 TO DISPLAY ON TV/PROJECTOR:
+            
+            1. Open Control Center (swipe down from top-right)
+            2. Tap "Screen Mirroring" button
+            3. Select your AirPlay device (Apple TV, Smart TV, etc.)
+            4. Wait for connection to establish
+            5. Return to this app and tap ▶️ Start Slideshow
+            
+            The slideshow will appear on your TV while you see a mini preview here.
             
             🎵 AUDIO OUTPUT:
             Use the green button to choose separate audio device
@@ -684,7 +718,7 @@ class ImageManagerViewController: BaseViewController {
         guard let playlist = selectedPlaylistForAirPlay else {
             let alert = UIAlertController(
                 title: "No Playlist Selected",
-                message: "Please tap on a playlist header to select it for AirPlay display.",
+                message: "Please tap on a playlist header to select it for slideshow display.",
                 preferredStyle: .alert
             )
             alert.addAction(UIAlertAction(title: "OK", style: .default))
@@ -717,26 +751,30 @@ class ImageManagerViewController: BaseViewController {
                 message = """
                 AirPlay is connected but SCREEN MIRRORING is not enabled.
                 
-                Your TV appears to support audio only, or you need to:
+                To show slideshow on TV:
                 
-                1. Open Control Center (swipe down)
-                2. Tap "Screen Mirroring" (not AirPlay)
-                3. Select your TV
-                4. Wait 5-10 seconds
-                5. Return here and tap Play again
+                1. Open Control Center (swipe down from top-right)
+                2. Tap "Screen Mirroring" (NOT the AirPlay button)
+                3. Select your TV/display device
+                4. Wait 5-10 seconds for connection
+                5. Return here and tap ▶️ Start again
                 
-                Note: Some AirPlay devices don't support video/screen mirroring.
+                Note: Some AirPlay devices only support audio, not video.
+                Check your device supports AirPlay 2 screen mirroring.
                 """
             } else {
                 message = """
-                No AirPlay connection detected.
+                No Screen Mirroring connection detected.
                 
-                Steps to connect:
-                1. Tap the AirPlay button above
-                2. Select your TV/display device
-                3. Enable Screen Mirroring
-                4. Wait for connection to establish
-                5. Try playing again
+                To show slideshow on TV or Projector:
+                
+                1. Open Control Center (swipe down from top-right)
+                2. Tap "Screen Mirroring"
+                3. Select your AirPlay device (Apple TV, Smart TV, etc.)
+                4. Wait for "Connected" status
+                5. Return to this app and tap ▶️ Start
+                
+                The slideshow will display on your TV while you see a mini preview here on your phone.
                 """
             }
             
@@ -750,7 +788,7 @@ class ImageManagerViewController: BaseViewController {
             return
         }
         
-        print("✅ AirPlay detected! Starting slideshow...")
+        print("✅ Screen Mirroring detected! Starting slideshow...")
         
         // Enable loop mode for continuous display
         var loopedPlaylist = playlist
