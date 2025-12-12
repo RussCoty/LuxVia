@@ -10,11 +10,17 @@ final class EulogyChatEngine: ObservableObject {
 
     private let generator: EulogyGenerator
     private let classifier: LuxSlotClassifier
+    private let llmService: LLMService
 
-    init(generator: EulogyGenerator = TemplateGenerator()) {
+    init(generator: EulogyGenerator = TemplateGenerator(), llmService: LLMService? = nil) {
         print("EulogyChatEngine initialized")
         self.generator = generator
         self.classifier = try! LuxSlotClassifier(configuration: MLModelConfiguration())
+        
+        // Try to get API key from UserDefaults, otherwise use mock service
+        let apiKey = UserDefaults.standard.string(forKey: "openai_api_key") ?? ""
+        self.llmService = llmService ?? (apiKey.isEmpty ? MockLLMService() : OpenAIService(apiKey: apiKey))
+        
         start()
     }
 
@@ -23,10 +29,9 @@ final class EulogyChatEngine: ObservableObject {
         messages = [
             .init(role: .assistant, text:
 """
-I'm here to help you compose a respectful, personal eulogy.
+I'm here to help you create a meaningful and personal eulogy. This is a space where we can talk naturally about your loved one.
 
-To begin, could you share the person's **full name** and **your relationship** to them?
-You can also tell me anything that feels important — personality, hobbies, a story you love — and I'll guide you gently.
+Please share whatever feels right to you - their name, who they were to you, what made them special, or any memories that come to mind. I'll listen and ask gentle questions along the way.
 """)
         ]
     }
@@ -43,43 +48,110 @@ You can also tell me anything that feels important — personality, hobbies, a s
         isThinking = true
         defer { isThinking = false }
 
+        // Extract information using ML classifier
         var label = "unknown"
-        var probs: [String: Double] = [:]
         do {
             let res = try classifier.prediction(text: text)
             label = res.label
             print("Classifier label: \(label)")
-            let probKeys = ["labelProbability", "labelProbabilities", "classLabelProbs"]
-            outer: for key in probKeys {
-                if let fv = res.featureValue(for: key) {
-                    for (k, v) in fv.dictionaryValue {
-                        if let s = k as? String { probs[s] = v.doubleValue }
-                    }
-                    if !probs.isEmpty { break outer }
-                }
-            }
         } catch {
             // fall back
         }
 
+        // Apply heuristics and label to extract structured data
         applyHeuristics(from: text)
         applyLabel(label, with: text)
 
+        // If we have enough information, generate the draft
         if form.isReadyForDraft {
             do {
                 let draft = try await generator.generate(from: form)
                 messages.append(.init(role: .draft, text: draft))
                 messages.append(.init(role: .assistant, text:
 """
-Would you like any edits? I can adjust **tone** (\(EulogyTone.allCases.map{$0.rawValue}.joined(separator:", "))), **length** (\(EulogyLength.allCases.map{$0.rawValue}.joined(separator:", "))), add/remove **stories**, or include **religious/humanist** elements.
+I've created a draft eulogy based on what you've shared. Please take a moment to read through it.
+
+Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCases.map{$0.rawValue}.joined(separator:", "))), length (\(EulogyLength.allCases.map{$0.rawValue}.joined(separator:", "))), add or remove stories, or incorporate different elements.
 """))
             } catch {
-                messages.append(.init(role: .assistant, text: "I hit a snag generating the draft — please try again."))
+                messages.append(.init(role: .assistant, text: "I encountered an issue generating the draft. Could we try again?"))
             }
             return
         }
 
-        messages.append(.init(role: .assistant, text: nextQuestion()))
+        // Generate natural conversational response using LLM
+        do {
+            let response = try await generateLLMResponse()
+            messages.append(.init(role: .assistant, text: response))
+        } catch {
+            // Fallback to asking next question if LLM fails
+            messages.append(.init(role: .assistant, text: nextQuestion()))
+        }
+    }
+    
+    private func generateLLMResponse() async throws -> String {
+        // Build context for the LLM
+        var systemPrompt = """
+        You are a compassionate assistant helping someone create a eulogy. Your role is to:
+        - Have a natural, warm conversation
+        - Ask thoughtful follow-up questions
+        - Show empathy and understanding
+        - Gently guide them to share: name, relationship, personality traits, hobbies, meaningful stories, achievements, and any spiritual/humanist preferences
+        - Keep responses concise (2-3 sentences max)
+        - Never be pushy or mechanical
+        - Adapt your questions based on what they've already shared
+        
+        Information collected so far:
+        """
+        
+        if let name = form.subjectName {
+            systemPrompt += "\n- Name: \(name)"
+        }
+        if let rel = form.relationship {
+            systemPrompt += "\n- Relationship: \(rel)"
+        }
+        if !form.traits.isEmpty {
+            systemPrompt += "\n- Traits: \(form.traits.joined(separator: ", "))"
+        }
+        if !form.hobbies.isEmpty {
+            systemPrompt += "\n- Hobbies: \(form.hobbies.joined(separator: ", "))"
+        }
+        if !form.anecdotes.isEmpty {
+            systemPrompt += "\n- Stories shared: \(form.anecdotes.count)"
+        }
+        if !form.achievements.isEmpty {
+            systemPrompt += "\n- Achievements: \(form.achievements.joined(separator: ", "))"
+        }
+        if let beliefs = form.beliefsOrRituals {
+            systemPrompt += "\n- Beliefs/Rituals: \(beliefs)"
+        }
+        
+        systemPrompt += "\n\nStill need: "
+        var needed: [String] = []
+        if form.subjectName == nil { needed.append("name") }
+        if form.relationship == nil { needed.append("relationship") }
+        if form.traits.isEmpty { needed.append("personality traits") }
+        if form.hobbies.isEmpty { needed.append("hobbies/passions") }
+        if form.anecdotes.isEmpty { needed.append("at least one story") }
+        
+        systemPrompt += needed.isEmpty ? "nothing critical, can generate draft soon" : needed.joined(separator: ", ")
+        
+        // Convert chat history to LLM format
+        var llmMessages: [LLMMessage] = [
+            LLMMessage(role: "system", content: systemPrompt)
+        ]
+        
+        // Add recent conversation context (last 6 messages to keep context window manageable)
+        let recentMessages = messages.suffix(6)
+        for msg in recentMessages {
+            if msg.role == .user {
+                llmMessages.append(LLMMessage(role: "user", content: msg.text))
+            } else if msg.role == .assistant {
+                llmMessages.append(LLMMessage(role: "assistant", content: msg.text))
+            }
+        }
+        
+        return try await llmService.chat(messages: llmMessages)
     }
 
     private func applyLabel(_ label: String, with text: String) {
