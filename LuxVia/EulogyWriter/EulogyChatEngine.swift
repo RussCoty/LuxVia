@@ -17,8 +17,14 @@ final class EulogyChatEngine: ObservableObject {
         self.generator = generator
         self.classifier = try! LuxSlotClassifier(configuration: MLModelConfiguration())
         
-        // Try to get API key from UserDefaults, otherwise use mock service
-        let apiKey = UserDefaults.standard.string(forKey: "openai_api_key") ?? ""
+        // Try to get API key from Keychain (secure storage), otherwise use mock service
+        let apiKey: String = {
+            if let data = KeychainHelper.standard.read(service: "com.luxvia.eulogy", account: "openai_api_key"),
+               let key = String(data: data, encoding: .utf8) {
+                return key
+            }
+            return ""
+        }()
         self.llmService = llmService ?? (apiKey.isEmpty ? MockLLMService() : OpenAIService(apiKey: apiKey))
         
         start()
