@@ -11,7 +11,7 @@ Hello, I'm LuxVia's AI Eulogy Writer. I can help you craft a thoughtful, persona
 
 Your privacy matters: only what you enter is used. For sensitive details, you can use a local AI provider.
 """)
-            NavigationLink("Start Writing", destination: EulogyEntryPoint())
+            NavigationLink("Start Writing", destination: EulogyWriterView.make())
                 .buttonStyle(.borderedProminent)
         }
         .padding()

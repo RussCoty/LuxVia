@@ -58,7 +58,7 @@ struct EulogyWriterView: View {
                 TextEditor(text: $input)
                     .padding(8)
                     .frame(minHeight: 40, maxHeight: 120)
-                   // .scrollContentBackground(.hidden)
+                    // .scrollContentBackground(.hidden) // iOS 16+ only
                     .background(Color.clear)
                     .disableAutocorrection(false)
                     .textInputAutocapitalization(.sentences)
