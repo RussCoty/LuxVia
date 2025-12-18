@@ -18,7 +18,6 @@ class SlideshowManager {
     private var currentSlide: SlideItem? // Track current slide
     private var displayTimer: Timer?
     private var isPlaying: Bool = false
-    private var backgroundTaskIdentifier: UIBackgroundTaskIdentifier = .invalid
     
     // Notifications
     static let slideshowDidStart = Notification.Name("SlideshowDidStart")
@@ -71,30 +70,19 @@ class SlideshowManager {
         
         print("📱 App entering background - maintaining slideshow on external display")
         
-        // Request extended background execution time
-        backgroundTaskIdentifier = UIApplication.shared.beginBackgroundTask { [weak self] in
-            print("⚠️ Background task expiring")
-            self?.endBackgroundTask()
-        }
+        // NOTE: We no longer use beginBackgroundTask because the silent audio player
+        // in AirPlaySlideshowViewController keeps the app alive using the 'audio' background mode.
+        // This allows unlimited background execution time, similar to YouTube and Prime Video.
         
-        print("✅ Background task started - slideshow will continue")
-        print("💡 External display (AirPlay) continues independently")
+        print("✅ Slideshow will continue on external display")
+        print("💡 Background audio keeps app active for slideshow playback")
     }
     
     @objc private func appWillEnterForeground() {
         print("📱 App returning to foreground")
-        endBackgroundTask()
         
         if isPlaying {
             print("✅ Slideshow still active - continuing playback")
-        }
-    }
-    
-    private func endBackgroundTask() {
-        if backgroundTaskIdentifier != .invalid {
-            UIApplication.shared.endBackgroundTask(backgroundTaskIdentifier)
-            backgroundTaskIdentifier = .invalid
-            print("🛑 Background task ended")
         }
     }
     
@@ -202,9 +190,6 @@ class SlideshowManager {
         currentPlaylist = nil
         currentSlideIndex = 0
         currentSlide = nil
-        
-        // End background task if running
-        endBackgroundTask()
         
         // Reset external display manager
         ExternalDisplayManager.shared.reset()
