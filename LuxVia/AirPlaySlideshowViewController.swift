@@ -18,8 +18,6 @@ class AirPlaySlideshowViewController: UIViewController {
     private var currentPlayer: AVPlayer?
     
     // MARK: - Background Audio Support
-    private var backgroundAudioPlayer: AVPlayer?
-    private var audioPlayerLooper: AVPlayerLooper?
     private var audioEngine: AVAudioEngine?
     private var playerNode: AVAudioPlayerNode?
     
@@ -109,7 +107,8 @@ class AirPlaySlideshowViewController: UIViewController {
         // Configure audio session to allow background playback
         do {
             let audioSession = AVAudioSession.sharedInstance()
-            try audioSession.setCategory(.playback, mode: .default, options: [.mixWithOthers])
+            // Use .playback category without mixing to ensure background execution
+            try audioSession.setCategory(.playback, mode: .default)
             try audioSession.setActive(true)
             print("✅ Audio session configured for background playback")
         } catch {
@@ -163,10 +162,7 @@ class AirPlaySlideshowViewController: UIViewController {
     
     private func scheduleBuffer(_ buffer: AVAudioPCMBuffer) {
         guard let player = playerNode else { return }
-        
-        player.scheduleBuffer(buffer, at: nil, options: .loops) { 
-            // Buffer completed callback - not needed for looped playback
-        }
+        player.scheduleBuffer(buffer, at: nil, options: .loops)
     }
     
     private func stopBackgroundAudio() {
@@ -174,8 +170,6 @@ class AirPlaySlideshowViewController: UIViewController {
         audioEngine?.stop()
         playerNode = nil
         audioEngine = nil
-        backgroundAudioPlayer = nil
-        audioPlayerLooper = nil
         print("🛑 Background audio stopped")
         
         // Deactivate audio session
@@ -184,11 +178,6 @@ class AirPlaySlideshowViewController: UIViewController {
         } catch {
             print("⚠️ Failed to deactivate audio session: \(error)")
         }
-    }
-    
-    private func generateSilentAudioFile() -> URL? {
-        // This method is no longer needed with AVAudioEngine approach
-        return nil
     }
     
     // MARK: - Display Slide
