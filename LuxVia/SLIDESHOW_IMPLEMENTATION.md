@@ -185,6 +185,8 @@ External Display (AirPlay):
 ✅ Manual navigation (previous/next)  
 ✅ AirPlay external display support  
 ✅ Background operation (app remains usable)  
+✅ Continuous playback when app is backgrounded (like YouTube/Prime Video)
+✅ Silent audio player to maintain background execution
 ✅ Thumbnail generation  
 ✅ Drag-to-reorder slides  
 ✅ Delete slides  
@@ -208,6 +210,24 @@ External Display (AirPlay):
 - Removal of observers in deinit
 - Efficient thumbnail generation (on-demand)
 - File-based storage (not all in memory)
+- Silent audio engine cleanup when slideshow stops
+
+## Background Execution Strategy
+
+The slideshow uses iOS's audio background mode to maintain execution when the app is sent to the background:
+
+1. **Audio Session Configuration**: Sets up AVAudioSession with `.playback` category
+2. **Silent Audio Player**: Uses AVAudioEngine with AVAudioPlayerNode playing a looping silent buffer
+3. **Zero Volume**: Ensures complete silence while keeping the app active
+4. **Independent External Display**: The external window continues to operate independently
+5. **Like YouTube/Prime Video**: Similar approach to popular video apps for background playback
+
+This allows the slideshow to continue playing on AirPlay/external displays even when:
+- The app is sent to the background
+- The user switches to other apps
+- The iPhone is locked (screen off)
+
+The external display window remains active and continues showing the slideshow content.
 
 ## Error Handling
 

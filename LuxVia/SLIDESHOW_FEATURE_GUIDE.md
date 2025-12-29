@@ -118,6 +118,9 @@ The LuxVia app now includes a powerful AirPlay slideshow feature that allows you
 - The slideshow runs on a separate window from the main app
 - You can use other features of LuxVia while the slideshow plays
 - Slideshow continues even when switching tabs
+- **NEW: Slideshow continues playing on the external display even when the app is sent to the background**
+- Uses silent audio playback to keep the app active in the background, similar to YouTube and Prime Video
+- The external display remains active independently, showing your slideshow continuously
 
 ### Performance Tips
 - Large video files may take time to load
