@@ -17,12 +17,17 @@ class AirPlaySlideshowViewController: UIViewController {
     private var playerViewController: AVPlayerViewController?
     private var currentPlayer: AVPlayer?
     
+    // MARK: - Background Audio Support
+    private var audioEngine: AVAudioEngine?
+    private var playerNode: AVAudioPlayerNode?
+    
     // MARK: - Lifecycle
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = .black
         setupImageView()
+        setupBackgroundAudio()
         
         print("📺 AirPlaySlideshowViewController viewDidLoad")
         print("   - View bounds: \(view.bounds)")
@@ -96,6 +101,83 @@ class AirPlaySlideshowViewController: UIViewController {
             imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
+    }
+    
+    private func setupBackgroundAudio() {
+        // Configure audio session to allow background playback
+        do {
+            let audioSession = AVAudioSession.sharedInstance()
+            // Use .playback category without mixing to ensure background execution
+            try audioSession.setCategory(.playback, mode: .default)
+            try audioSession.setActive(true)
+            print("✅ Audio session configured for background playback")
+        } catch {
+            print("❌ Failed to configure audio session: \(error)")
+        }
+        
+        // Create a silent audio player to keep app alive in background
+        // We'll use an AVAudioPlayerNode with AVAudioEngine for simplicity
+        startSilentAudioEngine()
+    }
+    
+    private func startSilentAudioEngine() {
+        audioEngine = AVAudioEngine()
+        playerNode = AVAudioPlayerNode()
+        
+        guard let engine = audioEngine, let player = playerNode else { return }
+        
+        engine.attach(player)
+        
+        let format = AVAudioFormat(standardFormatWithSampleRate: 44100, channels: 1)!
+        engine.connect(player, to: engine.mainMixerNode, format: format)
+        
+        // Create a silent buffer (1 second of silence)
+        let sampleRate = 44100.0
+        let bufferSize = AVAudioFrameCount(sampleRate)
+        guard let buffer = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: bufferSize) else {
+            print("❌ Failed to create audio buffer")
+            return
+        }
+        buffer.frameLength = bufferSize
+        
+        // Fill with silence (zeros) - this is already the default
+        if let data = buffer.floatChannelData?[0] {
+            for i in 0..<Int(bufferSize) {
+                data[i] = 0.0
+            }
+        }
+        
+        do {
+            try engine.start()
+            
+            // Schedule buffer in a loop
+            player.play()
+            scheduleBuffer(buffer)
+            
+            print("✅ Silent audio engine started for background playback")
+        } catch {
+            print("❌ Failed to start audio engine: \(error)")
+        }
+    }
+    
+    private func scheduleBuffer(_ buffer: AVAudioPCMBuffer) {
+        guard let player = playerNode else { return }
+        player.scheduleBuffer(buffer, at: nil, options: .loops)
+    }
+    
+    private func stopBackgroundAudio() {
+        playerNode?.stop()
+        audioEngine?.stop()
+        playerNode = nil
+        audioEngine = nil
+        print("🛑 Background audio stopped")
+        
+        // Deactivate audio session
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("⚠️ Failed to deactivate audio session: \(error)")
+        }
     }
     
     // MARK: - Display Slide
@@ -258,6 +340,7 @@ class AirPlaySlideshowViewController: UIViewController {
     
     deinit {
         stopVideo()
+        stopBackgroundAudio()
         NotificationCenter.default.removeObserver(self)
     }
 }
