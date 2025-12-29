@@ -9,9 +9,16 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
         super.init()
 
         do {
-            try AVAudioSession.sharedInstance().setCategory(.playback, mode: .default, options: [])
+            // Configure audio session to allow independent routing
+            // .allowAirPlay enables audio to route to AirPlay devices separately from video
+            // .allowBluetoothA2DP enables Bluetooth audio devices
+            try AVAudioSession.sharedInstance().setCategory(
+                .playback,
+                mode: .default,
+                options: [.allowAirPlay, .allowBluetoothA2DP]
+            )
             try AVAudioSession.sharedInstance().setActive(true)
-            print("✅ AVAudioSession set for background & silent switch playback")
+            print("✅ AVAudioSession set for background & silent switch playback with independent audio routing")
         } catch {
             print("❌ Failed to set AVAudioSession:", error)
         }
@@ -60,8 +67,12 @@ class AudioPlayerManager: NSObject, AVAudioPlayerDelegate {
             player?.volume = volume
             player?.delegate = self
             player?.prepareToPlay()
-            //background play capabilities
-            try? AVAudioSession.sharedInstance().setCategory(.playback, mode: .default)
+            //Background play capabilities with independent audio routing.
+            try? AVAudioSession.sharedInstance().setCategory(
+                .playback,
+                mode: .default,
+                options: [.allowAirPlay, .allowBluetoothA2DP]
+            )
             try? AVAudioSession.sharedInstance().setActive(true)
 
             player?.play()
