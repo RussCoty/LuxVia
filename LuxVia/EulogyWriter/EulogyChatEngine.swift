@@ -123,7 +123,10 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
             systemPrompt += "\n- Hobbies: \(form.hobbies.joined(separator: ", "))"
         }
         if !form.anecdotes.isEmpty {
-            systemPrompt += "\n- Stories shared: \(form.anecdotes.count)"
+            systemPrompt += "\n- Stories shared (\(form.anecdotes.count)):\n"
+            for (index, anecdote) in form.anecdotes.enumerated() {
+                systemPrompt += "  \(index + 1). \(anecdote)\n"
+            }
         }
         if !form.achievements.isEmpty {
             systemPrompt += "\n- Achievements: \(form.achievements.joined(separator: ", "))"

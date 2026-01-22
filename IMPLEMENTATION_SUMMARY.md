@@ -1,11 +1,31 @@
 # AI Chat Improvement - Implementation Summary
 
-## Issue Addressed
-The AI chat needed to feel more natural and human-like, moving away from rigid sequential questions to a conversational LLM-driven experience.
+## Issues Addressed
+1. **Original Issue**: The AI chat needed to feel more natural and human-like, moving away from rigid sequential questions to a conversational LLM-driven experience.
+2. **Current Issue**: The MockLLMService was using pre-written questions and not utilizing the context/information already collected, leading to repetitive questions.
 
 ## Changes Implemented
 
-### 1. New File: `LLMService.swift`
+### Latest Updates (Context-Aware MockLLMService)
+
+#### 1. Enhanced `MockLLMService` in `LLMService.swift`
+- **Now Reads System Context**: Extracts and parses the system prompt to understand what information has been collected
+- **Context-Aware Responses**: Detects which fields are already filled (name, relationship, traits, hobbies, stories, beliefs)
+- **Avoids Repetition**: Won't ask for information that's already been provided
+- **Intelligent Question Selection**: Uses the "Still need:" list from system prompt to guide next questions
+- **Multiple Response Paths**: Different responses based on which combination of information is available
+- **Helper Methods**:
+  - `extractStillNeeded()`: Parses the system prompt to find what information is still missing
+  - `containsCapitalizedWords()`: Detects potential names in user input
+
+#### 2. Updated `EulogyChatEngine.swift`
+- **Full Story Content in System Prompt**: Changed from showing just story count to including full text of all stories
+- This ensures the LLM (both OpenAI and Mock) can reference actual stories when generating responses
+- Format: Numbered list of stories for easy reference
+
+### Previous Updates (LLM Integration)
+
+#### 1. New File: `LLMService.swift`
 - **LLMService Protocol**: Abstraction for chat services
 - **OpenAIService**: Production implementation using GPT-4o-mini
   - Secure API integration with proper error handling
@@ -16,17 +36,18 @@ The AI chat needed to feel more natural and human-like, moving away from rigid s
   - Simulates natural conversation flow
   - Progressive information gathering
 
-### 2. Updated: `EulogyChatEngine.swift`
+#### 2. Updated: `EulogyChatEngine.swift`
 - **Conversational Initial Greeting**: Removed rigid opening questions
 - **LLM Integration**: Uses LLM for dynamic response generation
 - **Context Building**: Passes conversation history and form state to LLM
 - **Graceful Degradation**: Falls back to directed questions if LLM unavailable
 - **Secure API Key Storage**: Uses Keychain instead of UserDefaults
 
-### 3. Documentation: `CONVERSATION_FLOW_TEST.md`
+#### 3. Documentation: `CONVERSATION_FLOW_TEST.md`
 - Testing guidelines for the new conversational flow
 - Example conversation demonstrating natural interaction
 - Checklist for verifying human-like experience
+- Updated to reflect new context-aware MockLLMService behavior
 
 ## Key Features
 
@@ -35,16 +56,19 @@ The AI chat needed to feel more natural and human-like, moving away from rigid s
 - AI responds contextually to what's shared
 - Questions feel empathetic and conversational
 - No more form-filling experience
+- **NEW**: MockLLMService actually uses collected information to avoid asking redundant questions
 
 ### Smart Information Extraction
 - ML classifier still extracts structured data in background
 - Heuristics identify names, relationships, traits, hobbies, stories
 - Form is populated naturally as conversation progresses
+- **NEW**: Full story content is available to the LLM, not just the count
 
 ### Secure and Flexible
 - API keys stored securely in Keychain
 - Works with or without OpenAI API key
 - Mock service provides good UX for testing/development
+- **NEW**: Mock service now provides context-aware UX comparable to real LLM
 
 ## Code Quality Improvements
 - ✅ Eliminated force unwrapping of URLs

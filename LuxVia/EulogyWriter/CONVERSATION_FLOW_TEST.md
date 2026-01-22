@@ -59,12 +59,17 @@ like me to create a draft eulogy? I can make it warm and respectful of her Catho
 - [ ] User can request edits naturally after seeing draft
 
 ## Mock Service Testing
-The MockLLMService provides intelligent responses based on conversation state:
-- Early messages: Focus on getting to know the person
-- After name mentioned: Ask about relationship
-- After relationship: Ask about qualities/traits
-- After traits: Ask about hobbies/passions
-- After hobbies: Ask for stories
-- After stories: Ask about beliefs
+The MockLLMService now uses the system prompt context to provide intelligent responses:
+- **Context-Aware**: Reads the system prompt to understand what information has already been collected
+- **Avoids Repetition**: Won't ask for information that's already in the form (name, relationship, traits, hobbies, stories, beliefs)
+- **Natural Progression**: Guides conversation based on what's still needed
+- **Intelligent Fallback**: Uses "Still need:" list from system prompt to ask for missing information
+- **Actual Story Content**: The LLM receives the full text of stories shared, not just the count
 
-This creates a natural progression even without a real LLM API key.
+Key improvements:
+1. Parses system context to detect: hasName, hasRelationship, hasTraits, hasHobbies, hasStories, hasBeliefs
+2. Only asks for information that hasn't been provided yet
+3. Provides different responses depending on what combination of information is available
+4. Uses the "Still need:" section to intelligently guide the next question
+
+This creates a natural, context-aware conversation even without a real LLM API key.
