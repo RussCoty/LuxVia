@@ -167,7 +167,9 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         let lower = label.lowercased()
         switch true {
         case lower.contains("name"):
-            if form.subjectName == nil { form.subjectName = extractLikelyName(from: text) ?? text }
+            if form.subjectName == nil, let validName = extractValidName(from: text) {
+                form.subjectName = validName
+            }
         case lower.contains("relationship") || lower.contains("relation"):
             if form.relationship == nil { form.relationship = text }
             if form.pronouns == .they { inferPronouns(from: text) }
@@ -197,7 +199,7 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
 
     private func applyHeuristics(from text: String) {
         inferPronouns(from: text)
-        if form.subjectName == nil, let n = extractLikelyName(from: text) { form.subjectName = n }
+        if form.subjectName == nil, let n = extractValidName(from: text) { form.subjectName = n }
         if form.relationship == nil,
            text.range(of: "(mother|mum|mom|father|dad|grand|friend|partner|wife|husband|colleague)", options: [.regularExpression, .caseInsensitive]) != nil {
             form.relationship = text
@@ -210,13 +212,52 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         else if lower.contains(" he ") { form.pronouns = .he }
     }
 
-    private func extractLikelyName(from text: String) -> String? {
+    private func extractValidName(from text: String) -> String? {
+        // Common greetings and invalid inputs to filter out
+        let invalidInputs = [
+            "hi", "hello", "hey", "greetings", "good morning", "good afternoon", 
+            "good evening", "thanks", "thank you", "yes", "no", "okay", "ok",
+            "sure", "alright", "please", "help", "start", "begin"
+        ]
+        
+        let trimmedText = text.trimmingCharacters(in: .whitespacesAndNewlines)
+        let lowerText = trimmedText.lowercased()
+        
+        // Filter out common greetings and short inputs
+        if invalidInputs.contains(lowerText) || trimmedText.count < 2 {
+            return nil
+        }
+        
+        // Filter out single words that are too short to be a name (less than 2 characters)
+        if !trimmedText.contains(" ") && trimmedText.count < 2 {
+            return nil
+        }
+        
+        // Try to extract a proper name (capitalized words)
         let pattern = #"\b([A-Z][a-z]+(?:\s[A-Z][a-z]+)+)\b"#
         if let r = try? NSRegularExpression(pattern: pattern),
            let m = r.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
            let range = Range(m.range(at: 1), in: text) {
-            return String(text[range])
+            let extractedName = String(text[range])
+            // Validate the extracted name is not an invalid input
+            if !invalidInputs.contains(extractedName.lowercased()) {
+                return extractedName
+            }
         }
+        
+        // If no capitalized multi-word name found, check if it's a single capitalized word
+        // that's at least 2 characters and not in our invalid list
+        let singleWordPattern = #"\b([A-Z][a-z]{1,})\b"#
+        if let r = try? NSRegularExpression(pattern: singleWordPattern),
+           let m = r.firstMatch(in: text, range: NSRange(text.startIndex..., in: text)),
+           let range = Range(m.range(at: 1), in: text) {
+            let extractedName = String(text[range])
+            // Only accept if it's at least 2 characters and not an invalid input
+            if extractedName.count >= 2 && !invalidInputs.contains(extractedName.lowercased()) {
+                return extractedName
+            }
+        }
+        
         return nil
     }
 
