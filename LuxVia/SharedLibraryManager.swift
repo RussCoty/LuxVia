@@ -24,8 +24,7 @@ class SharedLibraryManager {
         // Try multiple possible bundle locations
         let possibleBundlePaths = [
             Bundle.main.resourceURL?.appendingPathComponent("Audio"),
-            Bundle.main.bundleURL.appendingPathComponent("Audio"),
-            URL(fileURLWithPath: Bundle.main.bundlePath).appendingPathComponent("Audio")
+            Bundle.main.bundleURL.appendingPathComponent("Audio")
         ].compactMap { $0 }
         
         for bundleURL in possibleBundlePaths {
