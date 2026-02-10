@@ -99,22 +99,10 @@ private struct MessageBubble: View {
                 }
                 // Add label for message source when it's an assistant message
                 if message.role == .assistant {
-                    HStack(spacing: 4) {
-                        if message.source == .aiGenerated {
-                            Circle()
-                                .fill(Color("AIGeneratedResponse"))
-                                .frame(width: 6, height: 6)
-                            Text("AI Generated")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        } else if message.source == .preWritten {
-                            Circle()
-                                .fill(Color("PreWrittenResponse"))
-                                .frame(width: 6, height: 6)
-                            Text("Template")
-                                .font(.caption2)
-                                .foregroundColor(.secondary)
-                        }
+                    if message.source == .aiGenerated {
+                        SourceIndicator(color: Color("AIGeneratedResponse"), label: "AI Generated")
+                    } else if message.source == .preWritten {
+                        SourceIndicator(color: Color("PreWrittenResponse"), label: "Template")
                     }
                 }
                 Text(message.text)
@@ -139,6 +127,22 @@ private struct MessageBubble: View {
             return Color("PreWrittenResponse")
         } else {
             return Color(.secondarySystemBackground)
+        }
+    }
+}
+
+private struct SourceIndicator: View {
+    let color: Color
+    let label: String
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(color)
+                .frame(width: 6, height: 6)
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
         }
     }
 }
