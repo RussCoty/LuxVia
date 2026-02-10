@@ -97,16 +97,48 @@ private struct MessageBubble: View {
                 if message.role == .draft {
                     Text("Draft eulogy").font(.caption).foregroundColor(.secondary)
                 }
+                // Add label for message source when it's an assistant message
+                if message.role == .assistant {
+                    HStack(spacing: 4) {
+                        if message.source == .aiGenerated {
+                            Circle()
+                                .fill(Color("AIGeneratedResponse"))
+                                .frame(width: 6, height: 6)
+                            Text("AI Generated")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        } else if message.source == .preWritten {
+                            Circle()
+                                .fill(Color("PreWrittenResponse"))
+                                .frame(width: 6, height: 6)
+                            Text("Template")
+                                .font(.caption2)
+                                .foregroundColor(.secondary)
+                        }
+                    }
+                }
                 Text(message.text)
                     .font(message.role == .draft ? .body : .callout)
                     .foregroundStyle(message.role == .user ? .white : .primary)
                     .padding(10)
                     .background(
                         RoundedRectangle(cornerRadius: 14)
-                            .fill(message.role == .user ? Color.accentColor : Color(.secondarySystemBackground))
+                            .fill(bubbleColor)
                     )
             }
             if message.role != .user { Spacer() }
+        }
+    }
+    
+    private var bubbleColor: Color {
+        if message.role == .user {
+            return Color.accentColor
+        } else if message.source == .aiGenerated {
+            return Color("AIGeneratedResponse")
+        } else if message.source == .preWritten {
+            return Color("PreWrittenResponse")
+        } else {
+            return Color(.secondarySystemBackground)
         }
     }
 }
