@@ -147,8 +147,7 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         systemPrompt += "\n\nStill need: "
         var needed: [String] = []
         if form.subjectName == nil { needed.append("name") }
-        if form.relationship == nil { 
-            needed.append("relationship (to the deceased)")
+        if form.relationship == nil { needed.append("relationship (to the deceased)")
         } else {
             // Explicitly indicate we HAVE the relationship so LLM doesn't ask again
             systemPrompt += "\n\n⚠️ IMPORTANT: Relationship already collected - DO NOT ask about it again."
@@ -275,9 +274,9 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         // 1. Higher priority family relationships (lower number = higher priority)
         // 2. Latest position (for "my mom's sister, my aunt" → pick "aunt")
         if let bestMatch = finalMatches.min(by: { m1, m2 in
-            // Lower priority number = higher importance
+            // Lower priority number = higher importance (1 beats 4)
             if m1.priority != m2.priority {
-                return m1.priority > m2.priority
+                return m1.priority < m2.priority
             }
             // Later position wins (pick the last/most specific relationship)
             return m1.position < m2.position
