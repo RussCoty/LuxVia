@@ -35,12 +35,10 @@ class SharedLibraryManager {
                 do {
                     let contents = try fileManager.contentsOfDirectory(atPath: bundleURL.path)
                     let targetFileName = name.lowercased()
-                    for file in contents {
-                        if file.lowercased() == targetFileName {
-                            let fullPath = bundleURL.appendingPathComponent(file)
-                            print("[DEBUG] [BUNDLE] ✅ Found case-insensitive match: \(fullPath.path)")
-                            return fullPath
-                        }
+                    if let matchedFile = contents.first(where: { $0.lowercased() == targetFileName }) {
+                        let fullPath = bundleURL.appendingPathComponent(matchedFile)
+                        print("[DEBUG] [BUNDLE] ✅ Found case-insensitive match: \(fullPath.path)")
+                        return fullPath
                     }
                     print("[DEBUG] [BUNDLE] ❌ Not found in bundle Audio folder. Searched for: \(name)")
                 } catch {
