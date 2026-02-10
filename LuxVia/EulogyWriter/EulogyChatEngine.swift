@@ -106,6 +106,9 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         - Keep responses concise (2-3 sentences max)
         - Never be pushy or mechanical
         - Adapt your questions based on what they've already shared
+        - If someone sends just a greeting (like "Hi", "Hello", etc.), warmly acknowledge it and guide them to share about their loved one
+        - Validate inputs: don't treat greetings or short casual messages as meaningful information
+        - When asking for a name, make it clear you need their full name, not just a greeting
         
         Information collected so far:
         """

@@ -85,6 +85,14 @@ final class MockLLMService: LLMService {
         messageCount: Int
     ) -> String {
         let lower = userMessage.lowercased()
+        let trimmed = userMessage.trimmingCharacters(in: .whitespacesAndNewlines)
+        
+        // Detect common greetings and handle them gracefully
+        let greetings = ["hi", "hello", "hey", "greetings", "good morning", "good afternoon", 
+                        "good evening", "thanks", "thank you"]
+        if greetings.contains(trimmed.lowercased()) {
+            return "Hello. I'm here to help you create a meaningful eulogy for your loved one. When you're ready, please share their name or tell me about them in your own words."
+        }
         
         // Parse what information we already have from the system context
         let hasName = systemContext.contains("Name:")
