@@ -16,42 +16,39 @@ class SharedLibraryManager {
 
 
     func urlForTrack(named name: String) -> URL? {
-    let ext = (name as NSString).pathExtension.lowercased()
-    let baseName = (name as NSString).deletingPathExtension
     print("[DEBUG] urlForTrack called with name: \(name)")
-    print("[DEBUG] Extension: \(ext), BaseName: \(baseName)")
 
-        // 1. Check bundle path
-        print("[DEBUG] [BUNDLE] Looking for resource: '\(baseName)' type: '\(ext)' in directory: 'Audio'")
-        if let path = Bundle.main.path(forResource: baseName, ofType: ext, inDirectory: "Audio") {
-            print("[DEBUG] [BUNDLE] ✅ Found in bundle: \(path)")
-            return URL(fileURLWithPath: path)
-        } else {
-            print("[DEBUG] [BUNDLE] ❌ Not found in bundle: \(baseName).\(ext)")
+        // 1. Check bundle Audio directory - use direct file enumeration for reliability
+        if let bundleURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
+            let fileManager = FileManager.default
+            print("[DEBUG] [BUNDLE] Checking Audio folder: \(bundleURL.path)")
             
-            // Fallback: Check if Audio directory exists and list its contents
-            if let bundleURL = Bundle.main.resourceURL?.appendingPathComponent("Audio") {
-                let fileManager = FileManager.default
-                print("[DEBUG] [BUNDLE] Audio folder exists: \(fileManager.fileExists(atPath: bundleURL.path))")
-                if fileManager.fileExists(atPath: bundleURL.path) {
-                    do {
-                        let contents = try fileManager.contentsOfDirectory(atPath: bundleURL.path)
-                        print("[DEBUG] [BUNDLE] Audio folder contents: \(contents)")
-                        
-                        // Try case-insensitive match
-                        let targetFileName = name.lowercased()
-                        for file in contents {
-                            if file.lowercased() == targetFileName {
-                                let fullPath = bundleURL.appendingPathComponent(file).path
-                                print("[DEBUG] [BUNDLE] ✅ Found case-insensitive match: \(fullPath)")
-                                return URL(fileURLWithPath: fullPath)
-                            }
-                        }
-                    } catch {
-                        print("[DEBUG] [BUNDLE] Error reading Audio folder: \(error)")
-                    }
+            if fileManager.fileExists(atPath: bundleURL.path) {
+                // First try exact match
+                let exactURL = bundleURL.appendingPathComponent(name)
+                if fileManager.fileExists(atPath: exactURL.path) {
+                    print("[DEBUG] [BUNDLE] ✅ Found exact match: \(exactURL.path)")
+                    return exactURL
                 }
+                
+                // Then try case-insensitive match
+                do {
+                    let contents = try fileManager.contentsOfDirectory(atPath: bundleURL.path)
+                    let targetFileName = name.lowercased()
+                    if let matchedFile = contents.first(where: { $0.lowercased() == targetFileName }) {
+                        let fullPath = bundleURL.appendingPathComponent(matchedFile)
+                        print("[DEBUG] [BUNDLE] ✅ Found case-insensitive match: \(fullPath.path)")
+                        return fullPath
+                    }
+                    print("[DEBUG] [BUNDLE] ❌ Not found in bundle Audio folder. Searched for: \(name)")
+                } catch {
+                    print("[DEBUG] [BUNDLE] Error reading Audio folder: \(error)")
+                }
+            } else {
+                print("[DEBUG] [BUNDLE] ❌ Audio folder does not exist at: \(bundleURL.path)")
             }
+        } else {
+            print("[DEBUG] [BUNDLE] ❌ Could not construct Audio folder URL")
         }
 
         // 2. Check imported files in Documents/audio/imported/
