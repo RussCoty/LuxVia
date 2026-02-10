@@ -54,6 +54,11 @@ Please share whatever feels right to you - their name, who they were to you, wha
         isThinking = true
         defer { isThinking = false }
 
+        // Apply keyword-based relationship detection FIRST (before classifier)
+        // This ensures we catch relationships even if classifier misses them
+        extractRelationshipFromKeywords(text)
+        print("📋 Form state after keyword extraction - relationship: \(form.relationship ?? "nil")")
+
         // Extract information using ML classifier
         var label = "unknown"
         do {
@@ -67,6 +72,7 @@ Please share whatever feels right to you - their name, who they were to you, wha
         // Apply heuristics and label to extract structured data
         applyHeuristics(from: text)
         applyLabel(label, with: text)
+        print("📋 Final form state - name: \(form.subjectName ?? "nil"), relationship: \(form.relationship ?? "nil"), pronouns: \(form.pronouns.rawValue)")
 
         // If we have enough information, generate the draft
         if form.isReadyForDraft {
@@ -141,7 +147,11 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         systemPrompt += "\n\nStill need: "
         var needed: [String] = []
         if form.subjectName == nil { needed.append("name") }
-        if form.relationship == nil { needed.append("relationship") }
+        if form.relationship == nil { needed.append("relationship (to the deceased)")
+        } else {
+            // Explicitly indicate we HAVE the relationship so LLM doesn't ask again
+            systemPrompt += "\n\n⚠️ IMPORTANT: Relationship already collected - DO NOT ask about it again."
+        }
         if form.traits.isEmpty { needed.append("personality traits") }
         if form.hobbies.isEmpty { needed.append("hobbies/passions") }
         if form.anecdotes.isEmpty { needed.append("at least one story") }
@@ -166,6 +176,137 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         return try await llmService.chat(messages: llmMessages)
     }
 
+    private func extractRelationshipFromKeywords(_ text: String) {
+        // Skip if relationship already extracted
+        guard form.relationship == nil else { return }
+        
+        let lower = text.lowercased()
+        
+        // Define relationship keywords with their normalized forms
+        let relationshipMap: [(keywords: [String], normalized: String, priority: Int)] = [
+            // Family relationships get higher priority (1)
+            // Grandparents
+            (["grandmother", "grandma", "granny", "nana", "gran"], "grandmother", 1),
+            (["grandfather", "grandpa", "granddad", "gramps"], "grandfather", 1),
+            
+            // Parents
+            (["mother", "mom", "mum", "mama", "mommy"], "mother", 1),
+            (["father", "dad", "papa", "daddy"], "father", 1),
+            
+            // Siblings
+            (["sister"], "sister", 1),
+            (["brother"], "brother", 1),
+            
+            // Extended family
+            (["aunt", "auntie"], "aunt", 1),
+            (["uncle"], "uncle", 1),
+            (["cousin"], "cousin", 1),
+            (["niece"], "niece", 1),
+            (["nephew"], "nephew", 1),
+            (["daughter"], "daughter", 1),
+            (["son"], "son", 1),
+            
+            // Marriage/Partnership (high priority)
+            (["wife"], "wife", 1),
+            (["husband"], "husband", 1),
+            (["spouse"], "spouse", 1),
+            (["partner"], "partner", 1),
+            
+            // Multi-word must come before single word (check "best friend" before "friend")
+            (["best friend", "bestfriend"], "best friend", 2),
+            
+            // Other relationships (lower priority - 3)
+            (["colleague", "coworker", "co-worker"], "colleague", 3),
+            (["mentor"], "mentor", 3),
+            (["teacher"], "teacher", 3),
+            (["neighbor", "neighbour"], "neighbor", 3),
+            (["friend"], "friend", 4)  // Lowest priority since it's most general
+        ]
+        
+        // Keep track of all matches
+        struct Match {
+            let normalized: String
+            let position: Int
+            let priority: Int
+            let hasStrongContext: Bool
+        }
+        var matches: [Match] = []
+        
+        // Search for relationship patterns
+        for (keywords, normalized, priority) in relationshipMap {
+            for keyword in keywords {
+                // Use word boundary regex for exact matching
+                let pattern = "\\b\(keyword)\\b"
+                guard let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive) else { continue }
+                
+                let nsRange = NSRange(lower.startIndex..<lower.endIndex, in: lower)
+                let regexMatches = regex.matches(in: lower, options: [], range: nsRange)
+                
+                for regexMatch in regexMatches {
+                    if let range = Range(regexMatch.range, in: lower) {
+                        let position = lower.distance(from: lower.startIndex, to: range.lowerBound)
+                        
+                        // Check context before the keyword
+                        let contextStart = lower.index(range.lowerBound, offsetBy: -30, limitedBy: lower.startIndex) ?? lower.startIndex
+                        let context = String(lower[contextStart..<range.upperBound])
+                        
+                        // Strong context = possessive my/our/the before the keyword
+                        let hasStrongContext = context.contains("my \(keyword)") ||
+                                             context.contains("our \(keyword)") ||
+                                             context.contains("the \(keyword)")
+                        
+                        matches.append(Match(
+                            normalized: normalized,
+                            position: position,
+                            priority: priority,
+                            hasStrongContext: hasStrongContext
+                        ))
+                    }
+                }
+            }
+        }
+        
+        // Filter to only strong context matches if we have any
+        let strongMatches = matches.filter { $0.hasStrongContext }
+        let finalMatches = strongMatches.isEmpty ? matches : strongMatches
+        
+        // Among matches (preferably with strong context), select based on:
+        // 1. Higher priority family relationships (lower number = higher priority)
+        // 2. Latest position (for "my mom's sister, my aunt" → pick "aunt")
+        if let bestMatch = finalMatches.min(by: { m1, m2 in
+            // Lower priority number = higher importance (1 beats 4)
+            if m1.priority != m2.priority {
+                return m1.priority < m2.priority
+            }
+            // Later position wins (pick the last/most specific relationship)
+            return m1.position < m2.position
+        }) {
+            form.relationship = bestMatch.normalized
+            print("✅ Relationship extracted: '\(bestMatch.normalized)' from text: '\(text)' (priority: \(bestMatch.priority), strong context: \(bestMatch.hasStrongContext))")
+            
+            // Try to infer pronouns from relationship
+            inferPronounsFromRelationship(bestMatch.normalized)
+        }
+    }
+    
+    private func inferPronounsFromRelationship(_ relationship: String) {
+        // Only infer if pronouns haven't been explicitly set
+        guard form.pronouns == .they else { return }
+        
+        let lower = relationship.lowercased()
+        
+        // Female relationships
+        if ["mother", "grandmother", "sister", "aunt", "niece", "daughter", "wife"].contains(lower) {
+            form.pronouns = .she
+            print("✅ Pronouns inferred: 'she' from relationship '\(relationship)'")
+        }
+        // Male relationships
+        else if ["father", "grandfather", "brother", "uncle", "nephew", "son", "husband"].contains(lower) {
+            form.pronouns = .he
+            print("✅ Pronouns inferred: 'he' from relationship '\(relationship)'")
+        }
+    }
+
     private func applyLabel(_ label: String, with text: String) {
         let lower = label.lowercased()
         switch true {
@@ -174,7 +315,10 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
                 form.subjectName = validName
             }
         case lower.contains("relationship") || lower.contains("relation"):
-            if form.relationship == nil { form.relationship = text }
+            // Extract just the relationship keyword from the text, not the entire message
+            if form.relationship == nil {
+                extractRelationshipFromKeywords(text)
+            }
             if form.pronouns == .they { inferPronouns(from: text) }
         case lower.contains("trait"):
             form.traits.append(text)
@@ -203,9 +347,10 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
     private func applyHeuristics(from text: String) {
         inferPronouns(from: text)
         if form.subjectName == nil, let n = extractValidName(from: text) { form.subjectName = n }
-        if form.relationship == nil,
-           text.range(of: "(mother|mum|mom|father|dad|grand|friend|partner|wife|husband|colleague)", options: [.regularExpression, .caseInsensitive]) != nil {
-            form.relationship = text
+        
+        // Use the robust keyword-based relationship extraction
+        if form.relationship == nil {
+            extractRelationshipFromKeywords(text)
         }
     }
 

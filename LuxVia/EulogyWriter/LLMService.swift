@@ -119,7 +119,7 @@ final class MockLLMService: LLMService {
         
         // If we have name but need relationship
         if hasName && !hasRelationship {
-            if contains(lower, anyOf: ["mother", "father", "friend", "relationship", "grandmother", "grandfather", "partner", "spouse", "wife", "husband"]) {
+            if contains(lower, anyOf: ["mother", "father", "friend", "relationship", "grandmother", "grandfather", "partner", "spouse", "wife", "husband", "mom", "dad", "grandma", "grandpa", "aunt", "uncle", "cousin", "sister", "brother"]) {
                 return "I can sense how meaningful this relationship was. What were some of their most defining qualities or characteristics that people who knew them would recognize immediately?"
             }
             return "Thank you for sharing. Could you tell me about your relationship with them? For example, were they your mother, father, friend, or another loved one?"
