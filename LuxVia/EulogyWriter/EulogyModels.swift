@@ -31,5 +31,26 @@ struct ChatMessage: Identifiable, Equatable {
     let id = UUID()
     let role: Role
     let text: String
+    let source: MessageSource
+    
     enum Role { case user, assistant, draft }
+    enum MessageSource { case user, aiGenerated, preWritten, draft }
+    
+    init(role: Role, text: String, source: MessageSource? = nil) {
+        self.role = role
+        self.text = text
+        // Auto-determine source based on role if not explicitly provided
+        if let source = source {
+            self.source = source
+        } else {
+            switch role {
+            case .user:
+                self.source = .user
+            case .draft:
+                self.source = .draft
+            case .assistant:
+                self.source = .preWritten // default for assistant
+            }
+        }
+    }
 }

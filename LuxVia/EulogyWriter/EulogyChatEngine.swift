@@ -38,7 +38,7 @@ final class EulogyChatEngine: ObservableObject {
 I'm here to help you create a meaningful and personal eulogy. This is a space where we can talk naturally about your loved one.
 
 Please share whatever feels right to you - their name, who they were to you, what made them special, or any memories that come to mind. I'll listen and ask gentle questions along the way.
-""")
+""", source: .preWritten)
         ]
     }
 
@@ -72,15 +72,15 @@ Please share whatever feels right to you - their name, who they were to you, wha
         if form.isReadyForDraft {
             do {
                 let draft = try await generator.generate(from: form)
-                messages.append(.init(role: .draft, text: draft))
+                messages.append(.init(role: .draft, text: draft, source: .draft))
                 messages.append(.init(role: .assistant, text:
 """
 I've created a draft eulogy based on what you've shared. Please take a moment to read through it.
 
 Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCases.map{$0.rawValue}.joined(separator:", "))), length (\(EulogyLength.allCases.map{$0.rawValue}.joined(separator:", "))), add or remove stories, or incorporate different elements.
-"""))
+""", source: .preWritten))
             } catch {
-                messages.append(.init(role: .assistant, text: "I encountered an issue generating the draft. Could we try again?"))
+                messages.append(.init(role: .assistant, text: "I encountered an issue generating the draft. Could we try again?", source: .preWritten))
             }
             return
         }
@@ -88,10 +88,10 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         // Generate natural conversational response using LLM
         do {
             let response = try await generateLLMResponse()
-            messages.append(.init(role: .assistant, text: response))
+            messages.append(.init(role: .assistant, text: response, source: .aiGenerated))
         } catch {
             // Fallback to asking next question if LLM fails
-            messages.append(.init(role: .assistant, text: nextQuestion()))
+            messages.append(.init(role: .assistant, text: nextQuestion(), source: .preWritten))
         }
     }
     

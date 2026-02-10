@@ -97,16 +97,52 @@ private struct MessageBubble: View {
                 if message.role == .draft {
                     Text("Draft eulogy").font(.caption).foregroundColor(.secondary)
                 }
+                // Add label for message source when it's an assistant message
+                if message.role == .assistant {
+                    if message.source == .aiGenerated {
+                        SourceIndicator(color: Color("AIGeneratedResponse"), label: "AI Generated")
+                    } else if message.source == .preWritten {
+                        SourceIndicator(color: Color("PreWrittenResponse"), label: "Template")
+                    }
+                }
                 Text(message.text)
                     .font(message.role == .draft ? .body : .callout)
                     .foregroundStyle(message.role == .user ? .white : .primary)
                     .padding(10)
                     .background(
                         RoundedRectangle(cornerRadius: 14)
-                            .fill(message.role == .user ? Color.accentColor : Color(.secondarySystemBackground))
+                            .fill(bubbleColor)
                     )
             }
             if message.role != .user { Spacer() }
+        }
+    }
+    
+    private var bubbleColor: Color {
+        if message.role == .user {
+            return Color.accentColor
+        } else if message.source == .aiGenerated {
+            return Color("AIGeneratedResponse")
+        } else if message.source == .preWritten {
+            return Color("PreWrittenResponse")
+        } else {
+            return Color(.secondarySystemBackground)
+        }
+    }
+}
+
+private struct SourceIndicator: View {
+    let color: Color
+    let label: String
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Circle()
+                .fill(color)
+                .frame(width: 6, height: 6)
+            Text(label)
+                .font(.caption2)
+                .foregroundColor(.secondary)
         }
     }
 }
