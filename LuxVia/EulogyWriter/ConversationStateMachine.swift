@@ -31,10 +31,10 @@ final class ConversationStateMachine {
         } else if form.relationship == nil {
             return .collectingRelationship
         } else if form.traits.isEmpty {
-            return .collectingCharacterValues
+            return .collectingTraits
         } else if form.anecdotes.isEmpty {
-            // Stories are important - collect character memory
-            return .collectingCharacterMemory
+            // Stories are important - prioritize them over hobbies
+            return .collectingStories
         } else if form.hobbies.isEmpty {
             return .collectingHobbies
         } else if form.beliefsOrRituals == nil {
@@ -83,16 +83,16 @@ final class ConversationStateMachine {
             }
             return (nil, "Thank you for sharing.")
             
-        case .collectingCharacterValues:
-            if !askedQuestions.contains(.characterValues) {
-                askedQuestions.insert(.characterValues)
+        case .collectingTraits:
+            if !askedQuestions.contains(.traits) {
+                askedQuestions.insert(.traits)
                 let questionText = ResponseTemplates.response(
-                    for: .characterValues,
+                    for: .traits,
                     name: form.subjectName,
                     relationship: form.relationship,
                     pronouns: form.pronouns
                 )
-                return (.characterValues, questionText)
+                return (.traits, questionText)
             }
             return (nil, "Thank you. Let me ask about something else.")
             
@@ -109,94 +109,16 @@ final class ConversationStateMachine {
             }
             return (nil, "Got it, thank you.")
             
-        case .collectingCharacterMemory:
-            if !askedQuestions.contains(.characterMemory) {
-                askedQuestions.insert(.characterMemory)
+        case .collectingStories:
+            if !askedQuestions.contains(.stories) {
+                askedQuestions.insert(.stories)
                 let questionText = ResponseTemplates.response(
-                    for: .characterMemory,
+                    for: .stories,
                     name: form.subjectName,
                     relationship: form.relationship,
                     pronouns: form.pronouns
                 )
-                return (.characterMemory, questionText)
-            }
-            return (nil, "Thank you for sharing that.")
-            
-        case .collectingImpact:
-            if !askedQuestions.contains(.impact) {
-                askedQuestions.insert(.impact)
-                let questionText = ResponseTemplates.response(
-                    for: .impact,
-                    name: form.subjectName,
-                    relationship: form.relationship,
-                    pronouns: form.pronouns
-                )
-                return (.impact, questionText)
-            }
-            return (nil, "Thank you for sharing that.")
-            
-        case .collectingFunnyMemory:
-            if !askedQuestions.contains(.funnyMemory) {
-                askedQuestions.insert(.funnyMemory)
-                let questionText = ResponseTemplates.response(
-                    for: .funnyMemory,
-                    name: form.subjectName,
-                    relationship: form.relationship,
-                    pronouns: form.pronouns
-                )
-                return (.funnyMemory, questionText)
-            }
-            return (nil, "Thank you for sharing that.")
-            
-        case .collectingWhatYouWillMiss:
-            if !askedQuestions.contains(.whatYouWillMiss) {
-                askedQuestions.insert(.whatYouWillMiss)
-                let questionText = ResponseTemplates.response(
-                    for: .whatYouWillMiss,
-                    name: form.subjectName,
-                    relationship: form.relationship,
-                    pronouns: form.pronouns
-                )
-                return (.whatYouWillMiss, questionText)
-            }
-            return (nil, "Thank you for sharing that.")
-            
-        case .collectingChallenges:
-            if !askedQuestions.contains(.challenges) {
-                askedQuestions.insert(.challenges)
-                let questionText = ResponseTemplates.response(
-                    for: .challenges,
-                    name: form.subjectName,
-                    relationship: form.relationship,
-                    pronouns: form.pronouns
-                )
-                return (.challenges, questionText)
-            }
-            return (nil, "Thank you for sharing that.")
-            
-        case .collectingSmallDetails:
-            if !askedQuestions.contains(.smallDetails) {
-                askedQuestions.insert(.smallDetails)
-                let questionText = ResponseTemplates.response(
-                    for: .smallDetails,
-                    name: form.subjectName,
-                    relationship: form.relationship,
-                    pronouns: form.pronouns
-                )
-                return (.smallDetails, questionText)
-            }
-            return (nil, "Thank you for sharing that.")
-            
-        case .collectingFinalThoughts:
-            if !askedQuestions.contains(.finalThoughts) {
-                askedQuestions.insert(.finalThoughts)
-                let questionText = ResponseTemplates.response(
-                    for: .finalThoughts,
-                    name: form.subjectName,
-                    relationship: form.relationship,
-                    pronouns: form.pronouns
-                )
-                return (.finalThoughts, questionText)
+                return (.stories, questionText)
             }
             return (nil, "Thank you for sharing that.")
             
