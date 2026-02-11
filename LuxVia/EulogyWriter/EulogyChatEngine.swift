@@ -106,15 +106,16 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         var systemPrompt = """
         You are a compassionate assistant helping someone create a eulogy. Your role is to:
         - Have a natural, warm conversation
-        - Ask thoughtful follow-up questions
+        - Ask thoughtful follow-up questions that REFERENCE and BUILD ON what they've already shared
         - Show empathy and understanding
         - Gently guide them to share: name, relationship, personality traits, hobbies, meaningful stories, achievements, and any spiritual/humanist preferences
         - Keep responses concise (2-3 sentences max)
         - Never be pushy or mechanical
-        - Adapt your questions based on what they've already shared
+        - NEVER ask for information already provided below
         - If someone sends just a greeting (like "Hi", "Hello", etc.), warmly acknowledge it and guide them to share about their loved one
         - Validate inputs: don't treat greetings or short casual messages as meaningful information
         - When asking for a name, make it clear you need their full name, not just a greeting
+        - Your goal is to gather enough information to create a meaningful eulogy, then PROPOSE creating the draft
         
         Information collected so far:
         """
@@ -125,6 +126,9 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         if let rel = form.relationship {
             systemPrompt += "\n- Relationship: \(rel)"
         }
+        // Include pronouns so LLM uses correct pronouns when referencing the deceased
+        systemPrompt += "\n- Pronouns: \(form.pronouns.rawValue)"
+        
         if !form.traits.isEmpty {
             systemPrompt += "\n- Traits: \(form.traits.joined(separator: ", "))"
         }
@@ -144,19 +148,31 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
             systemPrompt += "\n- Beliefs/Rituals: \(beliefs)"
         }
         
-        systemPrompt += "\n\nStill need: "
-        var needed: [String] = []
-        if form.subjectName == nil { needed.append("name") }
-        if form.relationship == nil { needed.append("relationship (to the deceased)")
+        // Check if we're ready for draft
+        if form.isReadyForDraft {
+            systemPrompt += """
+            
+            
+            ⚠️ DRAFT READY: You have collected sufficient information (name, relationship, traits, and stories/hobbies).
+            Your NEXT RESPONSE should:
+            1. Acknowledge what they've shared (reference specific details)
+            2. Ask if there's anything else they'd like to add
+            3. If they say no or share one more small thing, PROPOSE creating the draft
+            
+            Do NOT keep asking for more information indefinitely. Move toward draft creation.
+            """
         } else {
-            // Explicitly indicate we HAVE the relationship so LLM doesn't ask again
-            systemPrompt += "\n\n⚠️ IMPORTANT: Relationship already collected - DO NOT ask about it again."
+            systemPrompt += "\n\nStill need: "
+            var needed: [String] = []
+            if form.subjectName == nil { needed.append("name") }
+            if form.relationship == nil { needed.append("relationship (to the deceased)") }
+            if form.traits.isEmpty { needed.append("personality traits") }
+            if form.hobbies.isEmpty { needed.append("hobbies/passions") }
+            if form.anecdotes.isEmpty { needed.append("at least one story") }
+            
+            systemPrompt += needed.joined(separator: ", ")
+            systemPrompt += "\n\nFocus on gathering these missing pieces to move toward draft creation."
         }
-        if form.traits.isEmpty { needed.append("personality traits") }
-        if form.hobbies.isEmpty { needed.append("hobbies/passions") }
-        if form.anecdotes.isEmpty { needed.append("at least one story") }
-        
-        systemPrompt += needed.isEmpty ? "nothing critical, can generate draft soon" : needed.joined(separator: ", ")
         
         // Convert chat history to LLM format
         var llmMessages: [LLMMessage] = [

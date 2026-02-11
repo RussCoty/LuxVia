@@ -94,16 +94,47 @@ final class MockLLMService: LLMService {
             return "Hello. I'm here to help you create a meaningful eulogy for your loved one. When you're ready, please share their name or tell me about them in your own words."
         }
         
+        // Check if we're ready for draft (most important check first!)
+        let isReadyForDraft = systemContext.contains("⚠️ DRAFT READY:")
+        
         // Parse what information we already have from the system context
-        let hasName = systemContext.contains("Name:")
-        let hasRelationship = systemContext.contains("Relationship:")
-        let hasTraits = systemContext.contains("Traits:")
-        let hasHobbies = systemContext.contains("Hobbies:")
-        let hasStories = systemContext.contains("Stories shared:")
+        let hasName = systemContext.contains("Name:") && !systemContext.contains("Still need: name")
+        let hasRelationship = systemContext.contains("Relationship:") && !systemContext.contains("Still need: relationship")
+        let hasPronouns = extractPronouns(from: systemContext)
+        let hasTraits = systemContext.contains("Traits:") && !systemContext.contains("Still need: personality traits")
+        let hasHobbies = systemContext.contains("Hobbies:") && !systemContext.contains("Still need: hobbies")
+        let hasStories = systemContext.contains("Stories shared:") && !systemContext.contains("Still need: at least one story")
         let hasBeliefs = systemContext.contains("Beliefs/Rituals:")
+        
+        // Extract actual values for context-aware responses
+        let name = extractName(from: systemContext)
+        let relationship = extractRelationship(from: systemContext)
         
         // Extract what we still need from the system context
         let stillNeed = extractStillNeeded(from: systemContext)
+        
+        // IF READY FOR DRAFT - prioritize moving toward draft creation
+        if isReadyForDraft {
+            // Check if user is saying "no" or "nothing else" or similar
+            let doneIndicators = ["no", "nope", "nothing", "that's it", "that's all", "i think that's everything", "ready", "go ahead", "yes", "yeah"]
+            let seemsDone = doneIndicators.contains(where: { lower.contains($0) })
+            
+            // If they seem done OR if we've had a lot of back-and-forth (messageCount > 10)
+            if seemsDone || messageCount > 10 {
+                let nameRef = name ?? "your loved one"
+                return "Thank you for sharing all of this about \(nameRef). I have everything I need to create a meaningful draft. Let me put that together for you now."
+            }
+            
+            // Otherwise, acknowledge what they shared and gently offer to proceed
+            if trimmed.count > 20 {
+                // They shared something substantial
+                let nameRef = name ?? "them"
+                return "That's a wonderful detail about \(nameRef). Is there anything else you'd like me to include, or should I go ahead and create the draft?"
+            } else {
+                // Short response
+                return "Got it. Is there anything else you'd like to add before I create the draft eulogy?"
+            }
+        }
         
         // Early conversation - just starting
         if messageCount <= 2 {
@@ -117,63 +148,70 @@ final class MockLLMService: LLMService {
             return "That's a beautiful name. To help me craft something truly personal, could you tell me about your relationship with them and what made it special?"
         }
         
-        // If we have name but need relationship
+        // If we have name but need relationship - REFERENCE the name
         if hasName && !hasRelationship {
+            let nameRef = name ?? "them"
             if contains(lower, anyOf: ["mother", "father", "friend", "relationship", "grandmother", "grandfather", "partner", "spouse", "wife", "husband", "mom", "dad", "grandma", "grandpa", "aunt", "uncle", "cousin", "sister", "brother"]) {
-                return "I can sense how meaningful this relationship was. What were some of their most defining qualities or characteristics that people who knew them would recognize immediately?"
+                return "I can sense how meaningful your relationship with \(nameRef) was. What were some of \(hasPronouns.lowercased()) most defining qualities or characteristics that people who knew \(hasPronouns.lowercased()) would recognize immediately?"
             }
-            return "Thank you for sharing. Could you tell me about your relationship with them? For example, were they your mother, father, friend, or another loved one?"
+            return "Thank you for sharing about \(nameRef). Could you tell me about your relationship? For example, were they your mother, father, friend, or another loved one?"
         }
         
-        // If we have name and relationship but need traits
+        // If we have name and relationship but need traits - REFERENCE both
         if hasName && hasRelationship && !hasTraits {
+            let nameRef = name ?? "them"
+            let relRef = relationship ?? "your loved one"
             if userMessage.split(separator: ",").count > 1 || contains(lower, anyOf: ["kind", "generous", "funny", "patient", "wise", "caring", "loving", "strong"]) {
                 if !hasHobbies {
-                    return "Those are wonderful qualities. What were some of the things they loved to do? Their hobbies, passions, or the activities that truly lit them up?"
+                    return "Those are wonderful qualities that really capture \(nameRef). What were some of the things \(hasPronouns.lowercased()) loved to do? Any hobbies or passions that brought \(hasPronouns.lowercased()) joy?"
                 } else if !hasStories {
-                    return "Those are wonderful qualities. Is there a particular story or moment that really captures their essence - something friends and family might smile remembering?"
+                    return "Those qualities paint such a vivid picture of \(nameRef) as a \(relRef). Is there a particular story or moment that really captures \(hasPronouns.lowercased()) essence?"
                 } else {
-                    return "Those are beautiful qualities that paint such a vivid picture. Is there anything else you'd like to add about their beliefs or values?"
+                    return "Those are beautiful qualities. Is there anything about \(nameRef)'s beliefs or values that you'd like to include?"
                 }
             }
-            return "That's helpful. What were some of their most defining qualities? For example, were they patient, generous, funny, or something else that made them special?"
+            return "That's helpful. What were some of \(nameRef)'s most defining qualities? For example, was \(hasPronouns.lowercased()) patient, generous, funny, or something else that made \(hasPronouns.lowercased()) special?"
         }
         
-        // If we have basics but need hobbies
+        // If we have basics but need hobbies - REFERENCE what we know
         if hasName && hasRelationship && hasTraits && !hasHobbies {
+            let nameRef = name ?? "them"
             if contains(lower, anyOf: ["hobby", "love", "enjoy", "passion", "liked", "activity", "garden", "read", "cook"]) {
                 if !hasStories {
-                    return "That paints such a vivid picture of who they were. Is there a particular story or moment that really captures their essence - something friends and family might smile remembering?"
+                    return "That really brings \(nameRef) to life. Is there a particular story or moment that captures \(hasPronouns.lowercased()) essence - something that makes you smile when you remember it?"
                 } else {
-                    return "That's wonderful. Would you like to include any spiritual, religious, or humanist elements that would honor their beliefs?"
+                    return "That paints such a clear picture of who \(nameRef) was. Would you like to include any spiritual, religious, or humanist elements that honor \(hasPronouns.lowercased()) beliefs?"
                 }
             }
-            return "I'm getting a good sense of who they were. What did they love to do? Any hobbies, passions, or activities that brought them joy?"
+            return "I'm getting a clear sense of who \(nameRef) was. What did \(hasPronouns.lowercased()) love to do? Any hobbies, passions, or activities that brought \(hasPronouns.lowercased()) joy?"
         }
         
-        // If we need stories
+        // If we need stories - REFERENCE previous information
         if hasName && hasRelationship && (hasTraits || hasHobbies) && !hasStories {
+            let nameRef = name ?? "them"
             if userMessage.count > 50 || contains(lower, anyOf: ["story", "remember", "time", "once", "always"]) {
                 if !hasBeliefs {
-                    return "What a touching memory. Before I help craft the eulogy, would you like to include any spiritual, religious, or humanist elements that would honor their beliefs?"
+                    return "What a touching memory of \(nameRef). Before I help craft the eulogy, would you like to include any spiritual, religious, or humanist elements that would honor \(hasPronouns.lowercased()) beliefs?"
                 } else {
-                    return "What a beautiful memory to share. Thank you for trusting me with these details. I have enough to create a meaningful draft now."
+                    return "What a beautiful memory to share about \(nameRef). I have a wonderful sense of who \(hasPronouns.lowercased()) was now. Is there anything else you'd like me to know?"
                 }
             }
-            return "Could you share a story or memory that captures who they were? It could be something small but meaningful that shows their character."
+            return "Could you share a story or memory that captures who \(nameRef) was? It could be something small but meaningful that shows \(hasPronouns.lowercased()) character."
         }
         
-        // If we have most information but need beliefs
+        // If we have most information but need beliefs - REFERENCE the person
         if hasName && hasRelationship && hasTraits && hasStories && !hasBeliefs {
+            let nameRef = name ?? "them"
             if contains(lower, anyOf: ["catholic", "christian", "jewish", "muslim", "buddhist", "hindu", "spiritual", "atheist", "humanist", "faith", "belief", "church", "temple", "no", "none"]) {
-                return "Thank you for sharing that. I believe I have enough information now to create a meaningful draft. Let me put that together for you."
+                return "Thank you for sharing that about \(nameRef). I believe I have everything I need to create a meaningful draft. Shall I put that together for you?"
             }
-            return "Would you like to include any spiritual, religious, or humanist elements in the eulogy? Or if they didn't have specific beliefs, that's perfectly fine too."
+            return "Would you like to include any spiritual, religious, or humanist elements that would honor \(nameRef)'s beliefs? Or if \(hasPronouns.lowercased()) didn't have specific beliefs, that's perfectly fine too."
         }
         
         // If we have comprehensive information
         if hasName && hasRelationship && hasTraits && (hasHobbies || hasStories) {
-            return "Thank you for sharing all of this with me. I have a wonderful sense of who they were. Is there anything else you'd like me to know before I create the draft?"
+            let nameRef = name ?? "them"
+            return "Thank you for sharing all of this about \(nameRef). I have a wonderful sense of who \(hasPronouns.lowercased()) was. Is there anything else you'd like me to include, or should I create the draft?"
         }
         
         // Intelligent default that uses "still need" information
@@ -199,6 +237,39 @@ final class MockLLMService: LLMService {
         }
         
         return firstLine.components(separatedBy: ", ").map { $0.trimmingCharacters(in: .whitespaces) }
+    }
+    
+    private func extractName(from systemContext: String) -> String? {
+        // Extract name from "- Name: XYZ" pattern
+        guard let nameRange = systemContext.range(of: "- Name: ") else {
+            return nil
+        }
+        let afterName = String(systemContext[nameRange.upperBound...])
+        let nameLine = afterName.components(separatedBy: "\n").first ?? ""
+        let name = nameLine.trimmingCharacters(in: .whitespaces)
+        return name.isEmpty ? nil : name
+    }
+    
+    private func extractRelationship(from systemContext: String) -> String? {
+        // Extract relationship from "- Relationship: XYZ" pattern
+        guard let relRange = systemContext.range(of: "- Relationship: ") else {
+            return nil
+        }
+        let afterRel = String(systemContext[relRange.upperBound...])
+        let relLine = afterRel.components(separatedBy: "\n").first ?? ""
+        let relationship = relLine.trimmingCharacters(in: .whitespaces)
+        return relationship.isEmpty ? nil : relationship
+    }
+    
+    private func extractPronouns(from systemContext: String) -> String {
+        // Extract pronouns from "- Pronouns: XYZ" pattern
+        guard let pronounsRange = systemContext.range(of: "- Pronouns: ") else {
+            return "they" // default
+        }
+        let afterPronouns = String(systemContext[pronounsRange.upperBound...])
+        let pronounsLine = afterPronouns.components(separatedBy: "\n").first ?? ""
+        let pronouns = pronounsLine.trimmingCharacters(in: .whitespaces)
+        return pronouns.isEmpty ? "they" : pronouns
     }
     
     private func contains(_ text: String, anyOf keywords: [String]) -> Bool {
