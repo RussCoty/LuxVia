@@ -42,17 +42,17 @@ final class ConversationStateMachine {
             return .collectingHobbies
         } else if form.whatYouWillMiss == nil {
             return .collectingWhatYouWillMiss
-        } else if form.challengesOvercome == nil {
-            // Optional - can be skipped
+        } else if form.challengesOvercome == nil && !askedQuestions.contains(.challenges) {
+            // Optional - can be skipped, only ask if not already asked
             return .collectingChallenges
-        } else if form.smallDetails == nil {
-            // Optional - can be skipped
+        } else if form.smallDetails == nil && !askedQuestions.contains(.smallDetails) {
+            // Optional - can be skipped, only ask if not already asked
             return .collectingSmallDetails
-        } else if form.beliefsOrRituals == nil {
-            // Optional - can be skipped
+        } else if form.beliefsOrRituals == nil && !askedQuestions.contains(.beliefs) {
+            // Optional - can be skipped, only ask if not already asked
             return .collectingBeliefs
-        } else if form.finalThoughts == nil {
-            // Optional - can be skipped
+        } else if form.finalThoughts == nil && !askedQuestions.contains(.finalThoughts) {
+            // Optional - can be skipped, only ask if not already asked
             return .collectingFinalThoughts
         } else {
             return .readyForDraft
@@ -210,8 +210,8 @@ final class ConversationStateMachine {
                 )
                 return (.beliefs, questionText)
             }
-            // If beliefs question was already asked, ask final thoughts
-            return nextQuestion(form: form)
+            // Question already asked but not answered - let state machine progress
+            return (nil, "Thank you.")
             
         case .collectingFinalThoughts:
             if !askedQuestions.contains(.finalThoughts) {
@@ -224,8 +224,8 @@ final class ConversationStateMachine {
                 )
                 return (.finalThoughts, questionText)
             }
-            // If all questions asked, offer draft
-            return nextQuestion(form: form)
+            // Question already asked but not answered - let state machine progress
+            return (nil, "Thank you.")
             
         case .readyForDraft:
             draftOffered = true
