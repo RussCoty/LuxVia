@@ -61,7 +61,7 @@ final class TemplateGenerator: EulogyGenerator {
         let otherAnecdotes = f.anecdotes.isEmpty ? "" :
         "Stories we'll keep close:\n" + f.anecdotes.map { "• \($0)" }.joined(separator: "\n")
 
-        let beliefs = (f.beliefsOrRituals?.isEmpty == false && f.beliefsOrRituals != "")
+        let beliefs = (f.beliefsOrRituals?.isEmpty == false)
             ? "In keeping with \(name)'s wishes and beliefs (\(f.beliefsOrRituals!)), we give thanks for a life well lived."
             : ""
         

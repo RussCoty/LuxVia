@@ -56,23 +56,30 @@ struct EulogyForm: Codable {
     func checklist() -> String {
         var items: [String] = []
         
+        func checklistItem(_ condition: Bool, required: String, optional: String? = nil) -> String {
+            if let opt = optional {
+                return condition ? "✓ \(required)" : "○ \(required) (\(opt))"
+            }
+            return condition ? "✓ \(required)" : "○ \(required)"
+        }
+        
         items.append(subjectName != nil ? "✓ Name" : "○ Name")
         if let age = age {
             items.append("✓ Age (\(age))")
         } else {
             items.append("○ Age")
         }
-        items.append(relationship != nil ? "✓ Relationship" : "○ Relationship")
-        items.append(characterValues != nil ? "✓ Character/values" : "○ Character/values")
-        items.append(impact != nil ? "✓ Impact" : "○ Impact")
-        items.append(funnyMemory != nil ? "✓ Funny memory" : "○ Funny memory")
-        items.append(characterMemory != nil ? "✓ Character moment" : "○ Character moment")
-        items.append(!hobbies.isEmpty ? "✓ Hobbies/passions" : "○ Hobbies/passions")
-        items.append(whatYouWillMiss != nil ? "✓ What you'll miss" : "○ What you'll miss")
-        items.append(challengesOvercome != nil ? "✓ Challenges overcome" : "○ Challenges overcome (optional)")
-        items.append(smallDetails != nil ? "✓ Small details" : "○ Small details (optional)")
-        items.append(beliefsOrRituals != nil ? "✓ Beliefs/rituals" : "○ Beliefs/rituals (optional)")
-        items.append(finalThoughts != nil ? "✓ Final thoughts" : "○ Final thoughts (optional)")
+        items.append(checklistItem(relationship != nil, required: "Relationship"))
+        items.append(checklistItem(characterValues != nil, required: "Character/values"))
+        items.append(checklistItem(impact != nil, required: "Impact"))
+        items.append(checklistItem(funnyMemory != nil, required: "Funny memory"))
+        items.append(checklistItem(characterMemory != nil, required: "Character moment"))
+        items.append(checklistItem(!hobbies.isEmpty, required: "Hobbies/passions"))
+        items.append(checklistItem(whatYouWillMiss != nil, required: "What you'll miss"))
+        items.append(checklistItem(challengesOvercome != nil, required: "Challenges overcome", optional: "optional"))
+        items.append(checklistItem(smallDetails != nil, required: "Small details", optional: "optional"))
+        items.append(checklistItem(beliefsOrRituals != nil, required: "Beliefs/rituals", optional: "optional"))
+        items.append(checklistItem(finalThoughts != nil, required: "Final thoughts", optional: "optional"))
         
         return items.joined(separator: "\n")
     }

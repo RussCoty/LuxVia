@@ -282,6 +282,14 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
 
     private func applyLabel(_ label: String, with text: String) {
         let lower = label.lowercased()
+        
+        // Helper to add anecdote if not already present
+        func addAnecdote(_ text: String) {
+            if !form.anecdotes.contains(text) {
+                form.anecdotes.append(text)
+            }
+        }
+        
         switch true {
         case lower.contains("name"):
             if form.subjectName == nil, let validName = extractValidName(from: text) {
@@ -293,16 +301,16 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
                 extractRelationshipFromKeywords(text)
             }
             if form.pronouns == .they { inferPronouns(from: text) }
-        case lower.contains("character") || lower.contains("value") || lower.contains("principle"):
-            form.characterValues = text
         case lower.contains("impact") || lower.contains("difference") || lower.contains("change"):
             form.impact = text
         case lower.contains("funny") || lower.contains("humor") || lower.contains("lighthearted"):
             form.funnyMemory = text
-            form.anecdotes.append(text)
-        case lower.contains("moment") || lower.contains("character-defining") || lower.contains("shows who"):
+            addAnecdote(text)
+        case lower.contains("moment") && (lower.contains("character") || lower.contains("defining") || lower.contains("shows who")):
             form.characterMemory = text
-            form.anecdotes.append(text)
+            addAnecdote(text)
+        case lower.contains("character") || lower.contains("value") || lower.contains("principle"):
+            form.characterValues = text
         case lower.contains("trait"):
             // Keep for backward compatibility
             form.traits.append(text)
@@ -318,7 +326,7 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         case lower.contains("detail") || lower.contains("quirk") || lower.contains("habit"):
             form.smallDetails = text
         case lower.contains("anecdote") || lower.contains("story"):
-            form.anecdotes.append(text)
+            addAnecdote(text)
         case lower.contains("achievement") || lower.contains("milestone"):
             form.achievements.append(text)
         case lower.contains("belief") || lower.contains("faith") || lower.contains("ritual"):

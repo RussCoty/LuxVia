@@ -210,9 +210,8 @@ final class ConversationStateMachine {
                 )
                 return (.beliefs, questionText)
             }
-            // If beliefs question was already asked, move to next optional
-            currentState = .collectingFinalThoughts
-            fallthrough
+            // If beliefs question was already asked, ask final thoughts
+            return nextQuestion(form: form)
             
         case .collectingFinalThoughts:
             if !askedQuestions.contains(.finalThoughts) {
@@ -226,8 +225,7 @@ final class ConversationStateMachine {
                 return (.finalThoughts, questionText)
             }
             // If all questions asked, offer draft
-            currentState = .readyForDraft
-            fallthrough
+            return nextQuestion(form: form)
             
         case .readyForDraft:
             draftOffered = true
