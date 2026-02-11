@@ -258,6 +258,7 @@
 		10AB97DC2E4179C50015E379 /* CSVLyricsLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSVLyricsLoader.swift; sourceTree = "<group>"; };
 		10AB97DF2E417AC60015E379 /* LyricsLibraryManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LyricsLibraryManager.swift; sourceTree = "<group>"; };
 		10AB97E12E417C650015E379 /* lyrics.csv */ = {isa = PBXFileReference; lastKnownFileType = text; path = lyrics.csv; sourceTree = "<group>"; };
+		10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = LuxVia.xcodeproj; sourceTree = SOURCE_ROOT; };
 		10B10FCB2E67001500092B04 /* FirstLaunchTutorialViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirstLaunchTutorialViewController.swift; sourceTree = "<group>"; };
 		10B10FCE2E67002500092B04 /* TutorialManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialManager.swift; sourceTree = "<group>"; };
 		10D6870B2DD22CDF00155B1C /* PlayerControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlayerControlsView.swift; sourceTree = "<group>"; };
@@ -419,6 +420,7 @@
 		1084FA972DC8EC06009398EB = {
 			isa = PBXGroup;
 			children = (
+				10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */,
 				1084FAA22DC8EC06009398EB /* LuxVia */,
 				1084FAA12DC8EC06009398EB /* Products */,
 				101651CE2DF70D53008B41E5 /* Recovered References */,
@@ -600,6 +602,12 @@
 			);
 			productRefGroup = 1084FAA12DC8EC06009398EB /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 104AECF62E42B29D00F21CA7 /* Products */;
+					ProjectRef = 10B007582E1FF94600A996E6 /* LuxVia.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				1084FA9F2DC8EC06009398EB /* LuxVia */,
