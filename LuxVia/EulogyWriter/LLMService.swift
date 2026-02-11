@@ -152,7 +152,7 @@ final class MockLLMService: LLMService {
         if hasName && !hasRelationship {
             let nameRef = name ?? "them"
             if contains(lower, anyOf: ["mother", "father", "friend", "relationship", "grandmother", "grandfather", "partner", "spouse", "wife", "husband", "mom", "dad", "grandma", "grandpa", "aunt", "uncle", "cousin", "sister", "brother"]) {
-                return "I can sense how meaningful your relationship with \(nameRef) was. What were some of \(hasPronouns.lowercased()) most defining qualities or characteristics that people who knew \(hasPronouns.lowercased()) would recognize immediately?"
+                return "I can sense how meaningful your relationship with \(nameRef) was. What were some of \(toPossessive(hasPronouns)) most defining qualities or characteristics that people who knew \(toObject(hasPronouns)) would recognize immediately?"
             }
             return "Thank you for sharing about \(nameRef). Could you tell me about your relationship? For example, were they your mother, father, friend, or another loved one?"
         }
@@ -163,14 +163,14 @@ final class MockLLMService: LLMService {
             let relRef = relationship ?? "your loved one"
             if userMessage.split(separator: ",").count > 1 || contains(lower, anyOf: ["kind", "generous", "funny", "patient", "wise", "caring", "loving", "strong"]) {
                 if !hasHobbies {
-                    return "Those are wonderful qualities that really capture \(nameRef). What were some of the things \(hasPronouns.lowercased()) loved to do? Any hobbies or passions that brought \(hasPronouns.lowercased()) joy?"
+                    return "Those are wonderful qualities that really capture \(nameRef). What were some of the things \(hasPronouns) loved to do? Any hobbies or passions that brought \(toObject(hasPronouns)) joy?"
                 } else if !hasStories {
-                    return "Those qualities paint such a vivid picture of \(nameRef) as a \(relRef). Is there a particular story or moment that really captures \(hasPronouns.lowercased()) essence?"
+                    return "Those qualities paint such a vivid picture of \(nameRef) as a \(relRef). Is there a particular story or moment that really captures \(toPossessive(hasPronouns)) essence?"
                 } else {
                     return "Those are beautiful qualities. Is there anything about \(nameRef)'s beliefs or values that you'd like to include?"
                 }
             }
-            return "That's helpful. What were some of \(nameRef)'s most defining qualities? For example, was \(hasPronouns.lowercased()) patient, generous, funny, or something else that made \(hasPronouns.lowercased()) special?"
+            return "That's helpful. What were some of \(nameRef)'s most defining qualities? For example, was \(hasPronouns) patient, generous, funny, or something else that made \(toObject(hasPronouns)) special?"
         }
         
         // If we have basics but need hobbies - REFERENCE what we know
@@ -178,12 +178,12 @@ final class MockLLMService: LLMService {
             let nameRef = name ?? "them"
             if contains(lower, anyOf: ["hobby", "love", "enjoy", "passion", "liked", "activity", "garden", "read", "cook"]) {
                 if !hasStories {
-                    return "That really brings \(nameRef) to life. Is there a particular story or moment that captures \(hasPronouns.lowercased()) essence - something that makes you smile when you remember it?"
+                    return "That really brings \(nameRef) to life. Is there a particular story or moment that captures \(toPossessive(hasPronouns)) essence - something that makes you smile when you remember it?"
                 } else {
-                    return "That paints such a clear picture of who \(nameRef) was. Would you like to include any spiritual, religious, or humanist elements that honor \(hasPronouns.lowercased()) beliefs?"
+                    return "That paints such a clear picture of who \(nameRef) was. Would you like to include any spiritual, religious, or humanist elements that honor \(toPossessive(hasPronouns)) beliefs?"
                 }
             }
-            return "I'm getting a clear sense of who \(nameRef) was. What did \(hasPronouns.lowercased()) love to do? Any hobbies, passions, or activities that brought \(hasPronouns.lowercased()) joy?"
+            return "I'm getting a clear sense of who \(nameRef) was. What did \(hasPronouns) love to do? Any hobbies, passions, or activities that brought \(toObject(hasPronouns)) joy?"
         }
         
         // If we need stories - REFERENCE previous information
@@ -191,12 +191,12 @@ final class MockLLMService: LLMService {
             let nameRef = name ?? "them"
             if userMessage.count > 50 || contains(lower, anyOf: ["story", "remember", "time", "once", "always"]) {
                 if !hasBeliefs {
-                    return "What a touching memory of \(nameRef). Before I help craft the eulogy, would you like to include any spiritual, religious, or humanist elements that would honor \(hasPronouns.lowercased()) beliefs?"
+                    return "What a touching memory of \(nameRef). Before I help craft the eulogy, would you like to include any spiritual, religious, or humanist elements that would honor \(toPossessive(hasPronouns)) beliefs?"
                 } else {
-                    return "What a beautiful memory to share about \(nameRef). I have a wonderful sense of who \(hasPronouns.lowercased()) was now. Is there anything else you'd like me to know?"
+                    return "What a beautiful memory to share about \(nameRef). I have a wonderful sense of who \(hasPronouns) was now. Is there anything else you'd like me to know?"
                 }
             }
-            return "Could you share a story or memory that captures who \(nameRef) was? It could be something small but meaningful that shows \(hasPronouns.lowercased()) character."
+            return "Could you share a story or memory that captures who \(nameRef) was? It could be something small but meaningful that shows \(toPossessive(hasPronouns)) character."
         }
         
         // If we have most information but need beliefs - REFERENCE the person
@@ -205,13 +205,13 @@ final class MockLLMService: LLMService {
             if contains(lower, anyOf: ["catholic", "christian", "jewish", "muslim", "buddhist", "hindu", "spiritual", "atheist", "humanist", "faith", "belief", "church", "temple", "no", "none"]) {
                 return "Thank you for sharing that about \(nameRef). I believe I have everything I need to create a meaningful draft. Shall I put that together for you?"
             }
-            return "Would you like to include any spiritual, religious, or humanist elements that would honor \(nameRef)'s beliefs? Or if \(hasPronouns.lowercased()) didn't have specific beliefs, that's perfectly fine too."
+            return "Would you like to include any spiritual, religious, or humanist elements that would honor \(nameRef)'s beliefs? Or if \(hasPronouns) didn't have specific beliefs, that's perfectly fine too."
         }
         
         // If we have comprehensive information
         if hasName && hasRelationship && hasTraits && (hasHobbies || hasStories) {
             let nameRef = name ?? "them"
-            return "Thank you for sharing all of this about \(nameRef). I have a wonderful sense of who \(hasPronouns.lowercased()) was. Is there anything else you'd like me to include, or should I create the draft?"
+            return "Thank you for sharing all of this about \(nameRef). I have a wonderful sense of who \(hasPronouns) was. Is there anything else you'd like me to include, or should I create the draft?"
         }
         
         // Intelligent default that uses "still need" information
@@ -270,6 +270,26 @@ final class MockLLMService: LLMService {
         let pronounsLine = afterPronouns.components(separatedBy: "\n").first ?? ""
         let pronouns = pronounsLine.trimmingCharacters(in: .whitespaces)
         return pronouns.isEmpty ? "they" : pronouns
+    }
+    
+    // Helper to convert subject pronouns to possessive form
+    private func toPossessive(_ pronoun: String) -> String {
+        switch pronoun.lowercased() {
+        case "she": return "her"
+        case "he": return "his"
+        case "they": return "their"
+        default: return "their"
+        }
+    }
+    
+    // Helper to convert subject pronouns to object form
+    private func toObject(_ pronoun: String) -> String {
+        switch pronoun.lowercased() {
+        case "she": return "her"
+        case "he": return "him"
+        case "they": return "them"
+        default: return "them"
+        }
     }
     
     private func contains(_ text: String, anyOf keywords: [String]) -> Bool {
