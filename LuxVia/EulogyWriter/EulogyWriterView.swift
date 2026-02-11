@@ -8,8 +8,6 @@ import SwiftUI
 
 struct EulogyWriterView: View {
     @StateObject private var settings = EulogySettings.shared
-    @State private var input = ""
-    @State private var isSending = false
     @State private var showingSettings = false
 
     static func make() -> some View { EulogyWriterView() }
@@ -34,7 +32,6 @@ struct EulogyWriterView: View {
 private struct EulogyWriterContentView: View {
     let useLLM: Bool
     @Binding var showingSettings: Bool
-    @StateObject private var settings = EulogySettings.shared
     @StateObject private var engine: EulogyChatEngine
     @State private var input = ""
     @State private var isSending = false
@@ -81,7 +78,7 @@ private struct EulogyWriterContentView: View {
                 Spacer()
             }
             HStack {
-                if settings.useAIResponses {
+                if useLLM {
                     Label("AI Mode", systemImage: "sparkles")
                         .font(.caption)
                         .foregroundColor(.blue)

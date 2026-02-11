@@ -1,5 +1,4 @@
 import Foundation
-import Combine
 
 /// User preferences for eulogy writer AI features
 class EulogySettings: ObservableObject {
