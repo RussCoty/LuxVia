@@ -6,7 +6,37 @@
 
 ## Changes Implemented
 
-### Latest Updates (Context-Aware MockLLMService)
+### Latest Updates (Enhanced Context-Awareness & Goal-Driven Flow)
+
+#### 1. Enhanced System Prompt in `EulogyChatEngine.swift`
+- **Pronouns in Context**: Now includes pronouns (he/she/they) in system prompt so LLM uses correct pronouns
+- **Explicit Draft Ready Signal**: Adds "⚠️ DRAFT READY" marker when `form.isReadyForDraft == true`
+- **Clear Instructions**: Tells LLM to "REFERENCE and BUILD ON what they've already shared"
+- **Goal-Oriented**: Instructs LLM that the goal is to "gather enough information to create a meaningful eulogy, then PROPOSE creating the draft"
+- **Better "Still Need" Section**: More directive about focusing on gathering missing pieces to move toward draft creation
+
+#### 2. Improved `MockLLMService` Context Extraction
+- **New Helper Methods**:
+  - `extractName()`: Extracts actual name from system prompt instead of just detecting presence
+  - `extractRelationship()`: Extracts actual relationship value
+  - `extractPronouns()`: Extracts pronouns to use in responses
+- **Robust Parsing**: Checks both for presence (e.g., "Name:") AND absence from "Still need" list
+- **Draft Readiness Detection**: Explicitly checks for "⚠️ DRAFT READY" signal as top priority
+
+#### 3. Context-Aware Response Generation
+- **All Responses Reference Name**: Every response after name is shared uses the actual name (e.g., "Mary")
+- **Pronoun-Aware**: Uses extracted pronouns (he/she/they) when referring to deceased
+- **Relationship References**: Incorporates relationship context (e.g., "your grandmother")
+- **No Repetition**: Won't ask about information already collected
+- **Progressive Flow**: Each response builds on previously shared information
+
+#### 4. Goal-Driven Conversation Flow
+- **Priority on Draft Creation**: When `isReadyForDraft == true`, responses focus on moving to draft
+- **Done Indicators**: Detects when user says "no", "nothing else", "that's it", etc.
+- **Message Count Limit**: After 10+ messages with sufficient info, strongly suggests creating draft
+- **Explicit Proposals**: Directly asks "Should I create the draft?" instead of continuing to gather indefinitely
+
+### Previous Updates (Context-Aware MockLLMService)
 
 #### 1. Enhanced `MockLLMService` in `LLMService.swift`
 - **Now Reads System Context**: Extracts and parses the system prompt to understand what information has been collected
@@ -54,15 +84,27 @@
 ### Natural Conversation Flow
 - Users can share information in any order
 - AI responds contextually to what's shared
+- **NEW**: AI references previously shared information by name in every response
+- **NEW**: AI uses correct pronouns (he/she/they) based on relationship
 - Questions feel empathetic and conversational
 - No more form-filling experience
-- **NEW**: MockLLMService actually uses collected information to avoid asking redundant questions
+- **NEW**: Conversation actively progresses toward creating a complete eulogy draft
 
-### Smart Information Extraction
-- ML classifier still extracts structured data in background
+### Context-Aware Intelligence
+- ML classifier extracts structured data in background
 - Heuristics identify names, relationships, traits, hobbies, stories
 - Form is populated naturally as conversation progresses
+- **NEW**: LLM receives complete context including pronouns
+- **NEW**: All responses reference collected information (name, relationship, stories)
+- **NEW**: No redundant questions about information already provided
 - **NEW**: Full story content is available to the LLM, not just the count
+
+### Goal-Driven Draft Creation
+- **NEW**: Explicit "DRAFT READY" signal when sufficient information is collected
+- **NEW**: AI actively proposes creating draft instead of gathering indefinitely
+- **NEW**: Detects user confirmation ("yes", "go ahead", etc.) and triggers draft generation
+- **NEW**: Message count safeguard prevents endless information gathering
+- Smooth transition from conversation to draft creation
 
 ### Secure and Flexible
 - API keys stored securely in Keychain
