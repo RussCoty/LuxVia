@@ -12,19 +12,45 @@ struct EulogyForm: Codable {
     var tone: EulogyTone = .warm
     var length: EulogyLength = .standard
 
-    var traits: [String] = []
+    // NEW: Replace traits with characterValues
+    var characterValues: String?
+    
+    // NEW: Impact field
+    var impact: String?
+    
+    // Enhanced anecdotes with specific story fields
+    var anecdotes: [String] = []  // Keep for backward compatibility
+    var funnyMemory: String?
+    var characterMemory: String?
+    
     var hobbies: [String] = []
-    var anecdotes: [String] = []
-    var achievements: [String] = []
+    
+    // NEW: Emotional connection
+    var whatYouWillMiss: String?
+    
+    // NEW: Optional depth fields
+    var challengesOvercome: String?
+    var smallDetails: String?
+    
     var beliefsOrRituals: String?
-
+    
+    // NEW: Final thoughts
+    var finalThoughts: String?
+    
+    var achievements: [String] = []
     var audienceNotes: String?
+    
+    // Legacy field for backward compatibility
+    var traits: [String] = []
 
     var isReadyForDraft: Bool {
         subjectName != nil &&
         relationship != nil &&
-        !traits.isEmpty &&
-        (!hobbies.isEmpty || !anecdotes.isEmpty)
+        characterValues != nil &&
+        impact != nil &&
+        (funnyMemory != nil || characterMemory != nil) &&
+        !hobbies.isEmpty &&
+        whatYouWillMiss != nil
     }
     
     func checklist() -> String {
@@ -37,11 +63,16 @@ struct EulogyForm: Codable {
             items.append("○ Age")
         }
         items.append(relationship != nil ? "✓ Relationship" : "○ Relationship")
-        items.append(!traits.isEmpty ? "✓ Personality traits" : "○ Personality traits")
+        items.append(characterValues != nil ? "✓ Character/values" : "○ Character/values")
+        items.append(impact != nil ? "✓ Impact" : "○ Impact")
+        items.append(funnyMemory != nil ? "✓ Funny memory" : "○ Funny memory")
+        items.append(characterMemory != nil ? "✓ Character moment" : "○ Character moment")
         items.append(!hobbies.isEmpty ? "✓ Hobbies/passions" : "○ Hobbies/passions")
-        items.append(!anecdotes.isEmpty ? "✓ Story/memory" : "○ Story/memory")
-        items.append(!achievements.isEmpty ? "✓ Achievements" : "○ Achievements")
-        items.append(beliefsOrRituals != nil ? "✓ Beliefs/rituals" : "○ Beliefs/rituals")
+        items.append(whatYouWillMiss != nil ? "✓ What you'll miss" : "○ What you'll miss")
+        items.append(challengesOvercome != nil ? "✓ Challenges overcome" : "○ Challenges overcome (optional)")
+        items.append(smallDetails != nil ? "✓ Small details" : "○ Small details (optional)")
+        items.append(beliefsOrRituals != nil ? "✓ Beliefs/rituals" : "○ Beliefs/rituals (optional)")
+        items.append(finalThoughts != nil ? "✓ Final thoughts" : "○ Final thoughts (optional)")
         
         return items.joined(separator: "\n")
     }

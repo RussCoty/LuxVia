@@ -14,6 +14,7 @@ struct ResponseTemplates {
         let pronoun = pronouns.rawValue
         let possessive = possessiveForm(of: pronouns)
         let objective = objectiveForm(of: pronouns)
+        let reflexive = reflexiveForm(of: pronouns)
         
         switch questionType {
         case .name:
@@ -31,12 +32,36 @@ struct ResponseTemplates {
             ]
             return randomChoice(from: templates)
             
-        case .traits:
+        case .characterValues:
             let templates = [
-                "What were some of \(nameRef)'s most memorable qualities?",
-                "How would you describe \(nameRef)'s character or personality?",
-                "What qualities made \(nameRef) special to those who knew \(objective)?",
-                "What are 2-3 words that best describe \(nameRef)?"
+                "What mattered most to \(nameRef) in life?",
+                "What values or principles did \(nameRef) live by?",
+                "What was most important to \(nameRef)?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .impact:
+            let templates = [
+                "How did \(nameRef) impact your life or the lives of others?",
+                "In what ways did \(nameRef) make a difference?",
+                "How did knowing \(nameRef) change you or others?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .funnyMemory:
+            let templates = [
+                "Can you share a funny or lighthearted memory of \(nameRef)?",
+                "What's a moment with \(nameRef) that always makes you smile?",
+                "Do you have a humorous story about \(nameRef) you'd like to share?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .characterMemory:
+            let wasWere = pronoun == "they" ? "were" : "was"
+            let templates = [
+                "Share a moment that shows who \(nameRef) really was",
+                "What's a story that captures \(nameRef)'s character?",
+                "Can you describe a time when \(nameRef) was truly \(reflexive)?"
             ]
             return randomChoice(from: templates)
             
@@ -49,12 +74,28 @@ struct ResponseTemplates {
             ]
             return randomChoice(from: templates)
             
-        case .stories:
+        case .whatYouWillMiss:
             let templates = [
-                "Could you share a memory of \(nameRef) that stands out to you?",
-                "Is there a particular story that captures who \(nameRef) was?",
-                "What's a moment with \(nameRef) that you'll always remember?",
-                "Share a story that shows what made \(nameRef) special."
+                "What will you miss most about \(nameRef)?",
+                "What about \(nameRef) will stay with you forever?",
+                "What do you wish you could experience one more time with \(nameRef)?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .challenges:
+            let templates = [
+                "What challenges or hardships did \(nameRef) overcome? (You can skip this if you'd prefer)",
+                "Were there any difficult times that showed \(nameRef)'s strength? (Optional)",
+                "What adversity did \(nameRef) face with courage? (Feel free to skip)"
+            ]
+            return randomChoice(from: templates)
+            
+        case .smallDetails:
+            let wasWere = pronoun == "they" ? "were" : "was"
+            let templates = [
+                "What's a small detail about \(nameRef) that people might not know? A favorite song, daily habit, or something uniquely \(objective)? (Optional)",
+                "Was there a quirk, routine, or little thing that was so \(nameRef)? (You can skip this)",
+                "What small detail made \(nameRef) who \(pronoun) \(wasWere)? (Optional)"
             ]
             return randomChoice(from: templates)
             
@@ -64,6 +105,14 @@ struct ResponseTemplates {
                 "Were there any religious or spiritual beliefs important to \(nameRef)?",
                 "Would you like to mention any faith traditions or values that mattered to \(objective)?",
                 "Are there any beliefs, rituals, or values you'd like to include?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .finalThoughts:
+            let templates = [
+                "Is there anything else you'd like included in the eulogy?",
+                "Any final thoughts or memories you'd like to add?",
+                "What else should be said about \(nameRef)?"
             ]
             return randomChoice(from: templates)
         }
@@ -104,6 +153,14 @@ struct ResponseTemplates {
         case .she: return "her"
         case .he: return "him"
         case .they: return "them"
+        }
+    }
+    
+    private static func reflexiveForm(of pronouns: Pronouns) -> String {
+        switch pronouns {
+        case .she: return "herself"
+        case .he: return "himself"
+        case .they: return "themself"
         }
     }
     

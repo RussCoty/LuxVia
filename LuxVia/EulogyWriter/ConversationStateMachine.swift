@@ -25,23 +25,36 @@ final class ConversationStateMachine {
             return .reviewingDraft
         }
         
-        // Otherwise, determine state based on what's collected
+        // Follow new question order
         if form.subjectName == nil {
             return .collectingName
         } else if form.relationship == nil {
             return .collectingRelationship
-        } else if form.traits.isEmpty {
-            return .collectingTraits
-        } else if form.anecdotes.isEmpty {
-            // Stories are important - prioritize them over hobbies
-            return .collectingStories
+        } else if form.characterValues == nil {
+            return .collectingCharacterValues
+        } else if form.impact == nil {
+            return .collectingImpact
+        } else if form.funnyMemory == nil {
+            return .collectingFunnyMemory
+        } else if form.characterMemory == nil {
+            return .collectingCharacterMemory
         } else if form.hobbies.isEmpty {
             return .collectingHobbies
+        } else if form.whatYouWillMiss == nil {
+            return .collectingWhatYouWillMiss
+        } else if form.challengesOvercome == nil {
+            // Optional - can be skipped
+            return .collectingChallenges
+        } else if form.smallDetails == nil {
+            // Optional - can be skipped
+            return .collectingSmallDetails
         } else if form.beliefsOrRituals == nil {
-            // Beliefs are optional, but we'll offer to collect them
+            // Optional - can be skipped
             return .collectingBeliefs
+        } else if form.finalThoughts == nil {
+            // Optional - can be skipped
+            return .collectingFinalThoughts
         } else {
-            // We have everything
             return .readyForDraft
         }
     }
@@ -67,7 +80,6 @@ final class ConversationStateMachine {
                 )
                 return (.name, questionText)
             }
-            // If name question already asked but not collected, acknowledge and move on
             return (nil, "Thank you for that. Let me ask you something else.")
             
         case .collectingRelationship:
@@ -83,18 +95,57 @@ final class ConversationStateMachine {
             }
             return (nil, "Thank you for sharing.")
             
-        case .collectingTraits:
-            if !askedQuestions.contains(.traits) {
-                askedQuestions.insert(.traits)
+        case .collectingCharacterValues:
+            if !askedQuestions.contains(.characterValues) {
+                askedQuestions.insert(.characterValues)
                 let questionText = ResponseTemplates.response(
-                    for: .traits,
+                    for: .characterValues,
                     name: form.subjectName,
                     relationship: form.relationship,
                     pronouns: form.pronouns
                 )
-                return (.traits, questionText)
+                return (.characterValues, questionText)
             }
             return (nil, "Thank you. Let me ask about something else.")
+            
+        case .collectingImpact:
+            if !askedQuestions.contains(.impact) {
+                askedQuestions.insert(.impact)
+                let questionText = ResponseTemplates.response(
+                    for: .impact,
+                    name: form.subjectName,
+                    relationship: form.relationship,
+                    pronouns: form.pronouns
+                )
+                return (.impact, questionText)
+            }
+            return (nil, "Thank you for sharing that.")
+            
+        case .collectingFunnyMemory:
+            if !askedQuestions.contains(.funnyMemory) {
+                askedQuestions.insert(.funnyMemory)
+                let questionText = ResponseTemplates.response(
+                    for: .funnyMemory,
+                    name: form.subjectName,
+                    relationship: form.relationship,
+                    pronouns: form.pronouns
+                )
+                return (.funnyMemory, questionText)
+            }
+            return (nil, "That's a wonderful memory.")
+            
+        case .collectingCharacterMemory:
+            if !askedQuestions.contains(.characterMemory) {
+                askedQuestions.insert(.characterMemory)
+                let questionText = ResponseTemplates.response(
+                    for: .characterMemory,
+                    name: form.subjectName,
+                    relationship: form.relationship,
+                    pronouns: form.pronouns
+                )
+                return (.characterMemory, questionText)
+            }
+            return (nil, "Thank you for sharing that memory.")
             
         case .collectingHobbies:
             if !askedQuestions.contains(.hobbies) {
@@ -109,18 +160,44 @@ final class ConversationStateMachine {
             }
             return (nil, "Got it, thank you.")
             
-        case .collectingStories:
-            if !askedQuestions.contains(.stories) {
-                askedQuestions.insert(.stories)
+        case .collectingWhatYouWillMiss:
+            if !askedQuestions.contains(.whatYouWillMiss) {
+                askedQuestions.insert(.whatYouWillMiss)
                 let questionText = ResponseTemplates.response(
-                    for: .stories,
+                    for: .whatYouWillMiss,
                     name: form.subjectName,
                     relationship: form.relationship,
                     pronouns: form.pronouns
                 )
-                return (.stories, questionText)
+                return (.whatYouWillMiss, questionText)
             }
-            return (nil, "Thank you for sharing that.")
+            return (nil, "Thank you for sharing.")
+            
+        case .collectingChallenges:
+            if !askedQuestions.contains(.challenges) {
+                askedQuestions.insert(.challenges)
+                let questionText = ResponseTemplates.response(
+                    for: .challenges,
+                    name: form.subjectName,
+                    relationship: form.relationship,
+                    pronouns: form.pronouns
+                )
+                return (.challenges, questionText)
+            }
+            return (nil, "Thank you.")
+            
+        case .collectingSmallDetails:
+            if !askedQuestions.contains(.smallDetails) {
+                askedQuestions.insert(.smallDetails)
+                let questionText = ResponseTemplates.response(
+                    for: .smallDetails,
+                    name: form.subjectName,
+                    relationship: form.relationship,
+                    pronouns: form.pronouns
+                )
+                return (.smallDetails, questionText)
+            }
+            return (nil, "That's a lovely detail.")
             
         case .collectingBeliefs:
             if !askedQuestions.contains(.beliefs) {
@@ -133,7 +210,22 @@ final class ConversationStateMachine {
                 )
                 return (.beliefs, questionText)
             }
-            // If beliefs question was already asked, move to ready state
+            // If beliefs question was already asked, move to next optional
+            currentState = .collectingFinalThoughts
+            fallthrough
+            
+        case .collectingFinalThoughts:
+            if !askedQuestions.contains(.finalThoughts) {
+                askedQuestions.insert(.finalThoughts)
+                let questionText = ResponseTemplates.response(
+                    for: .finalThoughts,
+                    name: form.subjectName,
+                    relationship: form.relationship,
+                    pronouns: form.pronouns
+                )
+                return (.finalThoughts, questionText)
+            }
+            // If all questions asked, offer draft
             currentState = .readyForDraft
             fallthrough
             
