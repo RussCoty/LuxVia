@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		242E76C3D14242E2B7CBB415 /* ServiceTemplate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DACD35902EA48B68097143D /* ServiceTemplate.swift */; };
+		C1345F6578C84A59868D0E28 /* TemplateManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 35FAE6C9F8BC4315802F54A6 /* TemplateManager.swift */; };
+		434AA3F175424D74A434587F /* TemplateSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2E32446841B43B6939EBB4A /* TemplateSelectionViewController.swift */; };
+		3FFFB2B64CDF4414A1DFFD7F /* TemplatePreviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5B9BB0D42A6C41949E3EDA3F /* TemplatePreviewViewController.swift */; };
 		678E00FA6D784345AA664D30 /* LlamaEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D96D99BD8D4B00A1266372 /* LlamaEngine.swift */; };
 		5B1B32CFFE3F497EAFE85A14 /* LlamaPromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48596C21F59458F854D5F3D /* LlamaPromptBuilder.swift */; };
 		D7FCB49099404AEBB60A8BD8 /* EulogySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875543DA73E84BBBBEF5B0B0 /* EulogySettings.swift */; };
@@ -138,6 +142,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6DACD35902EA48B68097143D /* ServiceTemplate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceTemplate.swift; sourceTree = "<group>"; };
+		35FAE6C9F8BC4315802F54A6 /* TemplateManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateManager.swift; sourceTree = "<group>"; };
+		D2E32446841B43B6939EBB4A /* TemplateSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplateSelectionViewController.swift; sourceTree = "<group>"; };
+		5B9BB0D42A6C41949E3EDA3F /* TemplatePreviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TemplatePreviewViewController.swift; sourceTree = "<group>"; };
 		B1D96D99BD8D4B00A1266372 /* LlamaEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaEngine.swift; sourceTree = "<group>"; };
 		C48596C21F59458F854D5F3D /* LlamaPromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaPromptBuilder.swift; sourceTree = "<group>"; };
 		875543DA73E84BBBBEF5B0B0 /* EulogySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogySettings.swift; sourceTree = "<group>"; };
@@ -479,6 +487,10 @@
 				10334E4D2DF70CEC005B9682 /* ServiceItem.swift */,
 				103984D32DF700AF005D90DF /* ServiceOrderManager.swift */,
 				103984D52DF700AF005D90DF /* ServiceViewController.swift */,
+				6DACD35902EA48B68097143D /* ServiceTemplate.swift */,
+				35FAE6C9F8BC4315802F54A6 /* TemplateManager.swift */,
+				D2E32446841B43B6939EBB4A /* TemplateSelectionViewController.swift */,
+				5B9BB0D42A6C41949E3EDA3F /* TemplatePreviewViewController.swift */,
 				107017A32DE5B4C500FF4D87 /* SharedLibraryManager.swift */,
 				109366782DD22611007127CC /* SharedPlaylistManager.swift */,
 				10SS0006111111111111111 /* SlideshowModels.swift */,
@@ -671,6 +683,10 @@
 			files = (
 				101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */,
 				103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */,
+				242E76C3D14242E2B7CBB415 /* ServiceTemplate.swift in Sources */,
+				C1345F6578C84A59868D0E28 /* TemplateManager.swift in Sources */,
+				434AA3F175424D74A434587F /* TemplateSelectionViewController.swift in Sources */,
+				3FFFB2B64CDF4414A1DFFD7F /* TemplatePreviewViewController.swift in Sources */,
 				1099B6202DD7744300CA3194 /* MembershipManager.swift in Sources */,
 				10DE9D262E0D83C500B8FAB3 /* IconLabelButtonView.swift in Sources */,
 				10824D7F2DF33FBD00CDF11B /* LyricsDetailViewController.swift in Sources */,
