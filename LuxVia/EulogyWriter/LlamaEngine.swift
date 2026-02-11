@@ -1,64 +1,36 @@
 import Foundation
 
+/// Protocol for LLM engines to generate text responses
 protocol LLMEngine {
     func generate(prompt: String, maxTokens: Int) async throws -> String
 }
 
+/// Llama-based LLM engine (placeholder implementation)
 class LlamaEngine: LLMEngine {
-    private var context: LlamaContext?
-    private let modelName = "llama-3.2-3b-instruct-Q4_K_M"
+    private var modelPath: String?
     
-    init() {
-        do {
-            try loadModel()
-        } catch {
-            print("⚠️ LlamaEngine initialization failed: \(error.localizedDescription)")
-            print("   App will fall back to template responses")
-        }
-    }
-    
-    private func loadModel() throws {
-        // Try to find bundled model
-        guard let modelPath = Bundle.main.path(forResource: modelName, ofType: "gguf") else {
-            throw LlamaError.modelNotFound
-        }
-        
-        // Verify file exists and is readable
-        guard FileManager.default.fileExists(atPath: modelPath) else {
-            throw LlamaError.modelNotFound
-        }
-        
-        print("📦 Found model at: \(modelPath)")
-        
-        // Initialize llama context
-        context = try LlamaContext(modelPath: modelPath)
-        
-        print("✅ LlamaEngine initialized successfully")
+    init(modelPath: String? = nil) {
+        self.modelPath = modelPath
     }
     
     func generate(prompt: String, maxTokens: Int = 150) async throws -> String {
-        guard let ctx = context else {
-            throw LlamaError.contextNotInitialized
-        }
-        
-        // Run inference on background thread
-        return try await withCheckedThrowingContinuation { continuation in
-            Task.detached {
-                do {
-                    let result = try ctx.complete(prompt: prompt, maxTokens: maxTokens)
-                    continuation.resume(returning: result)
-                } catch {
-                    continuation.resume(throwing: error)
-                }
-            }
-        }
+        // Placeholder for llama.cpp integration
+        // In the future, this will integrate with llama.cpp Swift bindings
+        // to run Llama 3.2 3B Instruct model locally
+        return "AI response placeholder - will implement llama.cpp integration"
     }
 }
 
-/// Fallback engine that throws to signal template use
+/// Template-based engine using existing ResponseTemplates (fallback implementation)
 class TemplateEngine: LLMEngine {
     func generate(prompt: String, maxTokens: Int) async throws -> String {
-        // Always throw to signal fallback to templates
-        throw LlamaError.inferenceNotImplemented
+        // This is used as a fallback when LLM fails
+        // The actual template response is handled by ResponseTemplates
+        // This just signals to use template mode
+        throw TemplateEngineError.useTemplateInstead
+    }
+    
+    enum TemplateEngineError: Error {
+        case useTemplateInstead
     }
 }
