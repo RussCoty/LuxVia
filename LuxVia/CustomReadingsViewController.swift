@@ -137,7 +137,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
     }
     
     private func setupAddButton() {
-        addButton.setTitle("➕ Add Custom Reading", for: .normal)
+        addButton.setTitle("Add Custom Reading", for: .normal)
         addButton.setTitleColor(.systemBlue, for: .normal)
         addButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
         addButton.addTarget(self, action: #selector(addReading), for: .touchUpInside)
@@ -152,7 +152,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
     }
 
         private func setupAIEulogyButton() {
-            aiEulogyButton.setTitle("🧠 Write Eulogy with AI", for: .normal)
+            aiEulogyButton.setTitle("Write Eulogy with AI", for: .normal)
             aiEulogyButton.setTitleColor(.systemPurple, for: .normal)
             aiEulogyButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             aiEulogyButton.addTarget(self, action: #selector(openAIEulogyWriter), for: .touchUpInside)
@@ -165,7 +165,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         }
     
         private func setupRecordButton() {
-            recordButton.setTitle("🎤 Record Custom Reading", for: .normal)
+            recordButton.setTitle("Record Custom Reading", for: .normal)
             recordButton.setTitleColor(.systemBlue, for: .normal)
             recordButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             recordButton.addTarget(self, action: #selector(recordCustomReading), for: .touchUpInside)
@@ -178,7 +178,7 @@ class CustomReadingsViewController: UIViewController, UITableViewDataSource, UIT
         }
     
         private func setupImageManagerButton() {
-            imageManagerButton.setTitle("🖼️ Manage Slideshow Images", for: .normal)
+            imageManagerButton.setTitle("Manage Slideshow Images", for: .normal)
             imageManagerButton.setTitleColor(.systemOrange, for: .normal)
             imageManagerButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
             imageManagerButton.addTarget(self, action: #selector(openImageManager), for: .touchUpInside)
