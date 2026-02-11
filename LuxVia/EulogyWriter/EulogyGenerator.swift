@@ -30,16 +30,43 @@ final class TemplateGenerator: EulogyGenerator {
             }
         }()
 
-        let traits = f.traits.isEmpty ? "" : "\(name) will be remembered as " + f.traits.joined(separator: ", ") + "."
+        // Use new characterValues field
+        let characterValues = (f.characterValues != nil && !f.characterValues!.isEmpty) 
+            ? "\(f.characterValues!)" 
+            : (!f.traits.isEmpty ? "\(name) will be remembered as " + f.traits.joined(separator: ", ") + "." : "")
+        
+        // Impact section (NEW)
+        let impact = (f.impact != nil && !f.impact!.isEmpty) ? "\(f.impact!)" : ""
+        
+        // Funny memory (NEW)
+        let funnyMemory = (f.funnyMemory != nil && !f.funnyMemory!.isEmpty) ? "\(f.funnyMemory!)" : ""
+        
+        // Character-defining moment (NEW)
+        let characterMemory = (f.characterMemory != nil && !f.characterMemory!.isEmpty) ? "\(f.characterMemory!)" : ""
+        
         let hobbies = f.hobbies.isEmpty ? "" : "Favourite pastimes included " + f.hobbies.joined(separator: ", ") + "."
+        
+        // What you'll miss (NEW)
+        let whatYouWillMiss = (f.whatYouWillMiss != nil && !f.whatYouWillMiss!.isEmpty) ? "\(f.whatYouWillMiss!)" : ""
+        
+        // Challenges overcome (NEW - optional)
+        let challengesOvercome = (f.challengesOvercome != nil && !f.challengesOvercome!.isEmpty) ? "\(f.challengesOvercome!)" : ""
+        
+        // Small details (NEW - optional)
+        let smallDetails = (f.smallDetails != nil && !f.smallDetails!.isEmpty) ? "\(f.smallDetails!)" : ""
+        
         let achievements = f.achievements.isEmpty ? "" : "\(pronoun.poss.capitalized) proudest milestones: " + f.achievements.joined(separator: ", ") + "."
 
-        let anecdotes = f.anecdotes.isEmpty ? "" :
+        // Include other anecdotes not captured in specific fields
+        let otherAnecdotes = f.anecdotes.isEmpty ? "" :
         "Stories we'll keep close:\n" + f.anecdotes.map { "• \($0)" }.joined(separator: "\n")
 
         let beliefs = (f.beliefsOrRituals?.isEmpty == false)
             ? "In keeping with \(name)'s wishes and beliefs (\(f.beliefsOrRituals!)), we give thanks for a life well lived."
             : ""
+        
+        // Final thoughts (NEW - optional)
+        let finalThoughts = (f.finalThoughts != nil && !f.finalThoughts!.isEmpty) ? "\(f.finalThoughts!)" : ""
 
         let closing: String = {
             print("Generating closing paragraph with tone: \(f.tone)")
@@ -55,11 +82,25 @@ final class TemplateGenerator: EulogyGenerator {
             }
         }()
 
-        let bodyPieces = [traits, hobbies, achievements, anecdotes, beliefs].filter { !$0.isEmpty }
+        let bodyPieces = [
+            characterValues, 
+            impact, 
+            funnyMemory, 
+            characterMemory, 
+            hobbies, 
+            whatYouWillMiss, 
+            challengesOvercome, 
+            smallDetails, 
+            achievements, 
+            otherAnecdotes, 
+            beliefs,
+            finalThoughts
+        ].filter { !$0.isEmpty }
+        
         let shapedBody: String = {
             switch f.length {
-            case .short:    return bodyPieces.prefix(2).joined(separator: " ")
-            case .standard: return bodyPieces.prefix(4).joined(separator: " ")
+            case .short:    return bodyPieces.prefix(4).joined(separator: " ")
+            case .standard: return bodyPieces.prefix(8).joined(separator: " ")
             case .long:     return bodyPieces.joined(separator: " ")
             }
         }()

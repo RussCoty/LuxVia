@@ -95,9 +95,23 @@ final class EulogyChatEngine: ObservableObject {
             return
         }
         
-        // Check if user wants to skip optional question (like beliefs)
-        if stateMachine.currentState == .collectingBeliefs && stateMachine.userWantsToSkip(text) {
-            // Skip beliefs and move to draft ready state
+        // Check if user wants to skip optional questions
+        let optionalStates: [ConversationState] = [.collectingChallenges, .collectingSmallDetails, .collectingBeliefs, .collectingFinalThoughts]
+        if optionalStates.contains(stateMachine.currentState) && stateMachine.userWantsToSkip(text) {
+            // Mark the optional field as skipped by setting it to empty string
+            switch stateMachine.currentState {
+            case .collectingChallenges:
+                form.challengesOvercome = ""
+            case .collectingSmallDetails:
+                form.smallDetails = ""
+            case .collectingBeliefs:
+                form.beliefsOrRituals = ""
+            case .collectingFinalThoughts:
+                form.finalThoughts = ""
+            default:
+                break
+            }
+            // Move to next question
             await askNextQuestion()
             return
         }
@@ -268,6 +282,14 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
 
     private func applyLabel(_ label: String, with text: String) {
         let lower = label.lowercased()
+        
+        // Helper to add anecdote if not already present
+        func addAnecdote(_ text: String) {
+            if !form.anecdotes.contains(text) {
+                form.anecdotes.append(text)
+            }
+        }
+        
         switch true {
         case lower.contains("name"):
             if form.subjectName == nil, let validName = extractValidName(from: text) {
@@ -279,16 +301,38 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
                 extractRelationshipFromKeywords(text)
             }
             if form.pronouns == .they { inferPronouns(from: text) }
+        case lower.contains("impact") || lower.contains("difference") || (lower.contains("change") && (lower.contains("life") || lower.contains("lives") || lower.contains("others"))):
+            form.impact = text
+        case lower.contains("funny") || lower.contains("humor") || lower.contains("lighthearted"):
+            form.funnyMemory = text
+            addAnecdote(text)
+        case lower.contains("moment") && (lower.contains("character") || lower.contains("defining") || lower.contains("shows who")):
+            form.characterMemory = text
+            addAnecdote(text)
+        case lower.contains("character") || lower.contains("value") || lower.contains("principle"):
+            form.characterValues = text
         case lower.contains("trait"):
+            // Keep for backward compatibility
             form.traits.append(text)
+            if form.characterValues == nil {
+                form.characterValues = text
+            }
         case lower.contains("hobby") || lower.contains("interest"):
             form.hobbies.append(text)
+        case lower.contains("miss") && !lower.contains("missing"):
+            form.whatYouWillMiss = text
+        case lower.contains("challenge") || lower.contains("hardship") || lower.contains("overcome"):
+            form.challengesOvercome = text
+        case lower.contains("detail") || lower.contains("quirk") || lower.contains("habit"):
+            form.smallDetails = text
         case lower.contains("anecdote") || lower.contains("story"):
-            form.anecdotes.append(text)
+            addAnecdote(text)
         case lower.contains("achievement") || lower.contains("milestone"):
             form.achievements.append(text)
         case lower.contains("belief") || lower.contains("faith") || lower.contains("ritual"):
             form.beliefsOrRituals = text
+        case lower.contains("final") || lower.contains("else") || lower.contains("add"):
+            form.finalThoughts = text
         case lower.contains("tone"):
             if text.range(of: "solemn", options: .caseInsensitive) != nil { form.tone = .solemn }
             else if text.range(of: "celebrat", options: .caseInsensitive) != nil { form.tone = .celebratory }
