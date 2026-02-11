@@ -103,14 +103,21 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
             action: #selector(editButtonTapped)
         )
         
-        // Add help button
+        // Add template and help buttons
+        let templateButton = UIBarButtonItem(
+            image: UIImage(systemName: "doc.text"),
+            style: .plain,
+            target: self,
+            action: #selector(templateTapped)
+        )
+        
         let helpButton = UIBarButtonItem(
             image: UIImage(systemName: "questionmark.circle"),
             style: .plain,
             target: self,
             action: #selector(helpTapped)
         )
-        navigationItem.rightBarButtonItem = helpButton
+        navigationItem.rightBarButtonItems = [helpButton, templateButton]
     }
 
     private func setupContainerView() {
@@ -209,6 +216,12 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         }
     }
     
+    @objc private func templateTapped() {
+        let templateVC = TemplateSelectionViewController()
+        let navController = UINavigationController(rootViewController: templateVC)
+        present(navController, animated: true)
+    }
+    
     @objc private func helpTapped() {
         let alert = UIAlertController(title: "Help & Tours", message: nil, preferredStyle: .actionSheet)
         
@@ -266,6 +279,7 @@ class ServiceViewController: BaseViewController, UITableViewDataSource, UITableV
         let helpVC = UIAlertController(
             title: "Service Planning Help",
             message: """
+            • Use Templates to start with a pre-built service structure
             • Use the Service tab to organize your funeral order
             • Add music and readings to create your service flow
             • Edit mode allows you to reorder items by dragging
