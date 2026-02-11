@@ -27,18 +27,45 @@ final class EulogyChatEngine: ObservableObject {
         }()
         self.llmService = llmService ?? (apiKey.isEmpty ? MockLLMService() : OpenAIService(apiKey: apiKey))
         
+        // Load service details if available
+        if let bookletInfo = BookletInfo.load() {
+            if !bookletInfo.deceasedName.isEmpty {
+                form.subjectName = bookletInfo.deceasedName
+            }
+            // Calculate age from dates
+            let calendar = Calendar.current
+            let ageComponents = calendar.dateComponents([.year], from: bookletInfo.dateOfBirth, to: bookletInfo.dateOfPassing)
+            if let years = ageComponents.year, years >= 0 {
+                form.age = years
+            }
+        }
+        
         start()
     }
 
     func start() {
         print("EulogyChatEngine.start called")
-        messages = [
-            .init(role: .assistant, text:
-"""
-I'm here to help you create a meaningful and personal eulogy. This is a space where we can talk naturally about your loved one.
+        
+        // Customize greeting based on available info
+        var greeting = "I'm here to help you create a meaningful eulogy"
+        if let name = form.subjectName {
+            greeting += " for \(name)"
+            if let age = form.age {
+                greeting += " (age \(age))"
+            }
+        }
+        greeting += "."
+        
+        let initialMessage = """
+\(greeting)
 
-Please share whatever feels right to you - their name, who they were to you, what made them special, or any memories that come to mind. I'll listen and ask gentle questions along the way.
-""", source: .preWritten)
+I'll ask you focused questions to gather what's needed. You'll see your progress before each question.
+
+\(nextQuestion())
+"""
+        
+        messages = [
+            .init(role: .assistant, text: initialMessage, source: .preWritten)
         ]
     }
 
@@ -103,30 +130,31 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
     
     private func generateLLMResponse() async throws -> String {
         // Build context for the LLM
-        var systemPrompt = """
-        You are a compassionate assistant helping someone create a eulogy. Your role is to:
-        - Have a natural, warm conversation
-        - Ask thoughtful follow-up questions that REFERENCE and BUILD ON what they've already shared
-        - Show empathy and understanding
-        - Gently guide them to share: name, relationship, personality traits, hobbies, meaningful stories, achievements, and any spiritual/humanist preferences
-        - Keep responses concise (2-3 sentences max)
-        - Never be pushy or mechanical
-        - NEVER ask for information already provided below
-        - If someone sends just a greeting (like "Hi", "Hello", etc.), warmly acknowledge it and guide them to share about their loved one
-        - Validate inputs: don't treat greetings or short casual messages as meaningful information
-        - When asking for a name, make it clear you need their full name, not just a greeting
-        - Your goal is to gather enough information to create a meaningful eulogy, then PROPOSE creating the draft
+        let deceasedName = form.subjectName ?? "your loved one"
         
-        Information collected so far:
+        var systemPrompt = """
+        You are a compassionate assistant helping someone create a eulogy for \(deceasedName). Your role is to:
+        - Keep responses brief (1-2 sentences only)
+        - Ask ONE focused question at a time
+        - Reference \(deceasedName) by name in your questions
+        - Build on what they've already shared
+        - Show empathy without being mechanical
+        - NEVER ask for information already provided below
+        - Stop asking repetitive questions about qualities/hobbies
+        - Move toward draft creation once you have: relationship, 2-3 traits, 1-2 hobbies OR 1 story
+        
+        Information collected:
         """
         
         if let name = form.subjectName {
             systemPrompt += "\n- Name: \(name)"
+            if let age = form.age {
+                systemPrompt += " (age \(age))"
+            }
         }
         if let rel = form.relationship {
             systemPrompt += "\n- Relationship: \(rel)"
         }
-        // Include pronouns so LLM uses correct pronouns when referencing the deceased
         systemPrompt += "\n- Pronouns: \(form.pronouns.rawValue)"
         
         if !form.traits.isEmpty {
@@ -136,7 +164,7 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
             systemPrompt += "\n- Hobbies: \(form.hobbies.joined(separator: ", "))"
         }
         if !form.anecdotes.isEmpty {
-            systemPrompt += "\n- Stories shared (\(form.anecdotes.count)):\n"
+            systemPrompt += "\n- Stories (\(form.anecdotes.count)):\n"
             for (index, anecdote) in form.anecdotes.enumerated() {
                 systemPrompt += "  \(index + 1). \(anecdote)\n"
             }
@@ -153,19 +181,13 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
             systemPrompt += """
             
             
-            ⚠️ DRAFT READY: You have collected sufficient information (name, relationship, traits, and stories/hobbies).
-            Your NEXT RESPONSE should:
-            1. Acknowledge what they've shared (reference specific details)
-            2. Ask if there's anything else they'd like to add
-            3. If they say no or share one more small thing, PROPOSE creating the draft
-            
-            Do NOT keep asking for more information indefinitely. Move toward draft creation.
+            ⚠️ READY: Enough information collected. Ask if they'd like to add anything else, then propose creating the draft. Do NOT ask more trait/hobby questions.
             """
         } else {
             systemPrompt += "\n\nStill need: "
             var needed: [String] = []
             if form.subjectName == nil { needed.append("name") }
-            if form.relationship == nil { needed.append("relationship (to the deceased)") }
+            if form.relationship == nil { needed.append("relationship") }
             if form.traits.isEmpty { needed.append("personality traits") }
             if form.hobbies.isEmpty { needed.append("hobbies/passions") }
             if form.anecdotes.isEmpty { needed.append("at least one story") }
@@ -426,12 +448,29 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
     }
 
     private func nextQuestion() -> String {
-        if form.subjectName == nil { return "What was their **full name**?" }
-        if form.relationship == nil { return "And how were you **related**?" }
-        if form.traits.isEmpty { return "Tell me a few **qualities** that capture them (e.g., generous, determined, patient)." }
-        if form.hobbies.isEmpty { return "What did they **love doing** — hobbies, passions, rituals?" }
-        if form.anecdotes.isEmpty { return "Could you share **one short story** that friends/family always mention?" }
-        if form.beliefsOrRituals == nil { return "Should we include any **religious or humanist** elements?" }
-        return "Would you like a **warm**, **solemn**, **celebratory**, or **light/humorous** tone, and roughly **short/standard/long** length?"
+        let deceasedName = form.subjectName ?? "them"
+        let checklist = form.checklist()
+        
+        var question = "**Progress:**\n\(checklist)\n\n"
+        
+        if form.subjectName == nil {
+            question += "What was their full name?"
+        } else if form.relationship == nil {
+            question += "What was your relationship to \(deceasedName)?"
+        } else if form.traits.isEmpty {
+            question += "What are 2-3 words that describe \(deceasedName)? (e.g., kind, funny, dedicated)"
+        } else if form.hobbies.isEmpty {
+            question += "What did \(deceasedName) love to do?"
+        } else if form.anecdotes.isEmpty {
+            question += "Share one memory of \(deceasedName) that stands out."
+        } else if form.achievements.isEmpty {
+            question += "Any achievements or milestones of \(deceasedName)'s we should mention?"
+        } else if form.beliefsOrRituals == nil {
+            question += "Should we include any spiritual or humanist elements?"
+        } else {
+            question += "Preferred tone (warm/solemn/celebratory) and length (short/standard/long)?"
+        }
+        
+        return question
     }
 }

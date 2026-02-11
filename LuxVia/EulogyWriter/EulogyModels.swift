@@ -6,6 +6,7 @@ enum Pronouns: String, Codable { case she, he, they }
 
 struct EulogyForm: Codable {
     var subjectName: String?
+    var age: Int?
     var relationship: String?
     var pronouns: Pronouns = .they
     var tone: EulogyTone = .warm
@@ -24,6 +25,25 @@ struct EulogyForm: Codable {
         relationship != nil &&
         !traits.isEmpty &&
         (!hobbies.isEmpty || !anecdotes.isEmpty)
+    }
+    
+    func checklist() -> String {
+        var items: [String] = []
+        
+        items.append(subjectName != nil ? "✓ Name" : "○ Name")
+        if let age = age {
+            items.append("✓ Age (\(age))")
+        } else {
+            items.append("○ Age")
+        }
+        items.append(relationship != nil ? "✓ Relationship" : "○ Relationship")
+        items.append(!traits.isEmpty ? "✓ Personality traits" : "○ Personality traits")
+        items.append(!hobbies.isEmpty ? "✓ Hobbies/passions" : "○ Hobbies/passions")
+        items.append(!anecdotes.isEmpty ? "✓ Story/memory" : "○ Story/memory")
+        items.append(!achievements.isEmpty ? "✓ Achievements" : "○ Achievements")
+        items.append(beliefsOrRituals != nil ? "✓ Beliefs/rituals" : "○ Beliefs/rituals")
+        
+        return items.joined(separator: "\n")
     }
 }
 
