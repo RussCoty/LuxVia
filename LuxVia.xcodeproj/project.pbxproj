@@ -18,6 +18,10 @@
 		103599C02E8540C000565A95 /* EulogyChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599C12E8540C000565A95 /* EulogyChatEngine.swift */; };
 		103599C22E8540D000565A95 /* LuxSlotClassifier.mlmodel in Sources */ = {isa = PBXBuildFile; fileRef = 103599C32E8540D000565A95 /* LuxSlotClassifier.mlmodel */; };
 		103599C42E8540E000565A95 /* LLMService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599C52E8540E000565A95 /* LLMService.swift */; };
+		2562332615934AB496918A94 /* ConversationState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DF254496D904164A6EA10F3 /* ConversationState.swift */; };
+		5C2FDE404286431985F34C48 /* ConversationStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CD981E78B4834B30AC059B62 /* ConversationStateMachine.swift */; };
+		C29199070B73482C80ECF056 /* ResponseTemplates.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73B9DAF6E631401F900EFD2C /* ResponseTemplates.swift */; };
+
 		103984D62DF700AF005D90DF /* ServiceOrderManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D32DF700AF005D90DF /* ServiceOrderManager.swift */; };
 		103984D72DF700AF005D90DF /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D42DF700AF005D90DF /* ServiceItem.swift */; };
 		103984D82DF700AF005D90DF /* ServiceViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103984D52DF700AF005D90DF /* ServiceViewController.swift */; };
@@ -141,6 +145,10 @@
 		103599C12E8540C000565A95 /* EulogyChatEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyChatEngine.swift; sourceTree = "<group>"; };
 		103599C32E8540D000565A95 /* LuxSlotClassifier.mlmodel */ = {isa = PBXFileReference; lastKnownFileType = file.mlmodel; path = LuxSlotClassifier.mlmodel; sourceTree = "<group>"; };
 		103599C52E8540E000565A95 /* LLMService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LLMService.swift; sourceTree = "<group>"; };
+		4DF254496D904164A6EA10F3 /* ConversationState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationState.swift; sourceTree = "<group>"; };
+		CD981E78B4834B30AC059B62 /* ConversationStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationStateMachine.swift; sourceTree = "<group>"; };
+		73B9DAF6E631401F900EFD2C /* ResponseTemplates.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseTemplates.swift; sourceTree = "<group>"; };
+
 		103984D32DF700AF005D90DF /* ServiceOrderManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceOrderManager.swift; sourceTree = "<group>"; };
 		103984D42DF700AF005D90DF /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
 		103984D52DF700AF005D90DF /* ServiceViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceViewController.swift; sourceTree = "<group>"; };
@@ -496,6 +504,10 @@
 				103599BF2E8540B000565A95 /* EulogyGenerator.swift */,
 				103599C12E8540C000565A95 /* EulogyChatEngine.swift */,
 				103599C52E8540E000565A95 /* LLMService.swift */,
+				4DF254496D904164A6EA10F3 /* ConversationState.swift */,
+				CD981E78B4834B30AC059B62 /* ConversationStateMachine.swift */,
+				73B9DAF6E631401F900EFD2C /* ResponseTemplates.swift */,
+
 				103599C32E8540D000565A95 /* LuxSlotClassifier.mlmodel */,
 			);
 			path = EulogyWriter;
@@ -675,6 +687,10 @@
 				103599BE2E8540B000565A95 /* EulogyGenerator.swift in Sources */,
 				103599C02E8540C000565A95 /* EulogyChatEngine.swift in Sources */,
 				103599C42E8540E000565A95 /* LLMService.swift in Sources */,
+				2562332615934AB496918A94 /* ConversationState.swift in Sources */,
+				5C2FDE404286431985F34C48 /* ConversationStateMachine.swift in Sources */,
+				C29199070B73482C80ECF056 /* ResponseTemplates.swift in Sources */,
+
 				103599C22E8540D000565A95 /* LuxSlotClassifier.mlmodel in Sources */,
 				109851332DD8D490007C685B /* BaseViewController.swift in Sources */,
 				105BBAD02DF9A08D004B7F7A /* CustomReadingsViewController.swift in Sources */,
