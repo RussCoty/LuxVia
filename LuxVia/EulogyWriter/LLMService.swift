@@ -116,8 +116,16 @@ final class MockLLMService: LLMService {
         // IF READY FOR DRAFT - prioritize moving toward draft creation
         if isReadyForDraft {
             // Check if user is saying "no" or "nothing else" or similar
-            let doneIndicators = ["no", "nope", "nothing", "that's it", "that's all", "i think that's everything", "ready", "go ahead", "yes", "yeah"]
-            let seemsDone = doneIndicators.contains(where: { lower.contains($0) })
+            // Use word boundaries to avoid false matches
+            let donePatterns = [
+                "\\bno\\b", "\\bnope\\b", "\\bnothing\\b", "\\bthat's it\\b", 
+                "\\bthat's all\\b", "\\bi think that's everything\\b", 
+                "\\bready\\b", "\\bgo ahead\\b", "\\byes\\b", "\\byeah\\b"
+            ]
+            let seemsDone = donePatterns.contains { pattern in
+                (try? NSRegularExpression(pattern: pattern, options: .caseInsensitive)
+                    .firstMatch(in: lower, range: NSRange(lower.startIndex..., in: lower))) != nil
+            }
             
             // If they seem done OR if we've had a lot of back-and-forth (messageCount > 10)
             if seemsDone || messageCount > 10 {
