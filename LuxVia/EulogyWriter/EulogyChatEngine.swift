@@ -35,7 +35,7 @@ final class EulogyChatEngine: ObservableObject {
             // Calculate age from dates
             let calendar = Calendar.current
             let ageComponents = calendar.dateComponents([.year], from: bookletInfo.dateOfBirth, to: bookletInfo.dateOfPassing)
-            if let years = ageComponents.year, years > 0 {
+            if let years = ageComponents.year, years >= 0 {
                 form.age = years
             }
         }

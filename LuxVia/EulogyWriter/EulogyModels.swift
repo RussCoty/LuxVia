@@ -33,6 +33,8 @@ struct EulogyForm: Codable {
         items.append(subjectName != nil ? "✓ Name" : "○ Name")
         if let age = age {
             items.append("✓ Age (\(age))")
+        } else {
+            items.append("○ Age")
         }
         items.append(relationship != nil ? "✓ Relationship" : "○ Relationship")
         items.append(!traits.isEmpty ? "✓ Personality traits" : "○ Personality traits")
