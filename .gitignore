@@ -54,3 +54,7 @@ FuneralMusic 09_07_2025_12_17.zip
 .DS_Store
 .DS_Store
 .DS_Store
+
+# Large model files - download separately
+*.gguf
+Resources/Models/*.gguf

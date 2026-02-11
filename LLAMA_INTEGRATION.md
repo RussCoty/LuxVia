@@ -281,14 +281,30 @@ Created `test_llama_integration.swift` to document:
 - [x] No breaking changes
 - [x] Backward compatible
 
-### Phase 2 (Future)
-- [ ] Llama.cpp integration
-- [ ] Model bundling/download
+### Phase 2 (In Progress) ⏳
+- [x] LLM directory structure
+- [x] LlamaError.swift error types
+- [x] LlamaContext.swift wrapper
+- [x] LlamaBridge.h bridging header
+- [x] Updated LlamaEngine.swift implementation
+- [x] Model loading infrastructure
+- [x] Resources/Models directory with README
+- [x] .gitignore excludes .gguf files
+- [x] Error handling and fallback
+- [x] Background thread inference
+- [ ] llama.cpp C library integration (manual step required)
+- [ ] Metal acceleration setup
 - [ ] UI toggle implemented
 - [ ] Performance optimization
-- [ ] Error handling
 - [ ] User feedback
 - [ ] A/B testing framework
+
+**Phase 2 Status:**
+Infrastructure is now complete. Next steps require manual integration:
+1. Download model file (see Resources/Models/README.md)
+2. Integrate llama.cpp library (see LLAMA_INTEGRATION_MANUAL.md)
+3. Implement actual inference in LlamaContext.swift
+4. Test on device with Metal acceleration
 
 ## Migration Path
 
@@ -323,4 +339,40 @@ For questions or issues:
 ---
 
 **Last Updated:** 2026-02-11  
-**Status:** Phase 1 Complete, Phase 2 Pending
+**Status:** Phase 1 Complete ✅, Phase 2 Infrastructure Complete ⏳
+
+## Phase 2 Implementation Notes
+
+The Phase 2 infrastructure has been added to the repository:
+
+### Added Files
+- `LuxVia/EulogyWriter/LLM/LlamaError.swift` - Error types for model loading and inference
+- `LuxVia/EulogyWriter/LLM/LlamaContext.swift` - Wrapper around llama.cpp context
+- `LuxVia/EulogyWriter/LLM/LlamaBridge.h` - Objective-C bridging header for C API
+- `LuxVia/Resources/Models/README.md` - Model download instructions
+
+### Modified Files
+- `LuxVia/EulogyWriter/LlamaEngine.swift` - Updated with real implementation (model loading, async inference)
+- `.gitignore` - Excludes .gguf model files
+
+### Directory Structure
+```
+LuxVia/EulogyWriter/
+├── LLM/
+│   ├── LlamaBridge.h          # C bridging header
+│   ├── LlamaContext.swift     # Context wrapper
+│   └── LlamaError.swift       # Error types
+├── LlamaEngine.swift          # Updated implementation
+└── LlamaPromptBuilder.swift   # Existing from Phase 1
+
+LuxVia/Resources/
+└── Models/
+    └── README.md              # Model download guide
+```
+
+### Manual Steps Required
+See `LLAMA_INTEGRATION_MANUAL.md` for detailed instructions on:
+1. Building llama.cpp for iOS
+2. Integrating the compiled library
+3. Configuring Xcode build settings
+4. Testing on device
