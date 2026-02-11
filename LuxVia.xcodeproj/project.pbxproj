@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		678E00FA6D784345AA664D30 /* LlamaEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = B1D96D99BD8D4B00A1266372 /* LlamaEngine.swift */; };
+		5B1B32CFFE3F497EAFE85A14 /* LlamaPromptBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = C48596C21F59458F854D5F3D /* LlamaPromptBuilder.swift */; };
+		D7FCB49099404AEBB60A8BD8 /* EulogySettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 875543DA73E84BBBBEF5B0B0 /* EulogySettings.swift */; };
 		10066B4B2E1FD57000442DB2 /* Notifications+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */; };
 		101293E72DC9FD7C0012B3DE /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 101293E62DC9FD7C0012B3DE /* LoginViewController.swift */; };
 		1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1022FA822DF704BB0030074B /* MusicViewController.swift */; };
@@ -134,6 +137,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		B1D96D99BD8D4B00A1266372 /* LlamaEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaEngine.swift; sourceTree = "<group>"; };
+		C48596C21F59458F854D5F3D /* LlamaPromptBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LlamaPromptBuilder.swift; sourceTree = "<group>"; };
+		875543DA73E84BBBBEF5B0B0 /* EulogySettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogySettings.swift; sourceTree = "<group>"; };
 		10066B4A2E1FD56400442DB2 /* Notifications+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Notifications+Extensions.swift"; sourceTree = "<group>"; };
 		101293E62DC9FD7C0012B3DE /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		1022FA822DF704BB0030074B /* MusicViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MusicViewController.swift; sourceTree = "<group>"; };
@@ -503,6 +509,9 @@
 				103599BD2E8540A000565A95 /* EulogyModels.swift */,
 				103599BF2E8540B000565A95 /* EulogyGenerator.swift */,
 				103599C12E8540C000565A95 /* EulogyChatEngine.swift */,
+				B1D96D99BD8D4B00A1266372 /* LlamaEngine.swift */,
+				C48596C21F59458F854D5F3D /* LlamaPromptBuilder.swift */,
+				875543DA73E84BBBBEF5B0B0 /* EulogySettings.swift */,
 				103599C52E8540E000565A95 /* LLMService.swift */,
 				4DF254496D904164A6EA10F3 /* ConversationState.swift */,
 				CD981E78B4834B30AC059B62 /* ConversationStateMachine.swift */,
@@ -686,6 +695,9 @@
 				103599BC2E8540A000565A95 /* EulogyModels.swift in Sources */,
 				103599BE2E8540B000565A95 /* EulogyGenerator.swift in Sources */,
 				103599C02E8540C000565A95 /* EulogyChatEngine.swift in Sources */,
+				678E00FA6D784345AA664D30 /* LlamaEngine.swift in Sources */,
+				5B1B32CFFE3F497EAFE85A14 /* LlamaPromptBuilder.swift in Sources */,
+				D7FCB49099404AEBB60A8BD8 /* EulogySettings.swift in Sources */,
 				103599C42E8540E000565A95 /* LLMService.swift in Sources */,
 				2562332615934AB496918A94 /* ConversationState.swift in Sources */,
 				5C2FDE404286431985F34C48 /* ConversationStateMachine.swift in Sources */,
