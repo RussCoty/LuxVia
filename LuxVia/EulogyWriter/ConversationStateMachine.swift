@@ -32,13 +32,11 @@ final class ConversationStateMachine {
             return .collectingRelationship
         } else if form.traits.isEmpty {
             return .collectingTraits
-        } else if form.hobbies.isEmpty && form.anecdotes.isEmpty {
-            // Need at least one of hobbies or stories
-            return .collectingHobbies
+        } else if form.anecdotes.isEmpty {
+            // Stories are important - prioritize them over hobbies
+            return .collectingStories
         } else if form.hobbies.isEmpty {
             return .collectingHobbies
-        } else if form.anecdotes.isEmpty {
-            return .collectingStories
         } else if form.beliefsOrRituals == nil {
             // Beliefs are optional, but we'll offer to collect them
             return .collectingBeliefs

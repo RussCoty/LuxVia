@@ -108,6 +108,8 @@ struct ResponseTemplates {
     }
     
     private static func randomChoice<T>(from array: [T]) -> T {
-        return array.randomElement() ?? array[0]
+        // Precondition: array must not be empty (all callers pass non-empty arrays)
+        precondition(!array.isEmpty, "Cannot select random element from empty array")
+        return array.randomElement()!
     }
 }
