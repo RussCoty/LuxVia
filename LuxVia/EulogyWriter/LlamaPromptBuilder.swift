@@ -52,14 +52,26 @@ struct LlamaPromptBuilder {
             prompt += "Ask for the deceased person's name in a gentle way."
         case .collectingRelationship:
             prompt += "Ask how the user was related to \(form.subjectName ?? "them")."
-        case .collectingTraits:
-            prompt += "Ask about their personality traits or what made them special. Acknowledge any previous details shared."
+        case .collectingCharacterValues:
+            prompt += "Ask about their core values or what mattered most to them. Acknowledge any previous details shared."
+        case .collectingImpact:
+            prompt += "Ask about the impact they had on others or their community."
+        case .collectingFunnyMemory:
+            prompt += "Ask for a funny or lighthearted memory that captures their personality."
+        case .collectingCharacterMemory:
+            prompt += "Ask for a memory that shows their character or who they really were."
         case .collectingHobbies:
             prompt += "Ask what they loved to do or what brought them joy. Reference any context already shared."
-        case .collectingStories:
-            prompt += "Ask for a specific memory or story that captures who they were. Build on what's been shared."
+        case .collectingWhatYouWillMiss:
+            prompt += "Ask what the user will miss most about them."
+        case .collectingChallenges:
+            prompt += "Ask if there were any challenges they overcame or adversity they faced."
+        case .collectingSmallDetails:
+            prompt += "Ask about small details that others might not know but that were meaningful."
         case .collectingBeliefs:
             prompt += "Ask if there are any spiritual, religious, or cultural elements they'd like included."
+        case .collectingFinalThoughts:
+            prompt += "Ask if there are any final thoughts or messages they'd like to include."
         case .readyForDraft:
             prompt += "Let them know you have enough to create a meaningful eulogy and ask if they'd like you to create it now."
         case .greeting:

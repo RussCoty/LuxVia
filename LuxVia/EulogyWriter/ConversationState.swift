@@ -5,10 +5,16 @@ enum ConversationState: String, Codable {
     case greeting
     case collectingName
     case collectingRelationship
-    case collectingTraits
+    case collectingCharacterValues
+    case collectingImpact
+    case collectingFunnyMemory
+    case collectingCharacterMemory
     case collectingHobbies
-    case collectingStories
+    case collectingWhatYouWillMiss
+    case collectingChallenges
+    case collectingSmallDetails
     case collectingBeliefs
+    case collectingFinalThoughts
     case readyForDraft
     case reviewingDraft
 }
@@ -17,8 +23,14 @@ enum ConversationState: String, Codable {
 enum QuestionType: String, Hashable, CaseIterable {
     case name
     case relationship
-    case traits
+    case characterValues
+    case impact
+    case funnyMemory
+    case characterMemory
     case hobbies
-    case stories
+    case whatYouWillMiss
+    case challenges
+    case smallDetails
     case beliefs
+    case finalThoughts
 }
