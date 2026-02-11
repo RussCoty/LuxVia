@@ -31,12 +31,39 @@ struct ResponseTemplates {
             ]
             return randomChoice(from: templates)
             
-        case .traits:
+        case .characterValues:
             let templates = [
-                "What were some of \(nameRef)'s most memorable qualities?",
-                "How would you describe \(nameRef)'s character or personality?",
-                "What qualities made \(nameRef) special to those who knew \(objective)?",
-                "What are 2-3 words that best describe \(nameRef)?"
+                "What were some of \(nameRef)'s core values?",
+                "What mattered most to \(nameRef) in life?",
+                "What principles or values guided \(possessive) life?",
+                "What did \(nameRef) believe in or stand for?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .impact:
+            let templates = [
+                "What impact did \(nameRef) have on others?",
+                "How did \(nameRef) make a difference in \(possessive) community?",
+                "Who or what did \(nameRef) influence most?",
+                "What legacy did \(pronoun) leave behind?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .funnyMemory:
+            let templates = [
+                "Can you share a funny or lighthearted memory of \(nameRef)?",
+                "What's a humorous moment that shows \(possessive) personality?",
+                "Is there a funny story about \(nameRef) that always makes you smile?",
+                "What would make \(nameRef) laugh?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .characterMemory:
+            let templates = [
+                "Could you share a memory that shows who \(nameRef) really was?",
+                "Is there a moment that captures \(possessive) character?",
+                "What's a story that reveals \(possessive) true nature?",
+                "Share a memory that shows what made \(nameRef) special."
             ]
             return randomChoice(from: templates)
             
@@ -49,12 +76,30 @@ struct ResponseTemplates {
             ]
             return randomChoice(from: templates)
             
-        case .stories:
+        case .whatYouWillMiss:
             let templates = [
-                "Could you share a memory of \(nameRef) that stands out to you?",
-                "Is there a particular story that captures who \(nameRef) was?",
-                "What's a moment with \(nameRef) that you'll always remember?",
-                "Share a story that shows what made \(nameRef) special."
+                "What will you miss most about \(nameRef)?",
+                "What about \(nameRef) will you carry with you?",
+                "What will be hardest to live without?",
+                "What aspects of \(nameRef) do you wish could continue?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .challenges:
+            let templates = [
+                "Were there any challenges or adversity that \(nameRef) overcame?",
+                "What obstacles did \(pronoun) face in life?",
+                "How did \(nameRef) handle difficult times?",
+                "What did \(pronoun) persevere through?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .smallDetails:
+            let templates = [
+                "Are there small details about \(nameRef) that others might not know?",
+                "What little things made \(nameRef) unique?",
+                "What quirks or habits did \(pronoun) have?",
+                "What small moments or details were meaningful to you?"
             ]
             return randomChoice(from: templates)
             
@@ -64,6 +109,15 @@ struct ResponseTemplates {
                 "Were there any religious or spiritual beliefs important to \(nameRef)?",
                 "Would you like to mention any faith traditions or values that mattered to \(objective)?",
                 "Are there any beliefs, rituals, or values you'd like to include?"
+            ]
+            return randomChoice(from: templates)
+            
+        case .finalThoughts:
+            let templates = [
+                "Are there any final thoughts or messages you'd like to include?",
+                "Is there anything else you want people to know about \(nameRef)?",
+                "What haven't we covered that feels important?",
+                "Any last wishes or thoughts to share?"
             ]
             return randomChoice(from: templates)
         }
