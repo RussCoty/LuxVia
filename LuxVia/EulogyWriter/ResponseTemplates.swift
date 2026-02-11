@@ -57,7 +57,6 @@ struct ResponseTemplates {
             return randomChoice(from: templates)
             
         case .characterMemory:
-            let wasWere = pronoun == "they" ? "were" : "was"
             let reflexivePronoun = reflexive
             let templates = [
                 "Share a moment that shows who \(nameRef) really was",

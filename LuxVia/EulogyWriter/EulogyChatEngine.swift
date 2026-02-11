@@ -301,7 +301,7 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
                 extractRelationshipFromKeywords(text)
             }
             if form.pronouns == .they { inferPronouns(from: text) }
-        case lower.contains("impact") || lower.contains("difference") || lower.contains("change"):
+        case lower.contains("impact") || lower.contains("difference") || (lower.contains("change") && (lower.contains("life") || lower.contains("lives") || lower.contains("others"))):
             form.impact = text
         case lower.contains("funny") || lower.contains("humor") || lower.contains("lighthearted"):
             form.funnyMemory = text
@@ -319,7 +319,7 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
             }
         case lower.contains("hobby") || lower.contains("interest"):
             form.hobbies.append(text)
-        case lower.contains("miss") || lower.contains("remember"):
+        case lower.contains("miss") && !lower.contains("missing"):
             form.whatYouWillMiss = text
         case lower.contains("challenge") || lower.contains("hardship") || lower.contains("overcome"):
             form.challengesOvercome = text
