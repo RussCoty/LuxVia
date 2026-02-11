@@ -167,16 +167,28 @@ final class ConversationStateMachine {
     func userWantsDraft(_ text: String) -> Bool {
         let lower = text.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
-        // Affirmative patterns
+        // Check for negation words first
+        let negationPatterns = ["\\bnot\\b", "\\bdon't\\b", "\\bno\\b", "\\bnever\\b"]
+        for pattern in negationPatterns {
+            if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
+               regex.firstMatch(in: lower, range: NSRange(lower.startIndex..., in: lower)) != nil {
+                return false
+            }
+        }
+        
+        // Affirmative patterns with word boundaries to avoid false positives
         let affirmativePatterns = [
-            "yes", "yeah", "yep", "sure", "ok", "okay", "please",
-            "go ahead", "proceed", "create", "generate", "ready",
-            "let's do it", "sounds good", "perfect"
+            "\\byes\\b", "\\byeah\\b", "\\byep\\b", "\\bsure\\b", 
+            "\\bok\\b", "\\bokay\\b", "\\bplease\\b",
+            "\\bgo ahead\\b", "\\bproceed\\b", "\\bcreate\\b", 
+            "\\bgenerate\\b", "\\bready\\b",
+            "\\blet's do it\\b", "\\bsounds good\\b", "\\bperfect\\b"
         ]
         
-        // Check for exact matches or common affirmative phrases
+        // Check for pattern matches using word boundaries
         for pattern in affirmativePatterns {
-            if lower == pattern || lower.contains(pattern) {
+            if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
+               regex.firstMatch(in: lower, range: NSRange(lower.startIndex..., in: lower)) != nil {
                 return true
             }
         }
@@ -188,14 +200,19 @@ final class ConversationStateMachine {
     func userWantsToSkip(_ text: String) -> Bool {
         let lower = text.lowercased().trimmingCharacters(in: .whitespacesAndNewlines)
         
+        // Skip patterns with word boundaries to avoid false positives
         let skipPatterns = [
-            "no", "nope", "skip", "pass", "none", "nothing",
-            "no thanks", "that's ok", "that's okay", "not needed",
-            "not necessary", "don't need", "doesn't matter"
+            "\\bno\\b", "\\bnope\\b", "\\bskip\\b", "\\bpass\\b", 
+            "\\bnone\\b", "\\bnothing\\b",
+            "\\bno thanks\\b", "\\bthat's ok\\b", "\\bthat's okay\\b", 
+            "\\bnot needed\\b", "\\bnot necessary\\b", "\\bdon't need\\b", 
+            "\\bdoesn't matter\\b"
         ]
         
+        // Check for pattern matches using word boundaries
         for pattern in skipPatterns {
-            if lower == pattern || lower.starts(with: pattern) {
+            if let regex = try? NSRegularExpression(pattern: pattern, options: .caseInsensitive),
+               regex.firstMatch(in: lower, range: NSRange(lower.startIndex..., in: lower)) != nil {
                 return true
             }
         }

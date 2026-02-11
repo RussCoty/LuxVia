@@ -125,7 +125,8 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
     
     /// Ask the next question based on the state machine
     private func askNextQuestion() async {
-        let (_, questionText) = stateMachine.nextQuestion(form: form)
+        // Get next question from state machine (questionType not currently used but kept for future debugging)
+        let (questionType, questionText) = stateMachine.nextQuestion(form: form)
         
         // Add progress checklist before the question
         let checklist = form.checklist()
