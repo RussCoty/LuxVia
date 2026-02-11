@@ -11,11 +11,20 @@ final class EulogyChatEngine: ObservableObject {
     private let generator: EulogyGenerator
     private let classifier: LuxSlotClassifier
     private let stateMachine = ConversationStateMachine()
+    private let llmEngine: LLMEngine
+    private var lastUserMessage: String?
 
-    init(generator: EulogyGenerator = TemplateGenerator()) {
+    init(generator: EulogyGenerator = TemplateGenerator(), useLLM: Bool = false) {
         print("EulogyChatEngine initialized with state machine")
         self.generator = generator
         self.classifier = try! LuxSlotClassifier(configuration: MLModelConfiguration())
+        
+        // Initialize LLM engine based on setting
+        if useLLM {
+            self.llmEngine = LlamaEngine()
+        } else {
+            self.llmEngine = TemplateEngine()
+        }
         
         // Load service details if available
         if let bookletInfo = BookletInfo.load() {
@@ -62,6 +71,7 @@ final class EulogyChatEngine: ObservableObject {
         print("send called with text: \(text)")
         guard !text.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty else { return }
         messages.append(.init(role: .user, text: text))
+        lastUserMessage = text  // Store for LLM context
         Task { await handle(text) }
     }
 
@@ -125,14 +135,37 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
     
     /// Ask the next question based on the state machine
     private func askNextQuestion() async {
-        // Get next question from state machine (questionType not currently used but kept for future debugging)
-        let (questionType, questionText) = stateMachine.nextQuestion(form: form)
+        print("askNextQuestion called, current state: \(stateMachine.currentState)")
+        
+        // Update state
+        stateMachine.determineNextState(form: form)
+        
+        var questionText: String
+        var messageSource: ChatMessage.MessageSource = .preWritten
+        
+        // Try LLM-generated response first
+        do {
+            let prompt = LlamaPromptBuilder.buildPrompt(
+                state: stateMachine.currentState,
+                form: form,
+                lastUserMessage: lastUserMessage
+            )
+            questionText = try await llmEngine.generate(prompt: prompt, maxTokens: 150)
+            messageSource = .aiGenerated
+            print("✅ Generated LLM response: \(questionText)")
+        } catch {
+            // Fallback to template-based response
+            print("⚠️ LLM generation failed, using template fallback: \(error)")
+            let (_, templateText) = stateMachine.nextQuestion(form: form)
+            questionText = templateText
+            messageSource = .preWritten
+        }
         
         // Add progress checklist before the question
         let checklist = form.checklist()
         let fullMessage = "**Progress:**\n\(checklist)\n\n\(questionText)"
         
-        messages.append(.init(role: .assistant, text: fullMessage, source: .preWritten))
+        messages.append(.init(role: .assistant, text: fullMessage, source: messageSource))
     }
     
     private func extractRelationshipFromKeywords(_ text: String) {
