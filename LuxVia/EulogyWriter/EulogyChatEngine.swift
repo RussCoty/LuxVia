@@ -10,22 +10,12 @@ final class EulogyChatEngine: ObservableObject {
 
     private let generator: EulogyGenerator
     private let classifier: LuxSlotClassifier
-    private let llmService: LLMService
+    private let stateMachine = ConversationStateMachine()
 
-    init(generator: EulogyGenerator = TemplateGenerator(), llmService: LLMService? = nil) {
-        print("EulogyChatEngine initialized")
+    init(generator: EulogyGenerator = TemplateGenerator()) {
+        print("EulogyChatEngine initialized with state machine")
         self.generator = generator
         self.classifier = try! LuxSlotClassifier(configuration: MLModelConfiguration())
-        
-        // Try to get API key from Keychain (secure storage), otherwise use mock service
-        let apiKey: String = {
-            if let data = KeychainHelper.standard.read(service: "com.luxvia.eulogy", account: "openai_api_key"),
-               let key = String(data: data, encoding: .utf8) {
-                return key
-            }
-            return ""
-        }()
-        self.llmService = llmService ?? (apiKey.isEmpty ? MockLLMService() : OpenAIService(apiKey: apiKey))
         
         // Load service details if available
         if let bookletInfo = BookletInfo.load() {
@@ -56,17 +46,16 @@ final class EulogyChatEngine: ObservableObject {
         }
         greeting += "."
         
-        let initialMessage = """
-\(greeting)
-
-I'll ask you focused questions to gather what's needed. You'll see your progress before each question.
-
-\(nextQuestion())
-"""
+        greeting += "\n\nI'll ask you focused questions to gather what's needed. You'll see your progress before each question."
         
         messages = [
-            .init(role: .assistant, text: initialMessage, source: .preWritten)
+            .init(role: .assistant, text: greeting, source: .preWritten)
         ]
+        
+        // Ask first question
+        Task {
+            await askNextQuestion()
+        }
     }
 
     func send(_ text: String) {
@@ -82,7 +71,6 @@ I'll ask you focused questions to gather what's needed. You'll see your progress
         defer { isThinking = false }
 
         // Apply keyword-based relationship detection FIRST (before classifier)
-        // This ensures we catch relationships even if classifier misses them
         extractRelationshipFromKeywords(text)
         print("📋 Form state after keyword extraction - relationship: \(form.relationship ?? "nil")")
 
@@ -101,119 +89,51 @@ I'll ask you focused questions to gather what's needed. You'll see your progress
         applyLabel(label, with: text)
         print("📋 Final form state - name: \(form.subjectName ?? "nil"), relationship: \(form.relationship ?? "nil"), pronouns: \(form.pronouns.rawValue)")
 
-        // If we have enough information, generate the draft
-        if form.isReadyForDraft {
-            do {
-                let draft = try await generator.generate(from: form)
-                messages.append(.init(role: .draft, text: draft, source: .draft))
-                messages.append(.init(role: .assistant, text:
+        // Check if we're in the draft readiness state and user wants to proceed
+        if stateMachine.currentState == .readyForDraft && stateMachine.userWantsDraft(text) {
+            await generateDraft()
+            return
+        }
+        
+        // Check if user wants to skip optional question (like beliefs)
+        if stateMachine.currentState == .collectingBeliefs && stateMachine.userWantsToSkip(text) {
+            // Skip beliefs and move to draft ready state
+            await askNextQuestion()
+            return
+        }
+
+        // Ask next question based on state machine
+        await askNextQuestion()
+    }
+    
+    /// Generate and display the draft eulogy
+    private func generateDraft() async {
+        do {
+            let draft = try await generator.generate(from: form)
+            messages.append(.init(role: .draft, text: draft, source: .draft))
+            messages.append(.init(role: .assistant, text:
 """
 I've created a draft eulogy based on what you've shared. Please take a moment to read through it.
 
 Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCases.map{$0.rawValue}.joined(separator:", "))), length (\(EulogyLength.allCases.map{$0.rawValue}.joined(separator:", "))), add or remove stories, or incorporate different elements.
 """, source: .preWritten))
-            } catch {
-                messages.append(.init(role: .assistant, text: "I encountered an issue generating the draft. Could we try again?", source: .preWritten))
-            }
-            return
-        }
-
-        // Generate natural conversational response using LLM
-        do {
-            let response = try await generateLLMResponse()
-            messages.append(.init(role: .assistant, text: response, source: .aiGenerated))
+            stateMachine.markDraftGenerated()
         } catch {
-            // Fallback to asking next question if LLM fails
-            messages.append(.init(role: .assistant, text: nextQuestion(), source: .preWritten))
+            messages.append(.init(role: .assistant, text: "I encountered an issue generating the draft. Could we try again?", source: .preWritten))
         }
     }
     
-    private func generateLLMResponse() async throws -> String {
-        // Build context for the LLM
-        let deceasedName = form.subjectName ?? "your loved one"
+    /// Ask the next question based on the state machine
+    private func askNextQuestion() async {
+        let (_, questionText) = stateMachine.nextQuestion(form: form)
         
-        var systemPrompt = """
-        You are a compassionate assistant helping someone create a eulogy for \(deceasedName). Your role is to:
-        - Keep responses brief (1-2 sentences only)
-        - Ask ONE focused question at a time
-        - Reference \(deceasedName) by name in your questions
-        - Build on what they've already shared
-        - Show empathy without being mechanical
-        - NEVER ask for information already provided below
-        - Stop asking repetitive questions about qualities/hobbies
-        - Move toward draft creation once you have: relationship, 2-3 traits, 1-2 hobbies OR 1 story
+        // Add progress checklist before the question
+        let checklist = form.checklist()
+        let fullMessage = "**Progress:**\n\(checklist)\n\n\(questionText)"
         
-        Information collected:
-        """
-        
-        if let name = form.subjectName {
-            systemPrompt += "\n- Name: \(name)"
-            if let age = form.age {
-                systemPrompt += " (age \(age))"
-            }
-        }
-        if let rel = form.relationship {
-            systemPrompt += "\n- Relationship: \(rel)"
-        }
-        systemPrompt += "\n- Pronouns: \(form.pronouns.rawValue)"
-        
-        if !form.traits.isEmpty {
-            systemPrompt += "\n- Traits: \(form.traits.joined(separator: ", "))"
-        }
-        if !form.hobbies.isEmpty {
-            systemPrompt += "\n- Hobbies: \(form.hobbies.joined(separator: ", "))"
-        }
-        if !form.anecdotes.isEmpty {
-            systemPrompt += "\n- Stories (\(form.anecdotes.count)):\n"
-            for (index, anecdote) in form.anecdotes.enumerated() {
-                systemPrompt += "  \(index + 1). \(anecdote)\n"
-            }
-        }
-        if !form.achievements.isEmpty {
-            systemPrompt += "\n- Achievements: \(form.achievements.joined(separator: ", "))"
-        }
-        if let beliefs = form.beliefsOrRituals {
-            systemPrompt += "\n- Beliefs/Rituals: \(beliefs)"
-        }
-        
-        // Check if we're ready for draft
-        if form.isReadyForDraft {
-            systemPrompt += """
-            
-            
-            ⚠️ READY: Enough information collected. Ask if they'd like to add anything else, then propose creating the draft. Do NOT ask more trait/hobby questions.
-            """
-        } else {
-            systemPrompt += "\n\nStill need: "
-            var needed: [String] = []
-            if form.subjectName == nil { needed.append("name") }
-            if form.relationship == nil { needed.append("relationship") }
-            if form.traits.isEmpty { needed.append("personality traits") }
-            if form.hobbies.isEmpty { needed.append("hobbies/passions") }
-            if form.anecdotes.isEmpty { needed.append("at least one story") }
-            
-            systemPrompt += needed.joined(separator: ", ")
-            systemPrompt += "\n\nFocus on gathering these missing pieces to move toward draft creation."
-        }
-        
-        // Convert chat history to LLM format
-        var llmMessages: [LLMMessage] = [
-            LLMMessage(role: "system", content: systemPrompt)
-        ]
-        
-        // Add recent conversation context (last 6 messages to keep context window manageable)
-        let recentMessages = messages.suffix(6)
-        for msg in recentMessages {
-            if msg.role == .user {
-                llmMessages.append(LLMMessage(role: "user", content: msg.text))
-            } else if msg.role == .assistant {
-                llmMessages.append(LLMMessage(role: "assistant", content: msg.text))
-            }
-        }
-        
-        return try await llmService.chat(messages: llmMessages)
+        messages.append(.init(role: .assistant, text: fullMessage, source: .preWritten))
     }
-
+    
     private func extractRelationshipFromKeywords(_ text: String) {
         // Skip if relationship already extracted
         guard form.relationship == nil else { return }
@@ -445,32 +365,5 @@ Would you like me to make any changes? I can adjust the tone (\(EulogyTone.allCa
         }
         
         return nil
-    }
-
-    private func nextQuestion() -> String {
-        let deceasedName = form.subjectName ?? "them"
-        let checklist = form.checklist()
-        
-        var question = "**Progress:**\n\(checklist)\n\n"
-        
-        if form.subjectName == nil {
-            question += "What was their full name?"
-        } else if form.relationship == nil {
-            question += "What was your relationship to \(deceasedName)?"
-        } else if form.traits.isEmpty {
-            question += "What are 2-3 words that describe \(deceasedName)? (e.g., kind, funny, dedicated)"
-        } else if form.hobbies.isEmpty {
-            question += "What did \(deceasedName) love to do?"
-        } else if form.anecdotes.isEmpty {
-            question += "Share one memory of \(deceasedName) that stands out."
-        } else if form.achievements.isEmpty {
-            question += "Any achievements or milestones of \(deceasedName)'s we should mention?"
-        } else if form.beliefsOrRituals == nil {
-            question += "Should we include any spiritual or humanist elements?"
-        } else {
-            question += "Preferred tone (warm/solemn/celebratory) and length (short/standard/long)?"
-        }
-        
-        return question
     }
 }
