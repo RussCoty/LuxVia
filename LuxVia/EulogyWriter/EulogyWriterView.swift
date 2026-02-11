@@ -8,15 +8,9 @@ import SwiftUI
 
 struct EulogyWriterView: View {
     @StateObject private var settings = EulogySettings()
-    @StateObject private var engine: EulogyChatEngine
+    @StateObject private var engine = EulogyChatEngine(useLLM: false)
     @State private var input = ""
     @State private var isSending = false
-    
-    init() {
-        let settings = EulogySettings()
-        _settings = StateObject(wrappedValue: settings)
-        _engine = StateObject(wrappedValue: EulogyChatEngine(useLLM: settings.useAIResponses))
-    }
 
     static func make() -> some View { EulogyWriterView() }
 
