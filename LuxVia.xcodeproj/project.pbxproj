@@ -16,6 +16,7 @@
 		102F716E2DCDEA2000ACD992 /* LUMA transparent launch screen .png in Resources */ = {isa = PBXBuildFile; fileRef = 102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */; };
 		10334E4E2DF70CEC005B9682 /* ServiceItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 10334E4D2DF70CEC005B9682 /* ServiceItem.swift */; };
 		103599B92E853FFC00565A95 /* EulogyWriterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599B82E853FE600565A95 /* EulogyWriterView.swift */; };
+		103599BA2E853FF000565A95 /* EulogySettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599BA2E853FF000565A95 /* EulogySettingsView.swift */; };
 		103599BC2E8540A000565A95 /* EulogyModels.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599BD2E8540A000565A95 /* EulogyModels.swift */; };
 		103599BE2E8540B000565A95 /* EulogyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599BF2E8540B000565A95 /* EulogyGenerator.swift */; };
 		103599C02E8540C000565A95 /* EulogyChatEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 103599C12E8540C000565A95 /* EulogyChatEngine.swift */; };
@@ -146,6 +147,7 @@
 		102F716D2DCDEA2000ACD992 /* LUMA transparent launch screen .png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "LUMA transparent launch screen .png"; sourceTree = "<group>"; };
 		10334E4D2DF70CEC005B9682 /* ServiceItem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ServiceItem.swift; sourceTree = "<group>"; };
 		103599B82E853FE600565A95 /* EulogyWriterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyWriterView.swift; sourceTree = "<group>"; };
+		103599BA2E853FF000565A95 /* EulogySettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogySettingsView.swift; sourceTree = "<group>"; };
 		103599BD2E8540A000565A95 /* EulogyModels.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyModels.swift; sourceTree = "<group>"; };
 		103599BF2E8540B000565A95 /* EulogyGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyGenerator.swift; sourceTree = "<group>"; };
 		103599C12E8540C000565A95 /* EulogyChatEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EulogyChatEngine.swift; sourceTree = "<group>"; };
@@ -506,6 +508,7 @@
 			isa = PBXGroup;
 			children = (
 				103599B82E853FE600565A95 /* EulogyWriterView.swift */,
+				103599BA2E853FF000565A95 /* EulogySettingsView.swift */,
 				103599BD2E8540A000565A95 /* EulogyModels.swift */,
 				103599BF2E8540B000565A95 /* EulogyGenerator.swift */,
 				103599C12E8540C000565A95 /* EulogyChatEngine.swift */,
@@ -692,6 +695,7 @@
 				1022FA832DF704BB0030074B /* MusicViewController.swift in Sources */,
 				1099B6222DD784A000CA3194 /* NonceExtractor.swift in Sources */,
 				103599B92E853FFC00565A95 /* EulogyWriterView.swift in Sources */,
+				103599BA2E853FF000565A95 /* EulogySettingsView.swift in Sources */,
 				103599BC2E8540A000565A95 /* EulogyModels.swift in Sources */,
 				103599BE2E8540B000565A95 /* EulogyGenerator.swift in Sources */,
 				103599C02E8540C000565A95 /* EulogyChatEngine.swift in Sources */,

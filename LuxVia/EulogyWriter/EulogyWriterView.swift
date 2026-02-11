@@ -7,12 +7,43 @@
 import SwiftUI
 
 struct EulogyWriterView: View {
-    @StateObject private var settings = EulogySettings()
-    @StateObject private var engine = EulogyChatEngine(useLLM: false)
+    @StateObject private var settings = EulogySettings.shared
+    @State private var input = ""
+    @State private var isSending = false
+    @State private var showingSettings = false
+
+    static func make() -> some View { EulogyWriterView() }
+
+    var body: some View {
+        EulogyWriterContentView(useLLM: settings.useAIResponses, showingSettings: $showingSettings)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button {
+                        showingSettings = true
+                    } label: {
+                        Image(systemName: "gearshape")
+                    }
+                }
+            }
+            .sheet(isPresented: $showingSettings) {
+                EulogySettingsView()
+            }
+    }
+}
+
+private struct EulogyWriterContentView: View {
+    let useLLM: Bool
+    @Binding var showingSettings: Bool
+    @StateObject private var settings = EulogySettings.shared
+    @StateObject private var engine: EulogyChatEngine
     @State private var input = ""
     @State private var isSending = false
 
-    static func make() -> some View { EulogyWriterView() }
+    init(useLLM: Bool, showingSettings: Binding<Bool>) {
+        self.useLLM = useLLM
+        self._showingSettings = showingSettings
+        _engine = StateObject(wrappedValue: EulogyChatEngine(useLLM: useLLM))
+    }
 
     var body: some View {
         VStack(spacing: 0) {
@@ -39,13 +70,28 @@ struct EulogyWriterView: View {
         }
         .background(Color(.systemGroupedBackground))
         .navigationTitle("AI Eulogy")
+        .id(useLLM) // Force recreation when useLLM changes
     }
 
     private var header: some View {
-        HStack {
-            Circle().fill(Color.green.opacity(0.85)).frame(width: 8, height: 8)
-            Text("LuxVia • Eulogy Assistant").font(.headline)
-            Spacer()
+        VStack(spacing: 4) {
+            HStack {
+                Circle().fill(Color.green.opacity(0.85)).frame(width: 8, height: 8)
+                Text("LuxVia • Eulogy Assistant").font(.headline)
+                Spacer()
+            }
+            HStack {
+                if settings.useAIResponses {
+                    Label("AI Mode", systemImage: "sparkles")
+                        .font(.caption)
+                        .foregroundColor(.blue)
+                } else {
+                    Label("Template Mode", systemImage: "text.bubble")
+                        .font(.caption)
+                        .foregroundColor(.secondary)
+                }
+                Spacer()
+            }
         }
         .padding()
         .background(.ultraThinMaterial)
